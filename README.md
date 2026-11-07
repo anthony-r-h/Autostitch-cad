@@ -46,6 +46,10 @@ Within one drawing, copy all connected source lines and their output together to
 
 ## Tool assumptions
 
+**Show stitches** adds a schematic thread view between slit tips and round holes. It starts off; slits remain visible. **Spacing notes** starts on and marks each run of adjusted gaps with a bracket and its actual centre spacing, for example `2 x 3.25 mm / AWL`. This means two changed gaps; place those holes individually instead of using the nominal-pitch iron across them. Both bounding slits are amber, even when notes are hidden. Corner-hole distances follow the junction construction and are not labelled as pitch corrections.
+
+These controls apply to the drawing and support Undo/Redo. Thread lines are nonplotting on `AUTOSTITCH_STITCHES`; spacing instructions print on `AUTOSTITCH_NOTES`; physical slits and holes stay on `AUTOSTITCH`. All remain inside the generated block. Older output needs **Generate stitches** once to add these displays. Nominal spacing on a curve is not a guarantee that a rigid multi-tooth iron will fit.
+
 The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated: **Physical clearance unverified** remains visible. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
 
 ## Design and development

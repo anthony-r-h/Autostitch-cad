@@ -7,9 +7,9 @@
       "type": "palette",
       "caption": "Autostitch",
       "width": 360,
-      "height": 510,
+      "height": 554,
       "MinWidth": 360,
-      "MinHeight": 510,
+      "MinHeight": 554,
       "BackColor": 16119026,
       "controls": [
         {
@@ -218,7 +218,7 @@
           "type": "Label",
           "name": "Status",
           "left": 12,
-          "top": 398,
+          "top": 442,
           "width": 336,
           "height": 70,
           "Font": "Segoe UI",
@@ -233,7 +233,7 @@
           "type": "Label",
           "name": "Physical",
           "left": 12,
-          "top": 480,
+          "top": 524,
           "width": 336,
           "height": 22,
           "Font": "Segoe UI",
@@ -352,6 +352,40 @@
           "caption": "Connect stitch lines",
           "events": {
             "Clicked": "c:ASTUICONNECT"
+          }
+        },
+        {
+          "type": "CheckBox",
+          "name": "ShowStitches",
+          "left": 12,
+          "top": 398,
+          "width": 160,
+          "height": 30,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/ShowStitches",
+          "caption": "Show stitches",
+          "Value": 0,
+          "events": {
+            "Clicked": "c:ASTUISHOWSTITCHES"
+          }
+        },
+        {
+          "type": "CheckBox",
+          "name": "SpacingNotes",
+          "left": 184,
+          "top": 398,
+          "width": 164,
+          "height": 30,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/SpacingNotes",
+          "caption": "Spacing notes",
+          "Value": 1,
+          "events": {
+            "Clicked": "c:ASTUINOTES"
           }
         },
         {

@@ -12,7 +12,8 @@ $stitchReport = Join-Path $stitchOutput 'all-suites.txt'
 $stitchSuites = @(
   'AST:G-TESTS', 'AST:N-TESTS', 'AST:CAD-TESTS', 'AST:CAD-LIFECYCLE-TESTS',
   'AST:CAD-REPAIR-TESTS', 'AST:CAD-CORRESPONDENCE-TESTS', 'AST:CAD-RANGE-TESTS',
-  'AST:CAD-CONNECTED-TESTS', 'AST:CAD-MISSING-TESTS', 'AST:MARKER-TESTS', 'AST:HOST-TESTS'
+  'AST:CAD-CONNECTED-TESTS', 'AST:CAD-MISSING-TESTS', 'AST:MARKER-TESTS', 'AST:HOST-TESTS',
+  'AST:DISPLAY-TESTS'
 )
 if (Test-Path -LiteralPath $stitchReport) { Remove-Item -LiteralPath $stitchReport }
 $stitchDriver = @'
@@ -22,7 +23,8 @@ $stitchDriver = @'
     "source/autostitch-cad.lsp" "source/autostitch-markers.lsp"
     "tests/autostitch-geometry-tests.lsp" "tests/autostitch-network-tests.lsp"
     "tests/autostitch-cad-tests.lsp" "tests/autostitch-connected-tests.lsp"
-    "tests/autostitch-marker-tests.lsp" "tests/autostitch-host-tests.lsp")
+    "tests/autostitch-marker-tests.lsp" "tests/autostitch-host-tests.lsp"
+    "tests/autostitch-display-tests.lsp")
   (setq ast:suite-result (vl-catch-all-apply 'load (list (strcat "@ROOT@/" ast:suite-path))))
   (if (vl-catch-all-error-p ast:suite-result)
     (progn

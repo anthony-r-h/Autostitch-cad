@@ -36,7 +36,7 @@
   (setq ast:demo:*guides* nil)
   (ast:demo-label '(0.0 90.0 0.0) "AUTOSTITCH  |  Select stitch line, change pitch, Generate stitches")
   (ast:demo-label '(0.0 84.0 0.0) "Connect stitch lines where they meet or cross. Edit a source, then Generate stitches.")
-  (ast:demo-label '(0.0 78.0 0.0) "Gray: source lines. White: stitches. Colored editing points: nonplotting NODE / CEN snaps.")
+  (ast:demo-label '(0.0 78.0 0.0) "White: slit holes. Amber: adjusted spacing / AWL. Show stitches adds a thread preview.")
   (ast:demo-label '(0.0 68.0 0.0) "Straight line / pattern landmark at 31.5 mm")
   (setq guide (entmakex '((0 . "LINE") (8 . "DEMO-GUIDES") (10 0.0 63.0 0.0) (11 70.5 63.0 0.0))))
   (entmakex '((0 . "LINE") (8 . "DEMO-GUIDES") (10 31.5 55.0 0.0) (11 31.5 66.0 0.0)))

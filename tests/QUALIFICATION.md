@@ -13,6 +13,7 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Persistent markers, exact CEN/NODE snaps, shared labels and rollback | 38 passed |
 | Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
+| Thread-tip display, adjusted-spacing notes, inch scaling, tight arcs, visibility, signatures and rollback | 36 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
 Actual palette controls were exercised in BricsCAD: Select, Add landmark, Move, Start, End, Reverse and Generate. Picked inputs survived regeneration. Cancelling selection retained the previous seam. Invalid pitch left inputs and output unchanged.
@@ -48,6 +49,8 @@ The final package was checked again through actual Select and Generate controls:
 One automated replay in the long-running development session missed the expected Redo result. It did not reproduce in direct comparisons, a fresh process, or subsequent complete event runs. The runner now requires three consecutive idle observations and records actual coordinates on failure. Timing is a possible cause, not a proven diagnosis.
 
 Measured solver times: 101 openings ≈16 ms; 334 ≈15 ms; 1,001 ≈172 ms. These are single-run host measurements, not performance guarantees. Every seam has a hard 2,000-opening cap; oversized requests fail without truncated output.
+
+The display update passed all **12 native suites: 1,255 assertions**. Actual **Show stitches** and **Spacing notes** clicks changed their drawing layers immediately; native Undo/Redo restored both visibility and checkbox state. Saving and reopening retained both display choices and current output. Notes identify actual direct/chord spacing, mark both bounding slits, and exclude derived corner-hole gaps. Reversed lines and small-radius arc brackets were inspected in BricsCAD. Arc brackets use exact outward circular segments. Editing markers can overlap notes on crowded geometry; `AUTOSTITCH_UI` can be hidden for inspection and is nonplotting. There is no automatic annotation collision layout.
 
 ## Repeat
 

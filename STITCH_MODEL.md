@@ -37,7 +37,7 @@ Changing pitch never scales the other dimensions. Revalidate the selected profil
 5. Junction-to-round-hole distances are derived geometry, not ordinary pitch corrections.
 6. Within one generation, committed anchors remain fixed. An explicit later Generate recomputes the whole independent path or connected set from current inputs; there is no hidden permanently locked prefix.
 7. Closure reuses the original opening identity. A fresh closed circle fits its full sweep; the lab's arbitrary committed-prefix examples are not a required workflow.
-8. Validate all distinct emitted opening pairs across the entire connected set. A fitted span or one fitted member alone does not establish acceptable combined cuts.
+8. Validate all distinct emitted opening pairs across the entire connected set. A fitted span or one fitted member alone does not establish acceptable combined stitching.
 9. Use direct formulas and bounded analytic candidate selection. No phase search, iterative optimizer, relaxed constraints or substitution of another corner recipe after failure.
 
 Each source is an ordered planar LINE/ARC/CIRCLE or line/arc polyline, with at most one revolution per circular primitive. Connections can form branches across those sources without a global traversal or CAD Join operation. Reject nonfinite data, zero-length primitives, disconnected source segments and ambiguous traversal before construction. Normalize adjoining collinear or co-circular subdivisions; inserting a redundant CAD vertex must not change the layout.
@@ -48,7 +48,7 @@ Undeclared crossings, splines, ellipses, nonplanar geometry and free-phase mixed
 
 ## Declared connected sets
 
-Connect stitch lines combines selected sources and their existing connected members. When more than one intersection needs coordination, ConnectAll declares the complete set before solving, avoiding an infeasible intermediate partial declaration. Sources retain individual pitch, direction, ranges and landmark attachments; the slit/hole profile and clearance settings must agree. The complete set emits one cut list and one output block.
+Connect stitch lines combines selected sources and their existing connected members. When more than one intersection needs coordination, ConnectAll declares the complete set before solving, avoiding an infeasible intermediate partial declaration. Sources retain individual pitch, direction, ranges and landmark attachments; the slit/hole profile and clearance settings must agree. The complete set emits one list of stitch openings and one output block.
 
 Classify actual incident arms, not CAD entity boundaries. A sharp two-arm corner uses the selected-tip construction below, including when its arms are separate LINE entities; a smooth two-arm transition uses its shared slit. At a node with three or more arms, emit one round hole at the guide intersection and reserve each arm's first neighbour at nominal direct/chord pitch. Remaining spans use the same bounded fitters. These branch-adjacent gaps are protected reservations, not ordinary corrections. See [junction construction and examples](review/JUNCTIONS.md).
 
@@ -56,7 +56,7 @@ Equal-pitch collinear or co-circular continuations are normalized into one run, 
 
 Persist a connection's source/primitive incidences and selected analytic root. Recompute its position from current source geometry after edits. Common placement, unchanged supporting geometry and proven root-side correspondence can retain identity; an ambiguous changed root or topology requires explicit repair, never nearest-point reassignment. Every crossing within the declared set must be coordinated, and every distinct emitted cut pair must pass clearance.
 
-Disconnected or missing-source repair solves all resulting components before replacing any output. A failure retains the previous complete cuts. Source inputs remain canonical; saved output topology supports deleted-primary recovery without recreating deleted source geometry. [Connected workflow](review/CONNECTED_WORKFLOW.md) records adapter ownership and recovery details.
+Disconnected or missing-source repair solves all resulting components before replacing any output. A failure retains the previous complete stitches. Source inputs remain canonical; saved output topology supports deleted-primary recovery without recreating deleted source geometry. [Connected workflow](review/CONNECTED_WORKFLOW.md) records adapter ownership and recovery details.
 
 ## Span fitting and centred placement
 

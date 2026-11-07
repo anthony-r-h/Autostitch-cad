@@ -10,10 +10,10 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Independent JavaScript oracle compared with native line/arc fitting | 540 passed |
 | DWG generation, injected rollback failures, transforms, saved units, attachments and repair | 59 passed |
 | Connected-set merge/split, copies and missing-member recovery | 39 passed |
-| Persistent markers, exact CEN/NODE snaps, shared labels and rollback | 38 passed |
+| Compact markers, exact CEN/NODE/MID snaps, shared labels and rollback | 39 passed |
 | Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
-| Thread-tip display, adjusted-spacing notes, inch scaling, tight arcs, visibility, signatures and rollback | 36 passed |
+| Thread-tip display, monochrome chevrons, inch scaling, tight arcs, visibility, signatures and rollback | 36 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
 Actual palette controls were exercised in BricsCAD: Select, Add landmark, Move, Start, End, Reverse and Generate. Picked inputs survived regeneration. Cancelling selection retained the previous seam. Invalid pitch left inputs and output unchanged.
@@ -50,7 +50,9 @@ One automated replay in the long-running development session missed the expected
 
 Measured solver times: 101 openings ≈16 ms; 334 ≈15 ms; 1,001 ≈172 ms. These are single-run host measurements, not performance guarantees. Every seam has a hard 2,000-opening cap; oversized requests fail without truncated output.
 
-The display update passed all **12 native suites: 1,255 assertions**. Actual **Show stitches** and **Spacing notes** clicks changed their drawing layers immediately; native Undo/Redo restored both visibility and checkbox state. Saving and reopening retained both display choices and current output. Notes identify actual direct/chord spacing, mark both bounding slits, and exclude derived corner-hole gaps. Reversed lines and small-radius arc brackets were inspected in BricsCAD. Arc brackets use exact outward circular segments. Editing markers can overlap notes on crowded geometry; `AUTOSTITCH_UI` can be hidden for inspection and is nonplotting. There is no automatic annotation collision layout.
+The compact notation update passed all **12 native suites: 1,256 assertions**. Chevrons identify both ends of affected slits, deduplicate shared boundaries, and exclude derived corner-hole gaps. Actual slit positions remain unchanged. Tests cover forward/reversed lines and tight arcs, inch scaling, output signatures, version migration and rollback. Compact `S`/`E`/`J` labels retain endpoint and junction CEN/NODE snaps; the heavy `L#` landmark bar has exact NODE/MID snaps. Existing marker styles migrate automatically.
+
+The 61 native event checks also passed. The actual **Spacing marks** checkbox and native Undo/Redo were exercised. The expanded demo regenerated all **14 outputs from 19 sources**, then reopened with every source/output association current. It includes the original straight 45/135-degree turns, A03/A04 curved junctions, a 60-degree curved turn and a connected polyline-plus-line example.
 
 ## Repeat
 

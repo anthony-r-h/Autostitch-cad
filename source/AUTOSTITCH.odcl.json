@@ -334,7 +334,7 @@
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/PointHelp",
-          "caption": "Green START | Red END | Cyan LANDMARK | Yellow JOIN",
+          "caption": "S Start | E End | L# Landmark | J Junction",
           "BackColor": -24,
           "BorderStyle": 0
         },
@@ -382,7 +382,7 @@
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/SpacingNotes",
-          "caption": "Spacing notes",
+          "caption": "Spacing marks",
           "Value": 1,
           "events": {
             "Clicked": "c:ASTUINOTES"

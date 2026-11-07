@@ -13,7 +13,7 @@ The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [the 
 
 After opening the palette once, its commands are available in other drawings opened during that BricsCAD session.
 
-The release ZIP includes `examples/Autostitch-practical-demo.dwg`: eight editable examples covering landmarks, curves, corners, meeting lines and crossings. Open it, run AUTOSTITCH, and select a source line to try the controls.
+The release ZIP includes `examples/Autostitch-practical-demo.dwg`: fourteen editable examples covering landmarks, straight and curved corners, mixed polyline/line paths, branches and crossings. Open it, run AUTOSTITCH, and select a source line to try the controls.
 
 Supported source entities are `LINE`, `ARC`, `CIRCLE` and `LWPOLYLINE`, including bulged arc segments. They must lie in **WCS XY at Z=0**, with a positive Z normal. Separate entities can meet or cross without a CAD Join operation. Invalid constructions and overlapping stitch holes are rejected before output is replaced.
 
@@ -38,7 +38,7 @@ Connected lines share one output block on `AUTOSTITCH`. Corners, crossings and b
 - Reopening **AUTOSTITCH** also reloads saved inputs. After switching drawings, select a guide again before generating; a click cannot reuse another drawing's displayed seam.
 - If output was moved, rotated or scaled independently, **Restore position** explicitly regenerates it from its sources. It is enabled when that placement conflict is detected.
 
-The original sources remain authoritative and stay outside the stitch blocks. Editing aids are saved, nonplotting blocks on `AUTOSTITCH_UI`: green START, red END, cyan LANDMARK and yellow JOIN. Point picking enables endpoint, midpoint, intersection, centre and node snaps alongside your existing snap choices, then restores your exact previous settings. Markers survive redraws and reopening, and follow ordinary MOVE, STRETCH and ERASE commands with Undo/Redo. Stitches update only when you Generate. Changes made through Properties, automation or another LISP routine refresh markers when the line is selected again.
+The original sources remain authoritative and stay outside the stitch blocks. Editing aids are saved, nonplotting blocks on `AUTOSTITCH_UI`: compact `S` (start), `E` (end), `J` (junction), and a heavy transverse bar with `L#` (landmark). Point picking enables endpoint, midpoint, intersection, centre and node snaps alongside your existing snap choices, then restores your exact previous settings. Markers survive redraws and reopening, and follow ordinary MOVE, STRETCH and ERASE commands with Undo/Redo. Stitches update only when you Generate. Changes made through Properties, automation or another LISP routine refresh markers when the line is selected again.
 
 A picked point is projected onto the nearest position on the stitch guide. Landmark and range picks attach there at a fixed physical distance along the source segment. This records a location, not a live link to the other pattern object: if that object moves independently, re-pick the landmark. Changed polyline topology can require clearing or re-picking them. **Remove** offers **ClearAll** when correspondence is invalid; reset or re-pick affected ranges. For a connection whose attachment changed or disappeared, disconnect the affected line, then connect it again.
 
@@ -46,9 +46,9 @@ Within one drawing, copy all connected source lines and their output together to
 
 ## Tool assumptions
 
-**Show stitches** adds a schematic thread view between slit tips and round holes. It starts off; slits remain visible. **Spacing notes** starts on and marks each run of adjusted gaps with a bracket and its actual centre spacing, for example `2 x 3.25 mm / AWL`. This means two changed gaps; place those holes individually instead of using the nominal-pitch iron across them. Both bounding slits are amber, even when notes are hidden. Corner-hole distances follow the junction construction and are not labelled as pitch corrections.
+**Show stitches** adds a schematic thread view between slit tips and round holes. It starts off; slits remain visible. **Spacing marks** starts on and puts monochrome chevrons at both tips of each slit bordering adjusted spacing. Use individual placement at those marks. Derived corner-hole distances are not ordinary pitch corrections.
 
-These controls apply to the drawing and support Undo/Redo. Thread lines are nonplotting on `AUTOSTITCH_STITCHES`; spacing instructions print on `AUTOSTITCH_NOTES`; physical slits and holes stay on `AUTOSTITCH`. All remain inside the generated block. Older output needs **Generate stitches** once to add these displays. Nominal spacing on a curve is not a guarantee that a rigid multi-tooth iron will fit.
+Both controls apply to the drawing and support Undo/Redo. Thread lines are nonplotting on `AUTOSTITCH_STITCHES`; chevrons print on `AUTOSTITCH_NOTES`; actual slit and hole geometry stays on `AUTOSTITCH`. Chevrons are notation only. Older output needs **Generate stitches** once to replace its orange/bracket notation. Nominal spacing on a curve does not guarantee a rigid multi-tooth iron will fit.
 
 The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated: **Physical clearance unverified** remains visible. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
 

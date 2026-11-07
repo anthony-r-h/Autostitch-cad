@@ -184,7 +184,7 @@
         (progn
           (setq message (if (= key 'stitches)
             (if (= value 1) "Stitches shown in this drawing." "Stitches hidden; slit and round holes remain visible.")
-            (if (= value 1) "Spacing notes shown. Amber slits mark changed spacing." "Spacing notes hidden; changed-spacing slits remain amber.")))
+            (if (= value 1) "Chevrons mark slits beside adjusted spacing." "Spacing marks hidden.")))
           (if (and astui:*guide* (entget astui:*guide*))
             (progn
               (setq state (ast:cad-read astui:*guide*))

@@ -17,8 +17,14 @@ foreach ($candidate in $stitchApp.Documents) {
   }
 }
 if ($null -eq $stitchDocument) { throw "Open the test drawing under output/native first: $DrawingName" }
+if (-not $stitchApp.GetAcadState().IsQuiescent -or
+    $stitchApp.ActiveDocument.GetVariable('CMDNAMES') -ne '' -or
+    $stitchApp.ActiveDocument.GetVariable('CMDACTIVE') -ne 0) {
+  throw 'BricsCAD has an active command or point pick; no drawing was activated and no input was sent.'
+}
 $stitchDocument.Activate()
-if ($stitchDocument.GetVariable('CMDNAMES') -ne '' -or -not $stitchApp.GetAcadState().IsQuiescent) {
+if ($stitchDocument.GetVariable('CMDNAMES') -ne '' -or
+    $stitchDocument.GetVariable('CMDACTIVE') -ne 0 -or -not $stitchApp.GetAcadState().IsQuiescent) {
   throw 'The test drawing has an active command or point pick; no input was sent.'
 }
 $stitchLispPath = $stitchScript.Replace('\', '/').Replace('"', '\"')

@@ -1,0 +1,6229 @@
+{
+  "version": 1,
+  "units": "mm",
+  "notes": [
+    "This file is the test-discovery and documentation catalog. Native geometry inputs below are consumed by build-gallery-parity.mjs. Procedural CAD tests remain executable LISP; their source references and assertions are indexed here, not reimplemented.",
+    "Case IDs are stable. Add new IDs; do not renumber existing entries. Assertion IDs identify one assertion site, which may execute across a parameter matrix.",
+    "SVG-ready cases have explicit native route/settings/landmarks variants. Historical expected geometry is frozen data, not a second solver."
+  ],
+  "pitches": [
+    2.7,
+    3,
+    3.38,
+    3.85
+  ],
+  "geometry": [
+    {
+      "id": "S01",
+      "title": "Exact straight run",
+      "description": "Do the two fixed endpoint centres fit at nominal pitch?",
+      "group": "Straight runs",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "straight"
+    },
+    {
+      "id": "S02",
+      "title": "Minimum spacing adjustments",
+      "description": "Reach the fixed end with the fewest adjusted intervals; centre the correction block.",
+      "group": "Straight runs",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.5,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.5,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.5,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.5,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "straight"
+    },
+    {
+      "id": "S04",
+      "title": "Protected final interval",
+      "description": "Keep the final interval nominal and place corrections as centrally as the remaining intervals allow.",
+      "group": "Straight runs",
+      "svg": true,
+      "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.3,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 28.95
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.3,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 28.8
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.3,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 28.61
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30.3,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 28.375
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
+        }
+      ],
+      "kind": "straight"
+    },
+    {
+      "id": "F01",
+      "title": "Naturally centred landmark",
+      "description": "Does a compatible landmark preserve the ordinary phase on both sides?",
+      "group": "Interior landmarks",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.5
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.5
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.5
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.5
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "fixed-gap"
+    },
+    {
+      "id": "F02",
+      "title": "Landmark requires local corrections",
+      "description": "Can the approach and remainder reach their targets while the centred interval stays nominal?",
+      "group": "Interior landmarks",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "fixed-gap"
+    },
+    {
+      "id": "F03",
+      "title": "Two landmarks",
+      "description": "Fit each span while retaining both nominal landmark intervals.",
+      "group": "Interior landmarks",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  45,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            },
+            {
+              "primitive": 0,
+              "station": 31.75
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  45,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            },
+            {
+              "primitive": 0,
+              "station": 31.75
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  45,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            },
+            {
+              "primitive": 0,
+              "station": 31.75
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  45,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 16.25
+            },
+            {
+              "primitive": 0,
+              "station": 31.75
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "fixed-gap"
+    },
+    {
+      "id": "F05",
+      "title": "No fit between two landmark pairs",
+      "description": "Does an inadmissible middle span stop construction without changing the accepted first landmark?",
+      "group": "Interior landmarks",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 10
+            },
+            {
+              "primitive": 0,
+              "station": 20
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 10
+            },
+            {
+              "primitive": 0,
+              "station": 20
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 10
+            },
+            {
+              "primitive": 0,
+              "station": 20
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  30,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 10
+            },
+            {
+              "primitive": 0,
+              "station": 20
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "fixed-gap"
+    },
+    {
+      "id": "J01",
+      "title": "Straight continuation shares one slit",
+      "description": "Do coincident terminal slits become one real slit on a fixed straight guide?",
+      "group": "Junctions",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  10,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 1.8999999999999986,
+            "end": 18.1
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  10,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 1,
+            "end": 19
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  10,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 3.2400000000000007,
+            "end": 16.759999999999998
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  10,
+                  0
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 2.3,
+            "end": 17.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        }
+      ],
+      "kind": "continuation"
+    },
+    {
+      "id": "J02",
+      "title": "90° corner",
+      "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
+      "group": "Corner angles",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 0.25662403960413727,
+            "end": 18.007557374925675
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 2.056624039604138,
+            "end": 18.907557374925673
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 0.9166240396041374,
+            "end": 16.66755737492567
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 3.356624039604138,
+            "end": 17.60755737492567
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        }
+      ],
+      "kind": "corner"
+    },
+    {
+      "id": "J03",
+      "title": "135° corner",
+      "description": "Does the same direct construction fit the supplied wider corner?",
+      "group": "Corner angles",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.0710678118654755,
+                  -7.071067811865475
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 0.9384032561122027,
+            "end": 18.689336591433737
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.0710678118654755,
+                  -7.071067811865475
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 2.7384032561122034,
+            "end": 19.589336591433735
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.0710678118654755,
+                  -7.071067811865475
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 1.5984032561122028,
+            "end": 17.349336591433737
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.0710678118654755,
+                  -7.071067811865475
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 0.18840325611220266,
+            "end": 18.289336591433738
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        }
+      ],
+      "kind": "corner"
+    },
+    {
+      "id": "J04",
+      "title": "45° corner",
+      "description": "Does the same direct construction fit the supplied tighter corner?",
+      "group": "Corner angles",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  -7.071067811865475,
+                  -7.0710678118654755
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 2.6742218415823933,
+            "end": 17.72515517690393
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  -7.071067811865475,
+                  -7.0710678118654755
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 1.7742218415823938,
+            "end": 18.625155176903927
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  -7.071067811865475,
+                  -7.0710678118654755
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 0.6342218415823933,
+            "end": 19.765155176903928
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -10,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  -7.071067811865475,
+                  -7.0710678118654755
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 3.0742218415823945,
+            "end": 17.325155176903927
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        }
+      ],
+      "kind": "corner"
+    },
+    {
+      "id": "J05",
+      "title": "Incoming arm is too short",
+      "description": "Does the rule reject a corner whose required incoming neighbour lies outside the one-millimetre arm?",
+      "group": "Junctions",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -1,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -1,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -1,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -1,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "corner"
+    },
+    {
+      "id": "J06",
+      "title": "Ordered spans use actual corner anchors",
+      "description": "Can a reserved corner determine both approach and exit targets while earlier geometry remains fixed?",
+      "group": "Junctions",
+      "svg": true,
+      "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  1.83697019872103e-15,
+                  -30
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 27.006624039604137
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  1.83697019872103e-15,
+                  -30
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 26.556624039604138
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  1.83697019872103e-15,
+                  -30
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 25.986624039604138
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  1.83697019872103e-15,
+                  -30
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 25.281624039604136
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+        }
+      ],
+      "kind": "ordered-corner"
+    },
+    {
+      "id": "N01",
+      "title": "Pocket edge close to a corner",
+      "description": "Can the pocket-edge crossing and the nearby corner both keep their required holes?",
+      "group": "Junctions",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -26,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.347880794884119e-16,
+                  -12
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 19.5
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -26,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.347880794884119e-16,
+                  -12
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 19.5
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -26,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.347880794884119e-16,
+                  -12
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 19.5
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -26,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  7.347880794884119e-16,
+                  -12
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 19.5
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "near-corner"
+    },
+    {
+      "id": "A01",
+      "title": "Arc with both endpoint centres fixed",
+      "description": "Can chord-pitch corrections reach the exact arc endpoint?",
+      "group": "Curves",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "arc"
+    },
+    {
+      "id": "A02",
+      "title": "Arc with a protected centred interval",
+      "description": "Can ordered fits reach the two sides of a fixed centred chord and the fixed arc end?",
+      "group": "Curves",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 7.853981633974483
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 7.853981633974483
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 7.853981633974483
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 7.853981633974483
+            }
+          ],
+          "expected": {
+            "feasible": false,
+            "historicalStatus": "invalid",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "arc-gap"
+    },
+    {
+      "id": "A03",
+      "title": "Arc-to-line corner",
+      "description": "Construct the round hole from selected virtual slit tips; compare the retired shared-endpoint rule explicitly.",
+      "group": "Curves",
+      "svg": true,
+      "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 2.3471677639726396,
+            "end": 18.571975511965977
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 1.4378791453648132,
+            "end": 19.471975511965976
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 0.2830763028028249,
+            "end": 17.231975511965977
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  6.123233995736766e-16,
+                  -10
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 2.7236090429508053,
+            "end": 18.171975511965975
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        }
+      ],
+      "kind": "curved-junction"
+    },
+    {
+      "id": "A04",
+      "title": "Arc-to-arc corner",
+      "description": "Construct the round hole from selected virtual slit tips on both arcs; compare the retired shared-endpoint rule explicitly.",
+      "group": "Curves",
+      "svg": true,
+      "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -8,
+                  -4.898587196589413e-16
+                ],
+                "radius": 8,
+                "start-angle": 0,
+                "sweep": -1.0471975511965976
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 2.3471677639726396,
+            "end": 18.610920017518744
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -8,
+                  -4.898587196589413e-16
+                ],
+                "radius": 8,
+                "start-angle": 0,
+                "sweep": -1.0471975511965976
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 1.4378791453648132,
+            "end": 16.507699869578907
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -8,
+                  -4.898587196589413e-16
+                ],
+                "radius": 8,
+                "start-angle": 0,
+                "sweep": -1.0471975511965976
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 0.2830763028028249,
+            "end": 17.2832921416953
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 2.617993877991494,
+                "sweep": -1.0471975511965976
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -8,
+                  -4.898587196589413e-16
+                ],
+                "radius": 8,
+                "start-angle": 0,
+                "sweep": -1.0471975511965976
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 2.7236090429508053,
+            "end": 18.248286527584995
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "changed corner rule"
+          },
+          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+        }
+      ],
+      "kind": "curved-junction"
+    },
+    {
+      "id": "A05",
+      "title": "Straight into a curve",
+      "description": "With one slit fixed at the smooth join and free outer margins, does nominal spacing continue from the line into the arc?",
+      "group": "Curves",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -18,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7,
+            "start": 1.7999999999999972,
+            "end": 31.541346246655554
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -18,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3,
+            "start": 0,
+            "end": 33.0568272776686
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -18,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38,
+            "start": 1.1000000000000014,
+            "end": 31.585198945550868
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -18,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  -10
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -1.5707963267948966
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85,
+            "start": 2.5999999999999996,
+            "end": 33.49673293803034
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+        }
+      ],
+      "kind": "line-arc"
+    },
+    {
+      "id": "L01",
+      "title": "Exact closure after a committed prefix",
+      "description": "Can the remaining tail close a twenty-opening circle without revising its committed prefix?",
+      "group": "Closed loops",
+      "svg": true,
+      "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 9.588679832249491,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.3545002335234995
+            },
+            {
+              "primitive": 0,
+              "station": 4.063500700570499
+            },
+            {
+              "primitive": 0,
+              "station": 6.772501167617497
+            },
+            {
+              "primitive": 0,
+              "station": 9.481501634664497
+            },
+            {
+              "primitive": 0,
+              "station": 12.190502101711495
+            },
+            {
+              "primitive": 0,
+              "station": 14.899502568758495
+            },
+            {
+              "primitive": 0,
+              "station": 17.608503035805494
+            },
+            {
+              "primitive": 0,
+              "station": 20.317503502852492
+            },
+            {
+              "primitive": 0,
+              "station": 23.02650396989949
+            },
+            {
+              "primitive": 0,
+              "station": 25.73550443694649
+            },
+            {
+              "primitive": 0,
+              "station": 28.44450490399349
+            },
+            {
+              "primitive": 0,
+              "station": 31.153505371040488
+            },
+            {
+              "primitive": 0,
+              "station": 33.862505838087486
+            },
+            {
+              "primitive": 0,
+              "station": 36.571506305134484
+            },
+            {
+              "primitive": 0,
+              "station": 58.89295200371572
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 9.588679832249491,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.5061863059309806
+            },
+            {
+              "primitive": 0,
+              "station": 4.518558917792942
+            },
+            {
+              "primitive": 0,
+              "station": 7.530931529654903
+            },
+            {
+              "primitive": 0,
+              "station": 10.543304141516863
+            },
+            {
+              "primitive": 0,
+              "station": 13.555676753378826
+            },
+            {
+              "primitive": 0,
+              "station": 16.568049365240785
+            },
+            {
+              "primitive": 0,
+              "station": 19.58042197710275
+            },
+            {
+              "primitive": 0,
+              "station": 22.592794588964708
+            },
+            {
+              "primitive": 0,
+              "station": 25.60516720082667
+            },
+            {
+              "primitive": 0,
+              "station": 28.61753981268863
+            },
+            {
+              "primitive": 0,
+              "station": 31.629912424550593
+            },
+            {
+              "primitive": 0,
+              "station": 34.64228503641255
+            },
+            {
+              "primitive": 0,
+              "station": 37.654657648274515
+            },
+            {
+              "primitive": 0,
+              "station": 58.74126593130824
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "exact",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 9.588679832249491,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.6988742808139181
+            },
+            {
+              "primitive": 0,
+              "station": 5.096622842441755
+            },
+            {
+              "primitive": 0,
+              "station": 8.494371404069591
+            },
+            {
+              "primitive": 0,
+              "station": 11.892119965697427
+            },
+            {
+              "primitive": 0,
+              "station": 15.289868527325263
+            },
+            {
+              "primitive": 0,
+              "station": 18.6876170889531
+            },
+            {
+              "primitive": 0,
+              "station": 22.085365650580936
+            },
+            {
+              "primitive": 0,
+              "station": 25.483114212208772
+            },
+            {
+              "primitive": 0,
+              "station": 28.880862773836608
+            },
+            {
+              "primitive": 0,
+              "station": 32.27861133546445
+            },
+            {
+              "primitive": 0,
+              "station": 35.67635989709228
+            },
+            {
+              "primitive": 0,
+              "station": 58.548577956425305
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 9.588679832249491,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.9381710432199883
+            },
+            {
+              "primitive": 0,
+              "station": 5.814513129659965
+            },
+            {
+              "primitive": 0,
+              "station": 9.690855216099942
+            },
+            {
+              "primitive": 0,
+              "station": 13.567197302539919
+            },
+            {
+              "primitive": 0,
+              "station": 17.443539388979897
+            },
+            {
+              "primitive": 0,
+              "station": 21.319881475419873
+            },
+            {
+              "primitive": 0,
+              "station": 25.19622356185985
+            },
+            {
+              "primitive": 0,
+              "station": 29.072565648299825
+            },
+            {
+              "primitive": 0,
+              "station": 32.948907734739805
+            },
+            {
+              "primitive": 0,
+              "station": 36.82524982117978
+            },
+            {
+              "primitive": 0,
+              "station": 58.309281194019235
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        }
+      ],
+      "kind": "circle"
+    },
+    {
+      "id": "L02",
+      "title": "Closure corrections before a protected last chord",
+      "description": "Can the remaining tail close while preserving the committed prefix and final nominal chord?",
+      "group": "Closed loops",
+      "svg": true,
+      "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.3541346246655555
+            },
+            {
+              "primitive": 0,
+              "station": 4.062403873996667
+            },
+            {
+              "primitive": 0,
+              "station": 6.770673123327777
+            },
+            {
+              "primitive": 0,
+              "station": 9.478942372658889
+            },
+            {
+              "primitive": 0,
+              "station": 12.187211621989999
+            },
+            {
+              "primitive": 0,
+              "station": 14.89548087132111
+            },
+            {
+              "primitive": 0,
+              "station": 17.603750120652222
+            },
+            {
+              "primitive": 0,
+              "station": 20.312019369983332
+            },
+            {
+              "primitive": 0,
+              "station": 23.020288619314442
+            },
+            {
+              "primitive": 0,
+              "station": 25.728557868645552
+            },
+            {
+              "primitive": 0,
+              "station": 28.436827117976666
+            },
+            {
+              "primitive": 0,
+              "station": 31.145096367307776
+            },
+            {
+              "primitive": 0,
+              "station": 33.85336561663889
+            },
+            {
+              "primitive": 0,
+              "station": 36.56163486597
+            },
+            {
+              "primitive": 0,
+              "station": 39.26990411530111
+            },
+            {
+              "primitive": 0,
+              "station": 61.47771844713031
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.5056827277668603
+            },
+            {
+              "primitive": 0,
+              "station": 4.517048183300581
+            },
+            {
+              "primitive": 0,
+              "station": 7.5284136388343015
+            },
+            {
+              "primitive": 0,
+              "station": 10.539779094368022
+            },
+            {
+              "primitive": 0,
+              "station": 13.551144549901743
+            },
+            {
+              "primitive": 0,
+              "station": 16.562510005435463
+            },
+            {
+              "primitive": 0,
+              "station": 19.573875460969184
+            },
+            {
+              "primitive": 0,
+              "station": 22.585240916502904
+            },
+            {
+              "primitive": 0,
+              "station": 25.596606372036625
+            },
+            {
+              "primitive": 0,
+              "station": 28.607971827570346
+            },
+            {
+              "primitive": 0,
+              "station": 31.619337283104066
+            },
+            {
+              "primitive": 0,
+              "station": 34.63070273863779
+            },
+            {
+              "primitive": 0,
+              "station": 37.64206819417151
+            },
+            {
+              "primitive": 0,
+              "station": 61.326170344029
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.6981498681938585
+            },
+            {
+              "primitive": 0,
+              "station": 5.094449604581575
+            },
+            {
+              "primitive": 0,
+              "station": 8.490749340969293
+            },
+            {
+              "primitive": 0,
+              "station": 11.887049077357009
+            },
+            {
+              "primitive": 0,
+              "station": 15.283348813744727
+            },
+            {
+              "primitive": 0,
+              "station": 18.679648550132445
+            },
+            {
+              "primitive": 0,
+              "station": 22.07594828652016
+            },
+            {
+              "primitive": 0,
+              "station": 25.472248022907877
+            },
+            {
+              "primitive": 0,
+              "station": 28.868547759295595
+            },
+            {
+              "primitive": 0,
+              "station": 32.26484749568331
+            },
+            {
+              "primitive": 0,
+              "station": 35.66114723207103
+            },
+            {
+              "primitive": 0,
+              "station": 39.05744696845875
+            },
+            {
+              "primitive": 0,
+              "station": 61.133703203602
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 10,
+                "start-angle": 1.5707963267948966,
+                "sweep": -6.283185307179586
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [
+            {
+              "primitive": 0,
+              "station": 1.9370916172537924
+            },
+            {
+              "primitive": 0,
+              "station": 5.811274851761377
+            },
+            {
+              "primitive": 0,
+              "station": 9.685458086268962
+            },
+            {
+              "primitive": 0,
+              "station": 13.559641320776548
+            },
+            {
+              "primitive": 0,
+              "station": 17.433824555284133
+            },
+            {
+              "primitive": 0,
+              "station": 21.308007789791716
+            },
+            {
+              "primitive": 0,
+              "station": 25.1821910242993
+            },
+            {
+              "primitive": 0,
+              "station": 29.056374258806887
+            },
+            {
+              "primitive": 0,
+              "station": 32.930557493314474
+            },
+            {
+              "primitive": 0,
+              "station": 36.80474072782206
+            },
+            {
+              "primitive": 0,
+              "station": 60.89476145454207
+            }
+          ],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "equivalent constraints"
+          },
+          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+        }
+      ],
+      "kind": "circle"
+    },
+    {
+      "id": "R01",
+      "title": "Closed rectangle",
+      "description": "Does the last side return to the starting corner without moving earlier holes?",
+      "group": "Closed loops",
+      "svg": true,
+      "notes": "Same guide, endpoints, and landmarks.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  0
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  0
+                ],
+                "b": [
+                  31.5,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  31.5,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  -22.5
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  -22.5
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              }
+            ],
+            "closed": true
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "historicalStatus": "adjusted",
+            "comparison": "direct"
+          },
+          "notes": "Same guide, endpoints, and landmarks."
+        }
+      ],
+      "kind": "rectangle"
+    }
+  ],
+  "oracle": {
+    "id": "FIT-ORACLE",
+    "title": "Central correction selection against exhaustive enumeration",
+    "source": "tests/fit-oracle.mjs",
+    "nativeSource": "tests/build-native-oracle.mjs",
+    "expected": "Selected interval count, correction count, central block start and corrected pitch agree; infeasible spans reject.",
+    "pitches": [
+      2.7,
+      3,
+      3.38,
+      3.85
+    ],
+    "native": {
+      "lengths": [
+        0.01,
+        2.7,
+        3,
+        3.3,
+        6.3,
+        7,
+        12.73,
+        30.3,
+        30.5,
+        31.5,
+        67.19,
+        120.49
+      ],
+      "protections": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "radii": [
+        "p/2",
+        "p/2+0.01",
+        2.5,
+        10,
+        100
+      ],
+      "sweeps": [
+        0.13,
+        -0.57,
+        1.5707963267948966,
+        3.141592653589793,
+        -6.283185307179586
+      ],
+      "arcProtections": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "exhaustive": {
+      "lengthStep": 0.3,
+      "lengthCount": 300,
+      "protections": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "radii": [
+        1.35,
+        1.5,
+        2,
+        3,
+        10,
+        30
+      ],
+      "sweeps": [
+        0.1,
+        0.5,
+        1,
+        1.5707963267948966,
+        3.141592653589793,
+        4.71238898038469,
+        6.283185307179586
+      ],
+      "examples": [
+        {
+          "D": 31.5,
+          "p": 3
+        },
+        {
+          "D": 30.3,
+          "p": 3
+        },
+        {
+          "D": 6.3,
+          "p": 3,
+          "end": 1
+        },
+        {
+          "D": 30.5,
+          "p": 3
+        },
+        {
+          "D": 31,
+          "p": 3
+        },
+        {
+          "R": 10,
+          "sweep": 1.5707963267948966,
+          "p": 3
+        },
+        {
+          "R": 10,
+          "sweep": 6.283185307179586,
+          "p": 3,
+          "end": 1
+        }
+      ]
+    }
+  },
+  "nativeLoads": [
+    "source/autostitch-geometry.lsp",
+    "source/autostitch-network.lsp",
+    "source/autostitch-cad.lsp",
+    "source/autostitch-markers.lsp",
+    "tests/autostitch-geometry-tests.lsp",
+    "tests/autostitch-network-tests.lsp",
+    "tests/autostitch-cad-tests.lsp",
+    "tests/autostitch-connected-tests.lsp",
+    "tests/autostitch-marker-tests.lsp",
+    "tests/autostitch-host-tests.lsp",
+    "tests/autostitch-display-tests.lsp"
+  ],
+  "suites": [
+    {
+      "id": "GEO",
+      "title": "Geometry and corner matrices",
+      "source": "tests/autostitch-geometry-tests.lsp",
+      "entrypoint": "ast:g-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Pure solver; no drawing changes.",
+      "recipe": "Evaluate straight and circular fits; mirrored straight/curved corners; rotations/translations; landmarks; loops; collision guards.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "GEO-001",
+          "expected": "accepted (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" accepted\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-002",
+          "expected": "closed-form hole (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" closed-form hole\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-003",
+          "expected": "nominal virtual-to-real neighbours (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" nominal virtual-to-real neighbours\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-004",
+          "expected": "accepted (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" accepted\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-005",
+          "expected": "finite arms (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" finite arms\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-006",
+          "expected": "direct chord pitch (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" direct chord pitch\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-007",
+          "expected": "independently reconstructed selected tips (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" independently reconstructed selected tips\"}]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-008",
+          "expected": "full route ending at reserved neighbours: (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" full route ending at reserved neighbours: \"},[\"ast:g-get\",\"'error\",\"result\",{\"text\":\"\"}]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-009",
+          "expected": "reversed route preserves physical openings: (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" reversed route preserves physical openings: \"},[\"ast:g-get\",\"'error\",\"reversed-result\",{\"text\":\"\"}]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-010",
+          "expected": "R3 same winding 45 degree turn admits local corner",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-011",
+          "expected": "R3 opposite winding same 45 degree turn rejects disjoint loci",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-012",
+          "expected": "R3 same winding 135 degree turn rejects crossing real slit axes",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-013",
+          "expected": "clearance or reversal rejects turn (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"clearance or reversal rejects turn \"},[\"itoa\",\"degrees\"]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-014",
+          "expected": "20.435 degree included angle clears 0.4 mm: (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"20.435 degree included angle clears 0.4 mm: \"},[\"rtos\",\"degrees\",\"2\",\"3\"]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-015",
+          "expected": "20.434 degree included angle fails 0.4 mm: (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"20.434 degree included angle fails 0.4 mm: \"},[\"rtos\",\"degrees\",\"2\",\"3\"]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-016",
+          "expected": "shallow turn neighbour leaves arm: (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"shallow turn neighbour leaves arm: \"},[\"rtos\",\"degrees\",\"2\",\"4\"]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-017",
+          "expected": "shallow turn neighbour fits arm: (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"shallow turn neighbour fits arm: \"},[\"rtos\",\"degrees\",\"2\",\"4\"]]",
+          "sourceSymbol": "ast:g-test-corner-matrix"
+        },
+        {
+          "id": "GEO-018",
+          "expected": "baseline (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" baseline\"}]",
+          "sourceSymbol": "ast:g-test-corner-transforms"
+        },
+        {
+          "id": "GEO-019",
+          "expected": "moved  : (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" moved \"},[\"vl-princ-to-string\",\"offset\"],{\"text\":\": \"},[\"ast:g-get\",\"'error\",\"result\",{\"text\":\"\"}]]",
+          "sourceSymbol": "ast:g-test-corner-transforms"
+        },
+        {
+          "id": "GEO-020",
+          "expected": "transformed centres/types/axes (each parameter combination)",
+          "labelExpression": "[\"strcat\",\"label\",{\"text\":\" transformed centres/types/axes \"},[\"vl-princ-to-string\",\"offset\"]]",
+          "sourceSymbol": "ast:g-test-corner-transforms"
+        },
+        {
+          "id": "GEO-021",
+          "expected": "arithmetic-near anchors reuse one opening without interval",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-022",
+          "expected": "genuinely positive 1e-8 span is not collapsed into one opening",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-023",
+          "expected": "translated genuinely positive 1e-8 span still rejects at world offset1000",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-024",
+          "expected": "adjacent landmark gaps share one opening and both retain nominal pitch",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-025",
+          "expected": "30.5 central two gaps",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-026",
+          "expected": "31.5 symmetric count tie",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-027",
+          "expected": "half index tie toward end",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-028",
+          "expected": "protected final gap",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-029",
+          "expected": "infeasible seven",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-030",
+          "expected": "disabled corrections",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-031",
+          "expected": "line eleven openings",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-032",
+          "expected": "landmark centred nominal gap",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-033",
+          "expected": "finite footprint replaces length-only guard",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-034",
+          "expected": "quarter circle chord fit",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-035",
+          "expected": "redundant line vertex normalized",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-036",
+          "expected": "reverse with fixed native landmark",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-037",
+          "expected": "sharp ninety degree line corner",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-038",
+          "expected": "ordered sharp route emits one round hole",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-039",
+          "expected": "open sharp route interval identity",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-040",
+          "expected": "circle closure reuses first identity",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-041",
+          "expected": "circle picked phase",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-042",
+          "expected": "native start end trim",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-043",
+          "expected": "self crossing rejected",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-044",
+          "expected": "A03 reflected independent tip locus fixture",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-045",
+          "expected": "arc arc local corner winding and turn matrix",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-046",
+          "expected": "arc arc recovered virtual tips agree",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-047",
+          "expected": "inadmissible nearest root never replaced by farther root",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-048",
+          "expected": "principal root never rescued by extra revolution",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-049",
+          "expected": "smooth curvature join shares exactly one slit",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-050",
+          "expected": "landmark straddling curvature join rejected",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-051",
+          "expected": "closed polygon has four unique sharp holes",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-052",
+          "expected": "closed sharp route interval identity",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-053",
+          "expected": "closed multi primitive phase cuts original edge",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-054",
+          "expected": "multi primitive global start end trim",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-055",
+          "expected": "separated capsule boxes prove clearance",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-056",
+          "expected": "touching capsule boxes retain exact contact rejection",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-057",
+          "expected": "box prefilter preserves near contact arithmetic rejection",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-058",
+          "expected": "crossing axes never skipped by boxes",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-059",
+          "expected": "disk capsule touching remains rejected",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-060",
+          "expected": "exact positive margin uses exact accepted distance",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-061",
+          "expected": "touching disk boxes retain exact rejection",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-062",
+          "expected": "selected fit above bounded interval limit refuses",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-063",
+          "expected": "2001 opening seam explicitly refuses without truncation",
+          "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-064",
+          "expected": "2000 opening inclusive seam limit",
+          "sourceSymbol": "ast:g-tests"
+        }
+      ],
+      "matrices": [
+        {
+          "id": "GEO-LINE-CORNERS",
+          "sourceSymbol": "ast:g-test-corner-matrix",
+          "pitches": [
+            2.7,
+            3,
+            3.38,
+            3.85
+          ],
+          "handedness": [
+            -1,
+            1
+          ],
+          "turnDegrees": [
+            -150,
+            -135,
+            -120,
+            -90,
+            -60,
+            -45,
+            -30,
+            30,
+            45,
+            60,
+            90,
+            120,
+            135,
+            150
+          ],
+          "armLengths": [
+            30,
+            30
+          ],
+          "expected": "Hole position agrees with the independent closed form; virtual-to-real neighbours retain nominal pitch."
+        },
+        {
+          "id": "GEO-CURVED-CORNERS",
+          "sourceSymbol": "ast:g-test-corner-matrix",
+          "pitch": 3,
+          "turnDegrees": [
+            -135,
+            -90,
+            -45,
+            45,
+            90,
+            135
+          ],
+          "incomingRadii": [
+            0,
+            10
+          ],
+          "outgoingRadii": [
+            0,
+            8
+          ],
+          "winding": [
+            -1,
+            1
+          ],
+          "notes": "Radius zero means a line; omit line-line pairs, use winding +1 for a line. Lines are 10 mm long; arc extent is 60 degrees. Test width and margin are each 0.2 mm.",
+          "expected": "Selected virtual tips coincide, neighbouring slit chords are nominal, neighbours lie on finite arms, and reversal preserves physical openings."
+        }
+      ]
+    },
+    {
+      "id": "NET",
+      "title": "Connected geometry",
+      "source": "tests/autostitch-network-tests.lsp",
+      "entrypoint": "ast:n-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Pure solver; no drawing changes.",
+      "recipe": "Build explicit connected paths: continuation, T, X, multiple crossings, loops, mixed pitch, landmarks and disconnected geometry.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "NET-001",
+          "expected": "T finite intersection has two source incidences",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-002",
+          "expected": "T emits one shared hole and twelve ordinary slits",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-003",
+          "expected": "undeclared crossing requires Connect",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-004",
+          "expected": "X emits one shared hole and sixteen ordinary slits",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-005",
+          "expected": "separate endpoint LINEs equal ordered polyline corner",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-006",
+          "expected": "two-arm corner respects separate incoming and outgoing pitch",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-007",
+          "expected": "independent collinear subdivisions do not impose false phase",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-008",
+          "expected": "positive-length overlap is rejected",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-009",
+          "expected": "branch arms may retain different nominal pitches",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-010",
+          "expected": "incompatible physical hole profiles reject",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-011",
+          "expected": "shared-hole versus centred-gap conflict rejects",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-012",
+          "expected": "range cannot silently discard connected intersection",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-013",
+          "expected": "reverse range retains source intersection attachment",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-014",
+          "expected": "two branch nodes with   mm edge (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"two branch nodes with \"},[\"rtos\",\"edge\",\"2\",\"0\"],{\"text\":\" mm edge\"}]",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-015",
+          "expected": "circle endpoint-line T supports curved arms",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-016",
+          "expected": "circle phase does not introduce a second physical anchor",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-017",
+          "expected": "curved branch first gaps are exact three-millimetre chords",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-018",
+          "expected": "line circle enumerates both finite intersections",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-019",
+          "expected": "saved intersection follows provable common move",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-020",
+          "expected": "radius edit retains selected analytic root side",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-021",
+          "expected": "second undeclared circle crossing is not silently coordinated",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-022",
+          "expected": "two declared circle intersections share two holes",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-023",
+          "expected": "topology changes request an explicit repick",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-024",
+          "expected": "native line reversal retains same physical chosen root",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-025",
+          "expected": "common motion wins over an old-world-point coincidence",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-026",
+          "expected": "three co-located declarations reuse one physical hole",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-027",
+          "expected": "member enumeration order does not change T geometry",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-028",
+          "expected": "polyline corner plus third branch equals three separate arms",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-029",
+          "expected": "arc endpoint to circle interior T",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-030",
+          "expected": "two circle-circle X nodes",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-031",
+          "expected": "one full-circle traversal reversal preserves physical root",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-032",
+          "expected": "symmetric circle reversal cannot silently become a reflected root",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-033",
+          "expected": "translated symmetric reversal still requires explicit attachment repair",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-034",
+          "expected": "line reversal plus radius edit preserves selected positive or negative root",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-035",
+          "expected": "first invalid candidate route preserves diagnostic string",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-036",
+          "expected": "second invalid candidate route preserves diagnostic string",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-037",
+          "expected": "invalid physical profile preserves diagnostic string",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-038",
+          "expected": "invalid prepared route preserves diagnostic string",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-039",
+          "expected": "circle-first incidence order preserves reversed-line edited-radius root",
+          "sourceSymbol": "ast:n-tests"
+        }
+      ]
+    },
+    {
+      "id": "CAD",
+      "title": "Generate and replace output",
+      "source": "tests/autostitch-cad-tests.lsp",
+      "entrypoint": "ast:cad-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Generate a 30 mm line; edit length; regenerate; change declared units; inject write failures and verify rollback.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "CAD-001",
+          "expected": "Generate 30 mm LINE",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-002",
+          "expected": "Eleven real slits in generated block",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-003",
+          "expected": "Exactly one output reference",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-004",
+          "expected": "Output resolves reciprocal source",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-005",
+          "expected": "Fresh generation is current",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-006",
+          "expected": "Changing declared drawing units retains the saved seam conversion",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-007",
+          "expected": "New picks on an existing seam use its saved physical units",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-008",
+          "expected": "Regeneration after INSUNITS change preserves opening spacing and count",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-009",
+          "expected": "Source edit marks output stale",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-010",
+          "expected": "Regenerate replaces only reference definition",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-011",
+          "expected": "Failure reported at (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Failure reported at \"},\"stage\"]",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-012",
+          "expected": "Failure rolls back geometry and metadata at (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Failure rolls back geometry and metadata at \"},\"stage\"]",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-013",
+          "expected": "Moved output requires explicit repair",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-014",
+          "expected": "Generate fixed-station landmark",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-015",
+          "expected": "Stretch retains fixed physical landmark station",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-016",
+          "expected": "Shortening below landmark retains previous complete output",
+          "sourceSymbol": "ast:cad-tests"
+        },
+        {
+          "id": "CAD-017",
+          "expected": "Writer restores CMDECHO",
+          "sourceSymbol": "ast:cad-tests"
+        }
+      ]
+    },
+    {
+      "id": "LIFE",
+      "title": "Saved ownership and copying",
+      "source": "tests/autostitch-cad-tests.lsp",
+      "entrypoint": "ast:cad-lifecycle-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Copy guides and blocks, alter saved links/output, change units and verify only the owned output can be replaced.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "LIFE-001",
+          "expected": "Lifecycle fixture generated",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-002",
+          "expected": "Common translation remains current",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-003",
+          "expected": "Generate after common move restores canonical output placement",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-004",
+          "expected": "Common quarter-turn remains current",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-005",
+          "expected": "Output-only copy is static and cannot edit original",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-006",
+          "expected": "Guide-only copy cannot inherit original output",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-007",
+          "expected": "Copied guide creates independent output",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-008",
+          "expected": "Static copied output retains shared original definition",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-009",
+          "expected": "Scaled output cannot silently change physical pitch",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-010",
+          "expected": "Locked output layer rejects write",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-011",
+          "expected": "Manual cut alteration is detected",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-012",
+          "expected": "Explicit Generate replaces altered block content",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-013",
+          "expected": "Inch guide solves in physical millimetres",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        },
+        {
+          "id": "LIFE-014",
+          "expected": "Inch output slit retains 1.5 mm physical length",
+          "sourceSymbol": "ast:cad-lifecycle-tests"
+        }
+      ]
+    },
+    {
+      "id": "REPAIR",
+      "title": "Restore displaced output",
+      "source": "tests/autostitch-cad-tests.lsp",
+      "entrypoint": "ast:cad-repair-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Move output independently; restore it; inject failure; verify placement, saved inputs and prior output survive.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "REPAIR-001",
+          "expected": "Repair fixture generated",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-002",
+          "expected": "Transformed output exposes repair state",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-003",
+          "expected": "Infeasible Restore preserves prior transformed output",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-004",
+          "expected": "Explicit Restore repairs output from live guide",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-005",
+          "expected": "Detach failure rolls back associations at (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Detach failure rolls back associations at \"},\"stage\"]",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-006",
+          "expected": "Detach preserves cuts and clears both references",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-007",
+          "expected": "Generate after Detach creates independent output without deleting static cuts",
+          "sourceSymbol": "ast:cad-repair-tests"
+        },
+        {
+          "id": "REPAIR-008",
+          "expected": "Detached static cuts cannot reopen a live seam",
+          "sourceSymbol": "ast:cad-repair-tests"
+        }
+      ]
+    },
+    {
+      "id": "ATTACH",
+      "title": "Landmark attachment after edits",
+      "source": "tests/autostitch-cad-tests.lsp",
+      "entrypoint": "ast:cad-correspondence-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Edit a polyline without changing segment identity, then change its topology; retain valid attachments and reject ambiguous correspondence.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "ATTACH-001",
+          "expected": "Correspondence fixture saves two landmarks",
+          "sourceSymbol": "ast:cad-correspondence-tests"
+        },
+        {
+          "id": "ATTACH-002",
+          "expected": "Deleting one landmark cannot rebase another after vertex insertion",
+          "sourceSymbol": "ast:cad-correspondence-tests"
+        },
+        {
+          "id": "ATTACH-003",
+          "expected": "Moving one landmark cannot rebase remaining attachments",
+          "sourceSymbol": "ast:cad-correspondence-tests"
+        },
+        {
+          "id": "ATTACH-004",
+          "expected": "Clear all landmarks permits explicit correspondence repair",
+          "sourceSymbol": "ast:cad-correspondence-tests"
+        },
+        {
+          "id": "ATTACH-005",
+          "expected": "New picks attach to current topology after clear",
+          "sourceSymbol": "ast:cad-correspondence-tests"
+        }
+      ]
+    },
+    {
+      "id": "RANGE",
+      "title": "Start and end attachment",
+      "source": "tests/autostitch-cad-tests.lsp",
+      "entrypoint": "ast:cad-range-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Set interior limits; change guide length and topology; retain valid positions and reject limits that no longer fit.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "RANGE-001",
+          "expected": "Typed range anchor saves",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-002",
+          "expected": "Changed topology leaves range editable but marks conflict",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-003",
+          "expected": "Unrepaired typed range cannot silently change owning branch",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-004",
+          "expected": "Unrelated input edit does not bless stale range snapshot",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-005",
+          "expected": "Fresh range pick repairs correspondence and recomputes global station",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-006",
+          "expected": "Line stretch preserves explicit endpoint attachment distance",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-007",
+          "expected": "Shortened line rejects out-of-range endpoint attachment",
+          "sourceSymbol": "ast:cad-range-tests"
+        },
+        {
+          "id": "RANGE-008",
+          "expected": "Arc radius edit preserves physical start attachment distance",
+          "sourceSymbol": "ast:cad-range-tests"
+        }
+      ]
+    },
+    {
+      "id": "CONNECT",
+      "title": "Connected CAD ownership",
+      "source": "tests/autostitch-connected-tests.lsp",
+      "entrypoint": "ast:cad-connected-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Connect separate guides, generate one shared block, edit one member, copy/disconnect members and inject transactional failures.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "CONNECT-001",
+          "expected": "Connect reports failure while retiring old output",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-002",
+          "expected": "Failed Connect restores both independent sources and outputs",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-003",
+          "expected": "Connect two independent LINEs into a T",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-004",
+          "expected": "T has one shared output and retires duplicate references",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-005",
+          "expected": "T emits twelve slits and one shared hole",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-006",
+          "expected": "Either source opens its own inputs; output opens the shared job",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-007",
+          "expected": "Member pitch stays independent while shared output regenerates",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-008",
+          "expected": "Editing one source marks the whole connected set stale",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-009",
+          "expected": "Generate from the other source updates the edited through-path",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-010",
+          "expected": "Connected replacement rolls back at (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Connected replacement rolls back at \"},\"stage\"]",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-011",
+          "expected": "An insufficient arm preserves the complete connected output",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-012",
+          "expected": "Copied member starts independent and cannot edit original output",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-013",
+          "expected": "Failed Disconnect rolls back every component",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-014",
+          "expected": "Disconnect creates independently editable outputs",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-015",
+          "expected": "Unrelated path and output remain current and unchanged",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-016",
+          "expected": "X crossing emits sixteen slits and exactly one shared hole",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-017",
+          "expected": "Native complete-set COPY remaps all member and output references",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-018",
+          "expected": "Complete connected copy regenerates without changing original cuts",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-019",
+          "expected": "Primary-only copy does not retain uncopied original members",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-020",
+          "expected": "Connected output-only copy cannot reopen original work",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-021",
+          "expected": "Connect preview reports both line-circle intersections",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-022",
+          "expected": "Connect All coordinates both circle intersections atomically",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-023",
+          "expected": "Connect preview excludes already declared intersections",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-024",
+          "expected": "Connect preview counts crossings with every existing member",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-025",
+          "expected": "Connect All merges a third path across both existing members",
+          "sourceSymbol": "ast:cad-connected-tests"
+        }
+      ]
+    },
+    {
+      "id": "MISSING",
+      "title": "Deleted connected members",
+      "source": "tests/autostitch-connected-tests.lsp",
+      "entrypoint": "ast:cad-missing-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Erase connected sources including the primary; select surviving work; explicitly remove missing members and retain recoverable output.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "MISSING-001",
+          "expected": "Three-line missing-member fixture connects",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-002",
+          "expected": "Output backs up native membership and connection topology without source geometry",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-003",
+          "expected": "Deleted member leaves surviving line editable with explicit repair state",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-004",
+          "expected": "Generate preserves previous complete output until missing member repair",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-005",
+          "expected": "Failed missing-member repair restores output and retains earlier source deletion",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-006",
+          "expected": "Explicit repair removes missing incidences while preserving surviving connections",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-007",
+          "expected": "Output reopens a surviving line after its primary source was deleted",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-008",
+          "expected": "Copied orphaned output cannot borrow surviving original sources",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-009",
+          "expected": "Copied surviving source cannot repair the original missing-primary group",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-010",
+          "expected": "Failed primary recovery preserves cuts and source deletion",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-011",
+          "expected": "Failed repair after orphan marker pruning restores helpers and complete output",
+          "sourceSymbol": "ast:cad-missing-tests"
+        },
+        {
+          "id": "MISSING-012",
+          "expected": "Primary recovery reuses output for the remaining canonical source",
+          "sourceSymbol": "ast:cad-missing-tests"
+        }
+      ]
+    },
+    {
+      "id": "MARK",
+      "title": "Editing notation and IDs",
+      "source": "tests/autostitch-marker-tests.lsp",
+      "entrypoint": "ast:marker-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Create straight, reversed, curved, closed, inch and connected guides; inspect S/E/J/L markers, boxed IDs, snaps and helper ownership.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "MARK-001",
+          "expected": "Shared-marker T fixture connects; result= (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Shared-marker T fixture connects; result=\"},[\"vl-prin1-to-string\",\"result\"]]",
+          "sourceSymbol": "ast:marker-test-shared-node"
+        },
+        {
+          "id": "MARK-002",
+          "expected": "Connected guides share one stable ID and display its box on the owning guide only",
+          "sourceSymbol": "ast:marker-test-shared-node"
+        },
+        {
+          "id": "MARK-003",
+          "expected": "A shared T node has exactly one editing circle and point across both member helpers",
+          "sourceSymbol": "ast:marker-test-shared-node"
+        },
+        {
+          "id": "MARK-004",
+          "expected": "Shared J label replaces overlapping secondary S while its free E remains",
+          "sourceSymbol": "ast:marker-test-shared-node"
+        },
+        {
+          "id": "MARK-005",
+          "expected": "Every connected member resolves the same live shared-node positions",
+          "sourceSymbol": "ast:marker-test-shared-node"
+        },
+        {
+          "id": "MARK-006",
+          "expected": "Curved landmark bar crosses the exact selected point normal to the local tangent",
+          "sourceSymbol": "ast:marker-test-compact-geometry"
+        },
+        {
+          "id": "MARK-007",
+          "expected": "Curved start ID follows the local tangent and stays clear of the guide",
+          "sourceSymbol": "ast:marker-test-compact-geometry"
+        },
+        {
+          "id": "MARK-008",
+          "expected": "A corner within one polyline uses the same compact J notation",
+          "sourceSymbol": "ast:marker-test-compact-geometry"
+        },
+        {
+          "id": "MARK-009",
+          "expected": "Closed reversed direction cue wraps behind the start phase on the guide",
+          "sourceSymbol": "ast:marker-test-compact-geometry"
+        },
+        {
+          "id": "MARK-010",
+          "expected": "Inch drawings preserve physical label and landmark-bar sizes",
+          "sourceSymbol": "ast:marker-test-compact-geometry"
+        },
+        {
+          "id": "MARK-011",
+          "expected": "ID offset scales to drawing units",
+          "sourceSymbol": "ast:marker-test-compact-geometry"
+        },
+        {
+          "id": "MARK-012",
+          "expected": "Shared-start ID fixture connects",
+          "sourceSymbol": "ast:marker-test-junction-id"
+        },
+        {
+          "id": "MARK-013",
+          "expected": "At a shared start the boxed ID moves half a pitch along the path, clear of J and the guide",
+          "sourceSymbol": "ast:marker-test-junction-id"
+        },
+        {
+          "id": "MARK-014",
+          "expected": "Marker fixture generates; result= (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Marker fixture generates; result=\"},[\"vl-prin1-to-string\",\"result\"]]",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-015",
+          "expected": "Three exact snap points mark both endpoints and the landmark; only endpoints retain circles",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-016",
+          "expected": "Compact S/E/L1 labels retain their meanings and direction cue",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-017",
+          "expected": "One subtle monochrome ID box has small text, thin strokes and saved stable identity",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-018",
+          "expected": "Direction cue sits on the guide half a pitch after S",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-019",
+          "expected": "S and E labels identify the correct source endpoints",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-020",
+          "expected": "Endpoint label centres sit 0.8 mm from the stitch line",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-021",
+          "expected": "Helper reference and all nested graphics remain on the nonplotting editing layer",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-022",
+          "expected": "Physical openings retain their separate output layer",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-023",
+          "expected": "Selecting an editing helper resolves its owning path",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-024",
+          "expected": "Landmark is one heavy 2.4 mm transverse bar centred at the selected reference",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-025",
+          "expected": "Regen preserves all saved marker geometry",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-026",
+          "expected": "Existing large marker styles migrate to compact labels on inspection",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-027",
+          "expected": "Repeated existing-path inspection adds no block or source revision",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-028",
+          "expected": "Explicit inspection refreshes stale endpoints and landmark snaps after a source move",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-029",
+          "expected": "Saving pitch refreshes the existing marker reference in its transaction",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-030",
+          "expected": "Trimmed reversed path labels follow actual traversal start and end",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-031",
+          "expected": "Reversed trimmed guide moves its ID to the displayed traversal start",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-032",
+          "expected": "Reversed trimmed direction cue starts near its displayed S and points backward",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-033",
+          "expected": "One Redo restores source inputs and marker definition together",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-034",
+          "expected": "Labels retain 0.66 mm text with a smaller 0.528 mm stitch ID",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-035",
+          "expected": "Zoom and an actual input save preserve initial label size",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-036",
+          "expected": "Restore full-range fixture before rollback injection",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-037",
+          "expected": "Failure reaches the intended transaction stage: (each parameter combination)",
+          "labelExpression": "[\"strcat\",{\"text\":\"Failure reaches the intended transaction stage: \"},\"stage\"]",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-038",
+          "expected": "A helper-only copy cannot claim the original source",
+          "sourceSymbol": "ast:marker-test-body"
+        },
+        {
+          "id": "MARK-039",
+          "expected": "Manual reconciliation removes erased-source and nonreciprocal copied helpers",
+          "sourceSymbol": "ast:marker-test-body"
+        }
+      ]
+    },
+    {
+      "id": "HOST",
+      "title": "Native copy and drawing spaces",
+      "source": "tests/autostitch-host-tests.lsp",
+      "entrypoint": "ast:host-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Use native COPY on source plus output; regenerate independently; generate Model/Paper space sources with the other space active.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "HOST-001",
+          "expected": "Native COPY both remaps reciprocal references",
+          "sourceSymbol": "ast:host-tests"
+        },
+        {
+          "id": "HOST-002",
+          "expected": "Copied pair translation remains current",
+          "sourceSymbol": "ast:host-tests"
+        },
+        {
+          "id": "HOST-003",
+          "expected": "Copied pair regenerates independently",
+          "sourceSymbol": "ast:host-tests"
+        },
+        {
+          "id": "HOST-004",
+          "expected": "Model guide creates model output while paper space is active",
+          "sourceSymbol": "ast:host-tests"
+        },
+        {
+          "id": "HOST-005",
+          "expected": "Paper guide creates paper output while model space is active",
+          "sourceSymbol": "ast:host-tests"
+        }
+      ]
+    },
+    {
+      "id": "DISPLAY",
+      "title": "Printable slit and thread notation",
+      "source": "tests/autostitch-display-tests.lsp",
+      "entrypoint": "ast:display-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Generate straight, curved, closed and branched paths; inspect slit weights, thread endpoints, adjusted-spacing crossbars, filled holes and dashed construction.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "DISPLAY-001",
+          "expected": "Adjusted straight line generates with visual aids",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-002",
+          "expected": "Visual thread does not add physical openings",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-003",
+          "expected": "Straight thread joins actual selected slit tips, not hole centres",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-004",
+          "expected": "Both tips of all three affected slits have one monochrome crossbar; shared slit is not duplicated",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-005",
+          "expected": "Adjusted and nominal physical slits all retain monochrome color",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-006",
+          "expected": "Spacing notation contains only compact crossbars, with no text or bracket",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-007",
+          "expected": "Thread, spacing marks and construction are visible and printable without display options",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-008",
+          "expected": "Slit strokes are 0.30 mm and thread strokes remain light at 0.09 mm",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-009",
+          "expected": "Generate restores legacy off/frozen/nonplotting display layers without adding physical holes",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-010",
+          "expected": "Edited crossbar endpoint is detected by output signature",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-011",
+          "expected": "Edited crossbar width is detected by output signature",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-012",
+          "expected": "Changed slit color is detected by output signature",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-013",
+          "expected": "Restoring annotations and color restores current output",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-014",
+          "expected": "Failed annotated replacement restores prior holes, threads, notes and metadata",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-015",
+          "expected": "Failure before ENDBLK restores prior output and metadata",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-016",
+          "expected": "Previous chevron output version requires Generate",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-017",
+          "expected": "Generate upgrades legacy display metadata and restores current output",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-018",
+          "expected": "Exact straight run retains eleven holes and ten thread segments",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-019",
+          "expected": "Nominal run has no correction notes and keeps every slit ByLayer",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-020",
+          "expected": "Arc thread joins tangent-oriented finite slits without changing circle geometry",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-021",
+          "expected": "Three equal arc corrections mark four physical slits with eight crossbars",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-022",
+          "expected": "Arc crossbars mark exactly the slits bordering independently measured corrected chords",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-023",
+          "expected": "Closed-circle thread returns to its original slit exactly once",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-024",
+          "expected": "Sharp corner has two thread segments meeting its actual round hole",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-025",
+          "expected": "Sharp-corner construction shows both true virtual slits dashed with selected tips at the round-hole centre",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-026",
+          "expected": "Round hole has an exact filled black disk; derived corner distances receive no spacing crossbars",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-027",
+          "expected": "Edited round-hole fill is detected by output signature",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-028",
+          "expected": "Edited virtual-slit dash is detected by output signature",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-029",
+          "expected": "Separate connected lines retain the same two virtual slits and one filled corner hole",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-030",
+          "expected": "Connected T draws only its twelve true intervals; no cross-arm thread",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-031",
+          "expected": "A branch has a filled shared hole without inventing virtual-slit construction",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-032",
+          "expected": "Reversing a connected member preserves physical thread-tip selection",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-033",
+          "expected": "Tight counterclockwise arc places four crossbars directly on its physical slit tips",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-034",
+          "expected": "Reversing a tight arc retains crossbars on both ends of the same physical slits",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-035",
+          "expected": "Tight 150-degree arc marks only its two actual slits",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-036",
+          "expected": "Reversed 150-degree arc keeps local crossbars correctly oriented",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-037",
+          "expected": "Arc-to-arc junction keeps virtual centres on their support circles and emits their dashed slit axes",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-038",
+          "expected": "Inch drawing scales every slit centre, slit length and thread endpoint",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-039",
+          "expected": "Inch drawing scales crossbar positions and footprint while retaining the slit lineweight",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-040",
+          "expected": "Reversed straight line retains the same six monochrome crossbars",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-041",
+          "expected": "Inch drawing scales virtual-slit dashes and filled-hole diameter without scaling lineweights",
+          "sourceSymbol": "ast:display-tests"
+        }
+      ]
+    },
+    {
+      "id": "UI",
+      "title": "Palette workflow",
+      "source": "tests/autostitch-host-tests.lsp",
+      "entrypoint": "ast:ui-tests",
+      "runner": "ui",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Open the palette in a disposable drawing; select fixtures; set pitch and endpoints; add/remove landmarks; generate, reverse and connect.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "UI-001",
+          "expected": "An empty palette disables actions that require a selected stitch line",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-002",
+          "expected": "An open guide shows its ID and length with both endpoint controls enabled",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-003",
+          "expected": "Landmark actions name both the action and its object",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-004",
+          "expected": "Generate rejects invalid pitch without restoring or replacing moved output",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-005",
+          "expected": "An infeasible Generate preserves transformed output and its saved pitch",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-006",
+          "expected": "Generate applies the draft pitch and restores moved output to the unchanged guide",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-007",
+          "expected": "One Undo restores the transformed output and previous pitch together",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-008",
+          "expected": "Redo restores the generated output and new pitch together",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-009",
+          "expected": "Selecting a partial guide preserves its inputs and exposes both endpoint controls",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-010",
+          "expected": "Generate retains saved partial coverage until its endpoints are changed",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-011",
+          "expected": "Set start projects an interior point and preserves the pitch draft, end and landmarks",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-012",
+          "expected": "After Reverse, Set start changes the displayed start at the guide's upper station",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-013",
+          "expected": "A Set end pick crossing the displayed start leaves the saved seam unchanged",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-014",
+          "expected": "Default restores only the selected displayed endpoint after reversal",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-015",
+          "expected": "WholeLine clears both saved limits while retaining guide, pitch and landmark",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-016",
+          "expected": "Remove landmark deletes its constraint and disables itself when no landmarks remain",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-017",
+          "expected": "Default removes a saved endpoint anchor even when it currently reaches the full guide",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-018",
+          "expected": "A closed guide enables Set start and disables Set end",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-019",
+          "expected": "Set start on a closed guide saves the chosen loop phase",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-020",
+          "expected": "Set start on a loop removes obsolete endpoint limits left by a former open guide",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-021",
+          "expected": "Generate from a connected member restores the shared output and displays its shared ID",
+          "sourceSymbol": "ast:ui-tests"
+        }
+      ]
+    },
+    {
+      "id": "EVENT",
+      "title": "Native edits and Undo/Redo",
+      "source": "tests/autostitch-event-tests.lsp",
+      "entrypoint": "ast:event-setup",
+      "runner": "events",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Create two source/helper pairs; use native MOVE, STRETCH and ERASE with Undo/Redo; inject callback failure and compare saved records and geometry.",
+      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "checks": [
+        {
+          "id": "EVENT-001",
+          "expected": "Palette input save returns through internal Undo commands with the interpreter alive",
+          "sourceSymbol": "ast:event-ui-save"
+        },
+        {
+          "id": "EVENT-002",
+          "expected": "Failure reached metadata writes for both helpers",
+          "sourceSymbol": "ast:event-check-rollback"
+        },
+        {
+          "id": "EVENT-003",
+          "expected": "Failed callback restored exact source/helper Xrecords, helper entities, definitions and block-name set",
+          "sourceSymbol": "ast:event-check-rollback"
+        },
+        {
+          "id": "EVENT-004",
+          "expected": "Created two isolated source/helper fixtures",
+          "sourceSymbol": "ast:event-setup"
+        },
+        {
+          "id": "EVENT-005",
+          "expected": "Captured exact metadata/definitions and armed second-helper failure",
+          "sourceSymbol": "ast:event-arm-failure"
+        }
+      ],
+      "driver": "tests/run-events.ps1",
+      "inputs": {
+        "sources": [
+          {
+            "start": [
+              1000,
+              1000,
+              0
+            ],
+            "end": [
+              1060,
+              1000,
+              0
+            ]
+          },
+          {
+            "start": [
+              1000,
+              1020,
+              0
+            ],
+            "end": [
+              1060,
+              1020,
+              0
+            ]
+          }
+        ],
+        "helper": "One S and one E snap marker per source.",
+        "firstSourceSavedPitch": 3.2
+      },
+      "scenarios": [
+        {
+          "id": "EVENT-STEP-01",
+          "title": "Initial",
+          "action": "Create both source/helper pairs; save pitch 3.2 on the first source through the palette.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1000,
+            "endX": 1060,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-02",
+          "title": "MOVE",
+          "action": "Move both sources by [5,0,0].",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1065,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-03",
+          "title": "MOVE Undo",
+          "action": "Undo the move once.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1000,
+            "endX": 1060,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-04",
+          "title": "Event bootstrap preserves Undo state",
+          "action": "Enable editing notifications again; do not alter Undo/Redo history.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1000,
+            "endX": 1060,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-05",
+          "title": "MOVE Redo",
+          "action": "Redo the move.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1065,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-06",
+          "title": "STRETCH",
+          "action": "Crossing-select the two right endpoints and stretch by [6,0,0].",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1071,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-07",
+          "title": "STRETCH Undo",
+          "action": "Undo the stretch once.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1065,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-08",
+          "title": "STRETCH Redo",
+          "action": "Redo the stretch.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1071,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-09",
+          "title": "ERASE removes source and its helper",
+          "action": "Erase both sources.",
+          "expected": {
+            "sourceExists": false,
+            "startX": null,
+            "endX": null,
+            "helpersCurrent": false,
+            "notes": "Both source and helper are absent."
+          }
+        },
+        {
+          "id": "EVENT-STEP-10",
+          "title": "ERASE Undo",
+          "action": "Undo the erase once.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1071,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-11",
+          "title": "ERASE Redo removes source and its helper",
+          "action": "Redo the erase.",
+          "expected": {
+            "sourceExists": false,
+            "startX": null,
+            "endX": null,
+            "helpersCurrent": false,
+            "notes": "Both source and helper are absent."
+          }
+        },
+        {
+          "id": "EVENT-STEP-12",
+          "title": "Before failure",
+          "action": "Undo the erase again.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1071,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-13",
+          "title": "Failed callback retains native MOVE",
+          "action": "Inject failure after metadata writes; move by [9,0,0].",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1014,
+            "endX": 1080,
+            "helpersCurrent": false,
+            "notes": "Prior complete helpers remain; the failed callback does not undo the native edit."
+          }
+        },
+        {
+          "id": "EVENT-STEP-14",
+          "title": "Failed callback retains each prior complete helper",
+          "action": "Inspect helpers after the failed callback.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1014,
+            "endX": 1080,
+            "helpersCurrent": false,
+            "notes": "Prior complete helpers remain; the failed callback does not undo the native edit."
+          }
+        },
+        {
+          "id": "EVENT-STEP-15",
+          "title": "Failed callback MOVE Undo",
+          "action": "Undo the native move once.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1071,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-16",
+          "title": "One Undo restores both complete source/helper states after failed callback",
+          "action": "Compare the whole saved snapshot after Undo.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1005,
+            "endX": 1071,
+            "helpersCurrent": true,
+            "notes": "Both helpers have exactly two markers at the corresponding source endpoints."
+          }
+        },
+        {
+          "id": "EVENT-STEP-17",
+          "title": "Failed callback MOVE Redo",
+          "action": "Redo the native move.",
+          "expected": {
+            "sourceExists": true,
+            "startX": 1014,
+            "endX": 1080,
+            "helpersCurrent": false,
+            "notes": "Prior complete helpers remain; the failed callback does not undo the native edit."
+          }
+        }
+      ]
+    }
+  ]
+}

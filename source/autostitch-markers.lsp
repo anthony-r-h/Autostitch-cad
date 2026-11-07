@@ -205,7 +205,8 @@
            (equal (cdr (assoc 50 (entget reference))) 0.0 1e-10)
            (equal (cdr (assoc 210 (entget reference))) '(0.0 0.0 1.0) 1e-10)))
 
-(defun ast:markers-update (guide settings landmarks factor route / layer reference snapshot name index data owner object item style connections)
+(defun ast:markers-update-one (guide settings landmarks factor route / layer reference snapshot name index data owner object item style connections)
+  (ast:cad-ensure-stitch-id guide)
   (setq reference (ast:markers-reference guide)
         snapshot (ast:markers-snapshot guide settings landmarks factor route)
         style (cdr (assoc 'style snapshot)) connections (cdr (assoc 'connections snapshot)))
@@ -217,8 +218,8 @@
           (100 . "AcDbLayerTableRecord") (2 . "AUTOSTITCH_UI") (70 . 0)
           (62 . 7) (6 . "Continuous") (290 . 0))) "Could not create nonplotting marker layer."))
       (setq layer (entget (tblobjname "LAYER" "AUTOSTITCH_UI")))
-      (ast:cad-require (= 0 (logand 4 (cdr (assoc 70 layer)))) "Unlock AUTOSTITCH_UI to edit seam points.")
-      (ast:cad-require (= (cdr (assoc 290 layer)) 0) "Set AUTOSTITCH_UI to nonplotting before editing seam points.")
+      (ast:cad-require (= 0 (logand 4 (cdr (assoc 70 layer)))) "Unlock AUTOSTITCH_UI to edit stitch line markers.")
+      (ast:cad-require (= (cdr (assoc 290 layer)) 0) "Set AUTOSTITCH_UI to nonplotting before editing stitch line markers.")
       (setq index 1 name (strcat "AST_UI_" (cdr (assoc 5 (entget guide))) "_1"))
       (while (tblsearch "BLOCK" name)
         (setq index (1+ index) name (strcat "AST_UI_" (cdr (assoc 5 (entget guide))) "_" (itoa index))))
@@ -245,6 +246,18 @@
       (ast:markers-write-record reference '((role . markers)) guide)
       (ast:cad-inject "marker-metadata")
       reference)))
+
+(defun ast:markers-update (guide settings landmarks factor route / reference owner state)
+  (setq reference (ast:markers-update-one guide settings landmarks factor route)
+        owner (ast:cad-stitch-owner guide))
+  ;; A connected member can assign the shared ID; refresh its owner's box in the same transaction.
+  (if (not (equal owner guide))
+    (progn
+      (setq state (ast:cad-read owner))
+      (ast:cad-require (ast:cad-get 'ok state) (ast:cad-get 'error state))
+      (ast:markers-update-one owner (ast:cad-get 'settings state) (ast:cad-get 'landmarks state)
+        (ast:cad-get 'factor state) (ast:cad-get 'route state))))
+  reference)
 
 (defun ast:markers-ensure (guide settings landmarks factor route / result)
   (if (ast:markers-current-p guide (ast:markers-snapshot guide settings landmarks factor route))

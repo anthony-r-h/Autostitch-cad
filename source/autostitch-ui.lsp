@@ -164,7 +164,7 @@
     (ast:ui-put "Seam" "Caption" "No stitch line selected"))
   (setq astui:*busy* nil))
 
-(defun ast:ui-adopt (result)
+(defun ast:ui-adopt (result / markers-ready)
   (setq astui:*state* result astui:*guide* (cdr (assoc 'guide result))
         astui:*settings* (cdr (assoc 'settings result))
         astui:*route* (cdr (assoc 'route result))
@@ -175,8 +175,9 @@
   (if (= (getvar "INSUNITS") 0) (setq ast:*unit-factor* astui:*factor*))
   (setq astui:*pitch-text* (rtos (cdr (assoc 'pitch astui:*settings*)) 2 3))
   (ast:ui-put "Pitch" "Text" astui:*pitch-text*)
+  (setq markers-ready (ast:ui-markers))
   (ast:ui-fill)
-  (ast:ui-markers))
+  markers-ready)
 
 (defun ast:ui-pitch (/ value text)
   (setq text (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text")
@@ -247,7 +248,7 @@
         (progn
           (ast:ui-clear)
           (setq markers-ready (ast:ui-adopt result))
-          (if (and (not (cdr (assoc 'record result))) (numberp astui:*last-pitch*))
+          (if (and (not (cdr (assoc 'settings (cdr (assoc 'record result))))) (numberp astui:*last-pitch*))
             (ast:ui-put "Pitch" "Text" (rtos astui:*last-pitch* 2 3)))
           (if markers-ready
           (if (and (cdr (assoc 'closed astui:*route*))

@@ -22,7 +22,7 @@ Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with
 | Control | Action |
 | --- | --- |
 | Set start / Set end | Pick where stitching begins and stops along an open guide. `Default` restores that endpoint; `WholeLine` restores both. |
-| Reverse direction | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
+| Reverse | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
 | Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
 | Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
 | Connect stitch lines | Select another guide. Corners and T/X junctions in the connected set share openings. Multiple intersections offer `ConnectAll`. |
@@ -31,7 +31,9 @@ Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with
 
 Corners within a polyline are automatic. Separate entities need Connect stitch lines; nearby pattern geometry does not connect itself.
 
-Each connected set has one output block. Members keep their own pitch, direction, endpoints and landmarks. Selecting a member shows its inputs; Generate recomputes the whole set. The stitch ID is shared by the set, appears in the palette and a small box opposite `S`, and stays the same across regenerations. At a shared start junction, the box sits slightly along the main guide. IDs are local to the drawing.
+Each connected set has one output block. Members keep their own pitch, direction, endpoints and landmarks. Selecting a member shows its inputs; Generate recomputes the whole set.
+
+Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated block has the same name. The set shares one ID, shown in the palette and a small box opposite `S`; regeneration keeps that ID. At a shared start junction, the box sits slightly along the main guide. Existing drawings receive the new labels when selected; Generate updates their old output block names.
 
 ## Read the drawing
 

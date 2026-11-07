@@ -18,18 +18,19 @@ Draft structure only. Use test-catalog IDs for future SVGs.
 
 - Fixed tool profile; direct centre pitch.
 - Landmark centred in a nominal gap.
-- Reserve features before fitting.
-- Fewest changed gaps, within 10%; central placement preference.
+- Fixed feature positions and nominal gaps.
+- Spacing adjustments within $10\%$.
 - One opening per closure/shared junction.
-- Reject conflicts; preserve prior output.
+- Junction construction and opening clearance.
 
 ## Model and solution
 
 - Guide, opening, landmark, junction, free span.
 - Straight distance versus circular chord.
-- Count bounds; minimum correction count; central block.
+- Count bounds; fewest corrections; central block and tie-breaking.
 - Smooth join, virtual-tip corner, branch hole.
 - Whole-set clearance.
+- Effective junction angle from slit dimensions, lean, pitch and margin.
 
 ## Examples and SVGs
 
@@ -51,4 +52,5 @@ Draft structure only. Use test-catalog IDs for future SVGs.
 
 - Catalog examples and automated checks.
 - Curved-corner construction and clearance checks.
-- Link to the single limits/qualification record; avoid repeated caveats.
+- Geometric limits and unresolved rules.
+- Dependencies.

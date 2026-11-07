@@ -2,6 +2,12 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Stitch IDs and palette: 2026-11-07
+
+- All 14 native suites passed: 1,313 checks. After the final connected-label refresh, the seven affected suites passed again: 159 checks, including the added migration case.
+- Native edit events and Undo/Redo passed 61 checks after that final change.
+- Checked the pitch field and equal-width Set start / Set end / Reverse buttons in BricsCAD. The test catalog validates with 375 stable IDs.
+
 ## Cleanup verification: 2026-11-07
 
 Rerun after the runtime cleanup and test-catalog migration in `Autostitch-cleanup-tests.dwg`.
@@ -55,6 +61,6 @@ With a saved disposable `output/native/Autostitch-native.dwg` open in the existi
 Get-Content ./output/native/geometry-oracle.txt
 ```
 
-Omit `-IncludeUi` to run only the 12 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
+Omit `-IncludeUi` to run only the 13 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
 
 Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Geometric limits belong in [limits](../docs/LIMITS.md).

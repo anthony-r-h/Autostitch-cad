@@ -4891,7 +4891,7 @@
         },
         {
           "id": "CAD-010",
-          "expected": "Regenerate replaces only reference definition",
+          "expected": "Regenerate preserves the output reference and stitch block name",
           "sourceSymbol": "ast:cad-tests"
         },
         {
@@ -4930,6 +4930,74 @@
           "id": "CAD-017",
           "expected": "Writer restores CMDECHO",
           "sourceSymbol": "ast:cad-tests"
+        }
+      ]
+    },
+    {
+      "id": "ID",
+      "title": "Stable stitch IDs and block names",
+      "source": "tests/autostitch-cad-tests.lsp",
+      "entrypoint": "ast:cad-identity-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
+      "recipe": "Generate and regenerate a stitch; copy its guide and output; undo generation and deletion; migrate legacy metadata; reserve a conflicting block name.",
+      "expected": "One stable ST-number identifies each connected set and its current output block; copies, failed writes and Undo preserve ownership.",
+      "checks": [
+        {
+          "id": "ID-001",
+          "expected": "Failed first generation rolls back its ID reservation and metadata",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-002",
+          "expected": "Generated stitch ID and block name are the same ST-number",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-003",
+          "expected": "Undo generation removes the ID and restores the drawing counter",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-004",
+          "expected": "Redo restores the same stitch ID and block name",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-005",
+          "expected": "Regeneration keeps ST-number while a static output copy keeps its original geometry",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-006",
+          "expected": "An unassigned copied guide does not display its original stitch ID",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-007",
+          "expected": "Copied guide receives the next stitch number and a matching independent block",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-008",
+          "expected": "Undo deletion restores the original stitch ID",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-009",
+          "expected": "Legacy label migration assigns ST-number without regenerating existing output",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-010",
+          "expected": "Legacy output adopts its assigned ST-number on generation",
+          "sourceSymbol": "ast:cad-identity-tests"
+        },
+        {
+          "id": "ID-011",
+          "expected": "A foreign block claiming a renamed output ID is preserved and the stitch receives a free ID",
+          "sourceSymbol": "ast:cad-identity-tests"
         }
       ]
     },
@@ -5296,6 +5364,16 @@
         {
           "id": "CONNECT-025",
           "expected": "Connect All merges a third path across both existing members",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-026",
+          "expected": "Disconnect retains the first component ID and gives the other component a new ID",
+          "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "CONNECT-027",
+          "expected": "Connected members share one ST-number and a complete copied set receives another",
           "sourceSymbol": "ast:cad-connected-tests"
         }
       ]
@@ -5954,6 +6032,16 @@
         {
           "id": "UI-021",
           "expected": "Generate from a connected member restores the shared output and displays its shared ID",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-022",
+          "expected": "First selection shows the same new ST-number in the palette and boxed label",
+          "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-023",
+          "expected": "Selecting a legacy connected secondary member refreshes the primary boxed ID without regenerating output",
           "sourceSymbol": "ast:ui-tests"
         }
       ]

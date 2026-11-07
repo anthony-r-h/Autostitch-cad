@@ -17,7 +17,7 @@ $$
 J=C_i-h\mathbf u_i=C_o+h\mathbf u_o.
 $$
 
-The real incoming neighbour is one nominal step before $C_i$; the outgoing neighbour is one step after $C_o$. The virtual slits are construction only.
+The real incoming neighbour is one pitch before $C_i$; the outgoing neighbour is one pitch after $C_o$, measured as direct centre distance. The virtual slits are construction only.
 
 1. Intersect the incoming minus-tip and outgoing plus-tip loci.
 2. Choose the isolated intersection nearest the guide vertex. Equally near distinct roots are ambiguous.
@@ -45,9 +45,9 @@ $$
 
 Virtual centres may lie on extensions. Real neighbours may not.
 
-## Branches
+## Junctions with three or more arms
 
-For a branch at $P$, reserve one round hole and a neighbour on each arm. Nominal advance is
+For a junction at $P$, place one round hole and fix a nominal gap to its first neighbour on each arm. The corresponding advance along the guide is
 
 $$
 b=p\quad\text{on a line},\qquad
@@ -56,7 +56,7 @@ $$
 
 These hole-to-neighbour distances are nominal chords. Sharp two-arm hole distances instead follow the virtual-tip construction.
 
-Two branch holes one nominal step apart share one protected gap. At two steps, they share one middle slit. Fit any remaining free spans normally.
+Two such junction holes can share a protected nominal gap, or have one middle slit with a nominal gap on either side. Fit any remaining free spans normally.
 
 ## Angle limits
 
@@ -171,4 +171,4 @@ Apply the [opening-clearance inequalities](MODEL.md#opening-clearance) to $S_i,S
 
 For curved arms, use their selected tip-locus intersection and resulting finite slit axes. Radii, winding and available lengths are additional inputs. Holding these fixed makes the angle boundaries solvable, but the admissible angles need not form one interval.
 
-T/X branches use their intersection-centred hole construction and the same clearance test. The two-arm closed form does not apply to them.
+T/X junctions use their intersection-centred hole construction and the same clearance test. The two-arm closed form does not apply to them.

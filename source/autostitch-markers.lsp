@@ -24,25 +24,44 @@
   (ast:cad-require (entmake (append data (list '(8 . "AUTOSTITCH_UI") (cons 62 color))))
     "Could not create an editing marker."))
 
-(defun ast:markers-point (point label color size text-height / offset)
+(defun ast:markers-normal (guide point)
+  (+ (/ pi 2.0) (angle '(0.0 0.0 0.0)
+    (vlax-curve-getFirstDeriv guide (vlax-curve-getParamAtPoint guide
+      (vlax-curve-getClosestPointTo guide point))))))
+
+(defun ast:markers-label (point label color text-height)
+  (ast:markers-entity (list '(0 . "TEXT") (cons 10 point) (cons 11 point)
+    (cons 40 text-height) (cons 1 label) '(7 . "Standard") '(50 . 0.0)
+    '(72 . 1) '(73 . 2)) color))
+
+(defun ast:markers-point (guide point label color size text-height / offset)
   ;; Nested POINT and CIRCLE provide exact NODE/CEN snaps independent of PDMODE.
   (ast:markers-entity (list '(0 . "POINT") (cons 10 point)) color)
-  (ast:markers-entity (list '(0 . "CIRCLE") (cons 10 point) (cons 40 (* size 0.55))) color)
-  (setq offset (mapcar '+ point (list (* size 1.6) (* size 1.6) 0.0)))
-  (ast:markers-entity (list '(0 . "TEXT") (cons 10 offset) (cons 40 text-height)
-    (cons 1 label) '(7 . "Standard") '(50 . 0.0)) color))
+  (ast:markers-entity (list '(0 . "CIRCLE") (cons 10 point) (cons 40 (* size 0.25))) color)
+  (setq offset (polar point (ast:markers-normal guide point) size))
+  (ast:markers-label offset label color text-height))
 
-(defun ast:markers-style (guide settings factor / saved text-height)
-  (setq saved (cdr (assoc 'style (ast:markers-record guide)))
-        text-height (/ (max 0.8 (min 1.6 (* 0.4 (cdr (assoc 'pitch settings))))) factor))
-  ;; Keep the saved model-space size, migrating oversized early display styles.
-  (cond
-    ((null saved)
-      (list (cons 'size (/ (max 1.0 (* 0.32 (cdr (assoc 'pitch settings)))) factor))
-        (cons 'text-height text-height)))
-    ((> (* factor (cdr (assoc 'text-height saved))) 1.6)
-      (ast:cad-put 'text-height text-height saved))
-    (T saved)))
+(defun ast:markers-landmark (guide point index style / normal half-size text-height first last)
+  (setq normal (ast:markers-normal guide point) half-size (cdr (assoc 'landmark-half-size style))
+        text-height (cdr (assoc 'text-height style)) first (polar point normal half-size)
+        last (polar point (+ normal pi) half-size))
+  (ast:markers-entity (list '(0 . "POINT") (cons 10 point)) 4)
+  (ast:cad-require (entmake (list '(0 . "LWPOLYLINE") '(100 . "AcDbEntity")
+    '(8 . "AUTOSTITCH_UI") '(62 . 4) '(100 . "AcDbPolyline") '(90 . 2) '(70 . 0)
+    (cons 43 (cdr (assoc 'landmark-width style))) (cons 10 (list (car first) (cadr first)))
+    (cons 10 (list (car last) (cadr last))))) "Could not create landmark bar.")
+  (ast:markers-label (polar point normal (+ half-size (* text-height 0.8)))
+    (strcat "L" (itoa index)) 4 text-height))
+
+(defun ast:markers-style (guide settings factor / record saved pitch)
+  (setq record (ast:markers-record guide) saved (cdr (assoc 'style record))
+        pitch (cdr (assoc 'pitch settings)))
+  ;; Migrate old labels once, then retain their model-space size through later edits.
+  (if (and saved (equal 9 (ast:cad-get 'display-version (ast:cad-get 'snapshot record)))) saved
+    (list (cons 'size (/ (max 0.65 (min 1.0 (* pitch (/ 0.8 3.0)))) factor))
+      (cons 'text-height (/ (max 0.55 (min 0.8 (* pitch 0.22))) factor))
+      (cons 'landmark-half-size (/ (max 0.9 (min 1.6 (* pitch 0.4))) factor))
+      (cons 'landmark-width (/ 0.12 factor)))))
 
 (defun ast:markers-connections (guide / state connections result ast:*cad-error*)
   (setq result (vl-catch-all-apply
@@ -95,12 +114,12 @@
         last (if (and (>= finish 0.0) (<= finish total)) (vlax-curve-getPointAtDist guide finish)))
   (if (and (>= start 0.0) (<= start total)
            (not (ast:markers-shared-point-p (vlax-curve-getPointAtDist guide start) factor connections)))
-    (ast:markers-point (vlax-curve-getPointAtDist guide start)
-      (if closed "START" (if reversed "END" "START")) (if (and reversed (not closed)) 1 3) size text-height))
+    (ast:markers-point guide (vlax-curve-getPointAtDist guide start)
+      (if closed "S" (if reversed "E" "S")) (if (and reversed (not closed)) 1 3) size text-height))
   (if (and (not closed) (>= finish 0.0) (<= finish total)
            (not (ast:markers-shared-point-p (vlax-curve-getPointAtDist guide finish) factor connections)))
-    (ast:markers-point (vlax-curve-getPointAtDist guide finish)
-      (if reversed "START" "END") (if reversed 3 1) size text-height))
+    (ast:markers-point guide (vlax-curve-getPointAtDist guide finish)
+      (if reversed "S" "E") (if reversed 3 1) size text-height))
   (if (and (> total 0.0) (>= start 0.0) (<= finish total) (<= start finish))
     (progn
       (setq middle (vlax-curve-getPointAtDist guide
@@ -118,7 +137,7 @@
   (foreach attachment landmarks
     (setq index (1+ index))
     (if (setq point (ast:markers-attachment-point guide attachment factor))
-      (ast:markers-point point (strcat "LANDMARK " (itoa index)) 4 (* size 0.8) text-height)))
+      (ast:markers-landmark guide point index style)))
   (setq primitives (cdr (assoc 'primitives route)) index 0 corner-station 0.0)
   (repeat (if closed (length primitives) (max 0 (1- (length primitives))))
     (setq incoming (nth index primitives)
@@ -133,18 +152,17 @@
       (if (and (not (ast:markers-shared-point-p point factor connections))
                (not (equal point first 1e-8)) (not (equal point last 1e-8))
                (or closed (and (>= corner-station start) (<= corner-station finish))))
-        (ast:markers-point point
-          "CORNER" 6 (* size 0.65) text-height)))
+        (ast:markers-point guide point "J" 6 size text-height)))
     (setq index (1+ index)))
   (setq index 0)
   (foreach connection (if (equal guide (cdr (assoc 'primary (ast:cad-record guide)))) connections)
     (setq index (1+ index) point (cdr (assoc 'point connection)))
     (if point
-      (ast:markers-point (list (/ (car point) factor) (/ (cadr point) factor) 0.0)
-        (strcat "JOIN " (itoa index)) 2 size text-height))))
+      (ast:markers-point guide (list (/ (car point) factor) (/ (cadr point) factor) 0.0)
+        "J" 2 size text-height))))
 
 (defun ast:markers-snapshot (guide settings landmarks factor route)
-  (list '(display-version . 8) (cons 'settings settings) (cons 'landmarks landmarks)
+  (list '(display-version . 9) (cons 'settings settings) (cons 'landmarks landmarks)
     (cons 'factor factor) (cons 'route route) (cons 'style (ast:markers-style guide settings factor))
     (cons 'connections (ast:markers-connections guide))))
 

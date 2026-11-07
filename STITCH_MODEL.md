@@ -1,6 +1,6 @@
-# Stitch model: accepted line/arc foundation
+# Stitch model: line/arc paths and declared connections
 
-The native solver in `source/autostitch-geometry.lsp` implements this bounded line/arc design. `geometry.mjs` and the gallery retain the original baseline. Physical qualification is separate: [PHYSICAL_RULES.md](PHYSICAL_RULES.md). CAD scope and current limits: [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md).
+The native solver in `source/autostitch-geometry.lsp` implements the bounded single-path foundation. `source/autostitch-network.lsp` applies it to explicitly connected sources with one physical opening at each shared node. `geometry.mjs` and the gallery retain an older baseline. Physical qualification is separate: [PHYSICAL_RULES.md](PHYSICAL_RULES.md). CAD scope and current limits: [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md).
 
 ## Concepts and parameters
 
@@ -9,11 +9,12 @@ The native solver in `source/autostitch-geometry.lsp` implements this bounded li
 | Guide | User-owned, ordered planar line/arc geometry; authoritative location of ordinary opening centres. Explicit start, direction and open/closed state. |
 | Landmark | A deliberately centred **nominal gap**, with no opening at its station. A pocket-edge crossing is this kind of constraint. |
 | Junction | A transition within the ordered guide. Derived from its tangents/curvatures, not from nearby drawing intersections. |
+| Connection | A declared meeting/crossing between source paths; retains their identities and shares one physical opening. |
 | Opening | One real slit or round hole. Virtual slits are construction geometry only. A corner hole may lie off the guide. |
 | Reservation | Fixed entry/exit openings and protected gaps supplied by a feature. |
 | Span | Remaining guide between consecutive reserved ordinary centres; fitted without moving either anchor. |
 
-Normal inputs are guide, pitch and landmark picks. Endpoints/direction have visible defaults; genuine junctions are derived. Do not expose correction count or minimum-angle sliders.
+Normal inputs are source lines, pitch and gap picks, with Connect stitch lines for shared openings between sources. Endpoints/direction have visible defaults; corners within a source are derived. A gap pick is the landmark constraint below, not an implicit connection. Do not expose correction count or minimum-angle sliders.
 
 | Parameter | Ownership and default |
 | --- | --- |
@@ -34,16 +35,26 @@ Changing pitch never scales the other dimensions. Revalidate the selected profil
 3. Minimize changed ordinary gaps under those reservations. Then prefer exact centred placement, smaller fractional change, and smaller interval count, in that order.
 4. Keep changes in one contiguous equal-adjustment block per span. If exact centring is unavailable, use the nearest permitted block; half-index ties go toward the end.
 5. Junction-to-round-hole distances are derived geometry, not ordinary pitch corrections.
-6. Within one generation, committed anchors remain fixed. An explicit later Generate recomputes the whole seam from current inputs; there is no hidden permanently locked prefix.
+6. Within one generation, committed anchors remain fixed. An explicit later Generate recomputes the whole independent path or connected set from current inputs; there is no hidden permanently locked prefix.
 7. Closure reuses the original opening identity. A fresh closed circle fits its full sweep; the lab's arbitrary committed-prefix examples are not a required workflow.
-8. Validate all distinct emitted opening pairs. A fitted span alone does not establish an acceptable whole route.
+8. Validate all distinct emitted opening pairs across the entire connected set. A fitted span or one fitted member alone does not establish acceptable combined cuts.
 9. Use direct formulas and bounded analytic candidate selection. No phase search, iterative optimizer, relaxed constraints or substitution of another corner recipe after failure.
 
-Admit planar, nonbranching LINE/ARC/CIRCLE and line/arc polylines, with at most one revolution per circular primitive. Reject nonfinite data, zero-length primitives, disconnected segments and ambiguous traversal before construction. Normalize adjoining collinear or co-circular subdivisions; inserting a redundant CAD vertex must not change the layout.
+Each source is an ordered planar LINE/ARC/CIRCLE or line/arc polyline, with at most one revolution per circular primitive. Connections can form branches across those sources without a global traversal or CAD Join operation. Reject nonfinite data, zero-length primitives, disconnected source segments and ambiguous traversal before construction. Normalize adjoining collinear or co-circular subdivisions; inserting a redundant CAD vertex must not change the layout.
 
 At a genuine smooth change of curvature, reserve one shared slit at the join. This is a deliberate phase constraint. Every free span then lies on one normalized line or circle. A landmark whose required gap straddles such a join needs a mixed-primitive construction and is **unsupported initially**. Overlap with a prescribed slit is a constraint conflict, not permission to move it.
 
-Branches, shared openings between independent seams, self-crossing routes, splines, ellipses, nonplanar geometry, and free-phase mixed-primitive spans are outside this first domain. Reject them explicitly; do not approximate them with little straight segments. Same-drawing placement alone does not prove two separate seams belong to the same piece of material.
+Undeclared crossings, splines, ellipses, nonplanar geometry and free-phase mixed-primitive spans remain unsupported. Raw source paths cannot overlap for a positive length, even if their active ranges divide that overlap into adjacent pieces; trim the source geometry before connecting. Do not approximate unsupported curves with little straight segments. Same-drawing placement alone does not declare a shared workpiece: only the explicit connection operation coordinates independent sources.
+
+## Declared connected sets
+
+Connect stitch lines combines selected sources and their existing connected members. When more than one intersection needs coordination, ConnectAll declares the complete set before solving, avoiding an infeasible intermediate partial declaration. Sources retain individual pitch, direction, ranges and gap attachments; the slit/hole profile and clearance settings must agree. The complete set emits one cut list and one output block.
+
+Classify actual incident arms, not CAD entity boundaries. A sharp two-arm corner uses the selected-tip construction below, including when its arms are separate LINE entities; a smooth two-arm transition uses its shared slit. At a node with three or more arms, emit one round hole at the guide intersection and reserve each arm's first neighbour at nominal direct/chord pitch. Remaining spans use the same bounded fitters. These branch-adjacent gaps are protected reservations, not ordinary corrections. See [junction construction and examples](review/JUNCTIONS.md).
+
+Persist a connection's source/primitive incidences and selected analytic root. Recompute its position from current source geometry after edits. Common placement, unchanged supporting geometry and proven root-side correspondence can retain identity; an ambiguous changed root or topology requires explicit repair, never nearest-point reassignment. Every crossing within the declared set must be coordinated, and every distinct emitted cut pair must pass clearance.
+
+Disconnected or missing-source repair solves all resulting components before replacing any output. A failure retains the previous complete cuts. Source inputs remain canonical; saved output topology supports deleted-primary recovery without recreating deleted source geometry. [Connected workflow](review/CONNECTED_WORKFLOW.md) records adapter ownership and recovery details.
 
 ## Span fitting and centred placement
 

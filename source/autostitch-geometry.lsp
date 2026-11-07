@@ -271,7 +271,8 @@
       (if (null error)
         (progn
           (setq ci (ast:g-virtual-station incoming in-length li joint) co (ast:g-virtual-station outgoing 0.0 lo joint)
-                di (ast:g-step incoming (ast:g-get 'pitch settings 3.0)) dout (ast:g-step outgoing (ast:g-get 'pitch settings 3.0)))
+                di (ast:g-step incoming (ast:g-get 'incoming-pitch settings (ast:g-get 'pitch settings 3.0)))
+                dout (ast:g-step outgoing (ast:g-get 'outgoing-pitch settings (ast:g-get 'pitch settings 3.0))))
           (cond ((or (null ci) (null co)) (setq error "Sharp junction has an antipodal station ambiguity."))
                 ((or (< ci (- di in-length 1e-8)) (> ci (+ di 1e-8)) (< co (- (- dout) 1e-8)) (> co (+ (- out-length dout) 1e-8)))
                   (setq error "Selected sharp-junction root puts a real neighbour outside its finite arm; no remote-root or revolution fallback is allowed."))

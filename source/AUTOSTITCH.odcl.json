@@ -6,10 +6,10 @@
       "name": "Palette",
       "type": "palette",
       "caption": "Autostitch",
-      "width": 320,
-      "height": 376,
-      "MinWidth": 320,
-      "MinHeight": 376,
+      "width": 360,
+      "height": 510,
+      "MinWidth": 360,
+      "MinHeight": 510,
       "BackColor": 16119026,
       "controls": [
         {
@@ -17,13 +17,13 @@
           "name": "Select",
           "left": 12,
           "top": 12,
-          "width": 138,
-          "height": 32,
+          "width": 160,
+          "height": 34,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Select",
-          "caption": "Select guide",
+          "caption": "Select stitch line",
           "events": {
             "Clicked": "c:ASTUISELECT"
           }
@@ -31,9 +31,9 @@
         {
           "type": "Label",
           "name": "PitchLabel",
-          "left": 164,
-          "top": 18,
-          "width": 42,
+          "left": 12,
+          "top": 88,
+          "width": 70,
           "height": 24,
           "Font": "Segoe UI",
           "FontSize": 10,
@@ -46,9 +46,9 @@
         {
           "type": "TextBox",
           "name": "Pitch",
-          "left": 208,
-          "top": 12,
-          "width": 60,
+          "left": 76,
+          "top": 82,
+          "width": 70,
           "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
@@ -60,8 +60,8 @@
         {
           "type": "Label",
           "name": "Units",
-          "left": 274,
-          "top": 18,
+          "left": 152,
+          "top": 88,
           "width": 30,
           "height": 24,
           "Font": "Segoe UI",
@@ -76,14 +76,14 @@
           "type": "TextButton",
           "name": "Add",
           "left": 12,
-          "top": 54,
-          "width": 138,
+          "top": 310,
+          "width": 104,
           "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Add",
-          "caption": "Add landmark",
+          "caption": "Add gap",
           "events": {
             "Clicked": "c:ASTUIADD"
           }
@@ -91,15 +91,15 @@
         {
           "type": "TextButton",
           "name": "Generate",
-          "left": 162,
-          "top": 54,
-          "width": 146,
-          "height": 32,
+          "left": 184,
+          "top": 12,
+          "width": 164,
+          "height": 34,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Generate",
-          "caption": "Generate",
+          "caption": "Generate cuts",
           "events": {
             "Clicked": "c:ASTUIGENERATE"
           }
@@ -108,14 +108,14 @@
           "type": "Label",
           "name": "Seam",
           "left": 12,
-          "top": 100,
-          "width": 296,
+          "top": 54,
+          "width": 336,
           "height": 24,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/Seam",
-          "caption": "No guide selected",
+          "caption": "No stitch line selected",
           "BackColor": -24,
           "BorderStyle": 0
         },
@@ -123,23 +123,23 @@
           "type": "Label",
           "name": "LandmarkLabel",
           "left": 12,
-          "top": 132,
-          "width": 90,
+          "top": 278,
+          "width": 55,
           "height": 24,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/LandmarkLabel",
-          "caption": "Landmarks",
+          "caption": "Gaps",
           "BackColor": -24,
           "BorderStyle": 0
         },
         {
           "type": "ComboBox",
           "name": "Landmarks",
-          "left": 102,
-          "top": 126,
-          "width": 206,
+          "left": 68,
+          "top": 272,
+          "width": 280,
           "height": 28,
           "Font": "Segoe UI",
           "FontSize": 10,
@@ -153,15 +153,15 @@
         {
           "type": "TextButton",
           "name": "Move",
-          "left": 12,
-          "top": 164,
-          "width": 90,
-          "height": 28,
+          "left": 126,
+          "top": 310,
+          "width": 104,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Move",
-          "caption": "Move",
+          "caption": "Move gap",
           "events": {
             "Clicked": "c:ASTUIMOVE"
           }
@@ -169,15 +169,15 @@
         {
           "type": "TextButton",
           "name": "Delete",
-          "left": 114,
-          "top": 164,
-          "width": 90,
-          "height": 28,
+          "left": 240,
+          "top": 310,
+          "width": 108,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Delete",
-          "caption": "Delete",
+          "caption": "Delete gap",
           "events": {
             "Clicked": "c:ASTUIDELETE"
           }
@@ -185,15 +185,15 @@
         {
           "type": "TextButton",
           "name": "Reverse",
-          "left": 216,
-          "top": 164,
-          "width": 92,
-          "height": 28,
+          "left": 12,
+          "top": 200,
+          "width": 160,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Reverse",
-          "caption": "Reverse",
+          "caption": "Reverse direction",
           "events": {
             "Clicked": "c:ASTUIREVERSE"
           }
@@ -201,47 +201,31 @@
         {
           "type": "TextButton",
           "name": "ApplyPitch",
-          "left": 12,
-          "top": 244,
-          "width": 138,
-          "height": 28,
+          "left": 196,
+          "top": 82,
+          "width": 152,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/ApplyPitch",
-          "caption": "Apply pitch",
+          "caption": "Save pitch",
           "events": {
             "Clicked": "c:ASTUIPITCH"
-          }
-        },
-        {
-          "type": "TextButton",
-          "name": "Refresh",
-          "left": 162,
-          "top": 244,
-          "width": 146,
-          "height": 28,
-          "Font": "Segoe UI",
-          "FontSize": 10,
-          "EventInvoke": 1,
-          "VarName": "AUTOSTITCH/Palette/Refresh",
-          "caption": "Refresh markers",
-          "events": {
-            "Clicked": "c:ASTUIREFRESH"
           }
         },
         {
           "type": "Label",
           "name": "Status",
           "left": 12,
-          "top": 286,
-          "width": 296,
-          "height": 54,
+          "top": 398,
+          "width": 336,
+          "height": 70,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/Status",
-          "caption": "Select a guide or generated seam.",
+          "caption": "Select a stitch line or its generated cuts.",
           "BackColor": -24,
           "BorderStyle": 0
         },
@@ -249,8 +233,8 @@
           "type": "Label",
           "name": "Physical",
           "left": 12,
-          "top": 342,
-          "width": 296,
+          "top": 480,
+          "width": 336,
           "height": 22,
           "Font": "Segoe UI",
           "FontSize": 10,
@@ -264,14 +248,14 @@
           "type": "TextButton",
           "name": "Start",
           "left": 12,
-          "top": 204,
-          "width": 90,
-          "height": 28,
+          "top": 128,
+          "width": 104,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Start",
-          "caption": "Start",
+          "caption": "Set start",
           "events": {
             "Clicked": "c:ASTUISTART"
           }
@@ -279,15 +263,15 @@
         {
           "type": "TextButton",
           "name": "End",
-          "left": 114,
-          "top": 204,
-          "width": 90,
-          "height": 28,
+          "left": 126,
+          "top": 128,
+          "width": 104,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/End",
-          "caption": "End",
+          "caption": "Set end",
           "events": {
             "Clicked": "c:ASTUIEND"
           }
@@ -295,17 +279,95 @@
         {
           "type": "TextButton",
           "name": "Restore",
-          "left": 216,
-          "top": 204,
-          "width": 92,
-          "height": 28,
+          "left": 184,
+          "top": 200,
+          "width": 164,
+          "height": 32,
           "Font": "Segoe UI",
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Restore",
-          "caption": "Restore",
+          "caption": "Restore cut position",
           "events": {
             "Clicked": "c:ASTUIRESTORE"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Reset",
+          "left": 240,
+          "top": 128,
+          "width": 108,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Reset",
+          "caption": "Reset range",
+          "events": {
+            "Clicked": "c:ASTUIRESET"
+          }
+        },
+        {
+          "type": "Label",
+          "name": "Range",
+          "left": 12,
+          "top": 168,
+          "width": 336,
+          "height": 24,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Range",
+          "caption": "Select a stitch line to show its start and end.",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "Label",
+          "name": "PointHelp",
+          "left": 12,
+          "top": 242,
+          "width": 336,
+          "height": 24,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/PointHelp",
+          "caption": "Green START | Red END | Cyan GAP | Yellow JOIN",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "TextButton",
+          "name": "Connect",
+          "left": 12,
+          "top": 354,
+          "width": 160,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Connect",
+          "caption": "Connect stitch lines",
+          "events": {
+            "Clicked": "c:ASTUICONNECT"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Disconnect",
+          "left": 184,
+          "top": 354,
+          "width": 164,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Disconnect",
+          "caption": "Disconnect line",
+          "events": {
+            "Clicked": "c:ASTUIDISCONNECT"
           }
         }
       ],

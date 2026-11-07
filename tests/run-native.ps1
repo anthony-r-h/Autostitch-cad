@@ -18,7 +18,9 @@ foreach ($candidate in $stitchApp.Documents) {
 }
 if ($null -eq $stitchDocument) { throw "Open the test drawing under output/native first: $DrawingName" }
 $stitchDocument.Activate()
-if ($stitchDocument.GetVariable('CMDNAMES') -ne '') { throw 'The test drawing has an active command; no input was sent.' }
+if ($stitchDocument.GetVariable('CMDNAMES') -ne '' -or -not $stitchApp.GetAcadState().IsQuiescent) {
+  throw 'The test drawing has an active command or point pick; no input was sent.'
+}
 $stitchLispPath = $stitchScript.Replace('\', '/').Replace('"', '\"')
 $stitchDocument.SendCommand('(load "' + $stitchLispPath + '")' + "`n")
 Write-Output "Executed $stitchScript in $DrawingName"

@@ -35,7 +35,11 @@
 
 (defun ast:ui-run (action / result)
   (ast:ui-sync-owner)
-  (setq result (vl-catch-all-apply action nil))
+  (setq result (vl-catch-all-apply
+    '(lambda ()
+      (if (or (not (member 'ast:load-events (atoms-family 0)))
+              (ast:load-events (ast:home)))
+        (apply action nil))) nil))
   (if (vl-catch-all-error-p result)
     (ast:ui-status (vl-catch-all-error-message result)))
   (princ))
@@ -43,14 +47,16 @@
 (defun ast:ui-clear ()
   (if (and astui:*guide* (entget astui:*guide*)) (redraw astui:*guide* 4))
   (redraw)
-  (setq astui:*guide* nil astui:*settings* nil astui:*landmarks* nil astui:*route* nil
+  (setq astui:*state* nil astui:*guide* nil astui:*settings* nil astui:*landmarks* nil astui:*route* nil
         astui:*factor* nil astui:*placement-conflict* nil astui:*index* -1))
 
-(defun ast:ui-ready (/ result draft dirty selected index)
+(defun ast:ui-ready (/ result draft dirty selected index astui:*defer-markers*)
+  ;; Input writers update helpers in their own transaction; picks refresh explicitly.
+  (setq astui:*defer-markers* T)
   (cond
     ((ast:ui-sync-owner) nil)
     ((or (not astui:*guide*) (not (entget astui:*guide*)))
-      (ast:ui-status "Select a guide first.") nil)
+      (ast:ui-status "Select a stitch line first.") nil)
     (T
       (setq result (ast:cad-read astui:*guide*))
       (if (ast:ui-result result)
@@ -73,97 +79,51 @@
                   (ast:ui-status "Selected landmark changed. Select a landmark again.")))))
           T)))))
 
-(defun ast:ui-mark (point color / size centre)
-  ;; Screen-sized transient crosses, never cut entities.
-  (setq size (/ (getvar "VIEWSIZE") 90.0) centre (trans point 0 1))
-  (grdraw (mapcar '+ centre (list (- size) 0.0 0.0))
-    (mapcar '+ centre (list size 0.0 0.0)) color 1)
-  (grdraw (mapcar '+ centre (list 0.0 (- size) 0.0))
-    (mapcar '+ centre (list 0.0 size 0.0)) color 1))
-
-(defun ast:ui-landmark-point (attachment / primitive parameter station maximum boundary)
-  (setq primitive (cdr (assoc 'primitive attachment))
-        parameter (if (= (cdr (assoc 0 (entget astui:*guide*))) "LWPOLYLINE")
-          primitive (vlax-curve-getStartParam astui:*guide*))
-        maximum (vlax-curve-getEndParam astui:*guide*))
-  (if (and (>= parameter (vlax-curve-getStartParam astui:*guide*)) (< parameter maximum))
+(defun ast:ui-native-refresh (/ active astui:*busy*)
+  ;; Native edit notifications must never open or transfer the shared palette.
+  (if (and (equal (vl-bb-ref 'ASTUI-PALETTE-OWNER) (ast:ui-document-key))
+           (equal astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))
+           (member 'dcl-Form-IsActive (atoms-family 0)))
     (progn
-      (setq boundary (if (= (cdr (assoc 0 (entget astui:*guide*))) "LWPOLYLINE")
-                       (min maximum (1+ parameter)) maximum)
-            station (+ (vlax-curve-getDistAtParam astui:*guide* parameter)
-        (/ (cdr (assoc 'station attachment)) astui:*factor*)))
-      (if (and (>= (cdr (assoc 'station attachment)) 0.0)
-               (<= station (vlax-curve-getDistAtParam astui:*guide* boundary)))
-        (vlax-curve-getPointAtDist astui:*guide* station)))))
-
-(defun ast:ui-junctions (/ range normalized primitives index incoming outgoing point centre size corners color corner)
-  (setq range (ast:g-range (cdr (assoc 'primitives astui:*route*)) nil astui:*settings*
-    (cdr (assoc 'closed astui:*route*))))
-  (if (cdr (assoc 'ok range))
-    (progn
-      (setq normalized (ast:g-normalize (cdr (assoc 'primitives range)) nil
-              (cdr (assoc 'reverse astui:*settings*)))
-            primitives (cdr (assoc 'primitives normalized)) index 0
-            size (/ (getvar "VIEWSIZE") 160.0))
-      (repeat (if (and (cdr (assoc 'closed astui:*route*)) (> (length primitives) 1))
-        (length primitives) (max 0 (1- (length primitives))))
-        (setq incoming (nth index primitives)
-              outgoing (nth (rem (1+ index) (length primitives)) primitives)
-              point (ast:g-point incoming (ast:g-length incoming))
-              centre (trans (list (/ (car point) astui:*factor*) (/ (cadr point) astui:*factor*) 0.0) 0 1)
-              color 8)
-        (if (not (and (> (ast:g-dot (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0)) 0.0)
-                      (< (abs (ast:g-cross (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0))) 1e-10)))
+      (setq active (vl-catch-all-apply 'dcl-Form-IsActive (list "AUTOSTITCH" "Palette")))
+      (if (and (not (vl-catch-all-error-p active)) active astui:*guide*)
+        (if (not (entget astui:*guide*))
           (progn
-            (setq corner (ast:g-corner incoming outgoing astui:*settings*))
-            (setq color (if (cdr (assoc 'ok corner)) 6 1))))
-        (setq corners (list (polar centre 0.0 size) (polar centre (/ pi 2) size)
-          (polar centre pi size) (polar centre (* pi 1.5) size) (polar centre 0.0 size)))
-        (while (cdr corners)
-          (grdraw (car corners) (cadr corners) color 1)
-          (setq corners (cdr corners)))
-        (setq index (1+ index))))))
+            (ast:ui-clear) (ast:ui-fill)
+            (ast:ui-status "Selected stitch line was erased. Select a stitch line."))
+          (if (ast:ui-ready)
+            (cond
+              ((cdr (assoc 'connection-conflict astui:*state*))
+                (ast:ui-status (cdr (assoc 'connection-conflict astui:*state*))))
+              ((cdr (assoc 'range-conflict astui:*state*))
+                (ast:ui-status (cdr (assoc 'range-conflict astui:*state*))))
+              (astui:*placement-conflict*
+                (ast:ui-status "Cuts moved separately. Use Restore cut position."))
+              ((null (cdr (assoc 'output astui:*state*)))
+                (ast:ui-status "Stitch line selected. Generate to create cuts."))
+              ((cdr (assoc 'stale astui:*state*))
+                (ast:ui-status "Guide changed. Generate to update cuts."))
+              ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text") 2)
+                           (cdr (assoc 'pitch astui:*settings*)) 1e-12))
+                (ast:ui-status "Pitch edited. Generate to apply it."))
+              (T (ast:ui-status "Cuts match saved inputs."))))))))
+  T)
 
-(defun ast:ui-markers (/ first last total middle direction tip left right size point attachment start finish phase factor closed reverse-direction)
-  (redraw)
+(vl-acad-defun 'ast:ui-native-refresh)
+
+(defun ast:ui-markers ()
   (if (and astui:*guide* (entget astui:*guide*))
     (progn
       (redraw astui:*guide* 3)
-      (setq total (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*))
-            factor astui:*factor*
-            closed (cdr (assoc 'closed astui:*route*))
-            reverse-direction (cdr (assoc 'reverse astui:*settings*))
-            start (if (assoc 'start astui:*settings*) (/ (cdr (assoc 'start astui:*settings*)) factor) 0.0)
-            finish (if (assoc 'end astui:*settings*) (/ (cdr (assoc 'end astui:*settings*)) factor) total)
-            phase (if (assoc 'phase astui:*settings*) (/ (cdr (assoc 'phase astui:*settings*)) factor) 0.0))
-      (if closed (setq start phase finish phase))
-      (setq first (vlax-curve-getPointAtDist astui:*guide* start)
-            last (vlax-curve-getPointAtDist astui:*guide* finish))
-      (if first (ast:ui-mark first (if reverse-direction 1 3)))
-      (if (and last (not closed)) (ast:ui-mark last (if reverse-direction 3 1)))
-      (if (and (> total 0.0) (>= start 0.0) (<= finish total) (<= start finish))
-        (progn
-          (setq middle (vlax-curve-getPointAtDist astui:*guide*
-                  (if closed (rem (+ phase (* total 0.08)) total) (/ (+ start finish) 2.0)))
-                direction (vlax-curve-getFirstDeriv astui:*guide*
-                  (vlax-curve-getParamAtPoint astui:*guide* middle))
-                direction (angle '(0.0 0.0 0.0) (trans direction 0 1 T))
-                middle (trans middle 0 1)
-                size (/ (getvar "VIEWSIZE") 45.0))
-          (if reverse-direction (setq direction (+ direction pi)))
-          (setq tip (polar middle direction size)
-                left (polar tip (+ direction 2.65) (* size 0.45))
-                right (polar tip (- direction 2.65) (* size 0.45)))
-          (grdraw middle tip 2 1) (grdraw tip left 2 1) (grdraw tip right 2 1)))
-      (foreach attachment astui:*landmarks*
-        (if (setq point (ast:ui-landmark-point attachment)) (ast:ui-mark point 4)))
-      (ast:ui-junctions))))
+      (if astui:*defer-markers* T
+        (ast:ui-result (ast:markers-ensure astui:*guide* astui:*settings*
+          astui:*landmarks* astui:*factor* astui:*route*))))))
 
-(defun ast:ui-fill (/ labels index attachment)
+(defun ast:ui-fill (/ labels index attachment total start finish reversed control)
   (setq astui:*busy* T labels nil index 0)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
-          labels (cons (strcat (itoa index) ": segment "
+          labels (cons (strcat "Gap " (itoa index) " | segment "
             (itoa (1+ (cdr (assoc 'primitive attachment)))) " + "
             (rtos (cdr (assoc 'station attachment)) 2 2) " mm") labels)))
   (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Landmarks")
@@ -177,13 +137,31 @@
   (ast:ui-put "Delete" "Enabled" (if labels T nil))
   (ast:ui-put "Restore" "Enabled" (if astui:*placement-conflict* T nil))
   (ast:ui-put "Seam" "Caption" (if astui:*guide*
-    (strcat "Guide " (cdr (assoc 5 (entget astui:*guide*))) "  |  "
-      (itoa (length astui:*landmarks*)) " landmarks") "No guide selected"))
-  (ast:ui-put "Reverse" "Caption" (if (cdr (assoc 'reverse astui:*settings*)) "Reversed" "Reverse"))
-  (ast:ui-put "Start" "Caption" (if (cdr (assoc 'closed astui:*route*)) "Phase" "Start"))
+    (strcat "Stitch line " (cdr (assoc 5 (entget astui:*guide*))) "  |  "
+      (itoa (length astui:*landmarks*)) " gaps") "No stitch line selected"))
+  (ast:ui-put "Reverse" "Caption" "Reverse direction")
+  (ast:ui-put "Start" "Caption" "Set start")
   (ast:ui-put "Start" "Enabled" (if astui:*guide* T nil))
   (ast:ui-put "End" "Enabled" (and astui:*guide*
     (not (cdr (assoc 'closed astui:*route*)))))
+  (foreach control '("Add" "Generate" "ApplyPitch" "Reverse" "Reset" "Connect")
+    (ast:ui-put control "Enabled" (if astui:*guide* T nil)))
+  (ast:ui-put "Disconnect" "Enabled" (and astui:*guide*
+    (or (cdr (assoc 'missing-members astui:*state*)) (> (length (cdr (assoc 'members astui:*state*))) 1))))
+  (ast:ui-put "Disconnect" "Caption" (if (cdr (assoc 'missing-members astui:*state*))
+    "Remove missing lines" "Disconnect line"))
+  (if astui:*guide*
+    (progn
+      (setq total (* astui:*factor* (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*)))
+            start (if (assoc 'start astui:*settings*) (cdr (assoc 'start astui:*settings*)) 0.0)
+            finish (if (assoc 'end astui:*settings*) (cdr (assoc 'end astui:*settings*)) total)
+            reversed (cdr (assoc 'reverse astui:*settings*)))
+      (ast:ui-put "Range" "Caption"
+        (if (cdr (assoc 'closed astui:*route*))
+          (strcat "Closed path | start " (rtos (if (assoc 'phase astui:*settings*) (cdr (assoc 'phase astui:*settings*)) 0.0) 2 2) " mm")
+          (strcat "Start " (rtos (if reversed finish start) 2 2) "  >  End "
+            (rtos (if reversed start finish) 2 2) " mm"))))
+    (ast:ui-put "Range" "Caption" "Select a stitch line to show its start and end."))
   (setq astui:*busy* nil))
 
 (defun ast:ui-adopt (result)
@@ -218,13 +196,27 @@
       (ast:ui-fill) (ast:ui-markers)
       (ast:ui-status "Inputs saved. Generate to update cuts.") T)))
 
+(defun ast:ui-pick-point (prompt keywords / previous point)
+  ;; CEN/NODE select editing points without nearby cut endpoints competing.
+  (setq previous (getvar "OSMODE"))
+  (setvar "OSMODE" 12)
+  (if keywords (initget keywords))
+  (setq point (vl-catch-all-apply 'getpoint (list prompt)))
+  (setvar "OSMODE" previous)
+  (if (vl-catch-all-error-p point)
+    (progn (ast:ui-status (vl-catch-all-error-message point)) nil)
+    point))
+
 (defun ast:ui-pick-landmark (/ point result)
-  (setq point (getpoint "\nPick landmark on the guide: "))
-  (if point
+  (if (ast:ui-markers)
     (progn
-      (setq result (ast:cad-project astui:*guide* (trans point 1 0)))
-      (if (assoc 'error result) (progn (ast:ui-result result) nil) result))
-    (progn (ast:ui-status "Landmark pick cancelled.") nil)))
+      (ast:ui-status "Pick the centre of a gap. Native object snaps are enabled.")
+      (setq point (ast:ui-pick-point "\nPick gap centre on the guide: " nil))
+      (if point
+        (progn
+          (setq result (ast:cad-project astui:*guide* (trans point 1 0)))
+          (if (assoc 'error result) (progn (ast:ui-result result) nil) result))
+        (progn (ast:ui-status "Gap pick cancelled. Existing gaps retained.") nil)))))
 
 (defun ast:ui-global-station (attachment / index station primitive)
   (setq index 0 station (cdr (assoc 'station attachment)))
@@ -234,10 +226,12 @@
     (setq index (1+ index)))
   station)
 
-(defun ast:ui-select-action (/ selected result choice phase)
-  (setq selected (entsel "\nSelect a guide or generated Autostitch seam: "))
+(defun ast:ui-select-action (/ selected result choice phase helper-guide markers-ready)
+  (setq selected (entsel "\nSelect a stitch line or its generated cuts: "))
   (if selected
     (progn
+      (setq helper-guide (ast:markers-guide (car selected)))
+      (if helper-guide (setq selected (cons helper-guide (cdr selected))))
       (setq result (ast:cad-read (car selected)))
       (if (and (= (getvar "INSUNITS") 0) (not ast:*unit-factor*)
                (equal (cdr (assoc 'error result)) "Set drawing INSUNITS or explicitly choose millimetres per drawing unit."))
@@ -249,9 +243,10 @@
       (if (ast:ui-result result)
         (progn
           (ast:ui-clear)
-          (ast:ui-adopt result)
+          (setq markers-ready (ast:ui-adopt result))
           (if (and (not (cdr (assoc 'record result))) (numberp astui:*last-pitch*))
             (ast:ui-put "Pitch" "Text" (rtos astui:*last-pitch* 2 3)))
+          (if markers-ready
           (if (and (cdr (assoc 'closed astui:*route*))
                    (not (assoc 'phase astui:*settings*)))
             (progn
@@ -261,10 +256,11 @@
                     (ast:ui-set 'phase (ast:ui-global-station phase) astui:*settings*)) astui:*landmarks*)
                 (ast:ui-status "Start phase set at your pick. Generate when ready.")))
             (ast:ui-status (cond
+              ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
               ((and (cdr (assoc 'output result)) (cdr (assoc 'stale result)))
                 "Inputs or guide changed. Generate to update cuts.")
-              (T "Guide selected. Add landmarks or Generate.")))))))
+              (T "Stitch line selected. Set start/end, add gaps, then Generate."))))))))
     (ast:ui-status "Selection cancelled. Previous guide retained.")))
 
 (defun c:ASTUISELECT () (ast:ui-run 'ast:ui-select-action))
@@ -318,14 +314,17 @@
       (ast:ui-save (ast:ui-set 'reverse (not (cdr (assoc 'reverse astui:*settings*)))
         astui:*settings*) astui:*landmarks*)))))
 
-(defun ast:ui-range-pick (key / anchor-key point attachment settings station total lower upper)
-  (if (ast:ui-ready)
+(defun ast:ui-range-pick (key / anchor-key point attachment settings station total lower upper label)
+  (if (and (ast:ui-ready) (ast:ui-markers))
     (progn
+        (setq label (if (= key 'start) "start" "end"))
         (if (cdr (assoc 'closed astui:*route*)) (setq key 'phase))
+        (if (and (/= key 'phase) (cdr (assoc 'reverse astui:*settings*)))
+          (setq key (if (= key 'start) 'end 'start)))
         (setq anchor-key (read (strcat (vl-symbol-name key) "-ANCHOR")))
-        (initget "Default")
-        (setq point (getpoint (strcat "\nPick " (vl-symbol-name key)
-          " on the guide [Default]: ")))
+        (ast:ui-status (strcat "Pick the " label " on the guide. Native object snaps are enabled."))
+        (setq point (ast:ui-pick-point (strcat "\nPick " label
+          " on the guide [Default]: ") "Default"))
         (cond
           ((equal point "Default")
             (setq settings (vl-remove-if '(lambda (item) (member (car item) (list key anchor-key))) astui:*settings*))
@@ -334,8 +333,11 @@
           ((listp point)
             (if point
               (progn
-                (setq attachment (ast:cad-project astui:*guide* (trans point 1 0))
-                      station (ast:ui-global-station attachment)
+                (setq attachment (ast:cad-project astui:*guide* (trans point 1 0)))
+                (if (assoc 'error attachment)
+                  (ast:ui-result attachment)
+                  (progn
+                (setq station (ast:ui-global-station attachment)
                       settings (ast:ui-set anchor-key
                         (append attachment (list (cons 'source-route astui:*route*)))
                         (ast:ui-set key station astui:*settings*))
@@ -344,8 +346,8 @@
                       lower (if (assoc 'start settings) (cdr (assoc 'start settings)) 0.0)
                       upper (if (assoc 'end settings) (cdr (assoc 'end settings)) total))
                 (if (>= lower upper)
-                  (ast:ui-status "Start must precede End along the source guide.")
-                  (ast:ui-save settings astui:*landmarks*)))
+                  (ast:ui-status "Start and End would cross. Reset range to use the whole guide.")
+                  (ast:ui-save settings astui:*landmarks*)))))
               (ast:ui-status "Range pick cancelled.")))))))
 
 (defun c:ASTUISTART ()
@@ -353,6 +355,61 @@
 
 (defun c:ASTUIEND ()
   (ast:ui-run '(lambda () (ast:ui-range-pick 'end))))
+
+(defun c:ASTUIRESET ()
+  (ast:ui-run '(lambda (/ settings)
+    (if (ast:ui-ready)
+      (progn
+        (setq settings (vl-remove-if '(lambda (item)
+          (member (car item) '(start end phase start-anchor end-anchor phase-anchor))) astui:*settings*))
+        (if (cdr (assoc 'closed astui:*route*)) (setq settings (ast:ui-set 'phase 0.0 settings)))
+        (if (ast:ui-save settings astui:*landmarks*)
+          (ast:ui-status "Full guide restored. Generate to update cuts.")))))))
+
+(defun c:ASTUICONNECT ()
+  (ast:ui-run '(lambda (/ selected other pitch preview count choice result)
+    (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
+      (progn
+        (ast:ui-status "Select another stitch line to coordinate their stitching.")
+        (setq selected (entsel "\nSelect the other stitch line or its generated cuts: "))
+        (if selected
+          (progn
+            (setq other (if (ast:markers-guide (car selected))
+              (ast:markers-guide (car selected)) (car selected))
+                  preview (ast:cad-connect-preview astui:*guide* other))
+            (if (ast:ui-result preview)
+              (progn
+                (setq count (cdr (assoc 'count preview)) choice nil)
+                (cond
+                  ((= count 0) (ast:ui-status "These stitch lines have no new intersections to connect."))
+                  ((= count 1) (setq choice "ConnectAll"))
+                  (T
+                    (ast:ui-status (strcat (itoa count) " intersections found. Connect all to coordinate them."))
+                    (initget "ConnectAll Cancel")
+                    (setq choice (getkword (strcat "\nConnect all " (itoa count)
+                      " intersections? [ConnectAll/Cancel] <Cancel>: ")))))
+                (if (equal choice "ConnectAll")
+                  (progn
+                    (setq result (ast:cad-connect astui:*guide* other nil
+                      (ast:ui-set 'pitch pitch astui:*settings*) astui:*landmarks*))
+                    (if (ast:ui-result result)
+                      (progn
+                        (ast:ui-adopt (ast:cad-read astui:*guide*))
+                        (ast:ui-status "Stitch lines connected. Cuts updated."))))
+                  (if (> count 0) (ast:ui-status "Connection cancelled. Stitch lines retained."))))))
+          (ast:ui-status "Connection cancelled. Stitch lines retained.")))))))
+
+(defun c:ASTUIDISCONNECT ()
+  (ast:ui-run '(lambda (/ result repairing)
+    (if (ast:ui-ready)
+      (progn
+        (setq repairing (cdr (assoc 'missing-members astui:*state*)))
+        (setq result (ast:cad-disconnect astui:*guide*))
+        (if (ast:ui-result result)
+          (progn
+            (ast:ui-adopt (ast:cad-read astui:*guide*))
+            (ast:ui-status (if repairing "Missing stitch lines removed. Cuts updated."
+              "Selected stitch line disconnected. Cuts updated.")))))))))
 
 (defun ast:ui-generate (restore-output / pitch settings result state message warning individual corrected)
   (if (and (ast:ui-ready) (or (not restore-output) astui:*placement-conflict*)
@@ -390,11 +447,12 @@
       (progn
         (setq result (ast:cad-read astui:*guide*))
         (if (ast:ui-result result)
-          (progn (ast:ui-adopt result)
+          (if (ast:ui-adopt result)
             (ast:ui-status (cond
+              ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
               ((cdr (assoc 'stale result)) "Guide changed. Generate to update cuts.")
-              (T "Markers refreshed."))))))))))
+              (T "Saved path inputs reloaded."))))))))))
 
 (defun c:ASTUIINIT ()
   (setq astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))
@@ -402,7 +460,7 @@
   (setq astui:*pitch-text* "3")
   (ast:ui-put "Pitch" "Text" astui:*pitch-text*)
   (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))
-  (ast:ui-status "Select a guide or generated seam.")
+  (ast:ui-status "Select a stitch line or its generated cuts.")
   (princ))
 
 (defun c:ASTUICLOSE (reason)
@@ -435,9 +493,9 @@
         (progn
           (setq state (ast:cad-read astui:*guide*))
           (if (cdr (assoc 'ok state))
-            (progn
-              (ast:ui-adopt state)
+            (if (ast:ui-adopt state)
               (ast:ui-status (cond
+                ((cdr (assoc 'connection-conflict state)) (cdr (assoc 'connection-conflict state)))
                 ((cdr (assoc 'range-conflict state)) (cdr (assoc 'range-conflict state)))
                 ((cdr (assoc 'stale state)) "Inputs or guide changed. Generate to update cuts.")
                 (T "Saved seam inputs refreshed."))))

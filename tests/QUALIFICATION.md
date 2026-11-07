@@ -4,7 +4,7 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 
 | Check | Result |
 | --- | --- |
-| Native geometry: routes, angled/curved corners, reversal, closure, ranges, rejection and clearance | 698 passed |
+| Native geometry: routes, angled/curved corners, reversal, rigid transforms, closure, ranges, rejection and clearance | 1,035 passed |
 | Original HTML cases compared with actual native output at all four pitches | 80 match spacing/anchor constraints; 8 declared A03/A04 placement changes; no unexpected failures |
 | Connected geometry: corners, T/X, curved crossings, root identity and normalization | 43 passed |
 | Independent JavaScript oracle compared with native line/arc fitting | 540 passed |

@@ -26,16 +26,16 @@ S04/J06 protection and L01/L02 prefixes are translated into equivalent fixed nom
 ## Corners and deliberate changes
 
 - **Straight corners:** 112 combinations cover four pitches, both handednesses and signed turns from 30 to 150 degrees. Independent formulas check the hole and neighbouring centres. The original 45/90/135-degree included-angle examples are all in the gallery comparison.
-- **Curved corners:** 48 line/arc, arc/line and arc/arc combinations cover both turn directions and curve windings. Independent coordinates/tangents reconstruct both virtual tips and nominal chords. Complete three-opening routes and reversed traversal are checked. Tight R3 examples include valid, disjoint-construction and actual-collision outcomes.
+- **Curved corners:** 48 line/arc, arc/line and arc/arc combinations cover both turn directions and curve windings. Independent coordinates/tangents reconstruct both virtual tips and nominal chords. Complete three-opening routes, reversed traversal, rotation and translations up to (1000,1000) mm are checked. Tight R3 examples include valid, disjoint-construction and actual-collision outcomes.
 - **Angle limits:** checks bracket the chosen recipe's 22.483429-degree shallow-turn limit. With the illustrative width/margin of 0.2/0.2 mm, an included angle of 20.435 degrees passes and 20.434 degrees fails. These are profile-dependent examples, not universal stitching limits. Curvature, arm length and actual opening clearance also matter.
 - **A03/A04:** the exploratory source recipe centres the round hole at the guide vertex. The current rule makes the selected virtual slit tips meet, extending the straight-corner principle to curves. It preserves each arm's ordinary thread continuation; it does not promise equal guide/thread angles or superior stitched appearance. The comparison keeps the original free outer margins and shows the displaced hole explicitly.
 - **Other changes:** minimum corrections now sit centrally; exact footprint checks replace the old conservative length-only guard. T/X sharing is an added rule, tested by the connected-geometry suite rather than attributed to the original gallery.
 
 ## Defect found and fixed
 
-Reconstructing a valid corner left a supposed zero free span of **4.440892098500626e-16 mm**. The planner tried fitting another interval and rejected it. This caused 42 complete curved-corner checks and five original loop runs to fail. Comparing derived stations with the existing arithmetic tolerance before subtraction fixes the error. No manufacturing allowance or pitch relaxation was added.
+Reconstructing a valid corner left a supposed zero free span of **4.440892098500626e-16 mm**. The planner tried fitting another interval and rejected it. This caused 42 complete curved-corner checks and five original loop runs to fail. A subsequent rigid-motion check exposed the same issue away from the origin. The zero-span comparison now uses the existing arithmetic tolerance scaled to the source coordinates, extent and radius. At 1000 mm this is about 1.4e-11 mm; a genuine 1e-8 mm span still rejects. No manufacturing allowance or pitch relaxation was added. Arbitrarily large coordinate scales remain unqualified.
 
-Final evidence: **698 geometry assertions, 184 other native assertions, 540 independent native-fit comparisons; all passed.** The gallery performs **1,204 checks: 1,196 pass, eight identify the declared A03/A04 hole-location difference, zero unexpected failures.** The original JavaScript suite still passes its 30 core tests, 22 references and 1,637 invariants.
+Final evidence: **1,035 geometry assertions, 184 other native assertions, 540 independent native-fit comparisons; all passed.** The gallery performs **1,204 checks: 1,196 pass, eight identify the declared A03/A04 hole-location difference, zero unexpected failures.** The original JavaScript suite still passes its 30 core tests, 22 references and 1,637 invariants.
 
 ## Repeat
 

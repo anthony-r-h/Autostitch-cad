@@ -186,10 +186,17 @@
     (setq tail (cdr tail))) error)
 
 ;;; A sorted landmark reserves a nominal gap. No landmark is converted to a hole.
-(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved idx advances gaps advance gap next kind span opening-count free-length)
+(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved idx advances gaps advance gap next kind span opening-count free-length station-tol point)
   (setq pitch (ast:g-get 'pitch settings 3.0) step (ast:g-step primitive pitch) cursor start
         ordered (vl-sort landmarks '(lambda (aa bb) (< (cdr (assoc 'station aa)) (cdr (assoc 'station bb)))))
-        openings (list (ast:g-slit primitive start settings)) opening-count 1)
+        openings (list (ast:g-slit primitive start settings)) opening-count 1
+        station-tol (max (ast:g-length primitive) (abs start) (abs finish) (ast:g-get 'radius primitive 0.0)))
+  ;; Derived stations include roundoff from world-coordinate intersections.
+  (foreach point (if (= (ast:g-get 'kind primitive nil) 'line)
+                   (list (ast:g-get 'a primitive nil) (ast:g-get 'b primitive nil))
+                   (list (ast:g-get 'center primitive nil)))
+    (setq station-tol (max station-tol (abs (car point)) (abs (cadr point)))))
+  (setq station-tol (ast:g-tol station-tol))
   (foreach marker ordered
     (setq station (ast:g-get 'station marker nil))
     (if (not (ast:g-finite station)) (setq error "Landmark station must be finite.")
@@ -204,7 +211,7 @@
         (setq cursor (car span) next (cadr span))
         ;; Coincident derived anchors can differ by roundoff after subtraction.
         ;; Compare their stations first; a genuinely short positive span must fail.
-        (setq free-length (if (ast:g-near next cursor) 0.0 (max 0.0 (- next cursor))))
+        (setq free-length (if (<= (abs (- next cursor)) station-tol) 0.0 (max 0.0 (- next cursor))))
         (if (caddr span)
           (setq fit (list '(ok . T) (cons 'gaps (list pitch)) (cons 'advances (list (if (= (cdr (assoc 'kind primitive)) 'arc) (/ step (cdr (assoc 'radius primitive))) step)))))
           (setq fit (ast:g-fit (if (= (cdr (assoc 'kind primitive)) 'arc) (/ free-length (cdr (assoc 'radius primitive))) free-length) pitch (ast:g-get 'radius primitive nil) 0 0 (ast:g-get 'corrections settings T))))

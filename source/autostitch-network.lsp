@@ -78,7 +78,7 @@
 (defun ast:n-transform-point (point origin target old-axis new-axis parity / delta xx yy)
   (setq delta (ast:g-sub point origin) xx (ast:g-dot delta old-axis) yy (* parity (ast:g-dot delta (ast:g-left old-axis))))
   (ast:g-add target (ast:g-add (ast:g-mul new-axis xx) (ast:g-mul (ast:g-left new-axis) yy))))
-(defun ast:n-common-move (old-primitives new-primitives point / aa bb origin target old-axis new-axis scale old-length new-length parity valid result old-item new-item fraction)
+(defun ast:n-common-move (old-primitives new-primitives point / aa bb origin target old-axis new-axis parity valid result old-item new-item fraction)
   (setq aa (car old-primitives) bb (car new-primitives) origin (ast:g-point aa 0.0) target (ast:g-point bb 0.0)
         old-axis (ast:g-tangent aa 0.0) new-axis (ast:g-tangent bb 0.0))
   (foreach parity '(1 -1)
@@ -272,7 +272,7 @@
               (cons 'primitive (ast:g-trim-primitive primitive start finish)) (cons 'settings (ast:g-get 'settings path nil)) (cons 'landmarks local-marks)))) next-id (1+ next-id))))
         (setq sorted (cdr sorted)))
       (setq index (1+ index)))) edges)
-(defun ast:n-nodes (edges / nodes edge side point existing arm node)
+(defun ast:n-nodes (edges / nodes edge side point existing arm)
   (foreach edge edges
     (foreach side '(0 1)
       (setq point (ast:g-point (ast:g-get 'primitive edge nil) (if (= side 0) 0.0 (ast:g-length (ast:g-get 'primitive edge nil))))
@@ -320,12 +320,9 @@
                         edges (subst merged first-edge (vl-remove second-edge edges)) changed T))))))))) edges)
 (defun ast:n-set-edge (edges id key value / edge)
   (setq edge (ast:n-edge id edges)) (subst (ast:n-put key value edge) edge edges))
-(defun ast:n-end-tangent (edge side / primitive)
-  (setq primitive (ast:g-get 'primitive edge nil))
-  (if (= side 0) (ast:g-tangent primitive 0.0) (ast:g-mul (ast:g-tangent primitive (ast:g-length primitive)) -1.0)))
 
 ;;; All physical feature reservations are committed before any span is fitted.
-(defun ast:n-reserve (edges / nodes result node arms arm side edge primitive settings degree kind first-arm second-arm first-edge second-edge incoming outgoing corner opening start finish limit point error virtual-slits)
+(defun ast:n-reserve (edges / nodes result node arms arm side edge primitive settings degree kind first-arm second-arm first-edge second-edge incoming outgoing corner opening limit error virtual-slits)
   (setq nodes (ast:n-nodes edges))
   (foreach edge edges
     (setq edges (ast:n-set-edge edges (ast:g-get 'id edge nil) 'start 0.0)
@@ -369,7 +366,7 @@
   (if (and identity (setq existing (vl-some '(lambda (item) (if (equal identity (assoc 'node item)) item)) openings)))
     (if (ast:g-same-opening opening existing) openings nil)
     (append openings (list opening))))
-(defun ast:g-solve-set (paths connections / error prepared path item profile ids resolved node incidence owner point found edges reservations nodes openings intervals warnings edge primitive settings start finish start-node end-node direct result cuts cut index local-intervals adjusted all-primitives virtual-slits)
+(defun ast:g-solve-set (paths connections / error prepared path item profile ids resolved node incidence owner point edges reservations nodes openings intervals warnings edge primitive settings start finish start-node end-node direct result cuts cut index local-intervals adjusted all-primitives virtual-slits)
   (if (null paths) (setq error "Select a stitch line first."))
   (foreach path paths
     (if (not (and (numberp (ast:g-get 'id path nil)) (= (ast:g-get 'id path nil) (fix (ast:g-get 'id path nil)))))

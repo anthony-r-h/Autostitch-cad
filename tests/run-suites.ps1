@@ -1,6 +1,7 @@
 param(
   [string]$DrawingName = 'Autostitch-native.dwg',
-  [ValidateRange(1, 3600)][int]$TimeoutSeconds = 180
+  [ValidateRange(1, 3600)][int]$TimeoutSeconds = 180,
+  [switch]$IncludeUi
 )
 $ErrorActionPreference = 'Stop'
 $stitchRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -9,22 +10,18 @@ New-Item -ItemType Directory -Path $stitchOutput -Force | Out-Null
 $stitchLispRoot = $stitchRoot.Replace('\', '/').Replace('"', '\"')
 $stitchScript = Join-Path $stitchOutput 'all-suites.lsp'
 $stitchReport = Join-Path $stitchOutput 'all-suites.txt'
-$stitchSuites = @(
-  'AST:G-TESTS', 'AST:N-TESTS', 'AST:CAD-TESTS', 'AST:CAD-LIFECYCLE-TESTS',
-  'AST:CAD-REPAIR-TESTS', 'AST:CAD-CORRESPONDENCE-TESTS', 'AST:CAD-RANGE-TESTS',
-  'AST:CAD-CONNECTED-TESTS', 'AST:CAD-MISSING-TESTS', 'AST:MARKER-TESTS', 'AST:HOST-TESTS',
-  'AST:DISPLAY-TESTS'
-)
+$stitchCatalog = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'cases.json') -Raw | ConvertFrom-Json
+$stitchSuites = @($stitchCatalog.suites | Where-Object {
+  $_.runner -eq 'suite' -or ($IncludeUi -and $_.runner -eq 'ui')
+} | ForEach-Object { $_.entrypoint.ToUpperInvariant() })
+$stitchLoads = @($stitchCatalog.nativeLoads)
+if ($IncludeUi) { $stitchLoads = @('AUTOSTITCH.lsp') + $stitchLoads }
+$stitchLoadForms = ($stitchLoads | ForEach-Object { '"' + $_ + '"' }) -join ' '
 if (Test-Path -LiteralPath $stitchReport) { Remove-Item -LiteralPath $stitchReport }
 $stitchDriver = @'
 (setq ast:suite-file (open "@ROOT@/output/native/all-suites.txt" "w"))
 (setq ast:suite-load-failed nil ast:suite-failed nil ast:suite-completed 0)
-(foreach ast:suite-path '("source/autostitch-geometry.lsp" "source/autostitch-network.lsp"
-    "source/autostitch-cad.lsp" "source/autostitch-markers.lsp"
-    "tests/autostitch-geometry-tests.lsp" "tests/autostitch-network-tests.lsp"
-    "tests/autostitch-cad-tests.lsp" "tests/autostitch-connected-tests.lsp"
-    "tests/autostitch-marker-tests.lsp" "tests/autostitch-host-tests.lsp"
-    "tests/autostitch-display-tests.lsp")
+(foreach ast:suite-path '(@LOADS@)
   (setq ast:suite-result (vl-catch-all-apply 'load (list (strcat "@ROOT@/" ast:suite-path))))
   (if (vl-catch-all-error-p ast:suite-result)
     (progn
@@ -53,7 +50,7 @@ $stitchDriver = @'
 (close ast:suite-file)
 (princ)
 '@
-$stitchDriver.Replace('@ROOT@', $stitchLispRoot).Replace('@SUITES@', ($stitchSuites -join ' ')) |
+$stitchDriver.Replace('@ROOT@', $stitchLispRoot).Replace('@SUITES@', ($stitchSuites -join ' ')).Replace('@LOADS@', $stitchLoadForms) |
   Set-Content -LiteralPath $stitchScript -Encoding UTF8
 & (Join-Path $PSScriptRoot 'run-native.ps1') -ScriptPath $stitchScript -DrawingName $DrawingName
 $stitchDeadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)

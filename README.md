@@ -1,68 +1,59 @@
 # Autostitch for BricsCAD
 
-A BricsCAD tool that turns editable stitch lines into regenerable slit and hole layouts, including connected corners, T junctions and crossings.
+Lay out stitch holes from editable pattern lines. Set pitch, mark pattern landmarks, and connect lines where they share stitching. Regenerate after editing the pattern; the source lines remain the source of truth.
 
-The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [the original-axiom audit](tests/AXIOM_AUDIT.md) for case coverage and explicit rule changes, and [verification results](tests/QUALIFICATION.md) for native checks and limits. Physical tool calibration remains open.
+## Use
 
-## Start here
+1. Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and `source/` together. Requires BricsCAD V22 and OpenDCL 10.1.2.2 on Windows.
+2. **APPLOAD** `AUTOSTITCH.lsp`, then run **AUTOSTITCH**.
+3. **Select stitch line**, enter **Stitch pitch**, then **Generate stitches**.
+4. Edit the guide with normal CAD tools. Select its guide, editing marker or generated block to reopen it, then Generate again.
 
-1. Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and the `source` folder together. The event bridge uses BricsCAD V22's built-in .NET support; no external package installation is needed.
-2. In BricsCAD, use **APPLOAD** to load [AUTOSTITCH.lsp](AUTOSTITCH.lsp), then run **AUTOSTITCH**.
-3. Click **Select stitch line**, enter **Stitch pitch** in millimetres, then **Generate stitches**. The starting pitch is 3 mm. New lines reuse the last committed pitch; existing work restores its saved inputs.
-4. Edit the original line using normal CAD tools, then **Generate stitches** again. Select a source line, its editing markers or its linked output to reopen the work.
+Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation 0 with a positive Z normal. Pitch and tool dimensions are millimetres. Drawing units come from `INSUNITS`; unitless drawings ask for millimetres or inches.
 
-After opening the palette once, its commands are available in other drawings opened during that BricsCAD session.
+| Control | Action |
+| --- | --- |
+| Set start / Set end | Pick where stitching begins and stops along an open guide. `Default` restores that endpoint; `WholeLine` restores both. |
+| Reverse direction | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
+| Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
+| Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
+| Connect stitch lines | Select another guide. Corners, branches and crossings in the connected set share openings. Multiple intersections offer `ConnectAll`. |
+| Disconnect line | Separate the selected member and regenerate the resulting sets. |
+| Generate stitches | Save pitch and replace the complete output in one Undo step. Failure preserves the previous output. Independently moved output returns to its guides. |
 
-The release ZIP includes `examples/Autostitch-practical-demo.dwg`: fourteen editable examples covering landmarks, straight and curved corners, mixed polyline/line paths, branches and crossings. Open it, run AUTOSTITCH, and select a source line to try the controls.
+Corners within a polyline are automatic. Separate entities need Connect stitch lines; nearby pattern geometry does not connect itself.
 
-Supported source entities are `LINE`, `ARC`, `CIRCLE` and `LWPOLYLINE`, including bulged arc segments. They must lie in **WCS XY at Z=0**, with a positive Z normal. Separate entities can meet or cross without a CAD Join operation. Invalid constructions and overlapping stitch holes are rejected before output is replaced.
+Each connected set has one output block. Members keep their own pitch, direction, endpoints and landmarks. Selecting a member shows its inputs; Generate recomputes the whole set. The stitch ID is shared by the set, appears in the palette and a small box opposite `S`, and stays the same across regenerations. At a shared start junction, the box sits slightly along the main guide. IDs are local to the drawing.
 
-Each independent line or connected set is limited to **2,000 openings**. Larger requests fail explicitly; output is never truncated.
+## Read the drawing
 
-Drawing units come from `INSUNITS`; pitch and tool dimensions are always millimetres. A unitless drawing asks whether one drawing unit means a millimetre or an inch. Saved seams retain their unit conversion.
+| Mark | Meaning |
+| --- | --- |
+| Slit or filled circle | Physical opening. |
+| Thin connecting line | Thread display. |
+| Capital `I` at a slit | Spacing beside this slit differs from nominal pitch; place that spacing individually. |
+| Dashed virtual slits | Construction for a sharp corner's round hole. |
+| `S`, `E`, arrow | Start, end and direction. |
+| `J` / `L#` | Junction / landmark. |
+| Boxed ID | Stitch block identity; one label per connected set. |
 
-## Connecting stitch lines
+Slits and `I` marks use 0.30 mm strokes; thread and construction use 0.09 mm. Round holes print black. Generate includes these displays and enables their layers. Editing labels, including boxed IDs, are on nonprinting `AUTOSTITCH_UI`.
 
-Select one line, click **Connect stitch lines**, then select another line or its stitches. One new intersection connects directly. When several intersections need coordination, the tool reports the count and offers **ConnectAll** or Cancel. This includes intersections with the other lines already connected to either selection. Nearby unselected drawing geometry has no effect.
+## Edit and repair
 
-Connected lines share one output block on `AUTOSTITCH`. Corners, crossings and branches coordinate their shared opening. Two lines that simply continue along the same straight line or circle, with the same pitch, become one uninterrupted run; their source boundary does not force a hole. Each source keeps its own pitch, direction, landmarks and any older saved limits; the physical slit/hole profile must agree. Selecting a member edits that line's inputs, while **Generate stitches** recomputes the whole connected set. A failed operation preserves the previous complete output.
+- Markers follow native MOVE, STRETCH and ERASE with Undo/Redo. Generate updates the stitches. Properties and automation edits refresh markers on selection.
+- A landmark stores a position along its guide, not a live link to the snapped pattern object. If that reference moves independently, remove and add the landmark.
+- If an edit invalidates attachments, replace start/end picks or use `WholeLine`; remove affected landmarks (`ClearAll` is available); disconnect and reconnect affected junctions.
+- If a source was deleted, select a surviving member or old output and choose **Remove missing lines**. Failed repair preserves the old output.
+- Copy the complete set of sources and output together to retain editability. Output copied alone is static. Partial copies cannot regenerate the originals.
+- After switching drawings, select a guide before generating.
 
-**Disconnect line** removes the selected line's connections and regenerates the resulting independent sets. If a source was deleted, select a surviving line or the old output and use **Remove missing lines**. This repairs the remaining connections without requiring Undo, including when the first selected line was deleted. Generate remains blocked until that explicit repair succeeds.
+## Reference
 
-## Editing a line
-
-- **Add landmark** picks an existing point on the pattern: snap to an endpoint, intersection or other reference point. The two neighbouring stitches retain nominal spacing, centred around that location; there is no hole at the landmark. Choose a landmark in the list and use **Remove landmark** to remove its constraint. To relocate one, remove it and add it again. Pattern geometry is unchanged.
-- **Set start / Set end** choose where stitching begins and stops, including points within a guide. **Reverse direction** swaps the traversal direction. New lines default to the whole guide. At a point prompt, **Default** restores that endpoint; **WholeLine** restores both endpoints.
-- For a closed line, your first selection pick chooses where stitching begins. **Set start** changes that point; **Set end** is disabled.
-- **Generate stitches** commits the current pitch and output together. It also restores output moved, rotated or scaled independently back to its guides. Native **Undo / Redo** can reverse these operations.
-- Reopening **AUTOSTITCH** also reloads saved inputs. After switching drawings, select a guide again before generating; a click cannot reuse another drawing's displayed seam.
-
-The original sources remain authoritative and stay outside the stitch blocks. Editing aids are saved, nonplotting blocks on `AUTOSTITCH_UI`: compact `S` (start), `E` (end), `J` (junction), and a heavy transverse bar with `L#` (landmark). A subtle boxed stitch ID sits opposite `S`; it matches the palette and the stable ID in the generated block name. Connected guides share one ID and one box on their main guide. If that start is a junction, the box sits slightly along the guide. These IDs are local to the drawing; regeneration changes the block revision, not its ID. Point picking enables endpoint, midpoint, intersection, centre and node snaps alongside your existing snap choices, then restores your exact previous settings. Markers survive redraws and reopening, and follow ordinary MOVE, STRETCH and ERASE commands with Undo/Redo. Stitches update only when you Generate. Changes made through Properties, automation or another LISP routine refresh markers when the line is selected again.
-
-A picked landmark is projected onto the nearest position on the stitch guide and attaches at a fixed physical distance along that segment. It is not a live link to another pattern object: if that object moves independently, remove and add the landmark again. Changed polyline topology can require rebuilding landmarks; **Remove landmark** offers **ClearAll** when correspondence is invalid. If saved limits cannot follow an edit, use **Set start / Set end** to choose replacements, or **WholeLine** in either pick prompt to reset both. For a connection whose attachment changed or disappeared, disconnect the affected line, then connect it again.
-
-Within one drawing, copy all connected source lines and their output together to retain an editable copy. Copying output alone leaves static stitches; a partial source copy cannot edit the originals. Raw source guides must not overlap for a positive length, even when their selected ranges divide that overlap into adjacent pieces. Trim the overlapping source geometry before connecting it.
-
-## Tool assumptions
-
-Generated stitching always includes thread lines, changed-spacing crossbars and the virtual slits used to construct sharp corner holes. Slits and crossbars use **0.30 mm** strokes; thread and dashed virtual slits use **0.09 mm**. Round holes are filled, black on paper and white on a dark CAD background. These stroke weights control drawing appearance; the physical tool dimensions remain unchanged.
-
-Short crossbars mark both tips of slits beside adjusted spacing, making each affected slit look like a capital `I`. Dashed virtual slits meet at the calculated round-hole centre; they are construction guides for sharp two-arm corners. T/X branch holes use their existing guide-intersection rule. Direction arrows sit on the stitch line just after `S`, following its direction.
-
-Generate enables the thread, notation and construction layers for viewing and printing. Actual slits and circle boundaries stay on `AUTOSTITCH`, thread on `AUTOSTITCH_STITCHES`, crossbars and hole fills on `AUTOSTITCH_NOTES`, and dashed virtual slits on `AUTOSTITCH_CONSTRUCTION`. Editing labels remain nonplotting on `AUTOSTITCH_UI`. Older output needs **Generate stitches** once to receive the revised display. Nominal spacing on a curve does not guarantee a rigid multi-tooth iron will fit.
-
-The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
-
-## Design and development
-
-[STITCH_MODEL.md](STITCH_MODEL.md) defines geometry; [PHYSICAL_RULES.md](PHYSICAL_RULES.md) defines physical claims. [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md) records implementation scope and acceptance gates. [REVIEW.md](REVIEW.md) retains the design review.
-
-The older JavaScript laboratory and gallery remain available and contain earlier rules, including superseded A03/A04 experiments. They are not runtime dependencies of the CAD plugin. To inspect them with Node.js 18+:
-
-```sh
-node run-tests.mjs
-node build.mjs
-node test-viewer.mjs
-node review/model-evidence.mjs
-node review/correction-evidence.mjs
-```
+- [Axioms and their motivation](docs/AXIOMS.md)
+- [Model and fitting mathematics](docs/MODEL.md)
+- [Junction construction](docs/JUNCTIONS.md)
+- [Limitations, uncertainties and physical checks](docs/LIMITS.md)
+- [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [original-rule audit](tests/AXIOM_AUDIT.md)
+- [Long-form README outline](docs/README_OUTLINE.md)
+- [Repository and development instructions](AGENTS.md)

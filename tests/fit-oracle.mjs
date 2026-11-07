@@ -1,7 +1,9 @@
-// Standalone review evidence. Does not change production fits or generated results.
-// Run from repository root: node review/correction-evidence.mjs
+// Independent fit selector and exhaustive check; node tests/fit-oracle.mjs.
 import assert from 'node:assert/strict';
-import {fitSpan, fitCircularSpan} from '../geometry.mjs';
+import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
+const catalog = JSON.parse(fs.readFileSync(new URL('./cases.json', import.meta.url), 'utf8'));
+const sweep = catalog.oracle.exhaustive;
 
 const EPS = 1e-9;
 const near = (a, b) => Math.abs(a - b) <= EPS;
@@ -48,7 +50,7 @@ function minimumK(v, n) {
   return capacity > 0 ? ceil(Math.abs(r) / capacity) : Infinity;
 }
 
-export function proposed(spec) {
+export function selectFit(spec) {
   const v = parameters(spec);
   if (!v) return null;
   const q = v.start + v.end;
@@ -89,7 +91,7 @@ function oracle(spec) {
   const v = parameters(spec);
   if (!v) return null;
   let best = null;
-  // Deliberately no proposed feasible-range, K-range, parity selection, or
+  // Deliberately no selector feasible-range, K-range, parity selection, or
   // rounding formula: enumerate counts, correction counts, and block starts.
   for (let n = 1; n <= Math.ceil(v.total / v.min) + 1; n++) {
     if (n < v.start + v.end) continue;
@@ -112,7 +114,7 @@ function oracle(spec) {
 
 let checks = 0;
 function verify(spec) {
-  const actual = proposed(spec), expected = oracle(spec);
+  const actual = selectFit(spec), expected = oracle(spec);
   assert.equal(Boolean(actual), Boolean(expected), JSON.stringify(spec));
   if (actual) {
     for (const key of ['n', 'k', 'i', 'exactCentre']) {
@@ -124,29 +126,18 @@ function verify(spec) {
   return actual;
 }
 
-const examples = [
-  {D: 31.5, p: 3}, {D: 30.3, p: 3}, {D: 6.3, p: 3, end: 1},
-  {D: 30.5, p: 3}, {D: 31, p: 3},
-  {R: 10, sweep: Math.PI / 2, p: 3},
-  {R: 10, sweep: 2 * Math.PI, p: 3, end: 1},
-];
-for (const spec of examples) {
-  const selected = verify(spec);
-  const options = {protectedStart: spec.start ?? 0, protectedEnd: spec.end ?? 0};
-  const baseline = spec.R ? fitCircularSpan(spec.R, spec.sweep, spec.p, options)
-    : fitSpan(spec.D, spec.p, options);
-  console.log(JSON.stringify({spec, baseline: {n: baseline.intervalCount,
-    k: baseline.correctionCount, indices: baseline.adjustedIndices}, proposed: selected}));
-}
-const protections = [[0, 0], [0, 1], [1, 0], [1, 1], [0, 3], [2, 1]];
-for (const p of [2.7, 3, 3.38, 3.85]) {
-  for (let units = 1; units <= 300; units++) {
-    for (const [start, end] of protections) verify({D: units * .3, p, start, end});
-  }
-  for (const R of [1.35, 1.5, 2, 3, 10, 30]) {
-    for (const sweep of [.1, .5, 1, Math.PI / 2, Math.PI, 1.5 * Math.PI, 2 * Math.PI]) {
-      for (const [start, end] of protections) verify({R, sweep, p, start, end});
+if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
+  for (const spec of sweep.examples) verify(spec);
+  const protections = sweep.protections;
+  for (const p of catalog.oracle.pitches) {
+    for (let units = 1; units <= sweep.lengthCount; units++) {
+      for (const [start, end] of protections) verify({D: units * sweep.lengthStep, p, start, end});
+    }
+    for (const R of sweep.radii) {
+      for (const angle of sweep.sweeps) {
+        for (const [start, end] of protections) verify({R, sweep: angle, p, start, end});
+      }
     }
   }
+  console.log(`Correction selection: ${checks} cases matched exhaustive count/block oracle.`);
 }
-console.log(`Proposed correction selection: ${checks} cases matched exhaustive count/block oracle.`);

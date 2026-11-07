@@ -58,8 +58,8 @@
       (if (vl-catch-all-error-p result)
         (progn
           (vl-bb-set 'AST-AUTOLOAD-FILE nil)
-          (princ (strcat "\nAUTOSTITCH: Could not enable other drawings: "
-            (vl-catch-all-error-message result)))))))
+          (setq ast:*load-error* (vl-catch-all-error-message result))
+          (princ "\nAUTOSTITCH: Could not enable other drawings. APPLOAD AUTOSTITCH.lsp in the drawing you want to edit.")))))
   (princ))
 
 (defun ast:autoload-document (/ result ast:*autoloading*)
@@ -68,8 +68,9 @@
     (progn
       (setq result (vl-catch-all-apply 'ast:load-components nil))
       (if (vl-catch-all-error-p result)
-        (princ (strcat "\nAUTOSTITCH: Could not initialize this drawing: "
-          (vl-catch-all-error-message result)))))))
+        (progn
+          (setq ast:*load-error* (vl-catch-all-error-message result))
+          (princ "\nAUTOSTITCH: Could not load the tool in this drawing. Keep the installation folder intact, then APPLOAD AUTOSTITCH.lsp again."))))))
 
 (defun c:AUTOSTITCH (/ result)
   (setq result
@@ -78,7 +79,9 @@
          (if (or ast:*components-loaded* (ast:load-components))
            (if (ast:ui-open) (ast:register-documents)))) nil))
   (if (vl-catch-all-error-p result)
-    (princ (strcat "\nAUTOSTITCH: " (vl-catch-all-error-message result))))
+    (progn
+      (setq ast:*load-error* (vl-catch-all-error-message result))
+      (princ "\nAUTOSTITCH: Could not open the stitch tool. Check that OpenDCL is installed, keep the installation folder intact, then APPLOAD AUTOSTITCH.lsp again.")))
   (princ))
 
 (vl-acad-defun 'ast:events-ready)

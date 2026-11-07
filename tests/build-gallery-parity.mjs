@@ -3,9 +3,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {CASES, PITCHES, runCase} from '../case-suite.mjs';
-import {solveCorner} from '../geometry.mjs';
-import {renderSvg} from '../render-svg.mjs';
+import {renderSvg} from './render-svg.mjs';
+const catalog=JSON.parse(fs.readFileSync(new URL('./cases.json',import.meta.url),'utf8'));
+const baseline=JSON.parse(fs.readFileSync(new URL('./fixtures/gallery-baseline.json',import.meta.url),'utf8')).cases;
+const CASES=catalog.geometry, PITCHES=catalog.pitches;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(root, 'output', 'native');
@@ -33,8 +34,6 @@ function openingClearance(a,b){
   const [aa,ab]=ends(a),[ba,bb]=ends(b);
   return segmentDistance(aa,ab,ba,bb)-(a.diameter||0)/2-(b.diameter||0)/2;
 }
-const line = (a,b) => ({kind:'line', a:reflect(a), b:reflect(b)});
-const arc = (center,radius,start,sweep) => ({kind:'arc',center:reflect(center),radius,'start-angle':-start,sweep:-sweep});
 const length = g => g.kind === 'line' ? distance(g.a,g.b) : g.radius*Math.abs(g.sweep);
 function station(g, point) {
   if (g.kind === 'line') return ((point[0]-g.a[0])*(g.b[0]-g.a[0])+(point[1]-g.a[1])*(g.b[1]-g.a[1]))/length(g);
@@ -51,64 +50,14 @@ function pointAt(g,s) {
   return [g.center[0]+g.radius*Math.cos(a),g.center[1]+g.radius*Math.sin(a)];
 }
 
-function fixture(spec,pitch) {
-  const original=runCase(spec,pitch), settings={pitch}, landmarks=[];
-  let primitives, closed=false, translation='Same guide, endpoints, and landmarks.', fidelity='direct';
-  if(['straight','fixed-gap'].includes(spec.kind)) {
-    primitives=[line([0,0],[spec.length,0])];
-    for(const s of spec.gaps||[]) landmarks.push({primitive:0,station:s});
-    if(spec.protectedEnd) {
-      landmarks.push({primitive:0,station:spec.length-pitch/2});
-      translation='The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed.';
-      fidelity='equivalent constraints';
-    }
-  } else if(spec.kind === 'continuation') {
-    primitives=[line([-10,0],[0,0]),line([0,0],[10,0])];
-  } else if(['corner','ordered-corner','near-corner'].includes(spec.kind)) {
-    const turn=rad(spec.turn);
-    primitives=[line([-spec.inLength,0],[0,0]),line([0,0],[spec.outLength*Math.cos(turn),spec.outLength*Math.sin(turn)])];
-    if(spec.kind==='ordered-corner') {
-      landmarks.push({primitive:0,station:spec.inLength+solveCorner(spec.turn,pitch).previous[0]-pitch/2});
-      translation='The original final ordinary approach interval is protected by its exact midpoint landmark.';
-      fidelity='equivalent constraints';
-    }
-    if(spec.kind==='near-corner') landmarks.push({primitive:0,station:spec.inLength-spec.edgeOffset});
-  } else if(['arc','arc-gap'].includes(spec.kind)) {
-    primitives=[arc([0,spec.radius],spec.radius,-Math.PI/2,rad(spec.sweep))];
-    if(spec.kind==='arc-gap') landmarks.push({primitive:0,station:spec.radius*rad(spec.gapAngle)});
-  } else if(spec.kind==='curved-junction') {
-    const turn=rad(spec.turn), sweep=rad(spec.sweep), r=spec.radius, r2=spec.secondRadius;
-    primitives=[arc([0,r],r,-Math.PI/2-sweep,sweep),spec.second==='line'
-      ? line([0,0],[10*Math.cos(turn),10*Math.sin(turn)])
-      : arc([-r2*Math.sin(turn),r2*Math.cos(turn)],r2,turn-Math.PI/2,sweep)];
-    translation='Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly.';
-    fidelity='changed corner rule';
-  } else if(spec.kind==='line-arc') {
-    primitives=[line([-spec.length,0],[0,0]),arc([0,spec.radius],spec.radius,-Math.PI/2,rad(spec.sweep))];
-  } else if(spec.kind==='circle') {
-    primitives=[arc([0,0],spec.radius,-Math.PI/2,2*Math.PI)];closed=true;
-    const step=2*Math.asin(pitch/(2*spec.radius))*spec.radius;
-    const count=Math.floor((rad(spec.builtSweep)+1e-12)/(step/spec.radius));
-    for(let i=0;i<count;i++)landmarks.push({primitive:0,station:(i+.5)*step});
-    landmarks.push({primitive:0,station:length(primitives[0])-step/2});
-    translation='Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command.';
-    fidelity='equivalent constraints';
-  } else if(spec.kind==='rectangle') {
-    const vertices=[[0,0],[spec.width,0],[spec.width,spec.height],[0,spec.height]];
-    primitives=vertices.map((v,i)=>line(v,vertices[(i+1)%4]));closed=true;
-  } else throw new Error(`Unmapped original case: ${spec.id}`);
-  if(['continuation','corner','curved-junction','line-arc'].includes(spec.kind) && original.slits.length) {
-    const first=reflect(original.slits[0].center),last=reflect(original.slits.at(-1).center);
-    settings.start=station(primitives[0],first);
-    settings.end=primitives.slice(0,-1).reduce((n,g)=>n+length(g),0)+station(primitives.at(-1),last);
-    translation+=spec.kind==='curved-junction'
-      ? ' The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed.'
-      : ' The gallery\'s free outer margins are encoded as explicit start/end positions at its first and last nominal centres.';
-    if(fidelity==='direct')fidelity='equivalent constraints';
-  }
-  return {id:spec.id,pitch,spec,original,route:{primitives,closed},settings,landmarks,translation,fidelity};
-}
-const fixtures=PITCHES.flatMap(p=>CASES.map(s=>fixture(s,p)));
+const fixtures=PITCHES.flatMap(pitch=>CASES.map(spec=>{
+  const variant=spec.variants.find(v=>v.pitch===pitch);
+  const original=baseline.find(b=>b.id===spec.id&&b.pitch===pitch)?.result;
+  if(!variant||!original)throw new Error(`Missing fixture or baseline: ${spec.id}/${pitch}`);
+  return {id:spec.id,pitch,spec:{...spec,question:spec.description},original,...variant,
+    fidelity:variant.expected.comparison,translation:variant.notes};
+}));
+const freeFixtures=fixtures.filter(f=>f.spec.kind==='curved-junction');
 const symbolKeys=new Set(['kind']);
 function lisp(value,key='') {
   if(value===null||value===false)return 'nil';
@@ -144,12 +93,12 @@ if(!process.argv.includes('--report')) {
 (setq ast:gallery-file (open ${JSON.stringify(cadPath(path.join(output,'gallery-native.txt')))} "w"))
 (foreach ast:gallery-fixture (list\n${entries.join('\n')})
   (write-line (ast:gallery-format (ast:gallery-record ast:gallery-fixture)) ast:gallery-file))
-(write-line "DONE 88" ast:gallery-file)
+(write-line "DONE ${fixtures.length}" ast:gallery-file)
 (close ast:gallery-file)
 (princ)
 `;
   fs.writeFileSync(path.join(output,'gallery-native.lsp'),script);
-  const freeEntries=fixtures.filter(f=>f.spec.kind==='curved-junction').map(f=>
+  const freeEntries=freeFixtures.map(f=>
     `(list ${JSON.stringify(f.id)} ${f.pitch} '${lisp(f.route)} '${lisp({pitch:f.pitch})} nil)`);
   const freeScript=script.slice(0,script.indexOf('(setq ast:gallery-file'))+`
 (defun ast:gallery-free-corner (fixture / route settings primitives incoming outgoing corner before after start finish step-in step-out)
@@ -166,14 +115,14 @@ if(!process.argv.includes('--report')) {
 (setq ast:gallery-file (open ${JSON.stringify(cadPath(path.join(output,'gallery-free-corners.txt')))} "w"))
 (foreach ast:gallery-fixture (list\n${freeEntries.join('\n')})
   (write-line (ast:gallery-format (ast:gallery-free-corner ast:gallery-fixture)) ast:gallery-file))
-(write-line "DONE 8" ast:gallery-file)
+(write-line "DONE ${freeFixtures.length}" ast:gallery-file)
 (close ast:gallery-file)
 (princ)
 `;
   fs.writeFileSync(path.join(output,'gallery-free-corners.lsp'),freeScript);
   fs.writeFileSync(path.join(output,'gallery-fixtures.json'),JSON.stringify(fixtures,null,2));
-  console.log('Generated 88 original-gallery native cases: output/native/gallery-native.lsp');
-  console.log('Also generated gallery-free-corners.lsp for the 8 changed curved-corner constructions with free outer margins.');
+  console.log(`Generated ${fixtures.length} original-gallery native cases: output/native/gallery-native.lsp`);
+  console.log(`Also generated gallery-free-corners.lsp for ${freeFixtures.length} curved-corner constructions with free outer margins.`);
   console.log('Load both in disposable BricsCAD drawing, then node tests/build-gallery-parity.mjs --report');
 } else {
   report();
@@ -195,16 +144,16 @@ function comparisonSvg(result,other){
     ...r.markers.map(m=>m.point)]);
   const minimum=[0,1].map(i=>Math.min(...points.map(p=>p[i]))),maximum=[0,1].map(i=>Math.max(...points.map(p=>p[i])));
   const prefix=`${result.id}-${result.pitch}-${result.title.includes('native BricsCAD')?'native':'original'}`;
-  return renderSvg({...result,guides:[...result.guides,[minimum],[maximum]],virtualSlits:[]},
+  return renderSvg({...result,guides:[...result.guides,[minimum],[maximum]],virtualSlits:[],helpers:[]},
     {width:600,height:330,showThreads:true,showVirtuals:false})
     .replaceAll('figure-title',prefix+'-title').replaceAll('figure-desc',prefix+'-desc');
 }
 function report(){
   const lines=fs.readFileSync(path.join(output,'gallery-native.txt'),'utf8').trim().split(/\r?\n/);
-  if(lines.pop()!=='DONE 88'||lines.length!==88)throw new Error('Native report incomplete; expected all 88 records and DONE 88.');
+  if(lines.pop()!==`DONE ${fixtures.length}`||lines.length!==fixtures.length)throw new Error(`Native report incomplete; expected ${fixtures.length} records.`);
   const records=lines.map(parse), reports=[];
   const freeLines=fs.readFileSync(path.join(output,'gallery-free-corners.txt'),'utf8').trim().split(/\r?\n/);
-  if(freeLines.pop()!=='DONE 8'||freeLines.length!==8)throw new Error('Native free-corner report incomplete.');
+  if(freeLines.pop()!==`DONE ${freeFixtures.length}`||freeLines.length!==freeFixtures.length)throw new Error('Native free-corner report incomplete.');
   const freeRecords=freeLines.map(parse);
   for(const f of fixtures){
     const matches=records.filter(r=>r[0]===f.id&&Math.abs(r[1]-f.pitch)<1e-8);
@@ -289,7 +238,7 @@ function report(){
   const anchor=r=>`${r.id}-${String(r.pitch).replace('.','-')}`;
   const matrix=`<div style="overflow-x:auto"><table><thead><tr><th>Original case</th>${PITCHES.map(p=>`<th>${p} mm</th>`).join('')}</tr></thead><tbody>${CASES.map(s=>`<tr><th>${esc(s.id)} · ${esc(s.title)}</th>${PITCHES.map(p=>{const r=reports.find(r=>r.id===s.id&&r.pitch===p);return `<td><a class="${cssClass(r)}" href="#${anchor(r)}">${r.category==='pass'?'Pass':r.category==='rule difference'?'Rule change':'Defect'}</a></td>`;}).join('')}</tr>`).join('')}</tbody></table></div>`;
   const sections=reports.map(r=>`<details id="${anchor(r)}" ${!r.passed?'open':''}><summary class="${cssClass(r)}">${esc(r.id)} · ${r.pitch} mm · ${esc(r.title)} — ${r.category.toUpperCase()}</summary><p>${esc(r.translation)}</p><p>Original: ${esc(r.originalStatus)}. Native: ${esc(r.nativeStatus)}${r.error?'. '+esc(r.error):''}.</p>${r.fixedOldPhase?`<p>Auxiliary check with the old outer phase held fixed: ${esc(r.fixedOldPhase.status)}. ${esc(r.fixedOldPhase.error||"The fixed phase remains feasible.")} This stricter check is not the free-margin source case.</p>`:""}<div class="pair"><figure><figcaption>Original HTML construction</figcaption>${comparisonSvg(r.original,r.native)}</figure><figure><figcaption>Actual native solver output</figcaption>${comparisonSvg(r.native,r.original)}</figure></div><ul>${r.checks.map(c=>`<li class="${c.passed?'pass':c.expectedRuleDifference?'change':'fail'}">${c.passed?'PASS':c.expectedRuleDifference?'RULE DIFFERENCE':'FAIL'} — ${esc(c.name)}</li>`).join('')}</ul></details>`).join('\n');
-  const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Original gallery vs native BricsCAD — 88 cases</title><style>body{max-width:1320px;margin:32px auto;padding:0 24px;font:16px/1.5 system-ui;color:#182024;background:#fafafa}h1{font-size:28px}details{border-top:1px solid #c9cdcf;padding:15px 0}summary{font-weight:650;cursor:pointer}table{border-collapse:collapse;width:100%;margin:24px 0}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #ddd}.change{color:#946000}.pass{color:#176d44}.fail{color:#a42624}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}figure{margin:0;background:white;border:1px solid #ddd}figcaption{padding:8px 14px;font-weight:600}svg{width:100%;height:auto}.guide{fill:none;stroke:#aab1b6;stroke-width:1.2}.slit{stroke:#172d37;stroke-width:2}.hole{fill:white;stroke:#172d37;stroke-width:1.5}.adjustment{stroke:#d78528;stroke-width:5;opacity:.5}.protected{stroke:#2d98b8;stroke-width:4;opacity:.4}.thread{stroke:#999}.helper{stroke:#bbb}.label{font:12px system-ui;fill:#4a5055}.marker{fill:#3695a6}.virtual{stroke:#999;stroke-dasharray:3 3}@media(max-width:800px){.pair{grid-template-columns:1fr}}</style><h1>Original gallery vs native BricsCAD</h1><p><strong>${passed} / 88 fixtures satisfy the checked original geometric constraints.</strong> ${summary.ruleDifferences} documented curved-corner rule changes; ${summary.unexpectedFailures} unexpected defects. Every one of the original 22 cases is run at all four original pitches.</p><p>These are actual AutoLISP solver results exported by BricsCAD. The independent JavaScript checks measure the emitted geometry. The original latest-eligible correction placement is deliberately replaced by central placement; minimum counts and protected constraints are still checked. Fixed-prefix and free-margin cases use explicitly stated, geometrically equivalent constraints. On rejected input, the original gallery retains a diagnostic prefix; the native solver returns no partial generation. That intentional failure-policy difference is not scored as geometric parity. Physical material behaviour and UI editing are outside this report.</p>${matrix}${sections}</html>`;
+  const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Original gallery vs native BricsCAD — ${fixtures.length} cases</title><style>body{max-width:1320px;margin:32px auto;padding:0 24px;font:16px/1.5 system-ui;color:#182024;background:#fafafa}h1{font-size:28px}details{border-top:1px solid #c9cdcf;padding:15px 0}summary{font-weight:650;cursor:pointer}table{border-collapse:collapse;width:100%;margin:24px 0}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #ddd}.change{color:#946000}.pass{color:#176d44}.fail{color:#a42624}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}figure{margin:0;background:white;border:1px solid #ddd}figcaption{padding:8px 14px;font-weight:600}svg{width:100%;height:auto}.guide{fill:none;stroke:#aab1b6;stroke-width:1.2}.slit{stroke:#172d37;stroke-width:2}.hole{fill:white;stroke:#172d37;stroke-width:1.5}.adjustment{stroke:#d78528;stroke-width:5;opacity:.5}.protected{stroke:#2d98b8;stroke-width:4;opacity:.4}.thread{stroke:#999}.helper{stroke:#bbb}.label{font:12px system-ui;fill:#4a5055}.marker{fill:#3695a6}.virtual{stroke:#999;stroke-dasharray:3 3}@media(max-width:800px){.pair{grid-template-columns:1fr}}</style><h1>Original gallery vs native BricsCAD</h1><p><strong>${passed} / ${fixtures.length} fixtures satisfy the checked original geometric constraints.</strong> ${summary.ruleDifferences} documented curved-corner rule changes; ${summary.unexpectedFailures} unexpected defects. Each of the ${CASES.length} original cases is run at all ${PITCHES.length} original pitches.</p><p>These are actual AutoLISP solver results exported by BricsCAD. The independent JavaScript checks measure the emitted geometry. The original latest-eligible correction placement is deliberately replaced by central placement; minimum counts and protected constraints are still checked. Fixed-prefix and free-margin cases use explicitly stated, geometrically equivalent constraints. On rejected input, the original gallery retains a diagnostic prefix; the native solver returns no partial generation. That intentional failure-policy difference is not scored as geometric parity. Physical material behaviour and UI editing are outside this report.</p>${matrix}${sections}</html>`;
   fs.writeFileSync(path.join(output,'gallery-parity.html'),html);
   console.log(JSON.stringify(summary));
   for(const r of reports.filter(r=>!r.passed))console.log(`${r.id} @ ${r.pitch}: ${r.error||r.checks.filter(c=>!c.passed).map(c=>c.name).join('; ')}`);

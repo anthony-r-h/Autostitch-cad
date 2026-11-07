@@ -6,7 +6,7 @@ using Teigha.Runtime;
 
 [assembly: ExtensionApplication(typeof(Autostitch.EditEvents))]
 [assembly: CommandClass(typeof(Autostitch.EditEvents))]
-[assembly: System.Reflection.AssemblyVersion("1.1.0.0")]
+[assembly: System.Reflection.AssemblyVersion("1.2.0.0")]
 
 namespace Autostitch
 {
@@ -79,6 +79,9 @@ namespace Autostitch
             syncing = true;
             try
             {
+                // A LISP action can issue native UNDO Begin/End while saving inputs.
+                // Re-entering its interpreter here can corrupt the active evaluation.
+                if ((Convert.ToInt32(Application.GetSystemVariable("CMDACTIVE")) & 32) != 0) return;
                 // History notifications may refresh controls only. Even opening a
                 // database transaction here can invalidate native Redo.
                 if (history)

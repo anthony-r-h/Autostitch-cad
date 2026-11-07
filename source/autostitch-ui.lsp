@@ -98,15 +98,15 @@
               ((cdr (assoc 'range-conflict astui:*state*))
                 (ast:ui-status (cdr (assoc 'range-conflict astui:*state*))))
               (astui:*placement-conflict*
-                (ast:ui-status "Cuts moved separately. Use Restore cut position."))
+                (ast:ui-status "Stitches moved separately. Use Restore position."))
               ((null (cdr (assoc 'output astui:*state*)))
-                (ast:ui-status "Stitch line selected. Generate to create cuts."))
+                (ast:ui-status "Stitch line selected. Generate to create stitches."))
               ((cdr (assoc 'stale astui:*state*))
-                (ast:ui-status "Guide changed. Generate to update cuts."))
+                (ast:ui-status "Guide changed. Generate to update stitches."))
               ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text") 2)
                            (cdr (assoc 'pitch astui:*settings*)) 1e-12))
                 (ast:ui-status "Pitch edited. Generate to apply it."))
-              (T (ast:ui-status "Cuts match saved inputs."))))))))
+              (T (ast:ui-status "Stitches match saved inputs."))))))))
   T)
 
 (vl-acad-defun 'ast:ui-native-refresh)
@@ -123,7 +123,7 @@
   (setq astui:*busy* T labels nil index 0)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
-          labels (cons (strcat "Gap " (itoa index) " | segment "
+          labels (cons (strcat "Landmark " (itoa index) " | segment "
             (itoa (1+ (cdr (assoc 'primitive attachment)))) " + "
             (rtos (cdr (assoc 'station attachment)) 2 2) " mm") labels)))
   (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Landmarks")
@@ -138,7 +138,7 @@
   (ast:ui-put "Restore" "Enabled" (if astui:*placement-conflict* T nil))
   (ast:ui-put "Seam" "Caption" (if astui:*guide*
     (strcat "Stitch line " (cdr (assoc 5 (entget astui:*guide*))) "  |  "
-      (itoa (length astui:*landmarks*)) " gaps") "No stitch line selected"))
+      (itoa (length astui:*landmarks*)) " landmarks") "No stitch line selected"))
   (ast:ui-put "Reverse" "Caption" "Reverse direction")
   (ast:ui-put "Start" "Caption" "Set start")
   (ast:ui-put "Start" "Enabled" (if astui:*guide* T nil))
@@ -194,14 +194,14 @@
             astui:*pitch-text* (if (equal (distof text 2) (cdr (assoc 'pitch settings)) 1e-12)
               text (rtos (cdr (assoc 'pitch settings)) 2 3)))
       (ast:ui-fill) (ast:ui-markers)
-      (ast:ui-status "Inputs saved. Generate to update cuts.") T)))
+      (ast:ui-status "Inputs saved. Generate to update stitches.") T)))
 
-(defun ast:ui-pick-point (prompt keywords / previous point)
-  ;; CEN/NODE select editing points without nearby cut endpoints competing.
+(defun ast:ui-pick-point (prompt-text keywords / previous point)
+  ;; Pattern endpoints/intersections are valid inputs, alongside our CEN/NODE markers.
   (setq previous (getvar "OSMODE"))
-  (setvar "OSMODE" 12)
+  (setvar "OSMODE" (logior (logand previous 16383) 47))
   (if keywords (initget keywords))
-  (setq point (vl-catch-all-apply 'getpoint (list prompt)))
+  (setq point (vl-catch-all-apply 'getpoint (list prompt-text)))
   (setvar "OSMODE" previous)
   (if (vl-catch-all-error-p point)
     (progn (ast:ui-status (vl-catch-all-error-message point)) nil)
@@ -210,13 +210,13 @@
 (defun ast:ui-pick-landmark (/ point result)
   (if (ast:ui-markers)
     (progn
-      (ast:ui-status "Pick the centre of a gap. Native object snaps are enabled.")
-      (setq point (ast:ui-pick-point "\nPick gap centre on the guide: " nil))
+      (ast:ui-status "Snap to an existing landmark on the pattern: an endpoint, intersection or point.")
+      (setq point (ast:ui-pick-point "\nSelect landmark point on the pattern: " nil))
       (if point
         (progn
           (setq result (ast:cad-project astui:*guide* (trans point 1 0)))
           (if (assoc 'error result) (progn (ast:ui-result result) nil) result))
-        (progn (ast:ui-status "Gap pick cancelled. Existing gaps retained.") nil)))))
+        (progn (ast:ui-status "Landmark selection cancelled. Existing landmarks retained.") nil)))))
 
 (defun ast:ui-global-station (attachment / index station primitive)
   (setq index 0 station (cdr (assoc 'station attachment)))
@@ -227,7 +227,7 @@
   station)
 
 (defun ast:ui-select-action (/ selected result choice phase helper-guide markers-ready)
-  (setq selected (entsel "\nSelect a stitch line or its generated cuts: "))
+  (setq selected (entsel "\nSelect a stitch line or its generated stitches: "))
   (if selected
     (progn
       (setq helper-guide (ast:markers-guide (car selected)))
@@ -259,8 +259,8 @@
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
               ((and (cdr (assoc 'output result)) (cdr (assoc 'stale result)))
-                "Inputs or guide changed. Generate to update cuts.")
-              (T "Stitch line selected. Set start/end, add gaps, then Generate."))))))))
+                "Inputs or guide changed. Generate to update stitches.")
+              (T "Stitch line selected. Set start/end, select landmarks, then Generate."))))))))
     (ast:ui-status "Selection cancelled. Previous guide retained.")))
 
 (defun c:ASTUISELECT () (ast:ui-run 'ast:ui-select-action))
@@ -364,14 +364,14 @@
           (member (car item) '(start end phase start-anchor end-anchor phase-anchor))) astui:*settings*))
         (if (cdr (assoc 'closed astui:*route*)) (setq settings (ast:ui-set 'phase 0.0 settings)))
         (if (ast:ui-save settings astui:*landmarks*)
-          (ast:ui-status "Full guide restored. Generate to update cuts.")))))))
+          (ast:ui-status "Full guide restored. Generate to update stitches.")))))))
 
 (defun c:ASTUICONNECT ()
   (ast:ui-run '(lambda (/ selected other pitch preview count choice result)
     (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
       (progn
         (ast:ui-status "Select another stitch line to coordinate their stitching.")
-        (setq selected (entsel "\nSelect the other stitch line or its generated cuts: "))
+        (setq selected (entsel "\nSelect the other stitch line or its generated stitches: "))
         (if selected
           (progn
             (setq other (if (ast:markers-guide (car selected))
@@ -395,7 +395,7 @@
                     (if (ast:ui-result result)
                       (progn
                         (ast:ui-adopt (ast:cad-read astui:*guide*))
-                        (ast:ui-status "Stitch lines connected. Cuts updated."))))
+                        (ast:ui-status "Stitch lines connected. Stitches updated."))))
                   (if (> count 0) (ast:ui-status "Connection cancelled. Stitch lines retained."))))))
           (ast:ui-status "Connection cancelled. Stitch lines retained.")))))))
 
@@ -408,8 +408,8 @@
         (if (ast:ui-result result)
           (progn
             (ast:ui-adopt (ast:cad-read astui:*guide*))
-            (ast:ui-status (if repairing "Missing stitch lines removed. Cuts updated."
-              "Selected stitch line disconnected. Cuts updated.")))))))))
+            (ast:ui-status (if repairing "Missing stitch lines removed. Stitches updated."
+              "Selected stitch line disconnected. Stitches updated.")))))))))
 
 (defun ast:ui-generate (restore-output / pitch settings result state message warning individual corrected)
   (if (and (ast:ui-ready) (or (not restore-output) astui:*placement-conflict*)
@@ -427,9 +427,9 @@
               (ast:ui-adopt state)
               (setq astui:*last-pitch* pitch corrected (cdr (assoc 'corrected-count result))
                     message (strcat (if restore-output "Restored " "Generated ")
-                      (itoa (cdr (assoc 'count result))) " openings"))
+                      (itoa (cdr (assoc 'count result))) " stitch holes"))
               (if (numberp corrected)
-                (setq message (strcat message "; " (itoa corrected) " corrected gaps")))
+                (setq message (strcat message "; " (itoa corrected) " adjusted spacings")))
               (foreach warning (cdr (assoc 'warnings result))
                 (princ (strcat "\nAutostitch: " warning))
                 (if (vl-string-search "individual" warning) (setq individual T)))
@@ -451,7 +451,7 @@
             (ast:ui-status (cond
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
-              ((cdr (assoc 'stale result)) "Guide changed. Generate to update cuts.")
+              ((cdr (assoc 'stale result)) "Guide changed. Generate to update stitches.")
               (T "Saved path inputs reloaded."))))))))))
 
 (defun c:ASTUIINIT ()
@@ -460,28 +460,26 @@
   (setq astui:*pitch-text* "3")
   (ast:ui-put "Pitch" "Text" astui:*pitch-text*)
   (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))
-  (ast:ui-status "Select a stitch line or its generated cuts.")
+  (ast:ui-status "Select a stitch line or its generated stitches.")
   (princ))
 
 (defun c:ASTUICLOSE (reason)
   (ast:ui-clear)
   nil)
 
-(defun ast:ui-open (/ path loaded active document state)
+(defun ast:ui-open (/ path loaded document state)
   (vl-catch-all-apply 'vl-cmdf (list "_OPENDCL"))
-  (setq active (vl-catch-all-apply 'dcl-Form-IsActive (list "AUTOSTITCH" "Palette")))
-  (if (and (not (vl-catch-all-error-p active)) active)
-    (setq loaded T)
+  ;; Loading an existing project without ForceReload preserves its palette.
+  ;; Querying an unloaded form first raises an OpenDCL modal runtime error.
+  (setq path (findfile (strcat ast:*home* "/AUTOSTITCH.odcl")))
+  (if path
     (progn
-      (setq path (findfile (strcat ast:*home* "/AUTOSTITCH.odcl")))
-      (if path
+      (setq loaded (vl-catch-all-apply 'dcl-Project-Load (list path nil "AUTOSTITCH")))
+      (if (or (vl-catch-all-error-p loaded) (not loaded))
         (progn
-          (setq loaded (vl-catch-all-apply 'dcl-Project-Load (list path T "AUTOSTITCH")))
-          (if (or (vl-catch-all-error-p loaded) (not loaded))
-            (progn
-              (setq loaded nil)
-              (princ "\nAutostitch: Could not load the OpenDCL palette."))))
-        (princ "\nAutostitch: AUTOSTITCH.odcl is missing beside AUTOSTITCH.lsp."))))
+          (setq loaded nil)
+          (princ "\nAutostitch: Could not load the OpenDCL palette."))))
+    (princ "\nAutostitch: AUTOSTITCH.odcl is missing beside AUTOSTITCH.lsp."))
   (if loaded
     (progn
       (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
@@ -497,11 +495,11 @@
               (ast:ui-status (cond
                 ((cdr (assoc 'connection-conflict state)) (cdr (assoc 'connection-conflict state)))
                 ((cdr (assoc 'range-conflict state)) (cdr (assoc 'range-conflict state)))
-                ((cdr (assoc 'stale state)) "Inputs or guide changed. Generate to update cuts.")
+                ((cdr (assoc 'stale state)) "Inputs or guide changed. Generate to update stitches.")
                 (T "Saved seam inputs refreshed."))))
             (progn (c:ASTUIINIT) (ast:ui-result state))))
         (c:ASTUIINIT))
       (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))))
-  (princ))
+  (if loaded T nil))
 
 (princ)

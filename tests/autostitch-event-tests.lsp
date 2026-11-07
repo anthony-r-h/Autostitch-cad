@@ -70,6 +70,16 @@
           (ast:cad-require nil "Injected event failure after the second helper write.")))))
   (ast:event-assert T "Captured exact metadata/definitions and armed second-helper failure"))
 
+(defun ast:event-ui-save (/ guide state settings)
+  ;; Internal UNDO Begin/End must not re-enter the running palette save via .NET.
+  (c:AUTOSTITCH)
+  (setq guide (car ast:event-guides) state (ast:cad-read guide)
+        settings (ast:cad-put 'pitch 3.2 (cdr (assoc 'settings state))))
+  (ast:ui-adopt state)
+  (ast:cad-require (ast:ui-save settings nil) "Palette input save did not complete.")
+  (ast:event-assert (equal 3.2 (cdr (assoc 'pitch (cdr (assoc 'settings (ast:cad-read guide))))))
+    "Palette input save returns through internal Undo commands with the interpreter alive"))
+
 (defun ast:event-check-rollback ()
   (ast:event-assert (= ast:event-injections 2) "Failure reached metadata writes for both helpers")
   (ast:event-assert (equal ast:event-before (ast:event-snapshot))

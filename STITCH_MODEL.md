@@ -14,7 +14,7 @@ The native solver in `source/autostitch-geometry.lsp` implements the bounded sin
 | Reservation | Fixed entry/exit openings and protected gaps supplied by a feature. |
 | Span | Remaining guide between consecutive reserved ordinary centres; fitted without moving either anchor. |
 
-Normal inputs are source lines, pitch and gap picks, with Connect stitch lines for shared openings between sources. Endpoints/direction have visible defaults; corners within a source are derived. A gap pick is the landmark constraint below, not an implicit connection. Do not expose correction count or minimum-angle sliders.
+Normal inputs are source lines, pitch and selected landmarks from the existing pattern, with Connect stitch lines for shared openings between sources. Endpoints/direction have visible defaults; corners within a source are derived. Selecting a landmark applies the centred-spacing constraint below; it does not implicitly connect another stitch line. Do not expose correction count or minimum-angle sliders.
 
 | Parameter | Ownership and default |
 | --- | --- |
@@ -48,7 +48,7 @@ Undeclared crossings, splines, ellipses, nonplanar geometry and free-phase mixed
 
 ## Declared connected sets
 
-Connect stitch lines combines selected sources and their existing connected members. When more than one intersection needs coordination, ConnectAll declares the complete set before solving, avoiding an infeasible intermediate partial declaration. Sources retain individual pitch, direction, ranges and gap attachments; the slit/hole profile and clearance settings must agree. The complete set emits one cut list and one output block.
+Connect stitch lines combines selected sources and their existing connected members. When more than one intersection needs coordination, ConnectAll declares the complete set before solving, avoiding an infeasible intermediate partial declaration. Sources retain individual pitch, direction, ranges and landmark attachments; the slit/hole profile and clearance settings must agree. The complete set emits one cut list and one output block.
 
 Classify actual incident arms, not CAD entity boundaries. A sharp two-arm corner uses the selected-tip construction below, including when its arms are separate LINE entities; a smooth two-arm transition uses its shared slit. At a node with three or more arms, emit one round hole at the guide intersection and reserve each arm's first neighbour at nominal direct/chord pitch. Remaining spans use the same bounded fitters. These branch-adjacent gaps are protected reservations, not ordinary corrections. See [junction construction and examples](review/JUNCTIONS.md).
 

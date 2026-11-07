@@ -4,7 +4,7 @@ The adapter implementation is in `source/autostitch-cad.lsp`; the geometry and p
 
 ## User operation
 
-Select a path, then **Connect stitch lines**, and select the other path. One new intersection connects directly. When the merged set needs more than one intersection, the palette reports the count and offers **Connect all** or Cancel. This declares all crossings within the selected active ranges together so an intermediate partial connection cannot become an editing dead end. Nearby unselected drawing geometry has no effect. **Add gap** remains a separate operation for a nominal gap centred on one path.
+Select a path, then **Connect stitch lines**, and select the other path. One new intersection connects directly. When the merged set needs more than one intersection, the palette reports the count and offers **Connect all** or Cancel. This declares all crossings within the selected active ranges together so an intermediate partial connection cannot become an editing dead end. Nearby unselected drawing geometry has no effect. **Select landmark** picks an existing pattern point and preserves nominal stitch spacing around its position on the selected path.
 
 The selected source remains editable with normal CAD tools. Selecting any source in the connected set or its output reopens the saved work. Generate recomputes the complete connected set, including paths the user did not most recently select. A failure keeps its last complete output. An unrelated source does not change.
 

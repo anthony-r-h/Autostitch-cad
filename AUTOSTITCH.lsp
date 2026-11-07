@@ -76,10 +76,7 @@
     (vl-catch-all-apply
       '(lambda ()
          (if (or ast:*components-loaded* (ast:load-components))
-           (progn
-             (ast:ui-open)
-             (if (dcl-Form-IsActive "AUTOSTITCH" "Palette")
-               (ast:register-documents))))) nil))
+           (if (ast:ui-open) (ast:register-documents)))) nil))
   (if (vl-catch-all-error-p result)
     (princ (strcat "\nAUTOSTITCH: " (vl-catch-all-error-message result))))
   (princ))

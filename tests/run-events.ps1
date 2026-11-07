@@ -27,9 +27,14 @@ function Assert-Event([bool]$Condition, [string]$Label) {
 }
 function Wait-EventIdle {
   $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+  $timer = [Diagnostics.Stopwatch]::StartNew()
+  $idleSamples = 0
   do {
     Start-Sleep -Milliseconds 100
-    if ($stitchDocument.GetVariable('CMDNAMES') -eq '' -and $stitchApp.GetAcadState().IsQuiescent) { return }
+    if ($stitchDocument.GetVariable('CMDNAMES') -eq '' -and $stitchApp.GetAcadState().IsQuiescent) {
+      $idleSamples++
+      if ($idleSamples -ge 3) { $script:stitchWaitMilliseconds = $timer.ElapsedMilliseconds; return }
+    } else { $idleSamples = 0 }
   } while ([DateTime]::UtcNow -lt $deadline)
   throw 'Native event test command did not finish before the timeout.'
 }
@@ -82,7 +87,13 @@ function Assert-EventGeometry([string]$Label, [double]$StartX, [double]$EndX, [b
   $states = @(Get-EventState)
   for ($i = 0; $i -lt 2; $i++) {
     $state = $states[$i]; $y = 1000.0 + 20.0 * $i
-    Assert-Event ($state.SourceExists -and (Test-EventPoint $state.Start $StartX $y) -and (Test-EventPoint $state.End $EndX $y)) "$Label source $($i + 1) endpoints"
+    $sourceMatches = $state.SourceExists -and (Test-EventPoint $state.Start $StartX $y) -and (Test-EventPoint $state.End $EndX $y)
+    $sourceDetail = if ($sourceMatches) { '' } else {
+      ' actual=' + ($state | ConvertTo-Json -Depth 5 -Compress) +
+      ' commands=' + $stitchDocument.GetVariable('CMDNAMES') +
+      ' quiescent=' + $stitchApp.GetAcadState().IsQuiescent + ' waited-ms=' + $script:stitchWaitMilliseconds
+    }
+    Assert-Event $sourceMatches "$Label source $($i + 1) endpoints$sourceDetail"
     if ($HelpersCurrent) {
       $starts = @($state.Centres | Where-Object { Test-EventPoint $_ $StartX $y })
       $ends = @($state.Centres | Where-Object { Test-EventPoint $_ $EndX $y })

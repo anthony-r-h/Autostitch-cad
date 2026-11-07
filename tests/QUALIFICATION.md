@@ -38,6 +38,8 @@ The standalone package loaded in a fresh drawing using its own folder. The actua
 
 The final package was checked again through actual Select and Generate controls: 11 cuts, current output, and source/marker positions restored by MOVE, Undo and Redo. A separate fresh hidden BricsCAD process then loaded the packaged `Autostitch.Events.dll` version 1.1, regenerated a saved source, and moved its markers through the native event callback. The process exited after testing its isolated drawing; no development assembly was required.
 
+One automated replay in the long-running development session missed the expected Redo result. It did not reproduce in direct comparisons, a fresh process, or subsequent complete event runs. The runner now requires three consecutive idle observations and records actual coordinates on failure. Timing is a possible cause, not a proven diagnosis.
+
 Measured solver times: 101 openings ≈16 ms; 334 ≈15 ms; 1,001 ≈172 ms. These are single-run host measurements, not performance guarantees. Every seam has a hard 2,000-opening cap; oversized requests fail without truncated output.
 
 ## Repeat

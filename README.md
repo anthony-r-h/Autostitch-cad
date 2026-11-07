@@ -13,6 +13,8 @@ The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [veri
 
 After opening the palette once, its commands are available in other drawings opened during that BricsCAD session.
 
+The release ZIP includes `examples/Autostitch-practical-demo.dwg`: eight editable examples covering gaps, curves, corners, meeting lines and crossings. Open it, run AUTOSTITCH, and select a source line to try the controls.
+
 Supported source entities are `LINE`, `ARC`, `CIRCLE` and `LWPOLYLINE`, including bulged arc segments. They must lie in **WCS XY at Z=0**, with a positive Z normal. Separate entities can meet or cross without a CAD Join operation. Invalid constructions and overlapping cuts are rejected before output is replaced.
 
 Each independent line or connected set is limited to **2,000 openings**. Larger requests fail explicitly; output is never truncated.

@@ -1,5 +1,7 @@
 # Review record - 2026-11-06
 
+Historical foundation review. The resulting plugin and connected-line workflow are implemented; see [current qualification](tests/QUALIFICATION.md) for completed checks and remaining limits.
+
 **Conclusion:** retain the small geometry core; replace fixture-specific assumptions with one route/feature model and actual-opening validation. Implement the editing loop in the existing V22/OpenDCL stack. The foundation is specified for a bounded line/arc domain; physical qualification and CAD integration are separate acceptance gates.
 
 ## What the review changed

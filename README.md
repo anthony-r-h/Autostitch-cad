@@ -9,6 +9,14 @@ Lay out stitch holes from editable pattern lines. Set pitch, mark pattern landma
 3. **Select stitch line**, enter **Stitch pitch**, then **Generate stitches**.
 4. Edit the guide with normal CAD tools. Select its guide, editing marker or generated block to reopen it, then Generate again.
 
+To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home → Annotations**, run this from the installation folder with BricsCAD open and no command active:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\source\install-ribbon.ps1
+```
+
+The installer backs up the current CUI under `output/ribbon-backups/`. Rerunning it updates the same button. Keep the installation folder in place; rerun the installer if you move it or reset BricsCAD's interface.
+
 Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with a positive Z normal. Pitch and tool dimensions are millimetres. Drawing units come from `INSUNITS`; unitless drawings ask for millimetres or inches.
 
 | Control | Action |

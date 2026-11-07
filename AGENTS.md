@@ -31,6 +31,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Keep technical diagnostics in code; user messages must explain the problem and a useful next action.
 - Keep axioms geometric. Put solution choices in `docs/MODEL.md`, application workflow in `README.md`, and geometric limits in `docs/LIMITS.md`.
 - Define domain terms in `docs/GLOSSARY.md`; use those meanings consistently instead of introducing synonyms.
+- Use "nominal gap" and "adjusted gap" in documentation. Introduce protection under gaps and arms under junctions; avoid separate names for the same concept.
 - Write mathematical notation in LaTeX. Keep code identifiers and commands as code.
 - Update `tests/cases.json` when adding or changing a test scenario. Keep existing IDs stable.
 

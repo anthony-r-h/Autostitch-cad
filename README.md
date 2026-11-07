@@ -17,7 +17,7 @@ Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with
 | Reverse direction | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
 | Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
 | Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
-| Connect stitch lines | Select another guide. Corners, branches and crossings in the connected set share openings. Multiple intersections offer `ConnectAll`. |
+| Connect stitch lines | Select another guide. Corners and T/X junctions in the connected set share openings. Multiple intersections offer `ConnectAll`. |
 | Disconnect line | Separate the selected member and regenerate the resulting sets. |
 | Generate stitches | Save pitch and replace the complete output in one Undo step. Failure preserves the previous output. Independently moved output returns to its guides. |
 

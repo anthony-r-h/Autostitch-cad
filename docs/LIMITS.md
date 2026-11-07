@@ -11,7 +11,7 @@ Width and margin are required inputs to a finite-width result. They are currentl
 ## Unresolved geometric rules
 
 - A landmark gap spanning a change of curvature needs a mixed-curve construction. The current landmark rule applies within one straight or circular segment.
-- There is no symmetry constraint linking corrections in separate free spans.
+- There is no symmetry constraint linking adjustments in separate free spans.
 
 ## Outside the model
 

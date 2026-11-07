@@ -10,20 +10,20 @@ Defaults are $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $\alpha=40^\circ$ and 
 
 ## Solution policy
 
-Reserve features, fit each free span, then check every distinct opening pair.
+Fix feature positions and protected gaps, fit each free span, then check every distinct opening pair.
 
 Among feasible fits:
 
-1. Minimize the number of changed gaps.
-2. Prefer interval counts that allow an exactly centred correction block.
-3. Choose smaller fractional pitch change, then fewer intervals.
-4. Give the changed gaps one equal spacing in one contiguous block, placed as centrally as the protected gaps allow. Half-index ties go toward the end.
+1. Minimize the number of adjusted gaps.
+2. Prefer gap counts that allow an exactly centred adjustment block.
+3. Choose smaller fractional pitch change, then fewer gaps.
+4. Give the adjusted gaps one equal spacing in one contiguous block, placed as centrally as the protected gaps allow. Half-index ties go toward the end.
 
-These choices select a result within the axioms. They do not move reserved features.
+These choices select a result within the axioms. They do not move fixed features.
 
 ## Span fitting
 
-Let $q_s,q_e$ count protected nominal intervals at either end, and $q=q_s+q_e$. For a positive span:
+Let $q_s,q_e$ count protected gaps at either end, and $q=q_s+q_e$. For a positive span:
 
 | Quantity | Straight span | Circular span, radius $R$ |
 | --- | --- | --- |
@@ -38,7 +38,7 @@ $$
 e=a_+-a,\qquad c=a-a_-.
 $$
 
-The feasible integer interval counts satisfy
+The feasible integer gap counts satisfy
 
 $$
 n_{\min}=
@@ -47,7 +47,7 @@ n_{\min}=
 n_{\max}=\left\lfloor\frac{T-qc}{a_-}\right\rfloor.
 $$
 
-Reject if $n_{\min}>n_{\max}$. For a candidate count $n$, let $r=T-na$. Its required correction count is
+Reject if $n_{\min}>n_{\max}$. For a candidate count $n$, let $r=T-na$. The required number of adjusted gaps is
 
 $$
 k(n)=
@@ -76,7 +76,7 @@ n-K\equiv0\pmod2,\qquad
 \frac{n-K}{2}\geq\max(q_s,q_e).
 $$
 
-Compare the nearest admissible counts on either side of $T/a$, using the solution policy above. For the selected count, the zero-based correction-block start is
+Compare the nearest admissible counts on either side of $T/a$, using the solution policy above. For the selected count, the first adjusted gap has zero-based index
 
 $$
 i=\operatorname{clamp}
@@ -87,7 +87,7 @@ n-q_e-K
 \right).
 $$
 
-Here $\operatorname{clamp}(x,u,v)=\min\{v,\max\{u,x\}\}$. The adjusted advance and pitch are
+Here $\operatorname{clamp}(x,u,v)=\min\{v,\max\{u,x\}\}$. The adjusted advance and gap are
 
 $$
 a'=a+\frac{T-na}{K},
@@ -99,7 +99,7 @@ a',&\text{straight},\\
 \end{cases}
 $$
 
-For $K=0$, all intervals remain nominal. Negative sweep reverses angular advance; circular corrections are centred in angular station. Arithmetic tolerances do not enlarge the permitted pitch adjustment.
+For $K=0$, all gaps remain nominal. Negative sweep reverses angular advance; adjustment blocks on circles are centred in angular station. Arithmetic tolerances do not enlarge the permitted pitch adjustment.
 
 | Span with $p=3\,\mathrm{mm}$ | Fit |
 | --- | --- |
@@ -109,16 +109,16 @@ For $K=0$, all intervals remain nominal. Negative sweep reverses angular advance
 | $D=6.3\,\mathrm{mm}$, final gap protected | $3.3\,\mathrm{mm}$ followed by $3\,\mathrm{mm}$. |
 | $D=7\,\mathrm{mm}$ | No fit: $2(1.1p)=6.6\,\mathrm{mm}<D<8.1\,\mathrm{mm}=3(0.9p)$. |
 
-## Reservations
+## Fixed features
 
 - Open ends have slit centres at the chosen endpoints.
 - Closure reuses the start opening.
-- A straight landmark at station $s$ reserves $s-p/2$ and $s+p/2$.
-- A circular landmark at angle $\phi$ reserves $\phi-a/2$ and $\phi+a/2$. This is symmetry along the guide; the chord midpoint lies inside the circle.
-- A smooth change of curvature reserves one shared slit. Redundant straight or co-circular subdivisions do not introduce a reservation.
-- Sharp corners and branches use the [junction construction](JUNCTIONS.md).
+- A straight landmark at station $s$ fixes slit centres at $s-p/2$ and $s+p/2$.
+- A circular landmark at angle $\phi$ fixes slit centres at $\phi-a/2$ and $\phi+a/2$. This is symmetry along the guide; the chord midpoint lies inside the circle.
+- A smooth change of curvature requires one shared slit. Redundant straight or co-circular subdivisions do not force an opening.
+- Sharp corners and T/X junctions use the [junction construction](JUNCTIONS.md).
 
-Overlapping reservations can be reused only when their position, opening type and undirected slit axis agree.
+Coincident required openings can be reused only when their position, opening type and undirected slit axis agree.
 
 ## Opening clearance
 

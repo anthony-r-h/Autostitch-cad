@@ -27,8 +27,8 @@ Draft structure only. Use test-catalog IDs for future SVGs.
 
 - Guide, opening, landmark, junction, free span.
 - Straight distance versus circular chord.
-- Count bounds; fewest corrections; central block and tie-breaking.
-- Smooth join, virtual-tip corner, branch hole.
+- Count bounds; fewest adjusted gaps; central adjustment block and tie-breaking.
+- Smooth join, virtual-tip corner, T/X junction hole.
 - Whole-set clearance.
 - Effective junction angle from slit dimensions, lean, pitch and margin.
 

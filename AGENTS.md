@@ -16,7 +16,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `source/Autostitch.Events.cs` | Small native command-event bridge |
 | `AUTOSTITCH.odcl`, `Autostitch.Events.dll` | Distributed runtime assets; rebuild with `build-plugin.ps1` |
 | `package.ps1` | Package a clean Git revision into `output/release/Autostitch-V22.zip` |
-| `docs/` | Axioms, mathematics, junctions, limitations and README outline |
+| `docs/` | Glossary, axioms, mathematics, junctions, limitations and README outline |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
 | `output/` | Ignored generated evidence, local drawings and release packages |
@@ -30,6 +30,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Preserve drawing ownership, rollback and Undo/Redo behavior. Never replace valid output with a partial solution.
 - Keep technical diagnostics in code; user messages must explain the problem and a useful next action.
 - Keep axioms geometric. Put solution choices in `docs/MODEL.md`, application workflow in `README.md`, and geometric limits in `docs/LIMITS.md`.
+- Define domain terms in `docs/GLOSSARY.md`; use those meanings consistently instead of introducing synonyms.
 - Write mathematical notation in LaTeX. Keep code identifiers and commands as code.
 - Update `tests/cases.json` when adding or changing a test scenario. Keep existing IDs stable.
 

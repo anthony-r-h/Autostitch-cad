@@ -17,13 +17,14 @@ $$
 J=C_i-h\mathbf u_i=C_o+h\mathbf u_o.
 $$
 
-The real incoming neighbour is one pitch before $C_i$; the outgoing neighbour is one pitch after $C_o$, measured as direct centre distance. The virtual slits are construction only.
+The real incoming neighbour is before $C_i$; the outgoing neighbour is after $C_o$. Their corner steps $q_i,q_o$ are direct centre distances, nominally $p_i,p_o$. Each may adjust within $0.9p\leq q\leq1.1p$ to keep its real neighbour on its finite arm. The virtual slits are construction only.
 
 1. Intersect the incoming minus-tip and outgoing plus-tip loci.
 2. Choose the isolated intersection nearest the guide vertex. Equally near distinct roots are ambiguous.
 3. Recover the virtual stations on the principal branch nearest the vertex. Antipodal ties are ambiguous.
-4. Require real neighbours on their finite arms and all real openings to pass clearance.
-5. Reject a failed construction; do not substitute a farther root or another revolution.
+4. Prefer nominal corner steps. Where a neighbour falls outside its arm, choose the nearest allowed step that puts it on the arm.
+5. Require all real openings to pass clearance. Mark a real slit whose corner step was adjusted with `I`.
+6. Reject a failed construction; do not substitute a farther root or another revolution.
 
 For a circular arm, let $R$ be radius, $\sigma\in\{-1,1\}$ winding, and $\mathbf e_r,\mathbf e_\phi$ its radial and tangential basis. With signed lean $\alpha$:
 
@@ -32,11 +33,11 @@ $$
 \mathbf u&=\sigma(-\sin\alpha\,\mathbf e_r+\cos\alpha\,\mathbf e_\phi),\\
 \text{tip locus}&=C(s)+\epsilon h\mathbf u(s),\qquad \epsilon\in\{-1,1\},\\
 R_\epsilon&=\sqrt{R^2+h^2-2\epsilon Rh\sigma\sin\alpha},\\
-b&=2R\arcsin\left(\frac{p}{2R}\right).
+b(q)&=2R\arcsin\left(\frac{q}{2R}\right).
 \end{aligned}
 $$
 
-The tip locus is a concentric circle; a straight arm gives a parallel line and $b=p$. Relative to the vertex, virtual stations must satisfy
+The tip locus is a concentric circle; a straight arm gives a parallel line and $b(q)=q$. Relative to the vertex, virtual stations must satisfy
 
 $$
 -L_i+b_i\leq c_i\leq b_i,\qquad
@@ -44,6 +45,17 @@ $$
 $$
 
 Virtual centres may lie on extensions. Real neighbours may not.
+
+Intersect each arm's finite bounds with the advances allowed by its step range. Choose the advance nearest $b(p)$:
+
+$$
+\begin{aligned}
+b_i&\in[c_i,c_i+L_i]\cap[b(0.9p_i),b(1.1p_i)],\\
+b_o&\in[-c_o,L_o-c_o]\cap[b(0.9p_o),b(1.1p_o)].
+\end{aligned}
+$$
+
+For circular arms, cap the upper chord at $2R$. An empty intersection has no permitted placement. With adjustments disabled, use only $b(p)$.
 
 ## Junctions with three or more arms
 
@@ -68,7 +80,7 @@ $$
 
 A small included angle is a sharp corner. A small turn is nearly straight. Their limits are different.
 
-### Minimum included angle: equal-pitch straight arms
+### Minimum included angle: nominal steps on equal-pitch straight arms
 
 Let $a=\lvert\alpha\rvert$. For the common regime $0<a<\pi/2$ and $p\cos a\geq\ell$, define
 
@@ -116,7 +128,7 @@ If this condition fails, changing the angle cannot fix the profile.
 
 ### Shallow-turn limit
 
-For equal pitch and sufficiently long arms, real neighbours also require
+For equal pitch, nominal corner steps and sufficiently long arms, real neighbours require
 
 $$
 \lvert\delta\rvert\geq
@@ -127,15 +139,15 @@ $$
 \qquad p-h\cos\alpha>0.
 $$
 
-This limits the maximum included angle: $\beta\leq\pi-\delta_{\min}$. A zero turn uses the smooth-join rule.
+This is the nominal-step limit. With corner adjustment enabled, replace $p$ in this bound by $1.1p$; finite-arm and clearance checks still apply. A zero turn uses the smooth-join rule.
 
-For $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $a=40^\circ$, $w=m=0.2\,\mathrm{mm}$ and $d=0.5\,\mathrm{mm}$, the isolated, sufficiently long straight-corner construction admits
+For $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $a=40^\circ$, $w=m=0.2\,\mathrm{mm}$ and $d=0.5\,\mathrm{mm}$, the isolated straight-corner construction with nominal steps and sufficiently long arms admits
 
 $$
 20.434278^\circ\lesssim\beta\lesssim157.516571^\circ.
 $$
 
-Here $\delta_{\min}\approx22.483429^\circ$ and $H\approx2.087007\,\mathrm{mm}>0.55\,\mathrm{mm}$. These are results for the stated dimensions; width and margin are inputs, not universal constants.
+Here the nominal-step threshold is $\delta_{\min}\approx22.483429^\circ$ and $H\approx2.087007\,\mathrm{mm}>0.55\,\mathrm{mm}$. The corner-step allowance lowers the finite-arm threshold to approximately $20.061869^\circ$; this alone does not certify clearance. These results use the stated dimensions; width and margin are inputs, not universal constants.
 
 ### Exact test for other profiles and finite arms
 
@@ -146,16 +158,16 @@ $$
 Q&=h\sin\alpha\cot(\delta/2),\\
 c_i&=h\cos\alpha-Q,&c_o&=-h\cos\alpha-Q,\\
 J&=(-Q,-h\sin\alpha),\\
-P_i&=(c_i-p_i,0),&
-P_o&=(c_o+p_o)(\cos\delta,\sin\delta).
+P_i&=(c_i-q_i,0),&
+P_o&=(c_o+q_o)(\cos\delta,\sin\delta).
 \end{aligned}
 $$
 
 Require the finite-arm bounds
 
 $$
-p_i-L_i\leq c_i\leq p_i,\qquad
--p_o\leq c_o\leq L_o-p_o.
+q_i-L_i\leq c_i\leq q_i,\qquad
+-q_o\leq c_o\leq L_o-q_o.
 $$
 
 Construct the two finite slit axes

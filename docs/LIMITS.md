@@ -12,6 +12,7 @@ Width and margin are required inputs to a finite-width result. They are currentl
 
 - A landmark gap spanning a change of curvature needs a mixed-curve construction. The current landmark rule applies within one straight or circular segment.
 - There is no symmetry constraint linking adjustments in separate free spans.
+- Corner adjustment chooses the step nearest nominal that fits the finite arm. It does not search other step combinations to rescue a later clearance or span-fit failure.
 
 ## Outside the model
 

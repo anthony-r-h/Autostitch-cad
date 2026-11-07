@@ -30,7 +30,7 @@
     (progn
       (setq astui:*guide* nil ast:*unit-factor* nil)
       (c:ASTUIINIT)
-      (ast:ui-status "Select a stitch line in this drawing.")
+      (ast:ui-status "Select a guide in this drawing.")
       T)))
 
 (defun ast:ui-run (action / result)
@@ -45,7 +45,7 @@
       (setq astui:*last-error* (vl-catch-all-error-message result))
       (ast:ui-status (if (wcmatch (strcase astui:*last-error*) "*CANCEL*,*QUIT*")
         "Action cancelled."
-        "Could not complete the action. Reselect the stitch line and try again."))))
+        "Could not complete the action. Reselect the guide and try again."))))
   (princ))
 
 (defun ast:ui-clear ()
@@ -60,7 +60,7 @@
   (cond
     ((ast:ui-sync-owner) nil)
     ((or (not astui:*guide*) (not (entget astui:*guide*)))
-      (ast:ui-status "Select a stitch line first.") nil)
+      (ast:ui-status "Select a guide first.") nil)
     (T
       (setq result (ast:cad-read astui:*guide*))
       (if (ast:ui-result result)
@@ -95,7 +95,7 @@
             (if (not (entget astui:*guide*))
               (progn
                 (ast:ui-clear) (ast:ui-fill)
-                (ast:ui-status "Selected stitch line was erased. Select a stitch line."))
+                (ast:ui-status "Selected guide was erased. Select a guide."))
               (if (ast:ui-ready)
                 (cond
                   ((cdr (assoc 'connection-conflict astui:*state*))
@@ -151,7 +151,7 @@
   (ast:ui-put "Disconnect" "Enabled" (and astui:*guide*
     (or (cdr (assoc 'missing-members astui:*state*)) (> (length (cdr (assoc 'members astui:*state*))) 1))))
   (ast:ui-put "Disconnect" "Caption" (if (cdr (assoc 'missing-members astui:*state*))
-    "Remove missing lines" "Disconnect line"))
+    "Remove missing lines" "Disconnect guide"))
   (if astui:*guide*
     (progn
       (setq total (* astui:*factor* (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*)))
@@ -159,9 +159,9 @@
             finish (if (assoc 'end astui:*settings*) (cdr (assoc 'end astui:*settings*)) total))
       (ast:ui-put "Seam" "Caption"
         (if (cdr (assoc 'range-conflict astui:*state*)) "Saved stitch limits need updating"
-          (strcat "Stitch length: " (rtos (if closed total (- finish start)) 2 2) " mm"
+          (strcat "Guide length: " (rtos (if closed total (- finish start)) 2 2) " mm"
             (if (and (not closed) (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")))))
-    (ast:ui-put "Seam" "Caption" "No stitch line selected"))
+    (ast:ui-put "Seam" "Caption" "No guide selected"))
   (setq astui:*busy* nil))
 
 (defun ast:ui-adopt (result / markers-ready)
@@ -231,7 +231,7 @@
   station)
 
 (defun ast:ui-select-action (/ selected result choice phase helper-guide markers-ready)
-  (setq selected (entsel "\nSelect a stitch line or its generated stitches: "))
+  (setq selected (entsel "\nSelect a guide or its generated stitches: "))
   (if selected
     (progn
       (setq helper-guide (ast:markers-guide (car selected)))
@@ -368,8 +368,8 @@
   (ast:ui-run '(lambda (/ selected other pitch preview count choice result)
     (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
       (progn
-        (ast:ui-status "Select another stitch line to coordinate their stitching.")
-        (setq selected (entsel "\nSelect the other stitch line or its generated stitches: "))
+        (ast:ui-status "Select another guide to include in this stitch line.")
+        (setq selected (entsel "\nSelect the other guide or its generated stitches: "))
         (if selected
           (progn
             (setq other (if (ast:markers-guide (car selected))
@@ -379,35 +379,35 @@
               (progn
                 (setq count (cdr (assoc 'count preview)) choice nil)
                 (cond
-                  ((= count 0) (ast:ui-status "These stitch lines have no new intersections to connect."))
+                  ((= count 0) (ast:ui-status "These guides have no new meeting or crossing points to connect."))
                   ((= count 1) (setq choice "ConnectAll"))
                   (T
-                    (ast:ui-status (strcat (itoa count) " intersections found. Connect all to coordinate them."))
+                    (ast:ui-status (strcat (itoa count) " intersections found. Connect all to include them in this stitch line."))
                     (initget "ConnectAll Cancel")
                     (setq choice (getkword (strcat "\nConnect all " (itoa count)
                       " intersections? [ConnectAll/Cancel] <Cancel>: ")))))
                 (if (equal choice "ConnectAll")
                   (progn
-                    (setq result (ast:cad-connect astui:*guide* other nil
+                    (setq result (ast:cad-connect-guides astui:*guide* other nil
                       (ast:cad-put 'pitch pitch astui:*settings*) astui:*landmarks*))
                     (if (ast:ui-result result)
                       (progn
                         (ast:ui-adopt (ast:cad-read astui:*guide*))
-                        (ast:ui-status "Stitch lines connected. Stitches updated."))))
-                  (if (> count 0) (ast:ui-status "Connection cancelled. Stitch lines retained."))))))
-          (ast:ui-status "Connection cancelled. Stitch lines retained.")))))))
+                        (ast:ui-status "Guides connected. Generate stitches when ready."))))
+                  (if (> count 0) (ast:ui-status "Connection cancelled. Guides unchanged."))))))
+          (ast:ui-status "Connection cancelled. Guides unchanged.")))))))
 
 (defun c:ASTUIDISCONNECT ()
   (ast:ui-run '(lambda (/ result repairing)
     (if (ast:ui-ready)
       (progn
         (setq repairing (cdr (assoc 'missing-members astui:*state*)))
-        (setq result (ast:cad-disconnect astui:*guide*))
+        (setq result (ast:cad-disconnect-guides astui:*guide*))
         (if (ast:ui-result result)
           (progn
             (ast:ui-adopt (ast:cad-read astui:*guide*))
-            (ast:ui-status (if repairing "Missing stitch lines removed. Stitches updated."
-              "Selected stitch line disconnected. Stitches updated.")))))))))
+            (ast:ui-status (if repairing "Missing guides removed. Generate stitches to update the output."
+              "Guide disconnected. Generate each stitch line to update its stitches.")))))))))
 
 (defun ast:ui-generate (/ pitch settings result state)
   (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
@@ -434,7 +434,7 @@
   (setq astui:*pitch-text* "3")
   (ast:ui-put "Pitch" "Text" astui:*pitch-text*)
   (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))
-  (ast:ui-status "Select a stitch line or its generated stitches.")
+  (ast:ui-status "Select a guide or its generated stitches.")
   (princ))
 
 (defun c:ASTUICLOSE (reason)
@@ -470,7 +470,7 @@
                 ((cdr (assoc 'connection-conflict state)) (cdr (assoc 'connection-conflict state)))
                 ((cdr (assoc 'range-conflict state)) (ast:ui-limits-message))
                 ((cdr (assoc 'stale state)) "Generate stitches to apply your changes.")
-                (T "Stitch line loaded."))))
+                (T "Guide loaded."))))
             (progn (c:ASTUIINIT) (ast:ui-result state))))
         (c:ASTUIINIT))
       (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))))

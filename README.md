@@ -1,13 +1,14 @@
 # Autostitch for BricsCAD
 
-Lay out stitch holes from editable pattern lines. Set pitch, mark pattern landmarks, and connect lines where they share stitching. Regenerate after editing the pattern; the source lines remain the source of truth.
+Lay out stitch holes from editable pattern guides. Connect guides to define a stitch line, set pitch and landmarks, then generate its stitches. Regenerate after editing the pattern; the source guides remain the source of truth.
 
 ## Use
 
 1. Install the [dependencies](docs/LIMITS.md#dependencies). Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and `source/` together.
 2. **APPLOAD** `AUTOSTITCH.lsp`, then run **AUTOSTITCH**.
-3. **Select stitch line**, enter **Stitch pitch**, then **Generate stitches**.
-4. Edit the guide with normal CAD tools. Select its guide, editing marker or generated block to reopen it, then Generate again.
+3. **Select guide**. Use **Connect guides** to include other guides in the same stitch line, if needed.
+4. Enter **Stitch pitch**, set endpoints or landmarks, then **Generate stitches**.
+5. Edit guides with normal CAD tools. Select a guide, editing marker or generated block to reopen it, then Generate again.
 
 To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home → Annotations**, run this from the installation folder with BricsCAD open and no command active:
 
@@ -25,13 +26,13 @@ Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with
 | Reverse | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
 | Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
 | Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
-| Connect stitch lines | Select another guide. Corners and T/X junctions in the connected set share openings. Multiple intersections offer `ConnectAll`. |
-| Disconnect line | Separate the selected member and regenerate the resulting sets. |
+| Connect guides | Include another guide in this stitch line and save its junctions. Creates no stitches; Generate lays out the connected guides together. Multiple intersections offer `ConnectAll`. |
+| Disconnect guide | Separate the selected guide. Generate each resulting stitch line to update its stitches. |
 | Generate stitches | Save pitch and replace the complete output in one Undo step. Failure preserves the previous output. Independently moved output returns to its guides. |
 
-Corners within a polyline are automatic. Separate entities need Connect stitch lines; nearby pattern geometry does not connect itself.
+Corners within a polyline are automatic. Separate guides need Connect guides; nearby pattern geometry does not connect itself.
 
-Each connected set has one output block. Members keep their own pitch, direction, endpoints and landmarks. Selecting a member shows its inputs; Generate recomputes the whole set.
+One stitch line can contain several connected guides and has one generated output block. Each guide keeps its pitch, direction, endpoints and landmarks; the palette shows the selected guide's inputs and length. Generate recomputes the whole stitch line. Connecting or disconnecting guides saves their relationships without regenerating; previous output remains until Generate succeeds.
 
 Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated block has the same name. The set shares one ID, shown in the palette and a small box opposite `S`; regeneration keeps that ID. At a shared start junction, the box sits slightly along the main guide. Existing drawings receive the new labels when selected; Generate updates their old output block names.
 
@@ -41,7 +42,7 @@ Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated bl
 | --- | --- |
 | Slit or filled circle | Physical opening. |
 | Thin connecting line | Thread display. |
-| Capital `I` at a slit | Spacing beside this slit differs from nominal pitch; place that spacing individually. |
+| Capital `I` at a slit | An adjacent gap or its corner construction step differs from nominal pitch; place it individually. |
 | Dashed virtual slits | Construction for a sharp corner's round hole. |
 | `S`, `E`, arrow | Start, end and direction. |
 | `J` / `L#` | Junction / landmark. |

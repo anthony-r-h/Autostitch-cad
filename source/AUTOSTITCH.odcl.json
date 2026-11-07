@@ -23,7 +23,7 @@
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Select",
-          "caption": "Select stitch line",
+          "caption": "Select guide",
           "events": {
             "Clicked": "c:ASTUISELECT"
           }
@@ -54,7 +54,7 @@
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/Seam",
-          "caption": "No stitch line selected",
+          "caption": "No guide selected",
           "BackColor": -24,
           "BorderStyle": 0
         },
@@ -224,7 +224,7 @@
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/ConnectionsLabel",
-          "caption": "Connections",
+          "caption": "Guides",
           "BackColor": -24,
           "BorderStyle": 0
         },
@@ -239,7 +239,7 @@
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Connect",
-          "caption": "Connect stitch lines",
+          "caption": "Connect guides",
           "events": {
             "Clicked": "c:ASTUICONNECT"
           }
@@ -255,7 +255,7 @@
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Disconnect",
-          "caption": "Disconnect line",
+          "caption": "Disconnect guide",
           "events": {
             "Clicked": "c:ASTUIDISCONNECT"
           }
@@ -287,7 +287,7 @@
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/Status",
-          "caption": "Select a stitch line to begin.",
+          "caption": "Select a guide to begin.",
           "BackColor": -24,
           "BorderStyle": 0
         }

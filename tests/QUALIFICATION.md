@@ -2,6 +2,12 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Three output layers: 2026-11-07
+
+- The 13 non-display native suites passed 1,273 checks. The display suite passed all 42 checks after correcting its new plot-flag assertion.
+- A legacy-drawing merge passed eight checks: geometry/style preservation, removal of both old layers, nonprinting UI, Undo/Redo and regeneration.
+- The canonical catalog validates with 376 stable IDs.
+
 ## Stitch IDs and palette: 2026-11-07
 
 - All 14 native suites passed: 1,313 checks. After the final connected-label refresh, the seven affected suites passed again: 159 checks, including the added migration case.

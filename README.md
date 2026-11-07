@@ -49,6 +49,14 @@ Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated bl
 
 Slits and `I` marks use $0.30\,\mathrm{mm}$ strokes; thread and construction use $0.09\,\mathrm{mm}$. Round holes print black. Generate includes these displays and enables their layers. Editing labels, including boxed IDs, are on nonprinting `AUTOSTITCH_UI`.
 
+| Layer | Contents | Prints |
+| --- | --- | --- |
+| `AUTOSTITCH` | Slits, filled round holes, spacing `I` marks and dashed virtual slits | Yes |
+| `AUTOSTITCH_STITCHES` | Thread connections | Yes |
+| `AUTOSTITCH_UI` | Start/end, direction, junctions, landmarks and boxed IDs | No |
+
+Generate updates older output to these layers. In existing drawings, merge `AUTOSTITCH_NOTES` and `AUTOSTITCH_CONSTRUCTION` into `AUTOSTITCH` to remove the old layers, including their use in retained block definitions.
+
 ## Edit and repair
 
 - Markers follow native MOVE, STRETCH and ERASE with Undo/Redo. Generate updates the stitches. Properties and automation edits refresh markers on selection.

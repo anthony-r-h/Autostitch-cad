@@ -5788,7 +5788,7 @@
         },
         {
           "id": "DISPLAY-016",
-          "expected": "Previous chevron output version requires Generate",
+          "expected": "Previous separate-layer output version requires Generate",
           "sourceSymbol": "ast:display-tests"
         },
         {
@@ -5914,6 +5914,11 @@
         {
           "id": "DISPLAY-041",
           "expected": "Inch drawing scales virtual-slit dashes and filled-hole diameter without scaling lineweights",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-042",
+          "expected": "Printed openings and construction share AUTOSTITCH, thread stays separate, and editing markers remain nonprinting",
           "sourceSymbol": "ast:display-tests"
         }
       ]

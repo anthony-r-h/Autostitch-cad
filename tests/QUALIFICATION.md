@@ -13,6 +13,7 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Compact markers, direction arrows, exact CEN/NODE/MID snaps, shared labels and rollback | 42 passed |
 | Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
+| Simplified palette, automatic placement restore, pitch Undo/Redo, legacy limits and landmark removal | 15 passed |
 | Mandatory thread/spacing marks, stroke weights, filled holes, dashed virtual slits, inch scaling, signatures and rollback | 41 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
@@ -60,6 +61,8 @@ The updated demo regenerated **14 outputs**, with all **19 guides, settings and 
 
 The subsequent notation-only change replaces chevrons with short perpendicular crossbars at both slit tips, forming a capital `I`. All **41 display checks** passed again, covering straight/reversed/curved guides, inches, deduplication, output migration and rollback. Physical slit geometry and the 0.30 mm stroke remain unchanged.
 
+The palette cleanup passed **15 focused workflow checks** and a fresh run of all **61 native event checks**. Generate restores independently transformed output and commits pitch in one Undo step; invalid or infeasible requests preserve the previous output. Saved partial guides retain their limits until **Use whole line** is chosen. The compiled 16-control palette was inspected in BricsCAD; actual **Add landmark**, **Remove landmark**, **Set loop start** and **Generate stitches** buttons were exercised. Point picks saved the expected positions and restored the prior snap settings. Persistent shorthand, range controls and the calibration banner were removed from the normal workflow.
+
 ## Repeat
 
 Create and save a disposable `output/native/Autostitch-native.dwg`, then run:
@@ -74,6 +77,8 @@ Get-Content ./output/native/geometry-oracle.txt
 
 The harness refuses drawings outside `output/native`. Tests intentionally create entities in that drawing. `tests/create-demo.lsp` can recreate the demonstration in an empty drawing after loading `AUTOSTITCH.lsp`.
 
+For the focused palette checks, load `AUTOSTITCH.lsp`, open the palette, load `tests/autostitch-cad-tests.lsp` and `tests/autostitch-host-tests.lsp`, then evaluate `(ast:ui-tests)` in a disposable drawing.
+
 ## Remaining limits
 
 - Tested on this V22 host; other versions and operating systems are unqualified.
@@ -82,6 +87,6 @@ The harness refuses drawings outside `output/native`. Tests intentionally create
 - Overlapping source geometry must be trimmed before connecting, even when active ranges partition the overlap. Ambiguous edited intersections require Disconnect/Connect repair.
 - Native copy ownership was qualified within one DWG; cross-DWG scaled insertion is unqualified.
 - Native edits issued inside other LISP routines refresh markers on selection; the listener avoids re-entering an active interpreter.
-- Physical slit width, retained-material margin, leather behavior and tool-body access were not measured. The visible unverified-profile warning is intentional.
+- Physical slit width, retained-material margin, leather behavior and tool-body access were not measured; these limits are documented rather than shown as a persistent palette banner.
 - No automatic regeneration, obstruction pairing, guaranteed mirrored correction patterns, or rigid multi-tooth placement on arbitrary curves.
 - Core fit/clearance tests do not establish universal visual preference; stitched sample comparison is still needed.

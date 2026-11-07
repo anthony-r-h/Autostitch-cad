@@ -8,7 +8,7 @@ The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [the 
 
 1. Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and the `source` folder together. The event bridge uses BricsCAD V22's built-in .NET support; no external package installation is needed.
 2. In BricsCAD, use **APPLOAD** to load [AUTOSTITCH.lsp](AUTOSTITCH.lsp), then run **AUTOSTITCH**.
-3. Click **Select stitch line**, enter **Pitch** in millimetres, then **Generate stitches**. The starting pitch is 3 mm. New lines reuse the last committed pitch; existing work restores its saved inputs.
+3. Click **Select stitch line**, enter **Stitch pitch** in millimetres, then **Generate stitches**. The starting pitch is 3 mm. New lines reuse the last committed pitch; existing work restores its saved inputs.
 4. Edit the original line using normal CAD tools, then **Generate stitches** again. Select a source line, its editing markers or its linked output to reopen the work.
 
 After opening the palette once, its commands are available in other drawings opened during that BricsCAD session.
@@ -25,22 +25,21 @@ Drawing units come from `INSUNITS`; pitch and tool dimensions are always millime
 
 Select one line, click **Connect stitch lines**, then select another line or its stitches. One new intersection connects directly. When several intersections need coordination, the tool reports the count and offers **ConnectAll** or Cancel. This includes intersections with the other lines already connected to either selection. Nearby unselected drawing geometry has no effect.
 
-Connected lines share one output block on `AUTOSTITCH`. Corners, crossings and branches coordinate their shared opening. Two lines that simply continue along the same straight line or circle, with the same pitch, become one uninterrupted run; their source boundary does not force a hole. Each source keeps its own pitch, range, direction and landmarks; the physical slit/hole profile must agree. Selecting a member edits that line's inputs, while **Generate stitches** recomputes the whole connected set. A failed operation preserves the previous complete output.
+Connected lines share one output block on `AUTOSTITCH`. Corners, crossings and branches coordinate their shared opening. Two lines that simply continue along the same straight line or circle, with the same pitch, become one uninterrupted run; their source boundary does not force a hole. Each source keeps its own pitch, direction, landmarks and any older saved limits; the physical slit/hole profile must agree. Selecting a member edits that line's inputs, while **Generate stitches** recomputes the whole connected set. A failed operation preserves the previous complete output.
 
 **Disconnect line** removes the selected line's connections and regenerates the resulting independent sets. If a source was deleted, select a surviving line or the old output and use **Remove missing lines**. This repairs the remaining connections without requiring Undo, including when the first selected line was deleted. Generate remains blocked until that explicit repair succeeds.
 
 ## Editing a line
 
-- **Select landmark** picks an existing point on the pattern: snap to an endpoint, intersection or other reference point. The two neighbouring stitches retain nominal spacing, centred around that location; there is no hole at the landmark. Use **Re-pick** to choose a replacement point and **Remove** to remove this constraint from the stitch line. The pattern geometry is not changed.
-- **Set start / Set end** trim the working range without trimming the source. The labels follow **Reverse direction**, so Set start always changes the displayed start. Enter **Default** at a pick prompt to restore that endpoint; **Reset range** restores the full line.
-- For a closed line, your first selection pick sets its start phase. **Set start** changes it; Set end is disabled.
-- **Save pitch** saves an input edit separately. **Generate stitches** commits its current pitch and output together. Native **Undo / Redo** can reverse these operations.
+- **Add landmark** picks an existing point on the pattern: snap to an endpoint, intersection or other reference point. The two neighbouring stitches retain nominal spacing, centred around that location; there is no hole at the landmark. Choose a landmark in the list and use **Remove landmark** to remove its constraint. To relocate one, remove it and add it again. Pattern geometry is unchanged.
+- Open lines use the guide endpoints. Shorten or extend the guide with normal CAD tools. Older seams retain their saved limits; **Use whole line** clears those limits while preserving pitch and landmarks.
+- For a closed line, your first selection pick chooses where stitching begins. **Set loop start** changes that point. It is disabled for ordinary open lines.
+- **Generate stitches** commits the current pitch and output together. It also restores output moved, rotated or scaled independently back to its guides. Native **Undo / Redo** can reverse these operations.
 - Reopening **AUTOSTITCH** also reloads saved inputs. After switching drawings, select a guide again before generating; a click cannot reuse another drawing's displayed seam.
-- If output was moved, rotated or scaled independently, **Restore position** explicitly regenerates it from its sources. It is enabled when that placement conflict is detected.
 
 The original sources remain authoritative and stay outside the stitch blocks. Editing aids are saved, nonplotting blocks on `AUTOSTITCH_UI`: compact `S` (start), `E` (end), `J` (junction), and a heavy transverse bar with `L#` (landmark). Point picking enables endpoint, midpoint, intersection, centre and node snaps alongside your existing snap choices, then restores your exact previous settings. Markers survive redraws and reopening, and follow ordinary MOVE, STRETCH and ERASE commands with Undo/Redo. Stitches update only when you Generate. Changes made through Properties, automation or another LISP routine refresh markers when the line is selected again.
 
-A picked point is projected onto the nearest position on the stitch guide. Landmark and range picks attach there at a fixed physical distance along the source segment. This records a location, not a live link to the other pattern object: if that object moves independently, re-pick the landmark. Changed polyline topology can require clearing or re-picking them. **Remove** offers **ClearAll** when correspondence is invalid; reset or re-pick affected ranges. For a connection whose attachment changed or disappeared, disconnect the affected line, then connect it again.
+A picked landmark is projected onto the nearest position on the stitch guide and attaches at a fixed physical distance along that segment. It is not a live link to another pattern object: if that object moves independently, remove and add the landmark again. Changed polyline topology can require rebuilding landmarks; **Remove landmark** offers **ClearAll** when correspondence is invalid. **Use whole line** clears invalid saved limits on older open seams. For a connection whose attachment changed or disappeared, disconnect the affected line, then connect it again.
 
 Within one drawing, copy all connected source lines and their output together to retain an editable copy. Copying output alone leaves static stitches; a partial source copy cannot edit the originals. Raw source guides must not overlap for a positive length, even when their selected ranges divide that overlap into adjacent pieces. Trim the overlapping source geometry before connecting it.
 
@@ -52,7 +51,7 @@ Short crossbars mark both tips of slits beside adjusted spacing, making each aff
 
 Generate enables the thread, notation and construction layers for viewing and printing. Actual slits and circle boundaries stay on `AUTOSTITCH`, thread on `AUTOSTITCH_STITCHES`, crossbars and hole fills on `AUTOSTITCH_NOTES`, and dashed virtual slits on `AUTOSTITCH_CONSTRUCTION`. Editing labels remain nonplotting on `AUTOSTITCH_UI`. Older output needs **Generate stitches** once to receive the revised display. Nominal spacing on a curve does not guarantee a rigid multi-tooth iron will fit.
 
-The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated: **Physical clearance unverified** remains visible. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
+The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
 
 ## Design and development
 

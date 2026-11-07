@@ -4,13 +4,13 @@ The AutoLISP/OpenDCL plugin includes independent and explicitly connected stitch
 
 ## Current implementation status
 
-`AUTOSTITCH.lsp` loads the geometry, connected-path solver, DWG adapter, saved markers and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Controls include Select stitch line, Connect stitch lines, Disconnect line, Save pitch, Set start/end, Reset range, Reverse direction, Select landmark, Re-pick, Remove, Generate stitches and Restore position. Set start/end follow the displayed traversal direction; closed lines use Set start for phase. Saved nonplotting markers provide native NODE/CEN snaps.
+`AUTOSTITCH.lsp` loads the geometry, connected-path solver, DWG adapter, saved markers and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Its 16 controls group selection and stitch length, pitch/direction, landmarks, connections, then Generate and status. Landmark entries use names only. Open seams use guide endpoints; closed seams expose Set loop start. Older open seams retain saved limits and expose Use whole line to clear them. Saved nonplotting markers provide native NODE/CEN snaps.
 
-The solver supports line/arc routes and explicit connections between separate sources, including corners, T junctions and crossings. Range picks, nominal gap reservations and all distinct emitted cuts are validated across the complete connected set. Extraction accepts LINE, ARC, CIRCLE and LWPOLYLINE in WCS XY at Z=0 with a positive Z normal; arbitrary drawing planes are not implemented. Unitless drawings require an explicit millimetre/inch choice.
+The solver supports line/arc routes and explicit connections between separate sources, including corners, T junctions and crossings. Saved limits, nominal gap reservations and all distinct emitted cuts are validated across the complete connected set. Extraction accepts LINE, ARC, CIRCLE and LWPOLYLINE in WCS XY at Z=0 with a positive Z normal; arbitrary drawing planes are not implemented. Unitless drawings require an explicit millimetre/inch choice.
 
 The connected workflow and automatic marker updates have passed native checks in BricsCAD V22.2 with OpenDCL 10.1.2.2, including actual palette picks, saved deleted-member recovery, native edit Undo/Redo and failure rollback. [Verification results](tests/QUALIFICATION.md) record the evidence and remaining limits; physical qualification is still open.
 
-Attachment correspondence is deliberately conservative: changed polylines with landmarks or range picks can require clearing/re-picking those attachments. Polylines without attachments can regenerate after edits. The current fixed profile is 1.5 mm slits, 0.5 mm holes and 40° lean; tool width and retained-material margin are uncalibrated. Physical clearance remains unverified, and curved or corrected runs may require individual placement.
+Attachment correspondence is deliberately conservative: changed polylines can require removing and adding landmarks again, or clearing older saved limits. Polylines without attachments can regenerate after edits. The current fixed profile is 1.5 mm slits, 0.5 mm holes and 40° lean; tool width and retained-material margin are uncalibrated. Physical clearance remains unverified, and curved or corrected runs may require individual placement.
 
 ## Target and stack
 
@@ -25,22 +25,28 @@ The bridge skips callbacks while LISP is active. In particular, internal UNDO Be
 One `AUTOSTITCH` command opens a compact palette:
 
 ```text
-[Select stitch line] [Generate stitches]
-Pitch [3 mm]        [Save pitch]
-[Set start] [Set end] [Reset range]
-[Reverse direction]
+[Select stitch line]
+Stitch length: 100 mm
+Stitch pitch [3] mm
+[Reverse direction] [Set loop start]
+Landmarks
+[Landmark 1]
+[Add landmark] [Remove landmark]
+Connections
 [Connect stitch lines] [Disconnect line]
-Landmarks: Select / Re-pick / Remove
-Selected line + short status
+[Generate stitches]
+Short action or error message
 ```
 
 1. Select a supported guide. Show its highlight, endpoint markers, direction arrow and derived junction markers. An open guide defaults to its two endpoints; a new closed guide uses the selection pick as its explicit start phase.
-2. Select an existing pattern landmark using native object snaps; preserve nominal stitch spacing around its position. Connect stitch lines is a separate declaration of shared openings: select another source or output; one new intersection connects directly, while multiple required intersections offer ConnectAll or Cancel. The count includes every member of the merged set. Unselected drawing geometry has no effect.
-3. Generate stitches. Calculate and validate the complete candidate before replacing output. Every connected member retains its own pitch, range, direction and landmark inputs; its physical slit/hole profile must agree with the others.
+2. Add a landmark by snapping to an existing pattern point; preserve nominal stitch spacing around its position. Remove landmark deletes the selected constraint; relocating one means removing and adding it again. Connect stitch lines declares shared openings: select another source or output; one new intersection connects directly, while multiple required intersections offer ConnectAll or Cancel. The count includes every member of the merged set. Unselected drawing geometry has no effect.
+3. Generate stitches commits pitch and output together and restores independently transformed output to its guides. Calculate and validate the complete candidate before replacing output. Every connected member retains its own pitch, saved limits, direction and landmarks; its physical slit/hole profile must agree with the others.
 4. Select any member source, its saved markers or the linked output to reopen the work. A source selection edits that member's inputs; Generate updates the whole connected set. Edit original sources with normal CAD tools and generate again.
 5. Disconnect line removes that member's connections and regenerates the resulting components. A missing source changes the action to Remove missing lines: retain surviving connections, choose a surviving primary when necessary, and solve all components before replacing cuts.
 
-Default pitch is provisionally 3 mm, then the last choice; an existing seam always restores its own value. Tool/process setup is done once and remains outside the normal seam controls. Show `Physical clearance unverified` when calibration is absent, while still permitting ideal geometry.
+Default pitch is provisionally 3 mm, then the last choice; an existing seam restores its own value. Tool/process setup and calibration limits remain outside the normal seam controls. No persistent calibration banner appears in the palette.
+
+Set loop start is disabled for ordinary open lines. An older open seam with saved limits or anchors instead offers Use whole line: remove `start`, `end`, `start-anchor` and `end-anchor`, preserving pitch and landmarks. Existing limits are never silently discarded.
 
 Corners within a source derive from normalized geometry. Explicit source-to-source connections persist as source/primitive attachments. Two-arm treatment depends on geometry, not CAD entity boundaries; T and X nodes emit one shared round opening. Lost or ambiguous connection correspondence requires disconnecting the affected line and connecting it again. Raw sources that overlap for a positive length must be trimmed before connection, even if their selected ranges are adjacent.
 
@@ -60,7 +66,7 @@ The actual source entity remains authoritative on its original layer. Read analy
 
 Example: extend a 30 mm line to 40 mm at its end. A landmark at 16.5 mm stays 16.5 mm; it does not become 22 mm. Shorten below 16.5 mm: mark invalid and require repair. Moving the owning start moves a distance-attached landmark; show the updated marker before generation. Tool Reverse changes traversal, not the stored geometric attachment.
 
-Store the previous analytic primitive sequence to validate attachments. Same topology plus demonstrable endpoint/vertex correspondence permits stretching. Inserted/deleted/reordered vertices, native entity reversal, primitive-type changes or ambiguous correspondence require affected markers to be re-picked. Never use nearest-point reassignment or silently clamp a station. A redundant collinear/co-circular split can normalize away if correspondence is proven.
+Store the previous analytic primitive sequence to validate attachments. Same topology plus demonstrable endpoint/vertex correspondence permits stretching. Inserted/deleted/reordered vertices, native entity reversal, primitive-type changes or ambiguous correspondence require explicit attachment repair. Never use nearest-point reassignment or silently clamp a station. A redundant collinear/co-circular split can normalize away if correspondence is proven.
 
 Changing a source or its inputs makes the complete connected output stale; it does not immediately rewrite holes. Detect this on selection/open/Generate, including edits made with the plugin unloaded. The event bridge synchronizes markers after ordinary native commands such as MOVE, STRETCH and ERASE, including Undo/Redo. Property-palette and direct COM changes refresh on selection; automatic coverage of those edits is not claimed. Marker/input writes remain undoable. Cut regeneration stays an explicit command, and a failed Generate retains inputs and the last successful output.
 
@@ -72,7 +78,7 @@ Use versioned Xrecords on the guide and output reference. Object links use actua
 
 | Record | Contents |
 | --- | --- |
-| Guide definition | Schema/rule version, seam ID, output reference, units/plane, pitch and saved profile/process values, direction/closed state, user start/end overrides and landmark attachments. |
+| Guide definition | Schema/rule version, seam ID, output reference, units/plane, pitch and saved profile/process values, direction/closed state, legacy start/end overrides and landmark attachments. |
 | Connected primary | Ordered native source references and explicit connection attachments; each member retains its own input record and reciprocal primary pointer. |
 | Last successful generation | Revision, exact analytic source/input snapshot, expected output placement transform. |
 | Output reference | Reciprocal primary reference, identity, revision, content signature, native member references and compact connection backup for missing-primary recovery. |
@@ -98,7 +104,7 @@ The physical cuts are already DWG entities; no duplicate full opening list is st
 | Regenerate a native copy sharing a definition | Assign a fresh definition to that reference; never modify the shared definition. |
 | Move/rotate guide only | Stale output. Regenerate from current source. |
 | Move/rotate all sources and output together | Recognize their common rigid placement across every member and retain generation revision. |
-| Move output only | Explicit Restore from guide or Detach; no silent snap on Generate. |
+| Move/rotate/scale output only | Generate restores it from the authoritative guides as part of the same undoable replacement. |
 | Scale physical geometry | Requires regeneration with declared units/profile; never silently scale pitch, slit length or diameter. |
 | Mirror | Static transformed cuts are possible; editable reflected punching-face semantics remain outside the first release. |
 | BEDIT/explode generated output | Unsupported manual alteration/detachment. Regeneration from a valid guide replaces generated content. |
@@ -112,7 +118,7 @@ Manual changes inside generated blocks cannot be assumed absent. On tool inspect
 | Stage | Work and proof required before proceeding |
 | --- | --- |
 | 1. LINE slice | Port straight fit/placement and profile validation into pure LISP functions. Select, default endpoints, Generate one block, change length, regenerate, save/reopen, Undo/Redo. Measure actual pitch/slit length in V22. |
-| 2. Landmarks | Typed attachment records, multiple reserved spans, localized failure; verify 30-to-40 mm extension, shortening failure, Reverse and marker Move/Delete. |
+| 2. Landmarks | Typed attachment records, multiple reserved spans, localized failure; verify 30-to-40 mm extension, shortening failure, Reverse and landmark Add/Remove. |
 | 3. Ordered line/arc routes | One normalized planner, chord fits, shared smooth joins, bounded sharp-junction candidates, closure and whole-route finite-cut checks. Port independent oracle/fixture results; show honest unsupported cases. |
 | 4. Lifecycle qualification | Inject write failures; cancellation, locked layer, deleted source, copied guide/output/both, common transforms, shared definitions, multiple documents and edits while plugin unloaded. Count output references to rule out duplicates. |
 | Connected workflow | Separate-LINE corner equivalence, T/X, multiple-crossing ConnectAll, per-member inputs, global clearance, atomic merge/split, full/partial copies and deleted-primary recovery after save/reopen. |

@@ -48,7 +48,7 @@ function minimumK(v, n) {
   return capacity > 0 ? ceil(Math.abs(r) / capacity) : Infinity;
 }
 
-function proposed(spec) {
+export function proposed(spec) {
   const v = parameters(spec);
   if (!v) return null;
   const q = v.start + v.end;

@@ -21,6 +21,15 @@ Straight-corner checks cover 112 pitch/handedness/turn combinations. Curved-corn
 
 Corner-step regressions cover nearest-to-nominal placement, the adjustment boundary, disabled adjustment, curved contraction, zero-length free spans and reversed guide selection. Display checks require `I` marks on the adjusted real slit. Guide-workflow checks separate saved connections from generated output.
 
+The earlier curved matrix used turns of $\pm45^\circ$, $\pm90^\circ$ and $\pm135^\circ$; it missed the shallow placement boundary. New geometry rules need tests on both sides of their limits, including mixed curves and connected guides. A solver accepting a case is not itself evidence that the case is valid.
+
+Shallow coverage now includes:
+
+- **J07–J10:** the reported straight corner, line/arc, arc/line and arc/arc, each at four pitches. Independent analytic positions and chord steps distinguish nominal, adjusted and rejected cases.
+- **GEO-SHALLOW-CURVES:** sixteen winding/turn combinations at $\pm21.5^\circ$, plus short-arm, clearance and lower adjustment-boundary checks.
+- **NET-SHALLOW-CORNERS:** separate guides agree with the single route, including reversed selection and an over-limit rejection.
+- **NET-SHALLOW-BRANCHES:** straight T/X junctions at $5^\circ$ and $15^\circ$; curved T junctions at $14^\circ$ with both windings. Passing cases preserve nominal first chords; failing cases reject clearance.
+
 The tiny-span regression is covered: arithmetic residue around $4.44\times10^{-16}\,\mathrm{mm}$ is treated as zero, while a real $10^{-8}\,\mathrm{mm}$ span still rejects.
 
 ## Reproduce
@@ -34,6 +43,6 @@ node tests/build-gallery.mjs
 node tests/build-gallery.mjs --report
 ```
 
-The gallery checks 22 cases at four pitches and renders the native results. All 1,284 checks pass across 88 case variants plus eight fixed-range runs for curved corners. Missing, duplicate or extra records and solver exceptions fail validation.
+The gallery checks 26 cases at four pitches and renders the native results, including virtual slits and adjustment marks. All 1,702 checks pass across 104 case variants plus eight fixed-range runs for curved corners. Missing, duplicate or extra records and solver exceptions fail validation.
 
 Run status: [qualification](QUALIFICATION.md). Uncertainties: [limits](../docs/LIMITS.md).

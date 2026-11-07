@@ -86,27 +86,30 @@
            (member 'dcl-Form-IsActive (atoms-family 0)))
     (progn
       (setq active (vl-catch-all-apply 'dcl-Form-IsActive (list "AUTOSTITCH" "Palette")))
-      (if (and (not (vl-catch-all-error-p active)) active astui:*guide*)
-        (if (not (entget astui:*guide*))
-          (progn
-            (ast:ui-clear) (ast:ui-fill)
-            (ast:ui-status "Selected stitch line was erased. Select a stitch line."))
-          (if (ast:ui-ready)
-            (cond
-              ((cdr (assoc 'connection-conflict astui:*state*))
-                (ast:ui-status (cdr (assoc 'connection-conflict astui:*state*))))
-              ((cdr (assoc 'range-conflict astui:*state*))
-                (ast:ui-status (cdr (assoc 'range-conflict astui:*state*))))
-              (astui:*placement-conflict*
-                (ast:ui-status "Stitches moved separately. Use Restore position."))
-              ((null (cdr (assoc 'output astui:*state*)))
-                (ast:ui-status "Stitch line selected. Generate to create stitches."))
-              ((cdr (assoc 'stale astui:*state*))
-                (ast:ui-status "Guide changed. Generate to update stitches."))
-              ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text") 2)
-                           (cdr (assoc 'pitch astui:*settings*)) 1e-12))
-                (ast:ui-status "Pitch edited. Generate to apply it."))
-              (T (ast:ui-status "Stitches match saved inputs."))))))))
+      (if (and (not (vl-catch-all-error-p active)) active)
+        (progn
+          (ast:ui-display-fill)
+          (if astui:*guide*
+            (if (not (entget astui:*guide*))
+              (progn
+                (ast:ui-clear) (ast:ui-fill)
+                (ast:ui-status "Selected stitch line was erased. Select a stitch line."))
+              (if (ast:ui-ready)
+                (cond
+                  ((cdr (assoc 'connection-conflict astui:*state*))
+                    (ast:ui-status (cdr (assoc 'connection-conflict astui:*state*))))
+                  ((cdr (assoc 'range-conflict astui:*state*))
+                    (ast:ui-status (cdr (assoc 'range-conflict astui:*state*))))
+                  (astui:*placement-conflict*
+                    (ast:ui-status "Stitches moved separately. Use Restore position."))
+                  ((null (cdr (assoc 'output astui:*state*)))
+                    (ast:ui-status "Stitch line selected. Generate to create stitches."))
+                  ((cdr (assoc 'stale astui:*state*))
+                    (ast:ui-status "Generate to update stitches and display."))
+                  ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text") 2)
+                               (cdr (assoc 'pitch astui:*settings*)) 1e-12))
+                    (ast:ui-status "Pitch edited. Generate to apply it."))
+                  (T (ast:ui-status "Stitches match saved inputs."))))))))))
   T)
 
 (vl-acad-defun 'ast:ui-native-refresh)
@@ -121,6 +124,7 @@
 
 (defun ast:ui-fill (/ labels index attachment total start finish reversed control)
   (setq astui:*busy* T labels nil index 0)
+  (ast:ui-display-fill)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
           labels (cons (strcat "Landmark " (itoa index) " | segment "
@@ -163,6 +167,37 @@
             (rtos (if reversed start finish) 2 2) " mm"))))
     (ast:ui-put "Range" "Caption" "Select a stitch line to show its start and end."))
   (setq astui:*busy* nil))
+
+(defun ast:ui-display-fill (/ astui:*busy*)
+  (setq astui:*busy* T)
+  (dcl-Control-SetValue "AUTOSTITCH" "Palette" "ShowStitches"
+    (if (ast:cad-display-visible-p 'stitches) 1 0))
+  (dcl-Control-SetValue "AUTOSTITCH" "Palette" "SpacingNotes"
+    (if (ast:cad-display-visible-p 'notes) 1 0)))
+
+(defun ast:ui-display (key value)
+  (if (and (not astui:*busy*) (not (ast:ui-sync-owner)))
+    (ast:ui-run '(lambda (/ result state message)
+      (setq result (ast:cad-set-display key (= value 1)))
+      (ast:ui-display-fill)
+      (if (ast:ui-result result)
+        (progn
+          (setq message (if (= key 'stitches)
+            (if (= value 1) "Stitches shown in this drawing." "Stitches hidden; slit and round holes remain visible.")
+            (if (= value 1) "Spacing notes shown. Amber slits mark changed spacing." "Spacing notes hidden; changed-spacing slits remain amber.")))
+          (if (and astui:*guide* (entget astui:*guide*))
+            (progn
+              (setq state (ast:cad-read astui:*guide*))
+              (cond
+                ((not (cdr (assoc 'ok state)))
+                  (setq message (strcat message "\n" (cdr (assoc 'error state)))))
+                ((and (cdr (assoc 'output state)) (cdr (assoc 'stale state)))
+                  (setq message (strcat message "\nGenerate to update this line."))))))
+          (ast:ui-status message))))))
+  (princ))
+
+(defun c:ASTUISHOWSTITCHES (value) (ast:ui-display 'stitches value))
+(defun c:ASTUINOTES (value) (ast:ui-display 'notes value))
 
 (defun ast:ui-adopt (result)
   (setq astui:*state* result astui:*guide* (cdr (assoc 'guide result))
@@ -259,7 +294,7 @@
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
               ((and (cdr (assoc 'output result)) (cdr (assoc 'stale result)))
-                "Inputs or guide changed. Generate to update stitches.")
+                "Generate to update stitches and display.")
               (T "Stitch line selected. Set start/end, select landmarks, then Generate."))))))))
     (ast:ui-status "Selection cancelled. Previous guide retained.")))
 
@@ -451,7 +486,7 @@
             (ast:ui-status (cond
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
-              ((cdr (assoc 'stale result)) "Guide changed. Generate to update stitches.")
+              ((cdr (assoc 'stale result)) "Generate to update stitches and display.")
               (T "Saved path inputs reloaded."))))))))))
 
 (defun c:ASTUIINIT ()
@@ -495,7 +530,7 @@
               (ast:ui-status (cond
                 ((cdr (assoc 'connection-conflict state)) (cdr (assoc 'connection-conflict state)))
                 ((cdr (assoc 'range-conflict state)) (cdr (assoc 'range-conflict state)))
-                ((cdr (assoc 'stale state)) "Inputs or guide changed. Generate to update stitches.")
+                ((cdr (assoc 'stale state)) "Generate to update stitches and display.")
                 (T "Saved seam inputs refreshed."))))
             (progn (c:ASTUIINIT) (ast:ui-result state))))
         (c:ASTUIINIT))

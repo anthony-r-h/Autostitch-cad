@@ -478,7 +478,7 @@
                           after-center (ast:g-point (nth (rem (1+ idx) count) primitives) (ast:g-get 'outgoing-station (nth idx joins) 0.0))
                           openings (append openings (list (ast:g-get 'opening (nth idx joins) nil)))
                           intervals (append intervals (list (ast:g-junction-interval (ast:g-point primitive finish) joint-center idx)
-                                                            (ast:g-junction-interval joint-center after-center idx))))))))))
+                                                            (ast:g-junction-interval joint-center after-center (rem (1+ idx) count)))))))))))
         (setq idx (1+ idx)))
       (if (and (null error) closed (> (length openings) 1) (ast:g-same-opening (car openings) (last openings))) (setq openings (reverse (cdr (reverse openings)))))
       (if (null error) (setq error (ast:g-validate-openings openings settings)))))

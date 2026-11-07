@@ -325,13 +325,13 @@
   (if (= side 0) (ast:g-tangent primitive 0.0) (ast:g-mul (ast:g-tangent primitive (ast:g-length primitive)) -1.0)))
 
 ;;; All physical feature reservations are committed before any span is fitted.
-(defun ast:n-reserve (edges / nodes result node arms arm side edge primitive settings degree kind first-arm second-arm first-edge second-edge incoming outgoing corner opening start finish limit point error)
+(defun ast:n-reserve (edges / nodes result node arms arm side edge primitive settings degree kind first-arm second-arm first-edge second-edge incoming outgoing corner opening start finish limit point error virtual-slits)
   (setq nodes (ast:n-nodes edges))
   (foreach edge edges
     (setq edges (ast:n-set-edge edges (ast:g-get 'id edge nil) 'start 0.0)
           edges (ast:n-set-edge edges (ast:g-get 'id edge nil) 'finish (ast:g-length (ast:g-get 'primitive edge nil)))))
   (foreach node nodes
-    (setq arms (ast:g-get 'arms node nil) degree (length arms) kind 'smooth opening nil)
+    (setq arms (ast:g-get 'arms node nil) degree (length arms) kind 'smooth opening nil virtual-slits nil)
     (cond
       ((> degree 2)
         (setq kind 'branch edge (ast:n-edge (ast:g-get 'edge (car arms) nil) edges)
@@ -353,12 +353,14 @@
                   corner (ast:g-corner incoming outgoing settings))
             (if (not (ast:g-get 'ok corner nil)) (setq error (ast:g-get 'error corner nil))
               (progn
-                (setq opening (ast:g-get 'opening corner nil) limit (ast:g-get 'incoming-station corner 0.0) side (ast:g-get 'side first-arm 0)
+                (setq opening (ast:g-get 'opening corner nil) virtual-slits (ast:g-get 'virtual-slits corner nil)
+                      limit (ast:g-get 'incoming-station corner 0.0) side (ast:g-get 'side first-arm 0)
                       edges (ast:n-set-edge edges (ast:g-get 'id first-edge nil) (if (= side 0) 'start 'finish) (if (= side 0) (- (ast:g-length incoming) limit) limit))
                       limit (ast:g-get 'outgoing-station corner 0.0) side (ast:g-get 'side second-arm 0)
                       edges (ast:n-set-edge edges (ast:g-get 'id second-edge nil) (if (= side 0) 'start 'finish) (if (= side 0) limit (- (ast:g-length outgoing) limit)))))))))
       (T (setq kind 'terminal)))
-    (setq node (ast:n-put 'kind kind (ast:n-put 'opening (if opening (cons (cons 'node (ast:g-get 'id node nil)) opening)) node)))
+    (setq node (ast:n-put 'virtual-slits virtual-slits
+      (ast:n-put 'kind kind (ast:n-put 'opening (if opening (cons (cons 'node (ast:g-get 'id node nil)) opening)) node))))
     (foreach arm arms (setq edges (ast:n-set-edge edges (ast:g-get 'edge arm nil) (if (= (ast:g-get 'side arm 0) 0) 'start-node 'end-node) node)))
     (setq result (append result (list node))))
   (if error (ast:g-error error) (list '(ok . T) (cons 'edges edges) (cons 'nodes result))))
@@ -367,7 +369,7 @@
   (if (and identity (setq existing (vl-some '(lambda (item) (if (equal identity (assoc 'node item)) item)) openings)))
     (if (ast:g-same-opening opening existing) openings nil)
     (append openings (list opening))))
-(defun ast:g-solve-set (paths connections / error prepared path item profile ids resolved node incidence owner point found edges reservations nodes openings intervals warnings edge primitive settings start finish start-node end-node direct result cuts cut index local-intervals adjusted all-primitives)
+(defun ast:g-solve-set (paths connections / error prepared path item profile ids resolved node incidence owner point found edges reservations nodes openings intervals warnings edge primitive settings start finish start-node end-node direct result cuts cut index local-intervals adjusted all-primitives virtual-slits)
   (if (null paths) (setq error "No stitch paths selected."))
   (foreach path paths
     (if (not (and (numberp (ast:g-get 'id path nil)) (= (ast:g-get 'id path nil) (fix (ast:g-get 'id path nil)))))
@@ -395,7 +397,9 @@
       (if (ast:g-get 'ok reservations nil) (setq edges (ast:g-get 'edges reservations nil) nodes (ast:g-get 'nodes reservations nil)) (setq error (ast:g-get 'error reservations nil)))))
   (if (null error)
     (progn
-      (foreach node nodes (if (ast:g-get 'opening node nil) (setq openings (append openings (list (ast:g-get 'opening node nil))))))
+      (foreach node nodes
+        (if (ast:g-get 'opening node nil) (setq openings (append openings (list (ast:g-get 'opening node nil)))))
+        (setq virtual-slits (append virtual-slits (ast:g-get 'virtual-slits node nil))))
       (setq index 0)
       (foreach edge edges
         (if (null error)
@@ -442,5 +446,5 @@
       (setq adjusted (vl-some '(lambda (item) (= (ast:g-get 'kind item nil) 'corrected)) intervals))
       (if adjusted (setq warnings (cons "Corrected gaps require individual placement; nominal multi-tooth runs stop at the correction block." warnings)))
       (list '(ok . T) (cons 'status (if adjusted 'adjusted 'exact)) (cons 'openings openings) (cons 'intervals intervals)
-        (cons 'warnings warnings) (cons 'primitives all-primitives) (cons 'connections connections)))))
+        (cons 'virtual-slits virtual-slits) (cons 'warnings warnings) (cons 'primitives all-primitives) (cons 'connections connections)))))
 (princ)

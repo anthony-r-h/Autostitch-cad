@@ -10,10 +10,10 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Independent JavaScript oracle compared with native line/arc fitting | 540 passed |
 | DWG generation, injected rollback failures, transforms, saved units, attachments and repair | 59 passed |
 | Connected-set merge/split, copies and missing-member recovery | 39 passed |
-| Compact markers, exact CEN/NODE/MID snaps, shared labels and rollback | 39 passed |
+| Compact markers, direction arrows, exact CEN/NODE/MID snaps, shared labels and rollback | 42 passed |
 | Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
-| Thread-tip display, monochrome chevrons, inch scaling, tight arcs, visibility, signatures and rollback | 36 passed |
+| Mandatory thread/chevrons, stroke weights, filled holes, dashed virtual slits, inch scaling, signatures and rollback | 41 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
 Actual palette controls were exercised in BricsCAD: Select, Add landmark, Move, Start, End, Reverse and Generate. Picked inputs survived regeneration. Cancelling selection retained the previous seam. Invalid pitch left inputs and output unchanged.
@@ -52,7 +52,11 @@ Measured solver times: 101 openings ≈16 ms; 334 ≈15 ms; 1,001 ≈172 ms. The
 
 The compact notation update passed all **12 native suites: 1,256 assertions**. Chevrons identify both ends of affected slits, deduplicate shared boundaries, and exclude derived corner-hole gaps. Actual slit positions remain unchanged. Tests cover forward/reversed lines and tight arcs, inch scaling, output signatures, version migration and rollback. Compact `S`/`E`/`J` labels retain endpoint and junction CEN/NODE snaps; the heavy `L#` landmark bar has exact NODE/MID snaps. Existing marker styles migrate automatically.
 
-The 61 native event checks also passed. The actual **Spacing marks** checkbox and native Undo/Redo were exercised. The expanded demo regenerated all **14 outputs from 19 sources**, then reopened with every source/output association current. It includes the original straight 45/135-degree turns, A03/A04 curved junctions, a 60-degree curved turn and a connected polyline-plus-line example.
+The 61 native event checks also passed. At that revision, the **Spacing marks** checkbox and native Undo/Redo were exercised; the checkbox has since been removed. The expanded demo regenerated all **14 outputs from 19 sources**, then reopened with every source/output association current. It includes the original straight 45/135-degree turns, A03/A04 curved junctions, a 60-degree curved turn and a connected polyline-plus-line example.
+
+The fixed drawing-style revision passed all **12 native suites: 1,264 assertions**, plus **61 native event checks**. Slits and chevrons use 0.30 mm strokes; thread and dashed virtual slits use 0.09 mm. These displays are always generated and their layers enabled for viewing and printing. Round holes retain their physical circle and receive an exactly sized solid fill. Tests check actual virtual-slit tip contact at straight, curved and separate-source corners, no invented construction at T branches, dimensions in millimetres/inches, migration and rollback. Direction arrows follow the guide near `S`, including reversed and closed paths. Both display checkboxes were removed from the compiled palette.
+
+The updated demo regenerated **14 outputs**, with all **19 guides, settings and landmark lists unchanged** and all source/output associations current. The live palette and filled/dashed corner construction were inspected in BricsCAD.
 
 ## Repeat
 

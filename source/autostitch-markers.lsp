@@ -57,7 +57,7 @@
   (setq record (ast:markers-record guide) saved (cdr (assoc 'style record))
         pitch (cdr (assoc 'pitch settings)))
   ;; Migrate old labels once, then retain their model-space size through later edits.
-  (if (and saved (equal 9 (ast:cad-get 'display-version (ast:cad-get 'snapshot record)))) saved
+  (if (and saved (member (ast:cad-get 'display-version (ast:cad-get 'snapshot record)) '(9 10))) saved
     (list (cons 'size (/ (max 0.65 (min 1.0 (* pitch (/ 0.8 3.0)))) factor))
       (cons 'text-height (/ (max 0.55 (min 0.8 (* pitch 0.22))) factor))
       (cons 'landmark-half-size (/ (max 0.9 (min 1.6 (* pitch 0.4))) factor))
@@ -102,7 +102,7 @@
                (<= station (vlax-curve-getDistAtParam guide boundary)))
         (vlax-curve-getPointAtDist guide station)))))
 
-(defun ast:markers-geometry (guide settings landmarks factor route style connections / total start finish phase closed reversed size text-height first last middle direction index attachment point incoming outgoing primitives connection corner-station)
+(defun ast:markers-geometry (guide settings landmarks factor route style connections / total start finish phase closed reversed size text-height first last middle direction index attachment point incoming outgoing primitives connection corner-station cue-step cue-station)
   (setq total (vlax-curve-getDistAtParam guide (vlax-curve-getEndParam guide))
         closed (cdr (assoc 'closed route)) reversed (cdr (assoc 'reverse settings))
         start (if (assoc 'start settings) (/ (cdr (assoc 'start settings)) factor) 0.0)
@@ -120,16 +120,18 @@
            (not (ast:markers-shared-point-p (vlax-curve-getPointAtDist guide finish) factor connections)))
     (ast:markers-point guide (vlax-curve-getPointAtDist guide finish)
       (if reversed "S" "E") (if reversed 3 1) size text-height))
-  (if (and (> total 0.0) (>= start 0.0) (<= finish total) (<= start finish))
+  (if (and (> total 0.0) (>= start 0.0) (<= finish total) (or closed (< start finish)))
     (progn
-      (setq middle (vlax-curve-getPointAtDist guide
-              (if closed (rem (+ phase (* total 0.08)) total) (/ (+ start finish) 2.0)))
+      (setq cue-step (min (/ (* 0.5 (cdr (assoc 'pitch settings))) factor)
+                          (* 0.25 (if closed total (- finish start))))
+            cue-station (if closed
+              (rem (+ total phase (* (if reversed -1.0 1.0) cue-step)) total)
+              (if reversed (- finish cue-step) (+ start cue-step)))
+            middle (vlax-curve-getPointAtDist guide cue-station)
             direction (angle '(0.0 0.0 0.0)
               (vlax-curve-getFirstDeriv guide (vlax-curve-getParamAtPoint guide middle))))
-      ;; Keep the cue beside the guide so it cannot obscure a cut or snap marker.
-      (setq middle (polar middle (- direction (/ pi 2.0)) (* size 1.6)))
       (if reversed (setq direction (+ direction pi)))
-      ;; Text keeps the direction cue from introducing false endpoint snaps.
+      ;; Text marks traversal near S without introducing false endpoint snaps.
       (ast:markers-entity (list '(0 . "TEXT") (cons 10 middle) (cons 11 middle)
         (cons 40 text-height) '(1 . ">") '(7 . "Standard") (cons 50 direction)
         '(72 . 1) '(73 . 2)) 2)))
@@ -162,7 +164,7 @@
         "J" 2 size text-height))))
 
 (defun ast:markers-snapshot (guide settings landmarks factor route)
-  (list '(display-version . 9) (cons 'settings settings) (cons 'landmarks landmarks)
+  (list '(display-version . 10) (cons 'settings settings) (cons 'landmarks landmarks)
     (cons 'factor factor) (cons 'route route) (cons 'style (ast:markers-style guide settings factor))
     (cons 'connections (ast:markers-connections guide))))
 

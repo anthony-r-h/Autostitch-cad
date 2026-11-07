@@ -364,7 +364,7 @@
         (setq fake-state (ast:cad-put 'record (ast:cad-put 'attachment-route snapshot (ast:cad-get 'record state)) state))
         (cond
           ((or (null snapshot) (not (ast:cad-attachments-valid-p fake-state (list anchor))))
-           (setq error "Guide correspondence changed. Reset or re-pick Start, End or Phase."))
+           (setq error "The line changed. Use whole line, or set the loop start again."))
           (T
            (setq index (ast:cad-get 'primitive anchor) station (ast:cad-get 'station anchor))
            (if (or (not (numberp index)) (< index 0) (>= index (length primitives))
@@ -631,9 +631,9 @@
           (not (equal (cdr (assoc 330 (entget (ast:cad-get 'guide state))))
                       (cdr (assoc 330 (entget (ast:cad-get 'output state)))))))
      (list '(ok . nil) '(error . "Guide and output are in different spaces. Detach the old output, then Generate in the guide's space.")))
-    ((not (ast:cad-attachments-valid-p state landmarks)) (list '(ok . nil) '(error . "Guide correspondence changed. Delete and re-pick landmarks.")))
+    ((not (ast:cad-attachments-valid-p state landmarks)) (list '(ok . nil) '(error . "The line changed. Remove its landmarks, then add them again.")))
     ((and (not restore-placement) (ast:cad-get 'placement-conflict state))
-     (list '(ok . nil) '(error . "Output was transformed. Restore its original placement or detach it before Generate.")))
+     (list '(ok . nil) '(error . "Stitches moved separately. Use Generate stitches in the palette to return them to the guide.")))
     ((or (not (ast:cad-layer-unlocked-p "AUTOSTITCH"))
          (not (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget (ast:cad-get 'guide state))))))
          (and (setq output (ast:cad-get 'output state))
@@ -695,7 +695,7 @@
   (cond ((not (ast:cad-get 'ok state)) state)
         ((and landmarks (not (equal landmarks (ast:cad-get 'landmarks state)))
               (not (ast:cad-attachments-valid-p state (ast:cad-get 'landmarks state))))
-         (list '(ok . nil) '(error . "Guide correspondence changed. Clear all landmarks, then re-pick them before editing inputs.")))
+         (list '(ok . nil) '(error . "The line changed. Remove its landmarks, then add them again.")))
         ((not (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget (ast:cad-get 'guide state))))))
          (list '(ok . nil) '(error . "Unlock the guide layer before editing inputs.")))
         (T (ast:cad-transaction 'ast:cad-save-inputs-inner (list state (ast:cad-get 'settings ranges) landmarks)))))
@@ -735,7 +735,7 @@
     (ast:cad-require (ast:cad-attachments-valid-p state (ast:cad-get 'landmarks state))
                      "A connected path changed shape. Clear and re-pick its gaps before Generate.")
     (ast:cad-require (or restore-placement (not (ast:cad-get 'placement-conflict state)))
-                     "The output was moved separately. Use Restore before connecting or generating paths.")
+                     "Stitches moved separately. Use Generate stitches to return them to the guide before connecting lines.")
     (ast:cad-require (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget guide))))
                      "Unlock every connected path layer before Generate.")
     (if output

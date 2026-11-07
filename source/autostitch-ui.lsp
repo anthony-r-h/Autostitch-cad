@@ -20,6 +20,11 @@
         (cdr (assoc 'error result)) "The operation could not be completed."))
       nil)))
 
+(defun ast:ui-limits-message ()
+  (if (cdr (assoc 'closed astui:*route*))
+    "The loop changed. Set its starting point again."
+    "The line changed. Use whole line to reset its stitch limits."))
+
 (defun ast:ui-document-key (/ document)
   (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
   (strcat (vla-get-FullName document) "|" (vla-get-Name document)))
@@ -30,7 +35,7 @@
     (progn
       (setq astui:*guide* nil ast:*unit-factor* nil)
       (c:ASTUIINIT)
-      (ast:ui-status "Drawing changed. Select a guide in this drawing.")
+      (ast:ui-status "Select a stitch line in this drawing.")
       T)))
 
 (defun ast:ui-run (action / result)
@@ -74,7 +79,6 @@
               (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Landmarks" astui:*index*)
               (if (null index)
                 (progn
-                  (ast:ui-put "Move" "Enabled" nil)
                   (ast:ui-put "Delete" "Enabled" nil)
                   (ast:ui-status "Selected landmark changed. Select a landmark again.")))))
           T)))))
@@ -98,17 +102,17 @@
                   ((cdr (assoc 'connection-conflict astui:*state*))
                     (ast:ui-status (cdr (assoc 'connection-conflict astui:*state*))))
                   ((cdr (assoc 'range-conflict astui:*state*))
-                    (ast:ui-status (cdr (assoc 'range-conflict astui:*state*))))
+                    (ast:ui-status (ast:ui-limits-message)))
                   (astui:*placement-conflict*
-                    (ast:ui-status "Stitches moved separately. Use Restore position."))
+                    (ast:ui-status "Generate stitches to return them to the guide."))
                   ((null (cdr (assoc 'output astui:*state*)))
-                    (ast:ui-status "Stitch line selected. Generate to create stitches."))
+                    (ast:ui-status "Ready to generate stitches."))
                   ((cdr (assoc 'stale astui:*state*))
-                    (ast:ui-status "Generate to update stitches and display."))
+                    (ast:ui-status "Generate stitches to apply your changes."))
                   ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text") 2)
                                (cdr (assoc 'pitch astui:*settings*)) 1e-12))
-                    (ast:ui-status "Pitch edited. Generate to apply it."))
-                  (T (ast:ui-status "Stitches match saved inputs."))))))))))
+                    (ast:ui-status "Generate stitches to apply the new pitch."))
+                  (T (ast:ui-status "Stitches are up to date."))))))))))
   T)
 
 (vl-acad-defun 'ast:ui-native-refresh)
@@ -121,32 +125,32 @@
         (ast:ui-result (ast:markers-ensure astui:*guide* astui:*settings*
           astui:*landmarks* astui:*factor* astui:*route*))))))
 
-(defun ast:ui-fill (/ labels index attachment total start finish reversed control)
+(defun ast:ui-partial-p ()
+  (and astui:*guide* (not (cdr (assoc 'closed astui:*route*)))
+    (or (cdr (assoc 'range-conflict astui:*state*))
+      (vl-some '(lambda (key) (assoc key astui:*settings*)) '(start end start-anchor end-anchor)))))
+
+(defun ast:ui-fill (/ labels index attachment total start finish closed partial control)
   (setq astui:*busy* T labels nil index 0)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
-          labels (cons (strcat "Landmark " (itoa index) " | segment "
-            (itoa (1+ (cdr (assoc 'primitive attachment)))) " + "
-            (rtos (cdr (assoc 'station attachment)) 2 2) " mm") labels)))
+          labels (cons (strcat "Landmark " (itoa index)) labels)))
   (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Landmarks")
   (if labels
     (progn
       (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Landmarks" (reverse labels))
       (setq astui:*index* (max 0 (min astui:*index* (1- (length labels)))))
       (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Landmarks" astui:*index*))
-    (setq astui:*index* -1))
-  (ast:ui-put "Move" "Enabled" (if labels T nil))
+    (progn
+      (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Landmarks" '("No landmarks"))
+      (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Landmarks" 0)
+      (setq astui:*index* -1)))
+  (ast:ui-put "Landmarks" "Enabled" (if labels T nil))
   (ast:ui-put "Delete" "Enabled" (if labels T nil))
-  (ast:ui-put "Restore" "Enabled" (if astui:*placement-conflict* T nil))
-  (ast:ui-put "Seam" "Caption" (if astui:*guide*
-    (strcat "Stitch line " (cdr (assoc 5 (entget astui:*guide*))) "  |  "
-      (itoa (length astui:*landmarks*)) " landmarks") "No stitch line selected"))
-  (ast:ui-put "Reverse" "Caption" "Reverse direction")
-  (ast:ui-put "Start" "Caption" "Set start")
-  (ast:ui-put "Start" "Enabled" (if astui:*guide* T nil))
-  (ast:ui-put "End" "Enabled" (and astui:*guide*
-    (not (cdr (assoc 'closed astui:*route*)))))
-  (foreach control '("Add" "Generate" "ApplyPitch" "Reverse" "Reset" "Connect")
+  (setq closed (cdr (assoc 'closed astui:*route*)) partial (ast:ui-partial-p))
+  (ast:ui-put "Start" "Caption" (if partial "Use whole line" "Set loop start"))
+  (ast:ui-put "Start" "Enabled" (if (and astui:*guide* (or closed partial)) T nil))
+  (foreach control '("Add" "Generate" "Pitch" "Reverse" "Connect")
     (ast:ui-put control "Enabled" (if astui:*guide* T nil)))
   (ast:ui-put "Disconnect" "Enabled" (and astui:*guide*
     (or (cdr (assoc 'missing-members astui:*state*)) (> (length (cdr (assoc 'members astui:*state*))) 1))))
@@ -156,14 +160,12 @@
     (progn
       (setq total (* astui:*factor* (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*)))
             start (if (assoc 'start astui:*settings*) (cdr (assoc 'start astui:*settings*)) 0.0)
-            finish (if (assoc 'end astui:*settings*) (cdr (assoc 'end astui:*settings*)) total)
-            reversed (cdr (assoc 'reverse astui:*settings*)))
-      (ast:ui-put "Range" "Caption"
-        (if (cdr (assoc 'closed astui:*route*))
-          (strcat "Closed path | start " (rtos (if (assoc 'phase astui:*settings*) (cdr (assoc 'phase astui:*settings*)) 0.0) 2 2) " mm")
-          (strcat "Start " (rtos (if reversed finish start) 2 2) "  >  End "
-            (rtos (if reversed start finish) 2 2) " mm"))))
-    (ast:ui-put "Range" "Caption" "Select a stitch line to show its start and end."))
+            finish (if (assoc 'end astui:*settings*) (cdr (assoc 'end astui:*settings*)) total))
+      (ast:ui-put "Seam" "Caption"
+        (if (cdr (assoc 'range-conflict astui:*state*)) "Saved stitch limits need updating"
+          (strcat "Stitch length: " (rtos (if closed total (- finish start)) 2 2) " mm"
+            (if (and partial (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")))))
+    (ast:ui-put "Seam" "Caption" "No stitch line selected"))
   (setq astui:*busy* nil))
 
 (defun ast:ui-adopt (result)
@@ -196,7 +198,7 @@
             astui:*pitch-text* (if (equal (distof text 2) (cdr (assoc 'pitch settings)) 1e-12)
               text (rtos (cdr (assoc 'pitch settings)) 2 3)))
       (ast:ui-fill) (ast:ui-markers)
-      (ast:ui-status "Inputs saved. Generate to update stitches.") T)))
+      (ast:ui-status "Generate stitches to apply your changes.") T)))
 
 (defun ast:ui-pick-point (prompt-text keywords / previous point)
   ;; Pattern endpoints/intersections are valid inputs, alongside our CEN/NODE markers.
@@ -212,13 +214,13 @@
 (defun ast:ui-pick-landmark (/ point result)
   (if (ast:ui-markers)
     (progn
-      (ast:ui-status "Snap to an existing landmark on the pattern: an endpoint, intersection or point.")
-      (setq point (ast:ui-pick-point "\nSelect landmark point on the pattern: " nil))
+      (ast:ui-status "Pick a landmark on the pattern. Snap to an endpoint or intersection.")
+      (setq point (ast:ui-pick-point "\nPick a point to add a landmark: " nil))
       (if point
         (progn
           (setq result (ast:cad-project astui:*guide* (trans point 1 0)))
           (if (assoc 'error result) (progn (ast:ui-result result) nil) result))
-        (progn (ast:ui-status "Landmark selection cancelled. Existing landmarks retained.") nil)))))
+        (progn (ast:ui-status "No landmark added.") nil)))))
 
 (defun ast:ui-global-station (attachment / index station primitive)
   (setq index 0 station (cdr (assoc 'station attachment)))
@@ -256,21 +258,16 @@
               (if (ast:ui-save (ast:ui-set 'phase-anchor
                     (append phase (list (cons 'source-route astui:*route*)))
                     (ast:ui-set 'phase (ast:ui-global-station phase) astui:*settings*)) astui:*landmarks*)
-                (ast:ui-status "Start phase set at your pick. Generate when ready.")))
+                (ast:ui-status "Loop starts at your selected point. Generate stitches to apply it.")))
             (ast:ui-status (cond
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
-              ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
+              ((cdr (assoc 'range-conflict result)) (ast:ui-limits-message))
               ((and (cdr (assoc 'output result)) (cdr (assoc 'stale result)))
-                "Generate to update stitches and display.")
-              (T "Stitch line selected. Set start/end, select landmarks, then Generate."))))))))
-    (ast:ui-status "Selection cancelled. Previous guide retained.")))
+                "Generate stitches to apply your changes.")
+              (T "Ready to generate stitches."))))))))
+    (ast:ui-status "Selection unchanged.")))
 
 (defun c:ASTUISELECT () (ast:ui-run 'ast:ui-select-action))
-
-(defun c:ASTUIPITCH ()
-  (ast:ui-run '(lambda (/ pitch)
-    (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
-      (ast:ui-save (ast:ui-set 'pitch pitch astui:*settings*) astui:*landmarks*)))))
 
 (defun c:ASTUIADD ()
   (ast:ui-run '(lambda (/ pitch attachment)
@@ -284,15 +281,8 @@
   (if (not astui:*busy*)
     (progn
       (setq astui:*index* index)
-      (ast:ui-put "Move" "Enabled" (>= index 0))
       (ast:ui-put "Delete" "Enabled" (>= index 0))))
   (princ))
-
-(defun c:ASTUIMOVE ()
-  (ast:ui-run '(lambda (/ attachment)
-    (if (and (ast:ui-ready) (>= astui:*index* 0) (setq attachment (ast:ui-pick-landmark)))
-      (ast:ui-save astui:*settings*
-        (subst attachment (nth astui:*index* astui:*landmarks*) astui:*landmarks*))))))
 
 (defun c:ASTUIDELETE ()
   (ast:ui-run '(lambda (/ index kept attachment)
@@ -300,9 +290,9 @@
       (if (not (ast:cad-attachments-valid-p astui:*state* astui:*landmarks*))
         (progn
           (initget "ClearAll Cancel")
-          (if (equal (getkword "\nGuide correspondence changed. Clear all landmarks to re-pick them [ClearAll/Cancel] <Cancel>: ") "ClearAll")
+          (if (equal (getkword "\nThe line changed. Remove all landmarks and add them again [ClearAll/Cancel] <Cancel>: ") "ClearAll")
             (ast:ui-save astui:*settings* nil)
-            (ast:ui-status "Landmarks retained. Clear them before re-picking.")))
+            (ast:ui-status "Landmarks kept. Remove them before adding replacements.")))
         (progn
           (setq index 0 kept nil)
           (foreach attachment astui:*landmarks*
@@ -316,57 +306,26 @@
       (ast:ui-save (ast:ui-set 'reverse (not (cdr (assoc 'reverse astui:*settings*)))
         astui:*settings*) astui:*landmarks*)))))
 
-(defun ast:ui-range-pick (key / anchor-key point attachment settings station total lower upper label)
-  (if (and (ast:ui-ready) (ast:ui-markers))
-    (progn
-        (setq label (if (= key 'start) "start" "end"))
-        (if (cdr (assoc 'closed astui:*route*)) (setq key 'phase))
-        (if (and (/= key 'phase) (cdr (assoc 'reverse astui:*settings*)))
-          (setq key (if (= key 'start) 'end 'start)))
-        (setq anchor-key (read (strcat (vl-symbol-name key) "-ANCHOR")))
-        (ast:ui-status (strcat "Pick the " label " on the guide. Native object snaps are enabled."))
-        (setq point (ast:ui-pick-point (strcat "\nPick " label
-          " on the guide [Default]: ") "Default"))
-        (cond
-          ((equal point "Default")
-            (setq settings (vl-remove-if '(lambda (item) (member (car item) (list key anchor-key))) astui:*settings*))
-            (if (= key 'phase) (setq settings (ast:ui-set 'phase 0.0 settings)))
-            (ast:ui-save settings astui:*landmarks*))
-          ((listp point)
-            (if point
-              (progn
-                (setq attachment (ast:cad-project astui:*guide* (trans point 1 0)))
-                (if (assoc 'error attachment)
-                  (ast:ui-result attachment)
-                  (progn
-                (setq station (ast:ui-global-station attachment)
-                      settings (ast:ui-set anchor-key
-                        (append attachment (list (cons 'source-route astui:*route*)))
-                        (ast:ui-set key station astui:*settings*))
-                      total (* astui:*factor*
-                        (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*)))
-                      lower (if (assoc 'start settings) (cdr (assoc 'start settings)) 0.0)
-                      upper (if (assoc 'end settings) (cdr (assoc 'end settings)) total))
-                (if (>= lower upper)
-                  (ast:ui-status "Start and End would cross. Reset range to use the whole guide.")
-                  (ast:ui-save settings astui:*landmarks*)))))
-              (ast:ui-status "Range pick cancelled.")))))))
-
 (defun c:ASTUISTART ()
-  (ast:ui-run '(lambda () (ast:ui-range-pick 'start))))
-
-(defun c:ASTUIEND ()
-  (ast:ui-run '(lambda () (ast:ui-range-pick 'end))))
-
-(defun c:ASTUIRESET ()
-  (ast:ui-run '(lambda (/ settings)
-    (if (ast:ui-ready)
-      (progn
-        (setq settings (vl-remove-if '(lambda (item)
-          (member (car item) '(start end phase start-anchor end-anchor phase-anchor))) astui:*settings*))
-        (if (cdr (assoc 'closed astui:*route*)) (setq settings (ast:ui-set 'phase 0.0 settings)))
-        (if (ast:ui-save settings astui:*landmarks*)
-          (ast:ui-status "Full guide restored. Generate to update stitches.")))))))
+  (ast:ui-run '(lambda (/ settings pitch point attachment)
+    (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
+      (cond
+        ((ast:ui-partial-p)
+          (setq settings (vl-remove-if '(lambda (item)
+            (member (car item) '(start end start-anchor end-anchor))) astui:*settings*))
+          (ast:ui-save (ast:ui-set 'pitch pitch settings) astui:*landmarks*))
+        ((and (cdr (assoc 'closed astui:*route*)) (ast:ui-markers))
+          (ast:ui-status "Pick where stitching should begin on the loop.")
+          (setq point (ast:ui-pick-point "\nPick the loop's starting point: " nil))
+          (if point
+            (progn
+              (setq attachment (ast:cad-project astui:*guide* (trans point 1 0)))
+              (if (assoc 'error attachment) (ast:ui-result attachment)
+                (ast:ui-save
+                  (ast:ui-set 'phase-anchor (append attachment (list (cons 'source-route astui:*route*)))
+                    (ast:ui-set 'phase (ast:ui-global-station attachment)
+                      (ast:ui-set 'pitch pitch astui:*settings*))) astui:*landmarks*)))
+            (ast:ui-status "Loop start unchanged."))))))))
 
 (defun c:ASTUICONNECT ()
   (ast:ui-run '(lambda (/ selected other pitch preview count choice result)
@@ -413,12 +372,11 @@
             (ast:ui-status (if repairing "Missing stitch lines removed. Stitches updated."
               "Selected stitch line disconnected. Stitches updated.")))))))))
 
-(defun ast:ui-generate (restore-output / pitch settings result state message warning individual corrected)
-  (if (and (ast:ui-ready) (or (not restore-output) astui:*placement-conflict*)
-           (setq pitch (ast:ui-pitch)))
+(defun ast:ui-generate (/ pitch settings result state)
+  (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
     (progn
       (setq settings (ast:ui-set 'pitch pitch astui:*settings*)
-            result (if restore-output
+            result (if astui:*placement-conflict*
               (ast:cad-restore astui:*guide* settings astui:*landmarks*)
               (ast:cad-generate astui:*guide* settings astui:*landmarks*)))
       (if (ast:ui-result result)
@@ -427,21 +385,11 @@
           (if (ast:ui-result state)
             (progn
               (ast:ui-adopt state)
-              (setq astui:*last-pitch* pitch corrected (cdr (assoc 'corrected-count result))
-                    message (strcat (if restore-output "Restored " "Generated ")
-                      (itoa (cdr (assoc 'count result))) " stitch holes"))
-              (if (numberp corrected)
-                (setq message (strcat message "; " (itoa corrected) " adjusted spacings")))
-              (foreach warning (cdr (assoc 'warnings result))
-                (princ (strcat "\nAutostitch: " warning))
-                (if (vl-string-search "individual" warning) (setq individual T)))
-              (ast:ui-status (strcat message "." (if individual "\nIndividual placement may be needed." ""))))))))))
-
-(defun c:ASTUIRESTORE ()
-  (ast:ui-run '(lambda () (ast:ui-generate T))))
+              (setq astui:*last-pitch* pitch)
+              (ast:ui-status "Stitches generated."))))))))
 
 (defun c:ASTUIGENERATE ()
-  (ast:ui-run '(lambda () (ast:ui-generate nil))))
+  (ast:ui-run 'ast:ui-generate))
 
 (defun c:ASTUIREFRESH ()
   (ast:ui-run '(lambda (/ result)
@@ -452,9 +400,9 @@
           (if (ast:ui-adopt result)
             (ast:ui-status (cond
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
-              ((cdr (assoc 'range-conflict result)) (cdr (assoc 'range-conflict result)))
-              ((cdr (assoc 'stale result)) "Generate to update stitches and display.")
-              (T "Saved path inputs reloaded."))))))))))
+              ((cdr (assoc 'range-conflict result)) (ast:ui-limits-message))
+              ((cdr (assoc 'stale result)) "Generate stitches to apply your changes.")
+              (T "Stitch line loaded."))))))))))
 
 (defun c:ASTUIINIT ()
   (setq astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))
@@ -496,9 +444,9 @@
             (if (ast:ui-adopt state)
               (ast:ui-status (cond
                 ((cdr (assoc 'connection-conflict state)) (cdr (assoc 'connection-conflict state)))
-                ((cdr (assoc 'range-conflict state)) (cdr (assoc 'range-conflict state)))
-                ((cdr (assoc 'stale state)) "Generate to update stitches and display.")
-                (T "Saved seam inputs refreshed."))))
+                ((cdr (assoc 'range-conflict state)) (ast:ui-limits-message))
+                ((cdr (assoc 'stale state)) "Generate stitches to apply your changes.")
+                (T "Stitch line loaded."))))
             (progn (c:ASTUIINIT) (ast:ui-result state))))
         (c:ASTUIINIT))
       (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))))

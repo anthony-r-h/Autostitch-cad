@@ -50,5 +50,5 @@ Draft structure only. Use test-catalog IDs for future SVGs.
 ## Evidence and limits
 
 - Catalog examples and automated checks.
-- Original A03/A04 differences.
+- Curved-corner construction and clearance checks.
 - Link to the single limits/qualification record; avoid repeated caveats.

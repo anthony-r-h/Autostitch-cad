@@ -21,7 +21,7 @@ Rerun after the runtime cleanup and test-catalog migration in `Autostitch-cleanu
 
 The first seven rows total 1,276 checks across 12 native suites. Palette and events bring the native total to 1,358. Oracle comparisons are separate.
 
-The [original-rule audit](AXIOM_AUDIT.md) records the 88 gallery runs and deliberate A03/A04 changes. The independent selector also passed 8,215 exhaustive count/block comparisons.
+The [axiom audit](AXIOM_AUDIT.md) maps rules to checks and describes the 88 gallery cases. The independent selector also passed 8,215 exhaustive count/block comparisons.
 
 ## Earlier manual and saved-drawing checks
 
@@ -55,6 +55,6 @@ With a saved disposable `output/native/Autostitch-native.dwg` open in the existi
 Get-Content ./output/native/geometry-oracle.txt
 ```
 
-Omit `-IncludeUi` to run only the 12 non-palette suites. Run the [gallery comparison](AXIOM_AUDIT.md#reproduce) separately.
+Omit `-IncludeUi` to run only the 12 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
 
 Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Host and physical uncertainties belong in [limits](../docs/LIMITS.md).

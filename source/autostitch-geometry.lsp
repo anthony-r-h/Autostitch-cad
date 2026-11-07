@@ -1,5 +1,5 @@
 ;;; Pure analytic geometry. Distances are mm; angles are radians, WCS XY y-up.
-;;; The default positive lean reflects the laboratory's screen-coordinate profile.
+;;; Default slit lean is positive relative to the traversal tangent.
 (defun ast:g-get (key record fallback / pair)
   (if (setq pair (assoc key record)) (cdr pair) fallback))
 (defun ast:g-error (message) (list (cons 'ok nil) (cons 'error message)))

@@ -2,9 +2,9 @@
   "version": 1,
   "units": "mm",
   "notes": [
-    "This file is the test-discovery and documentation catalog. Native geometry inputs below are consumed by build-gallery-parity.mjs. Procedural CAD tests remain executable LISP; their source references and assertions are indexed here, not reimplemented.",
+    "This file is the test-discovery and documentation catalog. Native geometry inputs below are consumed by build-gallery.mjs. Procedural CAD tests remain executable LISP; their source references and assertions are indexed here, not reimplemented.",
     "Case IDs are stable. Add new IDs; do not renumber existing entries. Assertion IDs identify one assertion site, which may execute across a parameter matrix.",
-    "SVG-ready cases have explicit native route/settings/landmarks variants. Historical expected geometry is frozen data, not a second solver."
+    "SVG-ready cases have explicit route, settings, landmark and expected-result variants. Geometry checks measure actual native output against the current rules."
   ],
   "pitches": [
     2.7,
@@ -19,7 +19,7 @@
       "description": "Do the two fixed endpoint centres fit at nominal pitch?",
       "group": "Straight runs",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -45,10 +45,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -74,10 +74,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -103,10 +103,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -132,10 +132,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "straight"
@@ -146,7 +146,7 @@
       "description": "Reach the fixed end with the fewest adjusted intervals; centre the correction block.",
       "group": "Straight runs",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -172,10 +172,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -201,10 +201,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -230,10 +230,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 1,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -259,10 +259,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 1,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "straight"
@@ -304,8 +304,8 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
           "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
         },
@@ -338,8 +338,8 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 1,
+            "roundHoles": 0
           },
           "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
         },
@@ -372,8 +372,8 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 1,
+            "roundHoles": 0
           },
           "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
         },
@@ -406,8 +406,8 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
           "notes": "The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed."
         }
@@ -420,7 +420,7 @@
       "description": "Does a compatible landmark preserve the ordinary phase on both sides?",
       "group": "Interior landmarks",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -451,10 +451,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 9,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -485,10 +485,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -519,10 +519,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -553,10 +553,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 4,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "fixed-gap"
@@ -567,7 +567,7 @@
       "description": "Can the approach and remainder reach their targets while the centred interval stays nominal?",
       "group": "Interior landmarks",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -598,10 +598,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 10,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -632,10 +632,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -666,10 +666,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -700,10 +700,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 4,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "fixed-gap"
@@ -714,7 +714,7 @@
       "description": "Fit each span while retaining both nominal landmark intervals.",
       "group": "Interior landmarks",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -749,10 +749,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -787,10 +787,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 4,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -825,10 +825,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -863,10 +863,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 5,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "fixed-gap"
@@ -877,7 +877,7 @@
       "description": "Does an inadmissible middle span stop construction without changing the accepted first landmark?",
       "group": "Interior landmarks",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -912,10 +912,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 9,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -950,10 +950,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -988,10 +988,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -1026,10 +1026,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "fixed-gap"
@@ -1040,7 +1040,7 @@
       "description": "Do coincident terminal slits become one real slit on a fixed straight guide?",
       "group": "Junctions",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins.",
       "variants": [
         {
           "pitch": 2.7,
@@ -1079,10 +1079,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3,
@@ -1121,10 +1121,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.38,
@@ -1163,10 +1163,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.85,
@@ -1205,10 +1205,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         }
       ],
       "kind": "continuation"
@@ -1219,7 +1219,7 @@
       "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
       "group": "Corner angles",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins.",
       "variants": [
         {
           "pitch": 2.7,
@@ -1258,10 +1258,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3,
@@ -1300,10 +1300,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.38,
@@ -1342,10 +1342,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.85,
@@ -1384,10 +1384,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         }
       ],
       "kind": "corner"
@@ -1398,7 +1398,7 @@
       "description": "Does the same direct construction fit the supplied wider corner?",
       "group": "Corner angles",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins.",
       "variants": [
         {
           "pitch": 2.7,
@@ -1437,10 +1437,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3,
@@ -1479,10 +1479,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.38,
@@ -1521,10 +1521,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.85,
@@ -1563,10 +1563,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         }
       ],
       "kind": "corner"
@@ -1577,7 +1577,7 @@
       "description": "Does the same direct construction fit the supplied tighter corner?",
       "group": "Corner angles",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins.",
       "variants": [
         {
           "pitch": 2.7,
@@ -1616,10 +1616,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3,
@@ -1658,10 +1658,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.38,
@@ -1700,10 +1700,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.85,
@@ -1742,10 +1742,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         }
       ],
       "kind": "corner"
@@ -1756,7 +1756,7 @@
       "description": "Does the rule reject a corner whose required incoming neighbour lies outside the one-millimetre arm?",
       "group": "Junctions",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -1793,10 +1793,10 @@
           "landmarks": [],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -1833,10 +1833,10 @@
           "landmarks": [],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -1873,10 +1873,10 @@
           "landmarks": [],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -1913,10 +1913,10 @@
           "landmarks": [],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "corner"
@@ -1927,7 +1927,7 @@
       "description": "Can a reserved corner determine both approach and exit targets while earlier geometry remains fixed?",
       "group": "Junctions",
       "svg": true,
-      "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark.",
+      "notes": "The final ordinary approach interval is protected by its exact midpoint landmark.",
       "variants": [
         {
           "pitch": 2.7,
@@ -1969,10 +1969,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 7,
+            "roundHoles": 1
           },
-          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+          "notes": "The final ordinary approach interval is protected by its exact midpoint landmark."
         },
         {
           "pitch": 3,
@@ -2014,10 +2014,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 5,
+            "roundHoles": 1
           },
-          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+          "notes": "The final ordinary approach interval is protected by its exact midpoint landmark."
         },
         {
           "pitch": 3.38,
@@ -2059,10 +2059,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 3,
+            "roundHoles": 1
           },
-          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+          "notes": "The final ordinary approach interval is protected by its exact midpoint landmark."
         },
         {
           "pitch": 3.85,
@@ -2104,10 +2104,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 3,
+            "roundHoles": 1
           },
-          "notes": "The original final ordinary approach interval is protected by its exact midpoint landmark."
+          "notes": "The final ordinary approach interval is protected by its exact midpoint landmark."
         }
       ],
       "kind": "ordered-corner"
@@ -2118,7 +2118,7 @@
       "description": "Can the pocket-edge crossing and the nearby corner both keep their required holes?",
       "group": "Junctions",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -2160,10 +2160,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -2205,10 +2205,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 2,
+            "roundHoles": 1
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -2250,10 +2250,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -2295,10 +2295,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "near-corner"
@@ -2309,7 +2309,7 @@
       "description": "Can chord-pitch corrections reach the exact arc endpoint?",
       "group": "Curves",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -2334,10 +2334,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -2362,10 +2362,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -2390,10 +2390,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 4,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -2418,10 +2418,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 1,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "arc"
@@ -2432,7 +2432,7 @@
       "description": "Can ordered fits reach the two sides of a fixed centred chord and the fixed arc end?",
       "group": "Curves",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -2462,10 +2462,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -2495,10 +2495,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 4,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -2528,10 +2528,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 4,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -2561,10 +2561,10 @@
           ],
           "expected": {
             "feasible": false,
-            "historicalStatus": "invalid",
-            "comparison": "direct"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "arc-gap"
@@ -2572,10 +2572,10 @@
     {
       "id": "A03",
       "title": "Arc-to-line corner",
-      "description": "Construct the round hole from selected virtual slit tips; compare the retired shared-endpoint rule explicitly.",
+      "description": "Construct an arc-to-line round hole from the meeting virtual slit tips.",
       "group": "Curves",
       "svg": true,
-      "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed.",
+      "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected.",
       "variants": [
         {
           "pitch": 2.7,
@@ -2613,10 +2613,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         },
         {
           "pitch": 3,
@@ -2654,10 +2655,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         },
         {
           "pitch": 3.38,
@@ -2695,10 +2697,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         },
         {
           "pitch": 3.85,
@@ -2736,10 +2739,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         }
       ],
       "kind": "curved-junction"
@@ -2747,10 +2751,10 @@
     {
       "id": "A04",
       "title": "Arc-to-arc corner",
-      "description": "Construct the round hole from selected virtual slit tips on both arcs; compare the retired shared-endpoint rule explicitly.",
+      "description": "Construct an arc-to-arc round hole from the meeting virtual slit tips.",
       "group": "Curves",
       "svg": true,
-      "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed.",
+      "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected.",
       "variants": [
         {
           "pitch": 2.7,
@@ -2787,10 +2791,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         },
         {
           "pitch": 3,
@@ -2827,10 +2832,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         },
         {
           "pitch": 3.38,
@@ -2867,10 +2873,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         },
         {
           "pitch": 3.85,
@@ -2907,10 +2914,11 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "changed corner rule"
+            "changedGaps": 0,
+            "roundHoles": 1,
+            "fixedRangeFeasible": false
           },
-          "notes": "Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly. The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed."
+          "notes": "Choose nominal outer margins from the corner reservations. A second run fixes the supplied start/end positions and checks that the resulting short free spans are rejected."
         }
       ],
       "kind": "curved-junction"
@@ -2921,7 +2929,7 @@
       "description": "With one slit fixed at the smooth join and free outer margins, does nominal spacing continue from the line into the arc?",
       "group": "Curves",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres.",
+      "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins.",
       "variants": [
         {
           "pitch": 2.7,
@@ -2959,10 +2967,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3,
@@ -3000,10 +3008,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.38,
@@ -3041,10 +3049,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         },
         {
           "pitch": 3.85,
@@ -3082,21 +3090,21 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Same guide, endpoints, and landmarks. The gallery's free outer margins are encoded as explicit start/end positions at its first and last nominal centres."
+          "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins."
         }
       ],
       "kind": "line-arc"
     },
     {
       "id": "L01",
-      "title": "Exact closure after a committed prefix",
-      "description": "Can the remaining tail close a twenty-opening circle without revising its committed prefix?",
+      "title": "Exact closure after a reserved prefix",
+      "description": "Can the remaining tail close a twenty-opening circle without revising its reserved prefix?",
       "group": "Closed loops",
       "svg": true,
-      "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command.",
+      "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them.",
       "variants": [
         {
           "pitch": 2.7,
@@ -3182,10 +3190,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         },
         {
           "pitch": 3,
@@ -3267,10 +3275,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "exact",
-            "comparison": "equivalent constraints"
+            "changedGaps": 0,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         },
         {
           "pitch": 3.38,
@@ -3344,10 +3352,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         },
         {
           "pitch": 3.85,
@@ -3417,10 +3425,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 5,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         }
       ],
       "kind": "circle"
@@ -3428,10 +3436,10 @@
     {
       "id": "L02",
       "title": "Closure corrections before a protected last chord",
-      "description": "Can the remaining tail close while preserving the committed prefix and final nominal chord?",
+      "description": "Can the remaining tail close while preserving the reserved prefix and final nominal chord?",
       "group": "Closed loops",
       "svg": true,
-      "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command.",
+      "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them.",
       "variants": [
         {
           "pitch": 2.7,
@@ -3521,10 +3529,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         },
         {
           "pitch": 3,
@@ -3606,10 +3614,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 2,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         },
         {
           "pitch": 3.38,
@@ -3687,10 +3695,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 5,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         },
         {
           "pitch": 3.85,
@@ -3760,10 +3768,10 @@
           ],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "equivalent constraints"
+            "changedGaps": 3,
+            "roundHoles": 0
           },
-          "notes": "Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command."
+          "notes": "Landmark pairs reserve the prefix intervals and final closure chord; remaining intervals are fitted between them."
         }
       ],
       "kind": "circle"
@@ -3774,7 +3782,7 @@
       "description": "Does the last side return to the starting corner without moving earlier holes?",
       "group": "Closed loops",
       "svg": true,
-      "notes": "Same guide, endpoints, and landmarks.",
+      "notes": "Endpoint centres and landmark stations are fixed.",
       "variants": [
         {
           "pitch": 2.7,
@@ -3833,10 +3841,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 8,
+            "roundHoles": 4
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3,
@@ -3895,10 +3903,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 8,
+            "roundHoles": 4
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.38,
@@ -3957,10 +3965,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 10,
+            "roundHoles": 4
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         },
         {
           "pitch": 3.85,
@@ -4019,10 +4027,10 @@
           "landmarks": [],
           "expected": {
             "feasible": true,
-            "historicalStatus": "adjusted",
-            "comparison": "direct"
+            "changedGaps": 14,
+            "roundHoles": 4
           },
-          "notes": "Same guide, endpoints, and landmarks."
+          "notes": "Endpoint centres and landmark stations are fixed."
         }
       ],
       "kind": "rectangle"

@@ -20,14 +20,8 @@ These are the tool's design rules. [Model](MODEL.md) gives the mathematics; [jun
 - Put equal corrections in one contiguous block per free span. Among minimum-correction solutions, prefer exact centring, then smaller fractional change, then fewer intervals. If exact centring is unavailable, use the nearest permitted placement; half-index ties go toward the end.
 - Normalize redundant collinear and co-circular subdivisions. A CAD vertex alone must not change stitching.
 - Use one slit at a genuine smooth change of curvature; use the sharp-corner or branch rule where appropriate.
+- Sharp corners use intersecting virtual slit tips. Their round holes can lie off the guide vertex. T/X junctions use a shared round hole at the intersection.
 - Check every distinct real opening pair across the connected set. Passing each span separately is insufficient.
 - Generate recomputes the complete set from current inputs. There is no permanently committed prefix or automatic incremental regeneration.
 
-## Changes from the original laboratory
-
-- Corrections moved from the end toward the middle of each free span.
-- Curved cases A03/A04 now use intersecting virtual slit tips, matching the straight-corner construction. Their round holes can lie off the guide vertex.
-- Exact finite-opening clearance replaced the conservative `0.9p > slit length` guard.
-- T/X junctions gained a separate shared round-hole rule.
-
-[The audit](../tests/AXIOM_AUDIT.md) maps these decisions to the original fixtures and native checks.
+[The audit](../tests/AXIOM_AUDIT.md) maps these rules to executable checks.

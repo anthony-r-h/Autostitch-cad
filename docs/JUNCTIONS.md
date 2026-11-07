@@ -38,7 +38,7 @@ nominal station step b = 2R asin(p/(2R))
 
 Relative to the vertex, virtual stations must lie in `[-L+b,b]` on the incoming arm and `[-b,L-b]` on the outgoing arm. On a straight arm, `b=p`. Virtual centres can lie on extensions; real neighbours cannot.
 
-The tip rule preserves each straight arm's ordinary tip-to-tip thread continuation. Curved arms use their own tangents; the displayed thread turn need not equal the guide turn. A03/A04 deliberately differ from the original guide-centred round holes.
+The tip rule preserves each straight arm's ordinary tip-to-tip thread continuation. Curved arms use their own tangents; the displayed thread turn need not equal the guide turn.
 
 ## Branches
 

@@ -54,6 +54,6 @@ Slits and `I` marks use 0.30 mm strokes; thread and construction use 0.09 mm. Ro
 - [Model and fitting mathematics](docs/MODEL.md)
 - [Junction construction](docs/JUNCTIONS.md)
 - [Limitations, uncertainties and physical checks](docs/LIMITS.md)
-- [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [original-rule audit](tests/AXIOM_AUDIT.md)
+- [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [axiom coverage](tests/AXIOM_AUDIT.md)
 - [Long-form README outline](docs/README_OUTLINE.md)
 - [Repository and development instructions](AGENTS.md)

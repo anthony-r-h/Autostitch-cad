@@ -46,9 +46,7 @@
                              (equal (ast:g-get 'outgoing-station corner nil)
                                     (+ (* (car expected) (cos angle)) (* (cadr expected) (sin angle)) (- (* 0.75 (cos (* pi (/ 40.0 180.0))))) pitch) 1e-8))
                         (strcat label " nominal virtual-to-real neighbours")))))))
-  ;; The 48 mixed-curve cases check the selected-tip recipe, not the HTML's older
-  ;; A03/A04 shared-endpoint recipe. Those deliberately different results must not
-  ;; be counted as matches to the original fixtures.
+  ;; Mixed-curve cases independently reconstruct the selected virtual tips.
   (foreach degrees '(-135 -90 -45 45 90 135)
     (foreach radius-in '(0.0 10.0)
       (foreach radius-out '(0.0 8.0)

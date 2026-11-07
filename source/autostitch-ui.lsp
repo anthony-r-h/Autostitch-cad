@@ -23,7 +23,7 @@
 (defun ast:ui-limits-message ()
   (if (cdr (assoc 'closed astui:*route*))
     "The loop changed. Set its starting point again."
-    "The line changed. Use whole line to reset its stitch limits."))
+    "Set start or Set end again; choose WholeLine to reset both."))
 
 (defun ast:ui-document-key (/ document)
   (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
@@ -46,7 +46,11 @@
               (ast:load-events (ast:home)))
         (apply action nil))) nil))
   (if (vl-catch-all-error-p result)
-    (ast:ui-status (vl-catch-all-error-message result)))
+    (progn
+      (setq astui:*last-error* (vl-catch-all-error-message result))
+      (ast:ui-status (if (wcmatch (strcase astui:*last-error*) "*CANCEL*,*QUIT*")
+        "Action cancelled."
+        "Could not complete the action. Reselect the stitch line and try again."))))
   (princ))
 
 (defun ast:ui-clear ()
@@ -125,12 +129,7 @@
         (ast:ui-result (ast:markers-ensure astui:*guide* astui:*settings*
           astui:*landmarks* astui:*factor* astui:*route*))))))
 
-(defun ast:ui-partial-p ()
-  (and astui:*guide* (not (cdr (assoc 'closed astui:*route*)))
-    (or (cdr (assoc 'range-conflict astui:*state*))
-      (vl-some '(lambda (key) (assoc key astui:*settings*)) '(start end start-anchor end-anchor)))))
-
-(defun ast:ui-fill (/ labels index attachment total start finish closed partial control)
+(defun ast:ui-fill (/ labels index attachment total start finish closed control)
   (setq astui:*busy* T labels nil index 0)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
@@ -147,9 +146,11 @@
       (setq astui:*index* -1)))
   (ast:ui-put "Landmarks" "Enabled" (if labels T nil))
   (ast:ui-put "Delete" "Enabled" (if labels T nil))
-  (setq closed (cdr (assoc 'closed astui:*route*)) partial (ast:ui-partial-p))
-  (ast:ui-put "Start" "Caption" (if partial "Use whole line" "Set loop start"))
-  (ast:ui-put "Start" "Enabled" (if (and astui:*guide* (or closed partial)) T nil))
+  (setq closed (cdr (assoc 'closed astui:*route*)))
+  (ast:ui-put "Identity" "Caption" (if astui:*guide*
+    (strcat "Stitch ID: " (ast:cad-stitch-id astui:*guide*)) ""))
+  (ast:ui-put "Start" "Enabled" (if astui:*guide* T nil))
+  (ast:ui-put "End" "Enabled" (if (and astui:*guide* (not closed)) T nil))
   (foreach control '("Add" "Generate" "Pitch" "Reverse" "Connect")
     (ast:ui-put control "Enabled" (if astui:*guide* T nil)))
   (ast:ui-put "Disconnect" "Enabled" (and astui:*guide*
@@ -164,7 +165,7 @@
       (ast:ui-put "Seam" "Caption"
         (if (cdr (assoc 'range-conflict astui:*state*)) "Saved stitch limits need updating"
           (strcat "Stitch length: " (rtos (if closed total (- finish start)) 2 2) " mm"
-            (if (and partial (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")))))
+            (if (and (not closed) (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")))))
     (ast:ui-put "Seam" "Caption" "No stitch line selected"))
   (setq astui:*busy* nil))
 
@@ -208,7 +209,10 @@
   (setq point (vl-catch-all-apply 'getpoint (list prompt-text)))
   (setvar "OSMODE" previous)
   (if (vl-catch-all-error-p point)
-    (progn (ast:ui-status (vl-catch-all-error-message point)) nil)
+    (progn
+      (setq astui:*last-error* (vl-catch-all-error-message point))
+      (ast:ui-status (if (wcmatch (strcase astui:*last-error*) "*CANCEL*,*QUIT*")
+        "Point selection cancelled." "Could not pick that point. Try again.")) nil)
     point))
 
 (defun ast:ui-pick-landmark (/ point result)
@@ -238,7 +242,7 @@
       (if helper-guide (setq selected (cons helper-guide (cdr selected))))
       (setq result (ast:cad-read (car selected)))
       (if (and (= (getvar "INSUNITS") 0) (not ast:*unit-factor*)
-               (equal (cdr (assoc 'error result)) "Set drawing INSUNITS or explicitly choose millimetres per drawing unit."))
+               (equal (cdr (assoc 'error result)) "Set the drawing units to millimetres or inches, then select the line again."))
         (progn
           (initget 1 "Millimetres Inches")
           (setq choice (getkword "\nUnitless drawing: one drawing unit is [Millimetres/Inches]: ")
@@ -306,26 +310,63 @@
       (ast:ui-save (ast:ui-set 'reverse (not (cdr (assoc 'reverse astui:*settings*)))
         astui:*settings*) astui:*landmarks*)))))
 
-(defun c:ASTUISTART ()
-  (ast:ui-run '(lambda (/ settings pitch point attachment)
-    (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
+(defun ast:ui-range-save (key point pitch / anchor-key settings attachment station total lower upper)
+  (if (and (cdr (assoc 'closed astui:*route*)) (= key 'end))
+    (progn (ast:ui-status "A closed loop has a start, but no end.") nil)
+    (progn
+      (if (cdr (assoc 'closed astui:*route*))
+        (setq key 'phase)
+        (if (cdr (assoc 'reverse astui:*settings*))
+          (setq key (if (= key 'start) 'end 'start))))
+      (setq anchor-key (read (strcat (vl-symbol-name key) "-ANCHOR"))
+            settings (ast:ui-set 'pitch pitch astui:*settings*))
+      ;; A former open guide may retain obsolete endpoint limits after closure.
+      (if (= key 'phase)
+        (setq settings (vl-remove-if '(lambda (item)
+          (member (car item) '(start end start-anchor end-anchor))) settings)))
       (cond
-        ((ast:ui-partial-p)
+        ((equal point "WholeLine")
           (setq settings (vl-remove-if '(lambda (item)
-            (member (car item) '(start end start-anchor end-anchor))) astui:*settings*))
-          (ast:ui-save (ast:ui-set 'pitch pitch settings) astui:*landmarks*))
-        ((and (cdr (assoc 'closed astui:*route*)) (ast:ui-markers))
-          (ast:ui-status "Pick where stitching should begin on the loop.")
-          (setq point (ast:ui-pick-point "\nPick the loop's starting point: " nil))
-          (if point
+            (member (car item) '(start end start-anchor end-anchor))) settings))
+          (ast:ui-save settings astui:*landmarks*))
+        ((equal point "Default")
+          (setq settings (vl-remove-if '(lambda (item) (member (car item) (list key anchor-key))) settings))
+          (if (= key 'phase) (setq settings (ast:ui-set 'phase 0.0 settings)))
+          (ast:ui-save settings astui:*landmarks*))
+        ((and (listp point) point)
+          (setq attachment (ast:cad-project astui:*guide* (trans point 1 0)))
+          (if (assoc 'error attachment) (ast:ui-result attachment)
             (progn
-              (setq attachment (ast:cad-project astui:*guide* (trans point 1 0)))
-              (if (assoc 'error attachment) (ast:ui-result attachment)
-                (ast:ui-save
-                  (ast:ui-set 'phase-anchor (append attachment (list (cons 'source-route astui:*route*)))
-                    (ast:ui-set 'phase (ast:ui-global-station attachment)
-                      (ast:ui-set 'pitch pitch astui:*settings*))) astui:*landmarks*)))
-            (ast:ui-status "Loop start unchanged."))))))))
+              (setq station (ast:ui-global-station attachment)
+                    settings (ast:ui-set anchor-key
+                      (append attachment (list (cons 'source-route astui:*route*)))
+                      (ast:ui-set key station settings))
+                    total (* astui:*factor*
+                      (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*)))
+                    lower (if (assoc 'start settings) (cdr (assoc 'start settings)) 0.0)
+                    upper (if (assoc 'end settings) (cdr (assoc 'end settings)) total))
+              (if (and (/= key 'phase) (>= lower upper))
+                (progn (ast:ui-status "Start and end cannot cross. Pick within the remaining line.") nil)
+                (ast:ui-save settings astui:*landmarks*)))))
+        (T (ast:ui-status "Stitch limits unchanged.") nil)))))
+
+(defun ast:ui-range-pick (key / pitch label options point)
+  (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch))
+           (or (= key 'start) (not (cdr (assoc 'closed astui:*route*))))
+           (ast:ui-markers))
+    (progn
+      (setq label (if (= key 'start) "start" "end")
+            options (if (cdr (assoc 'closed astui:*route*)) "Default" "Default WholeLine"))
+      (ast:ui-status (strcat "Pick where stitching should " (if (= key 'start) "begin." "end.")))
+      (setq point (ast:ui-pick-point (strcat "\nPick " label " on the guide ["
+        (if (cdr (assoc 'closed astui:*route*)) "Default" "Default/WholeLine") "]: ") options))
+      (ast:ui-range-save key point pitch))))
+
+(defun c:ASTUISTART ()
+  (ast:ui-run '(lambda () (ast:ui-range-pick 'start))))
+
+(defun c:ASTUIEND ()
+  (ast:ui-run '(lambda () (ast:ui-range-pick 'end))))
 
 (defun c:ASTUICONNECT ()
   (ast:ui-run '(lambda (/ selected other pitch preview count choice result)

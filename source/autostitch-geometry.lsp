@@ -26,9 +26,9 @@
 ;;; Shared bounded count selection for lines and circles. No interval-count search.
 (defun ast:g-fit (total pitch radius protect-start protect-end corrections / nominal minimum maximum extension contraction low high ideal count-a count-b residual-a residual-b ka kb changed lower upper symmetric-low symmetric-high step below candidates best deviation adjusted chord block idx gaps advances residual candidate)
   (cond
-    ((or (< total 0.0) (<= pitch 0.0) (< protect-start 0) (< protect-end 0)) (ast:g-error "Invalid span parameters."))
-    ((and radius (> pitch (* 2.0 radius))) (ast:g-error "Nominal pitch exceeds the circle diameter."))
-    ((= total 0.0) (if (> (+ protect-start protect-end) 0) (ast:g-error "Zero span has protected gaps.") (list '(ok . T) '(count . 0) '(changed . 0) '(gaps) '(advances))))
+    ((or (< total 0.0) (<= pitch 0.0) (< protect-start 0) (< protect-end 0)) (ast:g-error "Cannot calculate stitching from this length or pitch. Check the line and enter a positive pitch."))
+    ((and radius (> pitch (* 2.0 radius))) (ast:g-error "The pitch is too large for this curve. Reduce the pitch or increase the curve radius."))
+    ((= total 0.0) (if (> (+ protect-start protect-end) 0) (ast:g-error "There is no room for the required stitch spacing here. Move the endpoint, landmark or junction.") (list '(ok . T) '(count . 0) '(changed . 0) '(gaps) '(advances))))
     (T
       (setq nominal (if radius (* 2.0 (ast:g-asin (/ pitch (* 2.0 radius)))) pitch)
             minimum (if radius (* 2.0 (ast:g-asin (/ (* pitch (if corrections 0.9 1.0)) (* 2.0 radius)))) (* pitch (if corrections 0.9 1.0)))
@@ -36,9 +36,11 @@
             extension (- maximum nominal) contraction (- nominal minimum)
             low (max 1 (+ protect-start protect-end) (ast:g-ceil-near (/ (+ total (* (+ protect-start protect-end) extension)) maximum)))
             high (ast:g-floor-near (/ (- total (* (+ protect-start protect-end) contraction)) minimum)))
+      ;; An integer interval count must satisfy both fixed anchors, protected
+      ;; nominal intervals, and the allowed pitch bounds (normally +/-10%).
       (cond
-        ((> low high) (ast:g-error "Infeasible span: no interval count satisfies the fixed anchors and pitch limits."))
-        ((> low 2000) (ast:g-error "Seam size limit: a span requires more than 2000 intervals. Split the seam explicitly."))
+        ((> low high) (ast:g-error "Stitches cannot fit this section at the chosen pitch. Change the pitch or adjust an endpoint, landmark or junction."))
+        ((> low 2000) (ast:g-error "This section needs more than 2000 stitches. Split the guide into shorter stitch lines."))
         (T
           (setq ideal (/ total nominal)
                 count-a (ast:g-clamp (ast:g-floor-near ideal) low high)
@@ -48,7 +50,7 @@
                 kb (ast:g-required-k residual-b total extension contraction)
                 changed (min ka kb))
           (if (> changed high)
-            (ast:g-error "Infeasible span: corrections are disabled or insufficient.")
+            (ast:g-error "This section needs more spacing adjustment than allowed. Change the pitch or the section length.")
             (progn
               (setq lower (max low (ast:g-ceil-near (/ (- total (* changed extension)) nominal)))
                     upper (min high (ast:g-floor-near (/ (+ total (* changed contraction)) nominal))) step 1)
@@ -71,7 +73,7 @@
                     (if (or (null best) (< deviation (- (car best) (ast:g-tol deviation))) (and (ast:g-near deviation (car best)) (< count-a (cadr best))))
                       (setq best (list deviation count-a adjusted chord))))))
               (if (or (null best) (> (cadr best) 2000))
-                (ast:g-error (if best "Seam size limit: the selected fit exceeds 2000 intervals. Split the seam explicitly." "Infeasible span: protected gaps consume the correction block."))
+                (ast:g-error (if best "This section needs more than 2000 stitches. Split the guide into shorter stitch lines." "Required spacing near landmarks or junctions leaves no room to adjust stitches. Move those points or change the pitch."))
                 (progn
                   (setq count-a (cadr best) adjusted (caddr best) chord (cadddr best)
                         block (ast:g-clamp (ast:g-floor (+ (/ (- count-a changed) 2.0) 0.5)) protect-start (- count-a protect-end changed)) idx 0)
@@ -116,18 +118,18 @@
   (setq pitch (ast:g-get 'pitch settings 3.0) slit (ast:g-get 'slit-length settings 1.5)
         lean (ast:g-get 'lean settings (* pi (/ 40.0 180.0))) hand (ast:g-get 'handedness settings 1)
         diameter (ast:g-get 'diameter settings 0.5) width (ast:g-get 'thickness settings nil) margin (ast:g-get 'margin settings nil))
-  (cond ((not (and (ast:g-finite pitch) (> pitch 0) (ast:g-finite slit) (> slit 0) (ast:g-finite lean) (member hand '(-1 1)) (ast:g-finite diameter) (> diameter 0))) "Invalid pitch or tool profile.")
-        ((and width (not (and (ast:g-finite width) (>= width 0)))) "Thickness must be a nonnegative finite value.")
-        ((and margin (not (and (ast:g-finite margin) (>= margin 0)))) "Margin must be a nonnegative finite value.")))
+  (cond ((not (and (ast:g-finite pitch) (> pitch 0) (ast:g-finite slit) (> slit 0) (ast:g-finite lean) (member hand '(-1 1)) (ast:g-finite diameter) (> diameter 0))) "The pitch or hole dimensions are invalid. Check the pitch and tool settings.")
+        ((and width (not (and (ast:g-finite width) (>= width 0)))) "The slit width is invalid. Enter a width of zero or more in the tool settings.")
+        ((and margin (not (and (ast:g-finite margin) (>= margin 0)))) "The material margin is invalid. Enter a distance of zero or more in the tool settings.")))
 (defun ast:g-primitive-error (primitive / kind)
   (setq kind (ast:g-get 'kind primitive nil))
   (cond ((= kind 'line)
-    (if (not (and (ast:g-pointp (ast:g-get 'a primitive nil)) (ast:g-pointp (ast:g-get 'b primitive nil)) (> (ast:g-length primitive) 1e-9))) "Invalid or zero-length line."))
+    (if (not (and (ast:g-pointp (ast:g-get 'a primitive nil)) (ast:g-pointp (ast:g-get 'b primitive nil)) (> (ast:g-length primitive) 1e-9))) "A guide segment has no usable length. Remove it or extend it."))
     ((= kind 'arc)
       (if (not (and (ast:g-pointp (ast:g-get 'center primitive nil)) (ast:g-finite (ast:g-get 'radius primitive nil)) (> (ast:g-get 'radius primitive 0) 0)
                     (ast:g-finite (ast:g-get 'start-angle primitive nil)) (ast:g-finite (ast:g-get 'sweep primitive nil))
-                    (> (abs (ast:g-get 'sweep primitive 0)) 1e-12) (<= (abs (ast:g-get 'sweep primitive 0)) (+ (* 2.0 pi) 1e-10)))) "Invalid arc or sweep exceeding one revolution."))
-    (T "Unsupported primitive; only analytic lines and arcs are admitted.")))
+                    (> (abs (ast:g-get 'sweep primitive 0)) 1e-12) (<= (abs (ast:g-get 'sweep primitive 0)) (+ (* 2.0 pi) 1e-10)))) "A curved guide segment is invalid or turns more than a full circle. Redraw that segment."))
+    (T "This guide contains unsupported curves. Use straight lines or circular arcs.")))
 
 (defun ast:g-point-segment-distance (point aa bb / delta factor)
   (setq delta (ast:g-sub bb aa) factor (ast:g-clamp (/ (ast:g-dot (ast:g-sub point aa) delta) (ast:g-dot delta delta)) 0.0 1.0))
@@ -152,8 +154,10 @@
       (setq actual (ast:g-dist (cdr (assoc 'center first)) (cdr (assoc 'center second))) required (+ (/ (+ (cdr (assoc 'diameter first)) (cdr (assoc 'diameter second))) 2.0) margin)))
     (T (if (= type-a 'round) (setq ends-a first first second second ends-a))
       (setq ends-a (ast:g-ends first) actual (ast:g-point-segment-distance (cdr (assoc 'center second)) (car ends-a) (cadr ends-a)) required (+ (/ width 2.0) (/ (cdr (assoc 'diameter second)) 2.0) margin))))
+  ;; Finite slit capsules and round disks cannot touch. Actual is axis/centre
+  ;; distance; required includes their widths/radii and the retained-material margin.
   (if (or (< actual (- required (ast:g-tol required))) (<= actual (+ (- required margin) (ast:g-tol required))) (<= actual 1e-9))
-    (strcat "Opening clearance rejected: " (rtos actual 2 6) " mm; required " (rtos required 2 6) " mm with no footprint contact.")))
+    "Two stitch holes touch or leave too little material between them. Spread the stitching farther apart or change the corner or curve."))
 (defun ast:g-opening-box (opening width / first-point second-point radius low-x low-y high-x high-y ends)
   (if (= (ast:g-get 'type opening nil) 'slit)
     (progn (setq ends (ast:g-ends opening) first-point (car ends) second-point (cadr ends) radius (/ width 2.0)))
@@ -171,7 +175,7 @@
   (or (> (- (car bb) (nth 2 aa)) threshold) (> (- (car aa) (nth 2 bb)) threshold)
       (> (- (cadr bb) (nth 3 aa)) threshold) (> (- (cadr aa) (nth 3 bb)) threshold)))
 (defun ast:g-validate-openings (openings settings / tail rest error width margin opening boxes)
-  (if (> (length openings) 2000) (setq error "Seam size limit: more than 2000 openings. Split the seam explicitly; no output was truncated."))
+  (if (> (length openings) 2000) (setq error "This stitch line needs more than 2000 holes. Split the guide into shorter stitch lines."))
   (setq width (ast:g-get 'thickness settings 0.0) margin (ast:g-get 'margin settings 0.0))
   (if (null width) (setq width 0.0)) (if (null margin) (setq margin 0.0))
   (if (null error)
@@ -199,10 +203,10 @@
   (setq station-tol (ast:g-tol station-tol))
   (foreach marker ordered
     (setq station (ast:g-get 'station marker nil))
-    (if (not (ast:g-finite station)) (setq error "Landmark station must be finite.")
+    (if (not (ast:g-finite station)) (setq error "A landmark position is invalid. Remove that landmark and add it again.")
       (progn
         (setq left (- station (/ step 2.0)) right (+ station (/ step 2.0)))
-        (if (or (< left (- cursor 1e-9)) (> right (+ finish 1e-9))) (setq error "Landmark nominal gap overlaps a feature or leaves the guide.")
+        (if (or (< left (- cursor 1e-9)) (> right (+ finish 1e-9))) (setq error "A landmark is too close to an endpoint, another landmark or a junction for this pitch. Remove it and add it farther away.")
           (setq reserved (append reserved (list (list cursor left nil) (list left right T))) cursor right)))))
   (setq reserved (append reserved (list (list cursor finish nil))))
   (foreach span reserved
@@ -224,7 +228,7 @@
                     intervals (cons (list (cons 'kind kind) (cons 'distance gap) (cons 'start-station cursor) (cons 'end-station station) (cons 'reserved (caddr span))) intervals)
                     openings (cons (ast:g-slit primitive station settings) openings) cursor station gaps (cdr gaps) advances (cdr advances) opening-count (1+ opening-count))
               ;; One temporary closing duplicate is removed by the route planner.
-              (if (> opening-count 2001) (setq error "Seam size limit: more than 2000 openings. Split the seam explicitly; no output was truncated."))))))))
+              (if (> opening-count 2001) (setq error "This stitch line needs more than 2000 holes. Split the guide into shorter stitch lines."))))))))
   (if error (ast:g-error error) (list '(ok . T) (cons 'openings (reverse openings)) (cons 'intervals (reverse intervals)))))
 
 ;;; Intersect supporting lines/circles analytically; never select a remote fallback.
@@ -272,24 +276,29 @@
   (setq in-length (ast:g-length incoming) out-length (ast:g-length outgoing) vertex (ast:g-point incoming in-length)
         li (ast:g-locus incoming in-length -1.0 settings) lo (ast:g-locus outgoing 0.0 1.0 settings)
         intersection (ast:g-intersections li lo) points (cdr (assoc 'points intersection)))
+  ;; Selected slit-tip loci must have an isolated intersection. Coincident,
+  ;; parallel and disjoint loci cannot choose a hole; tied nearest roots also fail.
   (cond
-    ((null points) (ast:g-error "Sharp junction has no isolated tip-locus intersection (parallel, coincident, or disjoint loci)."))
+    ((null points) (ast:g-error "These stitch directions do not define one corner hole. Change the corner angle or curve shape."))
     (T
       (setq first (car points) second (cadr points))
-      (if (and second (ast:g-near (expt (ast:g-dist first vertex) 2) (expt (ast:g-dist second vertex) 2))) (setq error "Sharp junction is ambiguous: equally near tip-locus roots.")
+      (if (and second (ast:g-near (expt (ast:g-dist first vertex) 2) (expt (ast:g-dist second vertex) 2))) (setq error "Two equally close corner-hole positions are possible. Adjust the corner angle or curve shape.")
         (setq joint (if (and second (< (ast:g-dist second vertex) (ast:g-dist first vertex))) second first)))
       (if (null error)
         (progn
           (setq ci (ast:g-virtual-station incoming in-length li joint) co (ast:g-virtual-station outgoing 0.0 lo joint)
                 di (ast:g-step incoming (ast:g-get 'incoming-pitch settings (ast:g-get 'pitch settings 3.0)))
                 dout (ast:g-step outgoing (ast:g-get 'outgoing-pitch settings (ast:g-get 'pitch settings 3.0))))
-          (cond ((or (null ci) (null co)) (setq error "Sharp junction has an antipodal station ambiguity."))
+          ;; Antipodal arc stations are ambiguous. Both real neighbours must fit
+          ;; the finite arms; never substitute a remote root or another revolution.
+          (cond ((or (null ci) (null co)) (setq error "This curved corner has no unique nearby stitch position. Adjust the curve shape."))
                 ((or (< ci (- di in-length 1e-8)) (> ci (+ di 1e-8)) (< co (- (- dout) 1e-8)) (> co (+ (- out-length dout) 1e-8)))
-                  (setq error "Selected sharp-junction root puts a real neighbour outside its finite arm; no remote-root or revolution fallback is allowed."))
+                  (setq error "The corner needs a stitch beyond the end of its line. Lengthen that section or change the corner."))
                 (T
                   (setq virtual-in (ast:g-slit incoming (+ in-length ci) settings) virtual-out (ast:g-slit outgoing co settings))
+                  ;; Parallel virtual slit axes make the selected-tip contact degenerate.
                   (if (< (abs (ast:g-cross (ast:g-get 'axis virtual-in nil) (ast:g-get 'axis virtual-out nil))) 1e-9)
-                    (setq error "Sharp junction has degenerate virtual-tip contact.")
+                    (setq error "The slit directions at this corner are parallel. Change the corner angle or curve shape.")
                     (progn
                       (setq before (ast:g-slit incoming (+ in-length ci (- di)) settings) after (ast:g-slit outgoing (+ co dout) settings)
                             hole (list '(type . round) (cons 'center joint) (cons 'diameter (ast:g-get 'diameter settings 0.5)))
@@ -322,8 +331,8 @@
   (foreach marker landmarks
     (setq index (ast:g-get 'primitive marker 0) station (ast:g-get 'station marker nil))
     (if (not (and (numberp index) (= index (fix index)) (>= index 0) (< index (length primitives)) (ast:g-finite station)))
-      (setq error "Invalid landmark primitive or station.")
-      (if (or (< station 0.0) (> station (ast:g-length (nth index primitives)))) (setq error "Landmark attachment lies outside its owning primitive.")
+      (setq error "A landmark no longer has a valid position on this line. Remove it and add it again.")
+      (if (or (< station 0.0) (> station (ast:g-length (nth index primitives)))) (setq error "A landmark is past the end of its guide segment. Extend that segment, or remove and add the landmark again.")
         (progn (setq offset (+ (nth index distances) station)) (setq absolute (cons (if reverse-travel (- total offset) offset) absolute))))))
   (if reverse-travel (setq primitives (mapcar 'ast:g-reverse-primitive (reverse primitives))))
   (foreach primitive primitives
@@ -367,7 +376,7 @@
           (foreach point (list (ast:g-point bb 0.0) (ast:g-point bb (/ (ast:g-length bb) 2.0)) (ast:g-point bb (ast:g-length bb)))
             (if (and (ast:g-point-on aa point) (not (vl-some '(lambda (sample) (< (ast:g-dist sample point) 1e-8)) allowed))) (setq crossing T)))))
       (setq jj (1+ jj))) (setq ii (1+ ii)))
-  (if crossing "Unsupported self-crossing, overlapping, or branching guide."))
+  (if crossing "This guide crosses or overlaps itself. Split crossings into separate lines and connect them; remove overlaps."))
 (defun ast:g-same-opening (aa bb)
   (and (= (ast:g-get 'type aa nil) (ast:g-get 'type bb nil)) (< (ast:g-dist (ast:g-get 'center aa nil) (ast:g-get 'center bb nil)) 1e-8)
     (if (= (ast:g-get 'type aa nil) 'slit)
@@ -388,20 +397,20 @@
     (setq offsets (append offsets (list total)) total (+ total (ast:g-length primitive))))
   (setq start (ast:g-get 'start settings 0.0) finish (ast:g-get 'end settings total) phase (ast:g-get 'phase settings 0.0))
   (if closed
-    (if (or (assoc 'start settings) (assoc 'end settings)) (setq error "Closed guides use a phase pick, not open start/end overrides.")
-      (if (not (and (ast:g-finite phase) (>= phase 0.0) (<= phase total))) (setq error "Closed phase station lies outside the original guide.")
+    (if (or (assoc 'start settings) (assoc 'end settings)) (setq error "A closed loop needs one starting point, not separate start and end limits. Use Set start on the loop.")
+      (if (not (and (ast:g-finite phase) (>= phase 0.0) (<= phase total))) (setq error "The saved loop start is no longer on the guide. Use Set start to choose it again.")
         (setq start phase finish (+ phase total))))
     (if (not (and (ast:g-finite start) (ast:g-finite finish) (>= start 0.0) (<= finish total) (> finish start)))
-      (setq error "Invalid start/end range: it must remain inside the original guide.")))
+      (setq error "The start and end must lie on the guide, with some line between them. Pick them again.")))
   (foreach marker landmarks
     (setq index (ast:g-get 'primitive marker 0) station (ast:g-get 'station marker nil))
     (if (not (and (numberp index) (= index (fix index)) (>= index 0) (< index (length primitives)) (ast:g-finite station)))
-      (setq error "Invalid landmark primitive or station.")
-      (if (or (< station 0.0) (> station (ast:g-length (nth index primitives)))) (setq error "Landmark attachment lies outside its owning primitive.")
+      (setq error "A landmark no longer has a valid position on this line. Remove it and add it again.")
+      (if (or (< station 0.0) (> station (ast:g-length (nth index primitives)))) (setq error "A landmark is past the end of its guide segment. Extend that segment, or remove and add the landmark again.")
         (progn
           (setq station (+ (nth index offsets) station))
           (if (and closed (< station start)) (setq station (+ station total)))
-          (if (or (< station start) (> station finish)) (setq error "Landmark lies outside the selected start/end range.")
+          (if (or (< station start) (> station finish)) (setq error "A landmark lies outside the chosen start and end. Extend the stitching to include it, or remove the landmark.")
             (setq absolute (cons (- station start) absolute)))))))
   (if (null error)
     (progn
@@ -424,14 +433,14 @@
 
 (defun ast:g-solve (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner starts finishes openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted virtual-slits)
   (setq primitives (ast:g-get 'primitives route nil) closed (ast:g-get 'closed route nil) error (ast:g-profile-error settings))
-  (if (null primitives) (setq error "No guide primitives."))
+  (if (null primitives) (setq error "No usable stitch line was found. Select a line or curve."))
   (foreach primitive primitives (if (null error) (setq error (ast:g-primitive-error primitive))))
   (if (null error)
     (progn
       (foreach primitive primitives
-        (if (and previous (> (ast:g-dist (ast:g-point previous (ast:g-length previous)) (ast:g-point primitive 0.0)) 1e-8)) (setq error "Disconnected ordered guide primitives."))
+        (if (and previous (> (ast:g-dist (ast:g-point previous (ast:g-length previous)) (ast:g-point primitive 0.0)) 1e-8)) (setq error "The guide has a break between segments. Join their endpoints or stitch them as separate lines."))
         (setq previous primitive))
-      (if (and closed (> (ast:g-dist (ast:g-point (car primitives) 0.0) (ast:g-point previous (ast:g-length previous))) 1e-8)) (setq error "Closed guide endpoints do not meet."))))
+      (if (and closed (> (ast:g-dist (ast:g-point (car primitives) 0.0) (ast:g-point previous (ast:g-length previous))) 1e-8)) (setq error "The closed guide has a gap at its join. Close that gap before generating stitches."))))
   (if (null error)
     (progn
       (setq range (ast:g-range primitives landmarks settings closed))
@@ -443,7 +452,7 @@
       (if (not (ast:g-get 'ok normalized nil)) (setq error (ast:g-get 'error normalized nil))
         (setq primitives (ast:g-get 'primitives normalized nil) landmarks (ast:g-get 'landmarks normalized nil)))))
   (foreach primitive primitives
-    (if (and (null error) (= (ast:g-get 'kind primitive nil) 'arc) (> (ast:g-get 'pitch settings 3.0) (* 2.0 (ast:g-get 'radius primitive 0)))) (setq error "Nominal pitch exceeds circle diameter.")))
+    (if (and (null error) (= (ast:g-get 'kind primitive nil) 'arc) (> (ast:g-get 'pitch settings 3.0) (* 2.0 (ast:g-get 'radius primitive 0)))) (setq error "The pitch is too large for this curve. Reduce the pitch or increase the curve radius.")))
   (if (null error) (setq error (ast:g-route-crossing primitives closed)))
   (if (null error)
     (progn
@@ -462,18 +471,18 @@
       (foreach primitive primitives
         (setq start (if (> idx 0) (ast:g-get 'outgoing-station (nth (1- idx) joins) 0.0) (if closed (ast:g-get 'outgoing-station (nth (1- count) joins) 0.0) 0.0))
               finish (if (< idx (length joins)) (ast:g-get 'incoming-station (nth idx joins) (ast:g-length primitive)) (ast:g-length primitive)))
-        (if (> start (+ finish 1e-8)) (setq error "Junction reservations overlap on a finite primitive."))
+        (if (> start (+ finish 1e-8)) (setq error "There is not enough room for the stitches between these corners. Move the corners apart or lengthen the section."))
         (if (null error)
           (progn
             (setq selected nil)
             (foreach marker landmarks (if (= (ast:g-get 'primitive marker 0) idx) (setq selected (cons marker selected))))
             (setq result (ast:g-solve-primitive primitive settings selected start finish))
-            (if (not (ast:g-get 'ok result nil)) (setq error (strcat "Primitive " (itoa (1+ idx)) ": " (ast:g-get 'error result "Unknown fitting failure.")))
+            (if (not (ast:g-get 'ok result nil)) (setq error (ast:g-get 'error result "Stitches could not be fitted to this section."))
               (progn
                 (setq local-openings (ast:g-get 'openings result nil) local-intervals (ast:g-get 'intervals result nil))
                 (if (and openings local-openings (ast:g-same-opening (last openings) (car local-openings))) (setq local-openings (cdr local-openings)))
                 (setq openings (append openings local-openings) intervals (append intervals (mapcar '(lambda (item) (cons (cons 'primitive idx) item)) local-intervals)))
-                (if (> (length openings) 2001) (setq error "Seam size limit: more than 2000 openings. Split the seam explicitly; no output was truncated."))
+                (if (> (length openings) 2001) (setq error "This stitch line needs more than 2000 holes. Split the guide into shorter stitch lines."))
                 (if (and (< idx (length joins)) (= (ast:g-get 'kind (nth idx joins) nil) 'sharp))
                   (progn
                     (setq joint-center (ast:g-get 'center (ast:g-get 'opening (nth idx joins) nil) nil)
@@ -486,11 +495,11 @@
       (if (null error) (setq error (ast:g-validate-openings openings settings)))))
   (if error (ast:g-error error)
     (progn
-      (setq warnings (list "Material edge clearance unverified; no boundary was supplied."))
-      (if (or (null (ast:g-get 'thickness settings nil)) (null (ast:g-get 'margin settings nil))) (setq warnings (cons "Physical clearance unverified: effective thickness or retained-material margin is unset." warnings)))
-      (if (vl-some '(lambda (item) (= (ast:g-get 'kind item nil) 'arc)) primitives) (setq warnings (cons "Curved openings follow individual tangents and require individual placement." warnings)))
+      (setq warnings (list "The distance from stitch holes to the material edge has not been checked."))
+      (if (or (null (ast:g-get 'thickness settings nil)) (null (ast:g-get 'margin settings nil))) (setq warnings (cons "Slit width and the material needed between holes have not been calibrated." warnings)))
+      (if (vl-some '(lambda (item) (= (ast:g-get 'kind item nil) 'arc)) primitives) (setq warnings (cons "Place holes individually on curves; a multi-tooth chisel may not follow the curve." warnings)))
       (setq adjusted (vl-some '(lambda (item) (= (ast:g-get 'kind item nil) 'corrected)) intervals))
-      (if adjusted (setq warnings (cons "Corrected gaps require individual placement; nominal multi-tooth runs stop at the correction block." warnings)))
+      (if adjusted (setq warnings (cons "Use individual placement where spacing is adjusted; a fixed-pitch chisel will not match it." warnings)))
       (list '(ok . T) (cons 'status (if adjusted 'adjusted 'exact)) (cons 'openings openings) (cons 'intervals intervals)
         (cons 'virtual-slits virtual-slits) (cons 'warnings warnings) (cons 'primitives primitives) (cons 'landmarks landmarks)))))
 (princ)

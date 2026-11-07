@@ -34,6 +34,25 @@
     (cons 40 text-height) (cons 1 label) '(7 . "Standard") '(50 . 0.0)
     '(72 . 1) '(73 . 2)) color))
 
+(defun ast:markers-id (guide point label size text-height / normal center rotation height bounds half-width half-height corner vertices)
+  (setq normal (ast:markers-normal guide point) center (polar point (+ normal pi) size)
+        rotation (rem (+ (- normal (/ pi 2.0)) (* 2.0 pi)) (* 2.0 pi))
+        height (* 0.8 text-height))
+  (if (and (> rotation (/ pi 2.0)) (<= rotation (* 1.5 pi))) (setq rotation (- rotation pi)))
+  (setq bounds (textbox (list '(0 . "TEXT") '(10 0.0 0.0 0.0) (cons 1 label)
+        (cons 40 height) '(7 . "Standard") '(50 . 0.0)))
+        half-width (+ (/ (- (caadr bounds) (caar bounds)) 2.0) (* height 0.25))
+        half-height (+ (/ (max height (- (cadadr bounds) (cadar bounds))) 2.0) (* height 0.2)))
+  (ast:markers-entity (list '(0 . "TEXT") (cons 10 center) (cons 11 center)
+    (cons 40 height) (cons 1 label) '(7 . "Standard") (cons 50 rotation)
+    '(72 . 1) '(73 . 2) '(370 . 9)) 7)
+  (foreach corner (list (list (- half-width) (- half-height)) (list half-width (- half-height))
+                       (list half-width half-height) (list (- half-width) half-height))
+    (setq point (polar (polar center rotation (car corner)) (+ rotation (/ pi 2.0)) (cadr corner))
+          vertices (append vertices (list (cons 10 (list (car point) (cadr point)))))))
+  (ast:markers-entity (append '((0 . "LWPOLYLINE") (100 . "AcDbEntity") (370 . 9)
+    (100 . "AcDbPolyline") (90 . 4) (70 . 1) (43 . 0.0)) vertices) 7))
+
 (defun ast:markers-point (guide point label color size text-height / offset)
   ;; Nested POINT and CIRCLE provide exact NODE/CEN snaps independent of PDMODE.
   (ast:markers-entity (list '(0 . "POINT") (cons 10 point)) color)
@@ -57,7 +76,7 @@
   (setq record (ast:markers-record guide) saved (cdr (assoc 'style record))
         pitch (cdr (assoc 'pitch settings)))
   ;; Migrate old labels once, then retain their model-space size through later edits.
-  (if (and saved (member (ast:cad-get 'display-version (ast:cad-get 'snapshot record)) '(9 10))) saved
+  (if (and saved (member (ast:cad-get 'display-version (ast:cad-get 'snapshot record)) '(9 10 11))) saved
     (list (cons 'size (/ (max 0.65 (min 1.0 (* pitch (/ 0.8 3.0)))) factor))
       (cons 'text-height (/ (max 0.55 (min 0.8 (* pitch 0.22))) factor))
       (cons 'landmark-half-size (/ (max 0.9 (min 1.6 (* pitch 0.4))) factor))
@@ -77,7 +96,7 @@
   (cond
     ((vl-catch-all-error-p result)
       (princ (strcat "\nAutostitch intersection markers: "
-        (if ast:*cad-error* ast:*cad-error* (vl-catch-all-error-message result)))) nil)
+        (ast:cad-error-message result "Could not update the junction labels. Select the stitch line again."))) nil)
     ((not (cdr (assoc 'ok result)))
       (princ (strcat "\nAutostitch intersection markers: " (cdr (assoc 'error result)))) nil)
     (T (cdr (assoc 'connections result)))))
@@ -102,7 +121,7 @@
                (<= station (vlax-curve-getDistAtParam guide boundary)))
         (vlax-curve-getPointAtDist guide station)))))
 
-(defun ast:markers-geometry (guide settings landmarks factor route style connections / total start finish phase closed reversed size text-height first last middle direction index attachment point incoming outgoing primitives connection corner-station cue-step cue-station)
+(defun ast:markers-geometry (guide settings landmarks factor route style connections / total start finish phase closed reversed size text-height first last middle direction index attachment point incoming outgoing primitives connection corner-station cue-step cue-station id-point)
   (setq total (vlax-curve-getDistAtParam guide (vlax-curve-getEndParam guide))
         closed (cdr (assoc 'closed route)) reversed (cdr (assoc 'reverse settings))
         start (if (assoc 'start settings) (/ (cdr (assoc 'start settings)) factor) 0.0)
@@ -135,6 +154,12 @@
       (ast:markers-entity (list '(0 . "TEXT") (cons 10 middle) (cons 11 middle)
         (cons 40 text-height) '(1 . ">") '(7 . "Standard") (cons 50 direction)
         '(72 . 1) '(73 . 2)) 2)))
+  (if (and (equal guide (ast:cad-stitch-owner guide))
+           (setq id-point (if (and reversed (not closed)) last first)))
+    (progn
+      ;; A shared junction owns J; move its ID slightly along this guide to keep J clear.
+      (if (and middle (ast:markers-shared-point-p id-point factor connections)) (setq id-point middle))
+      (ast:markers-id guide id-point (ast:cad-stitch-id guide) size text-height)))
   (setq index 0)
   (foreach attachment landmarks
     (setq index (1+ index))
@@ -164,8 +189,9 @@
         "J" 2 size text-height))))
 
 (defun ast:markers-snapshot (guide settings landmarks factor route)
-  (list '(display-version . 10) (cons 'settings settings) (cons 'landmarks landmarks)
+  (list '(display-version . 11) (cons 'settings settings) (cons 'landmarks landmarks)
     (cons 'factor factor) (cons 'route route) (cons 'style (ast:markers-style guide settings factor))
+    (cons 'stitch-id (ast:cad-stitch-id guide)) (cons 'id-owner (equal guide (ast:cad-stitch-owner guide)))
     (cons 'connections (ast:markers-connections guide))))
 
 (defun ast:markers-current-p (guide snapshot / reference record)
@@ -275,13 +301,13 @@
         ((and ast:*cad-block-open* (or (null cleanup) (vl-catch-all-error-p cleanup)))
           "Could not close an incomplete editing marker block.")
         ((vl-catch-all-error-p result)
-          (if ast:*cad-error* ast:*cad-error* (vl-catch-all-error-message result)))
+          (ast:cad-error-message result "Could not update the stitch line labels. Select the stitch line again."))
         (T
           (if (member 'ast:ui-native-refresh (atoms-family 0))
             (progn
               (setq ui-result (vl-catch-all-apply 'ast:ui-native-refresh nil))
               (if (vl-catch-all-error-p ui-result)
-                (princ (strcat "\nAutostitch palette refresh: " (vl-catch-all-error-message ui-result))))))
+                (princ (strcat "\nAutostitch palette refresh: " (ast:cad-error-message ui-result "Could not refresh the controls. Select the stitch line again."))))))
           T)))))
 
 (vl-acad-defun 'ast:markers-native-sync)

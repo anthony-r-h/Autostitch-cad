@@ -156,7 +156,7 @@
   (setq shifted (ast:n-put 'route (list (cons 'primitives (mapcar 'ast:g-reverse-primitive (ast:g-get 'primitives (ast:g-get 'route bb nil) nil))) '(closed . T)) bb)
         resolved (ast:g-resolve-connections (list modified shifted) selected))
   (ast:n-test (and (not (ast:g-get 'ok resolved nil)) (= (type (ast:g-get 'error resolved nil)) 'STR)
-    (wcmatch (ast:g-get 'error resolved "") "*ambiguous*")) "symmetric circle reversal cannot silently become a reflected root")
+    (wcmatch (ast:g-get 'error resolved "") "*more than one possible match*")) "symmetric circle reversal cannot silently become a reflected root")
   (setq resolved (ast:g-resolve-connections (list (ast:n-test-shift-path modified '(20.0 30.0)) (ast:n-test-shift-path shifted '(20.0 30.0))) selected))
   (ast:n-test (not (ast:g-get 'ok resolved nil)) "translated symmetric reversal still requires explicit attachment repair")
   ;; A source direction edit must not invert root identity during another edit.
@@ -175,7 +175,7 @@
   ;; AutoLISP OR returns a boolean, so error messages must be propagated explicitly.
   (setq result (ast:g-connect-candidates nil (ast:g-get 'route aa nil)))
   (ast:n-test (and (not (ast:g-get 'ok result nil)) (= (type (ast:g-get 'error result nil)) 'STR)
-    (= (ast:g-get 'error result nil) "No guide primitives.")) "first invalid candidate route preserves diagnostic string")
+    (= (ast:g-get 'error result nil) "No usable stitch line was found. Select a line or curve.")) "first invalid candidate route preserves diagnostic string")
   (setq result (ast:g-connect-candidates (ast:g-get 'route aa nil) nil))
   (ast:n-test (and (not (ast:g-get 'ok result nil)) (= (type (ast:g-get 'error result nil)) 'STR)) "second invalid candidate route preserves diagnostic string")
   (setq result (ast:n-prepare (ast:n-put 'settings '((pitch . -1.0)) aa)))

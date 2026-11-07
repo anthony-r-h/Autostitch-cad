@@ -10,10 +10,10 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Independent JavaScript oracle compared with native line/arc fitting | 540 passed |
 | DWG generation, injected rollback failures, transforms, saved units, attachments and repair | 59 passed |
 | Connected-set merge/split, copies and missing-member recovery | 39 passed |
-| Compact markers, direction arrows, exact CEN/NODE/MID snaps, shared labels and rollback | 42 passed |
+| Compact markers, boxed stitch IDs, direction arrows, exact CEN/NODE/MID snaps, shared labels and rollback | 54 passed |
 | Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
-| Simplified palette, automatic placement restore, pitch Undo/Redo, legacy limits and landmark removal | 15 passed |
+| Palette, endpoint picks/reversal, shared IDs, automatic placement restore, pitch Undo/Redo and landmark removal | 21 passed |
 | Mandatory thread/spacing marks, stroke weights, filled holes, dashed virtual slits, inch scaling, signatures and rollback | 41 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
@@ -62,6 +62,8 @@ The updated demo regenerated **14 outputs**, with all **19 guides, settings and 
 The subsequent notation-only change replaces chevrons with short perpendicular crossbars at both slit tips, forming a capital `I`. All **41 display checks** passed again, covering straight/reversed/curved guides, inches, deduplication, output migration and rollback. Physical slit geometry and the 0.30 mm stroke remain unchanged.
 
 The palette cleanup passed **15 focused workflow checks** and a fresh run of all **61 native event checks**. Generate restores independently transformed output and commits pitch in one Undo step; invalid or infeasible requests preserve the previous output. Saved partial guides retain their limits until **Use whole line** is chosen. The compiled 16-control palette was inspected in BricsCAD; actual **Add landmark**, **Remove landmark**, **Set loop start** and **Generate stitches** buttons were exercised. Point picks saved the expected positions and restored the prior snap settings. Persistent shorthand, range controls and the calibration banner were removed from the normal workflow.
+
+The subsequent revision restores **Set start / Set end / Reverse direction** and adds a boxed stitch ID opposite `S`. Connected guides share one ID and one box; a junction start shifts that box along its guide. All **12 native suites passed: 1,276 checks**, plus **21 palette checks** and a fresh **61 native event checks**. Coverage includes straight/reversed/curved/closed/inch labels, shared ownership, endpoint resets, rejected crossing limits and converting an open guide to a loop. The updated demo has 14 boxed IDs for 14 blocks; all 19 source geometries, settings and landmark lists were unchanged. The 18-control palette and curved-guide label were inspected in BricsCAD. Error wording now names the problem and relevant adjustment; solver rules are unchanged. The older palette layout above is retained only as test history.
 
 ## Repeat
 

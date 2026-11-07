@@ -112,6 +112,7 @@ try {
 (load "@ROOT@/tests/autostitch-event-tests.lsp")
 (setq ast:event-report "@REPORT@" ast:event-handles "@HANDLES@" ast:event-layer "@LAYER@")
 (ast:event-setup)
+(ast:event-ui-save)
 '@
   $stitchStarted = $true
   Invoke-EventLisp ($setup.Replace('@ROOT@', $rootLisp).Replace('@REPORT@', (ConvertTo-LispPath $stitchReport)).Replace('@HANDLES@', (ConvertTo-LispPath $stitchHandles)).Replace('@LAYER@', $stitchLayer)) 'setup'

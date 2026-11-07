@@ -118,7 +118,7 @@
   (foreach attachment landmarks
     (setq index (1+ index))
     (if (setq point (ast:markers-attachment-point guide attachment factor))
-      (ast:markers-point point (strcat "GAP " (itoa index)) 4 (* size 0.8) text-height)))
+      (ast:markers-point point (strcat "LANDMARK " (itoa index)) 4 (* size 0.8) text-height)))
   (setq primitives (cdr (assoc 'primitives route)) index 0 corner-station 0.0)
   (repeat (if closed (length primitives) (max 0 (1- (length primitives))))
     (setq incoming (nth index primitives)
@@ -144,7 +144,7 @@
         (strcat "JOIN " (itoa index)) 2 size text-height))))
 
 (defun ast:markers-snapshot (guide settings landmarks factor route)
-  (list '(display-version . 7) (cons 'settings settings) (cons 'landmarks landmarks)
+  (list '(display-version . 8) (cons 'settings settings) (cons 'landmarks landmarks)
     (cons 'factor factor) (cons 'route route) (cons 'style (ast:markers-style guide settings factor))
     (cons 'connections (ast:markers-connections guide))))
 

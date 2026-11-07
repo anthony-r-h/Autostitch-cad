@@ -4,7 +4,7 @@ The AutoLISP/OpenDCL plugin includes independent and explicitly connected stitch
 
 ## Current implementation status
 
-`AUTOSTITCH.lsp` loads the geometry, connected-path solver, DWG adapter, saved markers and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Controls include Select stitch line, Connect stitch lines, Disconnect line, Save pitch, Set start/end, Reset range, Reverse direction, Add/Move/Delete gap, Generate cuts and Restore cut position. Set start/end follow the displayed traversal direction; closed lines use Set start for phase. Saved nonplotting markers provide native NODE/CEN snaps.
+`AUTOSTITCH.lsp` loads the geometry, connected-path solver, DWG adapter, saved markers and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Controls include Select stitch line, Connect stitch lines, Disconnect line, Save pitch, Set start/end, Reset range, Reverse direction, Select landmark, Re-pick, Remove, Generate stitches and Restore position. Set start/end follow the displayed traversal direction; closed lines use Set start for phase. Saved nonplotting markers provide native NODE/CEN snaps.
 
 The solver supports line/arc routes and explicit connections between separate sources, including corners, T junctions and crossings. Range picks, nominal gap reservations and all distinct emitted cuts are validated across the complete connected set. Extraction accepts LINE, ARC, CIRCLE and LWPOLYLINE in WCS XY at Z=0 with a positive Z normal; arbitrary drawing planes are not implemented. Unitless drawings require an explicit millimetre/inch choice.
 
@@ -18,23 +18,25 @@ Attachment correspondence is deliberately conservative: changed polylines with l
 
 The bounded geometry remains pure AutoLISP, separate from CAD reads/writes and palette callbacks. `Autostitch.Events.dll`, placed beside the main LISP, bridges native command completion to marker synchronization through BricsCAD V22's built-in .NET support. It is not a geometry solver or external package dependency. Ship the DLL, loadable LISP, compiled `.odcl` and `source` together; retain editable palette and bridge source. No Node subprocess, browser UI, external solver or custom cut entity is required.
 
+The bridge skips callbacks while LISP is active. In particular, internal UNDO Begin/End during a palette save must never re-enter its interpreter. Top-level user Undo/Redo refreshes controls without a database transaction.
+
 ## Normal workflow
 
 One `AUTOSTITCH` command opens a compact palette:
 
 ```text
-[Select stitch line] [Generate cuts]
+[Select stitch line] [Generate stitches]
 Pitch [3 mm]        [Save pitch]
 [Set start] [Set end] [Reset range]
 [Reverse direction]
 [Connect stitch lines] [Disconnect line]
-Gaps: Add / Move / Delete
+Landmarks: Select / Re-pick / Remove
 Selected line + short status
 ```
 
 1. Select a supported guide. Show its highlight, endpoint markers, direction arrow and derived junction markers. An open guide defaults to its two endpoints; a new closed guide uses the selection pick as its explicit start phase.
-2. Add a gap only where a centred nominal gap is intended. Connect stitch lines is a separate declaration of shared openings: select another source or output; one new intersection connects directly, while multiple required intersections offer ConnectAll or Cancel. The count includes every member of the merged set. Unselected drawing geometry has no effect.
-3. Generate cuts. Calculate and validate the complete candidate before replacing output. Every connected member retains its own pitch, range, direction and gap inputs; its physical slit/hole profile must agree with the others.
+2. Select an existing pattern landmark using native object snaps; preserve nominal stitch spacing around its position. Connect stitch lines is a separate declaration of shared openings: select another source or output; one new intersection connects directly, while multiple required intersections offer ConnectAll or Cancel. The count includes every member of the merged set. Unselected drawing geometry has no effect.
+3. Generate stitches. Calculate and validate the complete candidate before replacing output. Every connected member retains its own pitch, range, direction and landmark inputs; its physical slit/hole profile must agree with the others.
 4. Select any member source, its saved markers or the linked output to reopen the work. A source selection edits that member's inputs; Generate updates the whole connected set. Edit original sources with normal CAD tools and generate again.
 5. Disconnect line removes that member's connections and regenerates the resulting components. A missing source changes the action to Remove missing lines: retain surviving connections, choose a surviving primary when necessary, and solve all components before replacing cuts.
 

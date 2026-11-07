@@ -10,11 +10,15 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | DWG generation, injected rollback failures, transforms, saved units, attachments and repair | 59 passed |
 | Connected-set merge/split, copies and missing-member recovery | 39 passed |
 | Persistent markers, exact CEN/NODE snaps, shared labels and rollback | 38 passed |
-| Native MOVE/STRETCH/ERASE, Undo/Redo, event bootstrap and two-helper failure rollback | 60 passed |
+| Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
 Actual palette controls were exercised in BricsCAD: Select, Add landmark, Move, Start, End, Reverse and Generate. Picked inputs survived regeneration. Cancelling selection retained the previous seam. Invalid pitch left inputs and output unchanged.
+
+The corrected **Select landmark** control snapped to an existing pattern-edge endpoint at 16.5 mm; **Re-pick** snapped to an edge crossing at 31.5 mm. The pattern edges were unchanged. Generated stitch centres straddled that crossing at 30 and 33 mm. Cancellation retained the landmark; success and cancellation restored the previous snap mask, including its disabled state. Repeated palette opening and Generate/Undo/Redo passed.
+
+This picker test exposed a host failure: the history listener could invoke LISP during an input save's internal UNDO Begin/End. Version 1.2 skips callbacks while LISP is active; the native probe measured CMDACTIVE=36 during those commands. A fresh process saved the landmark and completed a subsequent LISP evaluation. The event suite now includes this save path with the palette active. First-launch OpenDCL loading was also corrected to load the project before querying its forms. After the original host failure, the untitled drawing was restored from its secured autosave with its two LINE entities; the older demo's recovery copy was retained separately.
 
 The revised palette was exercised for a T connection, circle/line ConnectAll, cancellation, and Remove missing lines. Both crossings were stored with one current shared output. Native centre picking and Escape restored the exact previous OSMODE. Set start moved its saved marker; one Undo and Redo restored the previous and new range. Moving a selected source retained an uncommitted pitch draft and displayed the Generate-needed notice.
 
@@ -63,6 +67,7 @@ The harness refuses drawings outside `output/native`. Tests intentionally create
 - Changed polyline attachments require explicit repair when correspondence cannot be proved.
 - Overlapping source geometry must be trimmed before connecting, even when active ranges partition the overlap. Ambiguous edited intersections require Disconnect/Connect repair.
 - Native copy ownership was qualified within one DWG; cross-DWG scaled insertion is unqualified.
+- Native edits issued inside other LISP routines refresh markers on selection; the listener avoids re-entering an active interpreter.
 - Physical slit width, retained-material margin, leather behavior and tool-body access were not measured. The visible unverified-profile warning is intentional.
 - No automatic regeneration, obstruction pairing, guaranteed mirrored correction patterns, or rigid multi-tooth placement on arbitrary curves.
 - Core fit/clearance tests do not establish universal visual preference; stitched sample comparison is still needed.

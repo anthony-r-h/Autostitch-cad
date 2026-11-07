@@ -69,7 +69,7 @@
   (setq ast:demo:*guides* nil)
   (ast:demo-label '(0.0 90.0 0.0) "AUTOSTITCH  |  Select stitch line, change pitch, Generate stitches")
   (ast:demo-label '(0.0 84.0 0.0) "Connect stitch lines where they meet or cross. Edit a source, then Generate stitches.")
-  (ast:demo-label '(0.0 78.0 0.0) "Chevrons: adjusted spacing. S / E: start / end. J: junction. L#: landmark.")
+  (ast:demo-label '(0.0 78.0 0.0) "I marks: adjusted spacing. S / E: start / end. J: junction. L#: landmark.")
   (ast:demo-label '(0.0 68.0 0.0) "Straight line / pattern landmark at 31.5 mm")
   (setq guide (entmakex '((0 . "LINE") (8 . "DEMO-GUIDES") (10 0.0 63.0 0.0) (11 70.5 63.0 0.0))))
   (entmakex '((0 . "LINE") (8 . "DEMO-GUIDES") (10 31.5 55.0 0.0) (11 31.5 66.0 0.0)))

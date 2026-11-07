@@ -186,7 +186,7 @@
     (setq tail (cdr tail))) error)
 
 ;;; A sorted landmark reserves a nominal gap. No landmark is converted to a hole.
-(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved idx advances gaps advance gap next kind span opening-count)
+(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved idx advances gaps advance gap next kind span opening-count free-length)
   (setq pitch (ast:g-get 'pitch settings 3.0) step (ast:g-step primitive pitch) cursor start
         ordered (vl-sort landmarks '(lambda (aa bb) (< (cdr (assoc 'station aa)) (cdr (assoc 'station bb)))))
         openings (list (ast:g-slit primitive start settings)) opening-count 1)
@@ -202,9 +202,12 @@
     (if (null error)
       (progn
         (setq cursor (car span) next (cadr span))
+        ;; Coincident derived anchors can differ by roundoff after subtraction.
+        ;; Compare their stations first; a genuinely short positive span must fail.
+        (setq free-length (if (ast:g-near next cursor) 0.0 (max 0.0 (- next cursor))))
         (if (caddr span)
           (setq fit (list '(ok . T) (cons 'gaps (list pitch)) (cons 'advances (list (if (= (cdr (assoc 'kind primitive)) 'arc) (/ step (cdr (assoc 'radius primitive))) step)))))
-          (setq fit (ast:g-fit (if (= (cdr (assoc 'kind primitive)) 'arc) (/ (max 0.0 (- next cursor)) (cdr (assoc 'radius primitive))) (max 0.0 (- next cursor))) pitch (ast:g-get 'radius primitive nil) 0 0 (ast:g-get 'corrections settings T))))
+          (setq fit (ast:g-fit (if (= (cdr (assoc 'kind primitive)) 'arc) (/ free-length (cdr (assoc 'radius primitive))) free-length) pitch (ast:g-get 'radius primitive nil) 0 0 (ast:g-get 'corrections settings T))))
         (if (not (cdr (assoc 'ok fit))) (setq error (cdr (assoc 'error fit)))
           (progn
             (setq gaps (cdr (assoc 'gaps fit)) advances (cdr (assoc 'advances fit)))

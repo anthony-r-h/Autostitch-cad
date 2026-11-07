@@ -4,7 +4,8 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 
 | Check | Result |
 | --- | --- |
-| Native geometry: routes, corners, closure, ranges, rejection and clearance | 54 passed |
+| Native geometry: routes, angled/curved corners, reversal, closure, ranges, rejection and clearance | 698 passed |
+| Original HTML cases compared with actual native output at all four pitches | 80 match spacing/anchor constraints; 8 declared A03/A04 placement changes; no unexpected failures |
 | Connected geometry: corners, T/X, curved crossings, root identity and normalization | 43 passed |
 | Independent JavaScript oracle compared with native line/arc fitting | 540 passed |
 | DWG generation, injected rollback failures, transforms, saved units, attachments and repair | 59 passed |
@@ -15,6 +16,8 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
 Actual palette controls were exercised in BricsCAD: Select, Add landmark, Move, Start, End, Reverse and Generate. Picked inputs survived regeneration. Cancelling selection retained the previous seam. Invalid pitch left inputs and output unchanged.
+
+The [original-axiom audit](AXIOM_AUDIT.md) found and fixed a false rejection of coincident feature anchors caused by floating-point residue. All 11 native suites and the 540-fit oracle were rerun. The older open host also crashed during concurrent automation probes; its cause remains unresolved. Saved drawings were restored. This host failure limits stability claims independently of the passing geometry results.
 
 The corrected **Select landmark** control snapped to an existing pattern-edge endpoint at 16.5 mm; **Re-pick** snapped to an edge crossing at 31.5 mm. The pattern edges were unchanged. Generated stitch centres straddled that crossing at 30 and 33 mm. Cancellation retained the landmark; success and cancellation restored the previous snap mask, including its disabled state. Repeated palette opening and Generate/Undo/Redo passed.
 

@@ -307,7 +307,7 @@
         (cons 'connections (ast:cad-get 'connections group))
         (cons 'missing-members (ast:cad-get 'missing-members group))
         (cons 'connection-conflict (if (ast:cad-get 'missing-members group)
-          "A connected stitch line was deleted. Remove missing lines to repair the saved cuts."))
+          "A connected stitch line was deleted. Remove missing lines to repair the generated stitches."))
         (cons 'placement-conflict (and output (not common) (not (ast:cad-placement-ok-p output))))))
   (setq ranges (ast:cad-resolve-ranges state settings))
   (setq state (ast:cad-put 'settings (ast:cad-get 'settings ranges) state))
@@ -758,7 +758,7 @@
 
 (defun ast:cad-connect-context (selected other-state / members other-members member connections states resolved)
   (ast:cad-require (not (or (ast:cad-get 'missing-members selected) (ast:cad-get 'missing-members other-state)))
-                   "Remove missing lines from the existing cuts before connecting another line.")
+                   "Remove missing lines from the existing stitches before connecting another line.")
   (setq members (ast:cad-get 'members selected) other-members (ast:cad-get 'members other-state)
         connections (ast:cad-get 'connections selected))
   (foreach member other-members

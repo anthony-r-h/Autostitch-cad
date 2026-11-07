@@ -2,7 +2,7 @@
 
 A BricsCAD tool that turns editable stitch lines into regenerable slit and hole layouts, including connected corners, T junctions and crossings.
 
-The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [verification results](tests/QUALIFICATION.md) for native checks and limits. Physical tool calibration remains open.
+The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [the original-axiom audit](tests/AXIOM_AUDIT.md) for case coverage and explicit rule changes, and [verification results](tests/QUALIFICATION.md) for native checks and limits. Physical tool calibration remains open.
 
 ## Start here
 

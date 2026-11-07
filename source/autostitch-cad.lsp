@@ -202,7 +202,6 @@
          (list (cons 'primary primary) (cons 'members members) (cons 'missing-members missing)
                (cons 'connections connections)))))))
 
-(defun ast:cad-group-members (guide) (ast:cad-get 'members (ast:cad-group-info guide)))
 (defun ast:cad-canonical-value (value / decimal)
   (cond ((eq (type value) 'REAL)
          (setq decimal (rtos value 2 16))
@@ -408,9 +407,6 @@
 (defun ast:cad-display-layer (key)
   (cond ((= key 'stitches) "AUTOSTITCH_STITCHES") ((= key 'notes) "AUTOSTITCH_NOTES")
         ((= key 'construction) "AUTOSTITCH_CONSTRUCTION")))
-(defun ast:cad-display-visible-p (key / data)
-  (if (setq data (tblsearch "LAYER" (ast:cad-display-layer key)))
-    (and (> (cdr (assoc 62 data)) 0) (= 0 (logand 1 (cdr (assoc 70 data))))) T))
 (defun ast:cad-ensure-display-layer (key / name data)
   (setq name (ast:cad-display-layer key))
   (ast:cad-require name "Autostitch could not identify its drawing layer. Reload Autostitch and try again.")
@@ -940,7 +936,7 @@
 (defun ast:cad-connect-preview (entity other)
   (ast:cad-catch 'ast:cad-connect-preview-inner (list entity other)))
 
-(defun ast:cad-connect-inner (entity other world-point settings landmarks / selected other-state members member states candidates node connections solved context merged)
+(defun ast:cad-connect-inner (entity other world-point settings landmarks / selected other-state members states candidates node connections solved context merged)
   (setq selected (ast:cad-read-inner entity) other-state (ast:cad-read-inner other))
   (ast:cad-require (not (equal (ast:cad-get 'guide selected) (ast:cad-get 'guide other-state)))
                    "That is the same stitch line. Select another line to connect.")

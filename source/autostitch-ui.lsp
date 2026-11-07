@@ -8,11 +8,6 @@
   (ast:ui-put "Status" "Caption" message)
   (princ (strcat "\nAutostitch: " message)))
 
-(defun ast:ui-set (key value values / pair)
-  (if (setq pair (assoc key values))
-    (subst (cons key value) pair values)
-    (cons (cons key value) values)))
-
 (defun ast:ui-result (result)
   (if (cdr (assoc 'ok result)) T
     (progn
@@ -259,9 +254,9 @@
                    (not (assoc 'phase astui:*settings*)))
             (progn
               (setq phase (ast:cad-project astui:*guide* (trans (cadr selected) 1 0)))
-              (if (ast:ui-save (ast:ui-set 'phase-anchor
+              (if (ast:ui-save (ast:cad-put 'phase-anchor
                     (append phase (list (cons 'source-route astui:*route*)))
-                    (ast:ui-set 'phase (ast:ui-global-station phase) astui:*settings*)) astui:*landmarks*)
+                    (ast:cad-put 'phase (ast:ui-global-station phase) astui:*settings*)) astui:*landmarks*)
                 (ast:ui-status "Loop starts at your selected point. Generate stitches to apply it.")))
             (ast:ui-status (cond
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
@@ -278,7 +273,7 @@
     (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)) (setq attachment (ast:ui-pick-landmark)))
       (progn
         (setq astui:*index* (length astui:*landmarks*))
-        (ast:ui-save (ast:ui-set 'pitch pitch astui:*settings*)
+        (ast:ui-save (ast:cad-put 'pitch pitch astui:*settings*)
           (append astui:*landmarks* (list attachment))))))))
 
 (defun c:ASTUILANDMARK (index value)
@@ -307,7 +302,7 @@
 (defun c:ASTUIREVERSE ()
   (ast:ui-run '(lambda ()
     (if (ast:ui-ready)
-      (ast:ui-save (ast:ui-set 'reverse (not (cdr (assoc 'reverse astui:*settings*)))
+      (ast:ui-save (ast:cad-put 'reverse (not (cdr (assoc 'reverse astui:*settings*)))
         astui:*settings*) astui:*landmarks*)))))
 
 (defun ast:ui-range-save (key point pitch / anchor-key settings attachment station total lower upper)
@@ -319,7 +314,7 @@
         (if (cdr (assoc 'reverse astui:*settings*))
           (setq key (if (= key 'start) 'end 'start))))
       (setq anchor-key (read (strcat (vl-symbol-name key) "-ANCHOR"))
-            settings (ast:ui-set 'pitch pitch astui:*settings*))
+            settings (ast:cad-put 'pitch pitch astui:*settings*))
       ;; A former open guide may retain obsolete endpoint limits after closure.
       (if (= key 'phase)
         (setq settings (vl-remove-if '(lambda (item)
@@ -331,16 +326,16 @@
           (ast:ui-save settings astui:*landmarks*))
         ((equal point "Default")
           (setq settings (vl-remove-if '(lambda (item) (member (car item) (list key anchor-key))) settings))
-          (if (= key 'phase) (setq settings (ast:ui-set 'phase 0.0 settings)))
+          (if (= key 'phase) (setq settings (ast:cad-put 'phase 0.0 settings)))
           (ast:ui-save settings astui:*landmarks*))
         ((and (listp point) point)
           (setq attachment (ast:cad-project astui:*guide* (trans point 1 0)))
           (if (assoc 'error attachment) (ast:ui-result attachment)
             (progn
               (setq station (ast:ui-global-station attachment)
-                    settings (ast:ui-set anchor-key
+                    settings (ast:cad-put anchor-key
                       (append attachment (list (cons 'source-route astui:*route*)))
-                      (ast:ui-set key station settings))
+                      (ast:cad-put key station settings))
                     total (* astui:*factor*
                       (vlax-curve-getDistAtParam astui:*guide* (vlax-curve-getEndParam astui:*guide*)))
                     lower (if (assoc 'start settings) (cdr (assoc 'start settings)) 0.0)
@@ -393,7 +388,7 @@
                 (if (equal choice "ConnectAll")
                   (progn
                     (setq result (ast:cad-connect astui:*guide* other nil
-                      (ast:ui-set 'pitch pitch astui:*settings*) astui:*landmarks*))
+                      (ast:cad-put 'pitch pitch astui:*settings*) astui:*landmarks*))
                     (if (ast:ui-result result)
                       (progn
                         (ast:ui-adopt (ast:cad-read astui:*guide*))
@@ -416,7 +411,7 @@
 (defun ast:ui-generate (/ pitch settings result state)
   (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
     (progn
-      (setq settings (ast:ui-set 'pitch pitch astui:*settings*)
+      (setq settings (ast:cad-put 'pitch pitch astui:*settings*)
             result (if astui:*placement-conflict*
               (ast:cad-restore astui:*guide* settings astui:*landmarks*)
               (ast:cad-generate astui:*guide* settings astui:*landmarks*)))
@@ -431,19 +426,6 @@
 
 (defun c:ASTUIGENERATE ()
   (ast:ui-run 'ast:ui-generate))
-
-(defun c:ASTUIREFRESH ()
-  (ast:ui-run '(lambda (/ result)
-    (if (ast:ui-ready)
-      (progn
-        (setq result (ast:cad-read astui:*guide*))
-        (if (ast:ui-result result)
-          (if (ast:ui-adopt result)
-            (ast:ui-status (cond
-              ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
-              ((cdr (assoc 'range-conflict result)) (ast:ui-limits-message))
-              ((cdr (assoc 'stale result)) "Generate stitches to apply your changes.")
-              (T "Stitch line loaded."))))))))))
 
 (defun c:ASTUIINIT ()
   (setq astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))

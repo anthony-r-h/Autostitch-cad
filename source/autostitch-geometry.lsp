@@ -190,7 +190,7 @@
     (setq tail (cdr tail))) error)
 
 ;;; A sorted landmark reserves a nominal gap. No landmark is converted to a hole.
-(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved idx advances gaps advance gap next kind span opening-count free-length station-tol point)
+(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved advances gaps advance gap next kind span opening-count free-length station-tol point)
   (setq pitch (ast:g-get 'pitch settings 3.0) step (ast:g-step primitive pitch) cursor start
         ordered (vl-sort landmarks '(lambda (aa bb) (< (cdr (assoc 'station aa)) (cdr (assoc 'station bb)))))
         openings (list (ast:g-slit primitive start settings)) opening-count 1
@@ -325,7 +325,7 @@
     (list '(kind . line) (cons 'a (ast:g-get 'b primitive nil)) (cons 'b (ast:g-get 'a primitive nil)))
     (list '(kind . arc) (cons 'center (ast:g-get 'center primitive nil)) (cons 'radius (ast:g-get 'radius primitive 0))
           (cons 'start-angle (+ (ast:g-get 'start-angle primitive 0) (ast:g-get 'sweep primitive 0))) (cons 'sweep (- (ast:g-get 'sweep primitive 0))))))
-(defun ast:g-normalize (primitives landmarks reverse-travel / error marker index station offset total distances absolute normalized previous primitive remapped found running)
+(defun ast:g-normalize (primitives landmarks reverse-travel / error marker index station offset total distances absolute normalized primitive remapped found running)
   (setq total 0.0)
   (foreach primitive primitives (setq distances (append distances (list total)) total (+ total (ast:g-length primitive))))
   (foreach marker landmarks
@@ -350,7 +350,7 @@
   (if (= (ast:g-get 'kind primitive nil) 'line)
     (list '(kind . line) (cons 'point (ast:g-point primitive 0.0)) (cons 'tangent (ast:g-tangent primitive 0.0)))
     (list '(kind . circle) (cons 'center (ast:g-get 'center primitive nil)) (cons 'radius (ast:g-get 'radius primitive 0)))))
-(defun ast:g-point-on (primitive point / station radial angle sweep)
+(defun ast:g-point-on (primitive point / radial angle sweep)
   (if (= (ast:g-get 'kind primitive nil) 'line)
     (and (< (ast:g-point-segment-distance point (ast:g-point primitive 0.0) (ast:g-point primitive (ast:g-length primitive))) 1e-8))
     (progn
@@ -391,7 +391,7 @@
     (list '(kind . arc) (cons 'center (ast:g-get 'center primitive nil)) (cons 'radius (ast:g-get 'radius primitive 0))
           (cons 'start-angle (+ (ast:g-get 'start-angle primitive 0) (* (ast:g-sign (ast:g-get 'sweep primitive 0)) (/ start (ast:g-get 'radius primitive 0)))))
           (cons 'sweep (* (ast:g-sign (ast:g-get 'sweep primitive 0)) (/ (- finish start) (ast:g-get 'radius primitive 0)))))))
-(defun ast:g-range (primitives landmarks settings closed / start finish phase total error remapped marker station index offsets absolute primitive cursor low high selected cycle-length cycles found)
+(defun ast:g-range (primitives landmarks settings closed / start finish phase total error remapped marker station index offsets absolute primitive cursor low high selected cycles found)
   (setq total 0.0)
   (foreach primitive primitives
     (setq offsets (append offsets (list total)) total (+ total (ast:g-length primitive))))
@@ -431,7 +431,7 @@
           (setq cursor (+ cursor (ast:g-length primitive)) index (1+ index))))))
   (if error (ast:g-error error) (list '(ok . T) (cons 'primitives selected) (cons 'landmarks (reverse remapped)))))
 
-(defun ast:g-solve (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner starts finishes openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted virtual-slits)
+(defun ast:g-solve (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted virtual-slits)
   (setq primitives (ast:g-get 'primitives route nil) closed (ast:g-get 'closed route nil) error (ast:g-profile-error settings))
   (if (null primitives) (setq error "No usable stitch line was found. Select a line or curve."))
   (foreach primitive primitives (if (null error) (setq error (ast:g-primitive-error primitive))))

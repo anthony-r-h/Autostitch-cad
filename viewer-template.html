@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stitch tests</title>
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: #fff; color: #222; font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .page { max-width: 880px; padding: 20px; }
+    h1 { margin: 0 0 16px; font-size: 23px; line-height: 1.2; font-weight: 600; }
+    p { margin: 12px 0; }
+    button, select, input { font: inherit; }
+    select { max-width: 100%; padding: 5px 8px; color: #222; background: #fff; border: 1px solid #888; }
+    button { padding: 4px 9px; color: #222; background: #fff; border: 1px solid #888; cursor: pointer; }
+    button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid #087d87; outline-offset: 3px; }
+    .control { margin: 0 0 10px; }
+    .control label { display: block; margin-bottom: 3px; }
+    #pitch-select { width: 7.5em; }
+    #case-select { width: 34em; }
+    .plot { width: 100%; }
+    .plot svg, .static-plot svg { display: block; width: 100%; height: auto; }
+    .key { color: #666; font-size: 12px; margin: 5px 0 10px; }
+    #case-result { margin: 10px 0 18px; }
+    details { margin: 12px 0; }
+    summary { cursor: pointer; }
+    .options label { display: block; margin: 8px 0; }
+    .options input { accent-color: #087d87; margin-right: 7px; }
+    .options button { margin: 3px 0 7px; }
+    .measurements { margin: 9px 0; padding-left: 22px; font-size: 14px; }
+    .measurements li { margin: 3px 0; }
+    @media (max-width: 600px) { .page { padding: 16px; } }
+  </style>
+  <!-- STATIC_STYLES -->
+</head>
+<body>
+  <!-- STATIC_VIEW -->
+  <main class="page" id="app" hidden>
+    <h1>Stitch tests</h1>
+    <div class="control">
+      <label for="pitch-select">Pitch (mm)</label>
+      <select id="pitch-select"></select>
+    </div>
+    <div class="control">
+      <label for="case-select">Example</label>
+      <select id="case-select"></select>
+    </div>
+    <p id="case-description"></p>
+    <div class="plot" id="plot"></div>
+    <p class="key">Teal: holes. Orange: changed spacing.</p>
+    <p id="case-result" role="status" aria-live="polite"></p>
+    <details class="options" id="drawing-options">
+      <summary>Drawing options</summary>
+      <label><input type="checkbox" id="show-threads" checked>Thread</label>
+      <label><input type="checkbox" id="show-virtuals">Construction slits</label>
+      <label><input type="checkbox" id="show-intervals">Gap lengths</label>
+      <button type="button" id="export-svg">Save SVG</button>
+    </details>
+    <details id="case-details">
+      <summary>Details</summary>
+      <ul class="measurements" id="case-measurements"></ul>
+    </details>
+  </main>
+  <!-- EMBED_SCRIPT -->
+</body>
+</html>

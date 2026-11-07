@@ -1,6 +1,6 @@
-# Stitch model: accepted next-version design
+# Stitch model: accepted line/arc foundation
 
-This specifies the next implementation. `geometry.mjs` and the gallery still implement the original baseline. Physical qualification is separate: [PHYSICAL_RULES.md](PHYSICAL_RULES.md). CAD behavior: [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md).
+The native solver in `source/autostitch-geometry.lsp` implements this bounded line/arc design. `geometry.mjs` and the gallery retain the original baseline. Physical qualification is separate: [PHYSICAL_RULES.md](PHYSICAL_RULES.md). CAD scope and current limits: [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md).
 
 ## Concepts and parameters
 

@@ -1,10 +1,20 @@
 # BricsCAD implementation plan
 
-Accepted design, not an implemented plugin. [STITCH_MODEL.md](STITCH_MODEL.md) owns geometry; [PHYSICAL_RULES.md](PHYSICAL_RULES.md) owns physical claims.
+The AutoLISP/OpenDCL plugin is implemented. [STITCH_MODEL.md](STITCH_MODEL.md) owns geometry; [PHYSICAL_RULES.md](PHYSICAL_RULES.md) owns physical claims. The design contract below remains broader than the completed qualification; use [README.md](README.md) for loading and operation.
+
+## Current implementation status
+
+`AUTOSTITCH.lsp` loads the pure geometry, DWG adapter and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Implemented controls cover guide/output selection, pitch, landmark Move/Delete, Start/End or closed-guide Phase, Reverse, Generate and explicit Restore for independently transformed output. Inputs and reciprocal guide/output links persist in DWG metadata. Markers are transient graphics.
+
+The solver supports ordered lines and circular arcs, open and closed routes, range picks, nominal landmark reservations and finite-opening validation. Extraction currently accepts LINE, ARC, CIRCLE and LWPOLYLINE in WCS XY at Z=0 with a positive Z normal; arbitrary drawing planes are not implemented. Unitless drawings require an explicit millimetre/inch choice.
+
+Native geometry, adapter and principal palette workflows have passed in BricsCAD V22.2 with OpenDCL 10.1.2.2, including Undo/Redo, paired copying, layout ownership and save/reopen. [Verification results](tests/QUALIFICATION.md) distinguish tested behavior from remaining limits. Physical qualification is still open. The design below also includes future behavior beyond this first release.
+
+Attachment correspondence is deliberately conservative: changed polylines with landmarks or range picks can require clearing/re-picking those attachments. Polylines without attachments can regenerate after edits. The current fixed profile is 1.5 mm slits, 0.5 mm holes and 40° lean; tool width and retained-material margin are uncalibrated. Physical clearance remains unverified, and curved or corrected runs may require individual placement.
 
 ## Target and stack
 
-**Use AutoLISP + the existing OpenDCL palette on Windows BricsCAD V22.** The running executable is version 22.2.02; `OpenDCL.x64.22.brx` version 10.1.2.2 is loaded. Reuse the adjacent [Csvlabel](https://github.com/anthony-r-h/Csvlabel) project's callback, palette-source and packaging patterns.
+**Implemented with AutoLISP + OpenDCL on Windows BricsCAD V22.** The running executable is version 22.2.02; `OpenDCL.x64.22.brx` version 10.1.2.2 is loaded. The palette follows the adjacent [Csvlabel](https://github.com/anthony-r-h/Csvlabel) project's callback, palette-source and packaging patterns.
 
 The bounded line/arc mathematics does not require C# or BRX. Keep pure geometry functions separate from CAD reads/writes and palette callbacks. No Node subprocess, browser UI, external solver or custom entity. Ship loadable LISP and compiled `.odcl`; retain editable palette source. The installed .NET alternative targets **Framework 4.8**, not .NET 8 ([V22 documentation](https://developer.bricsys.com/bricscad/help/en_US/V22/DevRef/source/dotNET_overview.htm)); it has no present advantage sufficient to justify another stack.
 
@@ -19,7 +29,7 @@ Start / End / Reverse                 (secondary actions)
 Selected seam + short status
 ```
 
-1. Select a supported guide. Show its highlight, endpoint markers, direction arrow and derived junction markers. An open guide defaults to its two endpoints; a closed guide asks for one start/phase pick.
+1. Select a supported guide. Show its highlight, endpoint markers, direction arrow and derived junction markers. An open guide defaults to its two endpoints; a new closed guide uses the selection pick as its explicit start phase.
 2. Pick landmarks only where a centred nominal gap is intended. Selecting a landmark offers Move/Delete. Other drawing intersections have no effect.
 3. Generate. Calculate the entire candidate, show errors at their features, then create or replace that seam's output. Live preview can follow the first working slice; it must not add another compulsory confirmation.
 4. Later select either the guide or its linked output to reopen the same inputs. Edit the original guide with normal CAD tools, then Generate again.
@@ -103,8 +113,8 @@ Stages 1-2 establish the usable editing loop. Do not port every gallery shape be
 
 **Later imprints:** copy the successfully generated master openings by explicit rigid registration, optionally reflection once face convention is settled; never solve each destination independently. Store source revision, destination placement and opening correspondence together. Keep stable local frames so moving the master around the sheet does not move an imprint. Source changes mark it stale; explicit refresh updates geometry and correspondence. Same-DWG first; no inference of assembled layers or leather deformation.
 
-## Host evidence and limits
+## Initial host inspection (historical)
 
 Read-only inspection on 2026-11-06 found V22.2.02 running, OpenDCL 10.1.2.2 loaded, OpenDCL Studio installed, and the sibling Csvlabel source/compiled palette. Its README reports native V22 tests; those were not rerun here. Installed `API/dotNet` samples independently confirm Framework 4.8.
 
-Licensed edition remains unverified. Read-only COM probes returned `CO_E_CLASSSTRING` for the unversioned ProgID and `MK_E_UNAVAILABLE` for `.22.0`; the cause was not established. No drawing commands or plugin code were sent to the running host, and no open drawing was modified. Stage 1 must verify the actual writer/UI behavior.
+During that initial read-only inspection, the licensed edition was unverified. COM probes returned `CO_E_CLASSSTRING` for the unversioned ProgID and `MK_E_UNAVAILABLE` for `.22.0`; the cause was not established. No drawing commands or plugin code were sent during that inspection. Later implementation work ran native checks in a separate test drawing, as distinguished in the current status above.

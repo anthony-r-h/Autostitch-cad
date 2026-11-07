@@ -1,48 +1,50 @@
-# Autostitch: design review and implementation plan
+# Autostitch for BricsCAD
 
 A BricsCAD tool that turns an editable stitch guide into a contained, regenerable set of openings.
 
-**Status:** the repository contains a working geometry laboratory, not a CAD plugin. The documents below specify the next version. Existing JavaScript, saved results and gallery still implement the original rules; they have not been silently updated to the new decisions.
+The repository includes a loadable AutoLISP/OpenDCL plugin, exercised in **BricsCAD V22.2 / OpenDCL 10.1.2.2**, including palette picks, Undo/Redo, copying and save/reopen. See [native verification](tests/QUALIFICATION.md). Physical tool calibration remains open.
 
-## Read in this order
+## Start here
 
-| Document | Decision it owns |
-| --- | --- |
-| [STITCH_MODEL.md](STITCH_MODEL.md) | Parameters, features, fitting, junction construction, supported geometry and failure meanings. |
-| [PHYSICAL_RULES.md](PHYSICAL_RULES.md) | Correction preferences, symmetry, real chisel limits, clearance and physical calibration. |
-| [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md) | Concrete V22/OpenDCL implementation, UI, editing, persistence and delivery gates. |
-| [REVIEW.md](REVIEW.md) | Findings, challenged decisions, evidence and what remains unverified. |
+1. Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl` and the `source` folder together. No package installation is needed.
+2. In BricsCAD, use **APPLOAD** to load [AUTOSTITCH.lsp](AUTOSTITCH.lsp), then run **AUTOSTITCH**.
+3. Click **Select guide**, enter **Pitch** in millimetres, then **Generate**. The starting pitch is 3 mm. New guides reuse the last committed pitch; existing seams restore their saved inputs.
+4. Edit the original guide using normal CAD tools, then **Generate** again. You can select either the guide or its linked output to reopen a seam.
 
-## Decisions that change the old plan
+Supported source entities are `LINE`, `ARC`, `CIRCLE` and ordered `LWPOLYLINE` guides, including bulged arc segments. They must lie in **WCS XY at Z=0**, with a positive Z normal. Invalid intersections, overlapping openings and unsupported junctions are rejected before output is replaced.
 
-- Keep the direct straight/chord fits. Centre corrections within each free span; prefer exact symmetry when it costs no additional changed gaps.
-- Validate actual finite openings. Minimum corner angle follows from tool dimensions and clearance; it is not a universal slider.
-- Use one slit-tip construction for sharp line/arc joins. Preserve each arm's ordinary display-thread behavior; curved thread turn need not equal guide turn.
-- Treat the result as exact opening positions. A rigid multi-tooth iron cannot reproduce every corrected or curved run exactly.
-- Keep user-drawn guides authoritative. Default endpoints and derived junctions remove unnecessary annotation clicks; landmarks remain deliberate.
-- Implement with the **running BricsCAD V22 / existing OpenDCL** stack. One block per seam, explicit Generate, predictable Undo.
+Each seam is limited to **2,000 openings**. Larger requests fail explicitly; output is never truncated.
 
-See the [visual comparison of the decisions](review/design-comparison.svg).
+Drawing units come from `INSUNITS`; pitch and tool dimensions are always millimetres. A unitless drawing asks whether one drawing unit means a millimetre or an inch. Saved seams retain their unit conversion.
 
-## Run and inspect
+## Editing a seam
 
-No package installation is needed. Node.js 18+ runs the existing laboratory:
+- **Add landmark** reserves a centred nominal gap at your pick. Select a landmark in the list to **Move** or **Delete** it. Other drawing intersections do not create landmarks.
+- **Start / End** trim the working range without trimming the source. Enter **Default** at the pick prompt to restore an endpoint. They follow the source's native direction; **Reverse** changes traversal afterward.
+- For a closed guide, your first selection pick sets its start phase. Use **Phase** to change it.
+- **Apply pitch** saves an input edit separately. **Generate** commits its current pitch and output together. Native **Undo / Redo** can reverse these operations; a failed Generate retains the previous output.
+- **Refresh markers** reloads saved inputs and redraws the transient markers. It discards an uncommitted pitch draft.
+- Reopening **AUTOSTITCH** also reloads saved inputs. After switching drawings, select a guide again before generating; a click cannot reuse another drawing's displayed seam.
+- If output was moved, rotated or scaled independently, **Restore** explicitly regenerates it at the guide. It is enabled when that placement conflict is detected.
+
+Each seam produces one ordinary block reference on `AUTOSTITCH`. The original guide stays separate. Markers are temporary graphics and may need Refresh after a view redraw.
+
+Landmarks and range picks attach to a primitive at a fixed physical distance. Changed polylines with such attachments can require clearing or re-picking them because stable vertex identities are unavailable. **Delete** offers **ClearAll** when landmark correspondence is invalid; reset or re-pick affected Start/End/Phase values. An edited polyline without these attachments can regenerate normally.
+
+## Tool assumptions
+
+The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated: **Physical clearance unverified** remains visible. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
+
+## Design and development
+
+[STITCH_MODEL.md](STITCH_MODEL.md) defines geometry; [PHYSICAL_RULES.md](PHYSICAL_RULES.md) defines physical claims. [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md) records implementation scope and acceptance gates. [REVIEW.md](REVIEW.md) retains the design review.
+
+The older JavaScript laboratory and gallery remain available and contain earlier rules, including superseded A03/A04 experiments. They are not runtime dependencies of the CAD plugin. To inspect them with Node.js 18+:
 
 ```sh
 node run-tests.mjs
 node build.mjs
 node test-viewer.mjs
-```
-
-Open [stitch-geometry-lab.html](stitch-geometry-lab.html) for the original 22 examples. A03/A04 are superseded curved-junction experiments; their exact spacing is not approval of their construction.
-
-The new design has separate, deliberately limited evidence probes:
-
-```sh
 node review/model-evidence.mjs
 node review/correction-evidence.mjs
 ```
-
-These are mathematical review artifacts, not a general route planner or production solver. The product will not depend on Node or this viewer.
-
-The first implementation target is the LINE workflow in [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md): select, generate, edit length, regenerate, save/reopen, Undo/Redo. Do not port the fixture builders as the route planner.

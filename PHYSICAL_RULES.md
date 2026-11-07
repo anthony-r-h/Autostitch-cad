@@ -1,6 +1,6 @@
 # Physical rules and practical limits
 
-Decisions for the next version; no leather samples were measured or stitched during this review. Placement mathematics lives in [STITCH_MODEL.md](STITCH_MODEL.md).
+Decisions used by the native plugin; no leather samples were measured or stitched during this work. Placement mathematics lives in [STITCH_MODEL.md](STITCH_MODEL.md).
 
 ## Correction placement and symmetry
 
@@ -26,7 +26,7 @@ This is a practical preference, not proof of minimum labour or superior appearan
 
 At `R=10 mm,p=3 mm`, adjacent desired axes differ by **17.253853 degrees**. A two-tooth iron aligned to the chord has **8.626927-degree** orientation error at each tooth. Three consecutive centres have **0.45 mm** middle-point deviation from the outer-centre line. Re-entering a hole while rotating the iron can also recut it.
 
-Therefore the tool specifies **exact opening locations/orientations**, with multi-tooth use on suitable straight runs. Curves/corrections/junctions need individual placement or a separately validated approximation. Preview highlights these regions; it does not simulate leather deformation or tool-body access.
+Therefore the tool specifies **exact opening locations/orientations**, with multi-tooth use on suitable straight runs. Curves/corrections/junctions need individual placement or a separately validated approximation. The palette reports placement warnings; it does not simulate leather deformation or tool-body access.
 
 ## Finite cuts, margin, and minimum angle
 

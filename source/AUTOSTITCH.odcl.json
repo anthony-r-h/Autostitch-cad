@@ -1,0 +1,318 @@
+{
+  "format": 1,
+  "name": "AUTOSTITCH",
+  "forms": [
+    {
+      "name": "Palette",
+      "type": "palette",
+      "caption": "Autostitch",
+      "width": 320,
+      "height": 376,
+      "MinWidth": 320,
+      "MinHeight": 376,
+      "BackColor": 16119026,
+      "controls": [
+        {
+          "type": "TextButton",
+          "name": "Select",
+          "left": 12,
+          "top": 12,
+          "width": 138,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Select",
+          "caption": "Select guide",
+          "events": {
+            "Clicked": "c:ASTUISELECT"
+          }
+        },
+        {
+          "type": "Label",
+          "name": "PitchLabel",
+          "left": 164,
+          "top": 18,
+          "width": 42,
+          "height": 24,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/PitchLabel",
+          "caption": "Pitch",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "TextBox",
+          "name": "Pitch",
+          "left": 208,
+          "top": 12,
+          "width": 60,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Pitch",
+          "text": "3",
+          "ReturnAsTab": true
+        },
+        {
+          "type": "Label",
+          "name": "Units",
+          "left": 274,
+          "top": 18,
+          "width": 30,
+          "height": 24,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Units",
+          "caption": "mm",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "TextButton",
+          "name": "Add",
+          "left": 12,
+          "top": 54,
+          "width": 138,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Add",
+          "caption": "Add landmark",
+          "events": {
+            "Clicked": "c:ASTUIADD"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Generate",
+          "left": 162,
+          "top": 54,
+          "width": 146,
+          "height": 32,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Generate",
+          "caption": "Generate",
+          "events": {
+            "Clicked": "c:ASTUIGENERATE"
+          }
+        },
+        {
+          "type": "Label",
+          "name": "Seam",
+          "left": 12,
+          "top": 100,
+          "width": 296,
+          "height": 24,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Seam",
+          "caption": "No guide selected",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "Label",
+          "name": "LandmarkLabel",
+          "left": 12,
+          "top": 132,
+          "width": 90,
+          "height": 24,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/LandmarkLabel",
+          "caption": "Landmarks",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "ComboBox",
+          "name": "Landmarks",
+          "left": 102,
+          "top": 126,
+          "width": 206,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Landmarks",
+          "ComboBoxStyle": 2,
+          "events": {
+            "SelChanged": "c:ASTUILANDMARK"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Move",
+          "left": 12,
+          "top": 164,
+          "width": 90,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Move",
+          "caption": "Move",
+          "events": {
+            "Clicked": "c:ASTUIMOVE"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Delete",
+          "left": 114,
+          "top": 164,
+          "width": 90,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Delete",
+          "caption": "Delete",
+          "events": {
+            "Clicked": "c:ASTUIDELETE"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Reverse",
+          "left": 216,
+          "top": 164,
+          "width": 92,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Reverse",
+          "caption": "Reverse",
+          "events": {
+            "Clicked": "c:ASTUIREVERSE"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "ApplyPitch",
+          "left": 12,
+          "top": 244,
+          "width": 138,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/ApplyPitch",
+          "caption": "Apply pitch",
+          "events": {
+            "Clicked": "c:ASTUIPITCH"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Refresh",
+          "left": 162,
+          "top": 244,
+          "width": 146,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Refresh",
+          "caption": "Refresh markers",
+          "events": {
+            "Clicked": "c:ASTUIREFRESH"
+          }
+        },
+        {
+          "type": "Label",
+          "name": "Status",
+          "left": 12,
+          "top": 286,
+          "width": 296,
+          "height": 54,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Status",
+          "caption": "Select a guide or generated seam.",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "Label",
+          "name": "Physical",
+          "left": 12,
+          "top": 342,
+          "width": 296,
+          "height": 22,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 0,
+          "VarName": "AUTOSTITCH/Palette/Physical",
+          "caption": "Physical clearance unverified",
+          "BackColor": -24,
+          "BorderStyle": 0
+        },
+        {
+          "type": "TextButton",
+          "name": "Start",
+          "left": 12,
+          "top": 204,
+          "width": 90,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Start",
+          "caption": "Start",
+          "events": {
+            "Clicked": "c:ASTUISTART"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "End",
+          "left": 114,
+          "top": 204,
+          "width": 90,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/End",
+          "caption": "End",
+          "events": {
+            "Clicked": "c:ASTUIEND"
+          }
+        },
+        {
+          "type": "TextButton",
+          "name": "Restore",
+          "left": 216,
+          "top": 204,
+          "width": 92,
+          "height": 28,
+          "Font": "Segoe UI",
+          "FontSize": 10,
+          "EventInvoke": 1,
+          "VarName": "AUTOSTITCH/Palette/Restore",
+          "caption": "Restore",
+          "events": {
+            "Clicked": "c:ASTUIRESTORE"
+          }
+        }
+      ],
+      "events": {
+        "Initialize": "c:ASTUIINIT",
+        "CancelClose": "c:ASTUICLOSE"
+      }
+    }
+  ]
+}

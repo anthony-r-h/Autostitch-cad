@@ -7,9 +7,9 @@ The native solver in `source/autostitch-geometry.lsp` implements the bounded sin
 | Concept | Meaning |
 | --- | --- |
 | Guide | User-owned, ordered planar line/arc geometry; authoritative location of ordinary opening centres. Explicit start, direction and open/closed state. |
-| Landmark | A deliberately centred **nominal gap**, with no opening at its station. A pocket-edge crossing is this kind of constraint. |
-| Junction | A transition within the ordered guide. Derived from its tangents/curvatures, not from nearby drawing intersections. |
-| Connection | A declared meeting/crossing between source paths; retains their identities and shares one physical opening. |
+| Landmark | A selected reference on the existing pattern, such as a pocket edge. Its spacing requirement is one centred nominal gap, with no opening at the reference station. |
+| Junction | Where stitch-line arms meet: a corner, a smooth join, a T or a crossing. CAD entity boundaries do not change the physical rule. Corners within a guide are derived from its geometry. |
+| Connect stitch lines | The action declaring that separate source paths share their junctions. It retains their source identities; nearby drawing intersections alone do not declare shared stitching. |
 | Opening | One real slit or round hole. Virtual slits are construction geometry only. A corner hole may lie off the guide. |
 | Reservation | Fixed entry/exit openings and protected gaps supplied by a feature. |
 | Span | Remaining guide between consecutive reserved ordinary centres; fitted without moving either anchor. |

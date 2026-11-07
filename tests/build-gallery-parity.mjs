@@ -1,0 +1,297 @@
+// Run without arguments to generate the native export; use --report after BricsCAD loads it.
+// All geometry is the original gallery geometry, reflected from screen Y-down into CAD Y-up.
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {CASES, PITCHES, runCase} from '../case-suite.mjs';
+import {solveCorner} from '../geometry.mjs';
+import {renderSvg} from '../render-svg.mjs';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const output = path.join(root, 'output', 'native');
+const rad = x => x * Math.PI / 180;
+const reflect = p => [p[0], -p[1]];
+const distance = (a,b) => Math.hypot(a[0]-b[0], a[1]-b[1]);
+const near = (a,b) => distance(a,b) < 1e-7;
+const subtract=(a,b)=>a.map((x,i)=>x-b[i]);
+const cross=(a,b)=>a[0]*b[1]-a[1]*b[0];
+function pointSegment(p,a,b){
+  const d=subtract(b,a),square=d[0]*d[0]+d[1]*d[1];
+  const t=square?Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/square)):0;
+  return distance(p,a.map((x,i)=>x+t*d[i]));
+}
+function segmentDistance(a,b,c,d){
+  const u=subtract(b,a),v=subtract(d,c),denominator=cross(u,v);
+  if(Math.abs(denominator)>1e-12){
+    const offset=subtract(c,a),s=cross(offset,v)/denominator,t=cross(offset,u)/denominator;
+    if(s>=0&&s<=1&&t>=0&&t<=1)return 0;
+  }
+  return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
+}
+function openingClearance(a,b){
+  const ends=o=>o.type==='round'?[o.center,o.center]:[-.5,.5].map(sign=>o.center.map((x,i)=>x+sign*o.axis[i]*o.length));
+  const [aa,ab]=ends(a),[ba,bb]=ends(b);
+  return segmentDistance(aa,ab,ba,bb)-(a.diameter||0)/2-(b.diameter||0)/2;
+}
+const line = (a,b) => ({kind:'line', a:reflect(a), b:reflect(b)});
+const arc = (center,radius,start,sweep) => ({kind:'arc',center:reflect(center),radius,'start-angle':-start,sweep:-sweep});
+const length = g => g.kind === 'line' ? distance(g.a,g.b) : g.radius*Math.abs(g.sweep);
+function station(g, point) {
+  if (g.kind === 'line') return ((point[0]-g.a[0])*(g.b[0]-g.a[0])+(point[1]-g.a[1])*(g.b[1]-g.a[1]))/length(g);
+  const angle = Math.atan2(point[1]-g.center[1], point[0]-g.center[0]);
+  const direction = Math.sign(g.sweep);
+  let advance = direction*(angle-g['start-angle']);
+  while (advance < -1e-8) advance += 2*Math.PI;
+  while (advance > 2*Math.PI+1e-8) advance -= 2*Math.PI;
+  return advance*g.radius;
+}
+function pointAt(g,s) {
+  if(g.kind === 'line') return g.a.map((x,i) => x+(g.b[i]-x)*s/length(g));
+  const a = g['start-angle']+Math.sign(g.sweep)*s/g.radius;
+  return [g.center[0]+g.radius*Math.cos(a),g.center[1]+g.radius*Math.sin(a)];
+}
+
+function fixture(spec,pitch) {
+  const original=runCase(spec,pitch), settings={pitch}, landmarks=[];
+  let primitives, closed=false, translation='Same guide, endpoints, and landmarks.', fidelity='direct';
+  if(['straight','fixed-gap'].includes(spec.kind)) {
+    primitives=[line([0,0],[spec.length,0])];
+    for(const s of spec.gaps||[]) landmarks.push({primitive:0,station:s});
+    if(spec.protectedEnd) {
+      landmarks.push({primitive:0,station:spec.length-pitch/2});
+      translation='The protected final interval is encoded by its exact midpoint landmark; both endpoints remain fixed.';
+      fidelity='equivalent constraints';
+    }
+  } else if(spec.kind === 'continuation') {
+    primitives=[line([-10,0],[0,0]),line([0,0],[10,0])];
+  } else if(['corner','ordered-corner','near-corner'].includes(spec.kind)) {
+    const turn=rad(spec.turn);
+    primitives=[line([-spec.inLength,0],[0,0]),line([0,0],[spec.outLength*Math.cos(turn),spec.outLength*Math.sin(turn)])];
+    if(spec.kind==='ordered-corner') {
+      landmarks.push({primitive:0,station:spec.inLength+solveCorner(spec.turn,pitch).previous[0]-pitch/2});
+      translation='The original final ordinary approach interval is protected by its exact midpoint landmark.';
+      fidelity='equivalent constraints';
+    }
+    if(spec.kind==='near-corner') landmarks.push({primitive:0,station:spec.inLength-spec.edgeOffset});
+  } else if(['arc','arc-gap'].includes(spec.kind)) {
+    primitives=[arc([0,spec.radius],spec.radius,-Math.PI/2,rad(spec.sweep))];
+    if(spec.kind==='arc-gap') landmarks.push({primitive:0,station:spec.radius*rad(spec.gapAngle)});
+  } else if(spec.kind==='curved-junction') {
+    const turn=rad(spec.turn), sweep=rad(spec.sweep), r=spec.radius, r2=spec.secondRadius;
+    primitives=[arc([0,r],r,-Math.PI/2-sweep,sweep),spec.second==='line'
+      ? line([0,0],[10*Math.cos(turn),10*Math.sin(turn)])
+      : arc([-r2*Math.sin(turn),r2*Math.cos(turn)],r2,turn-Math.PI/2,sweep)];
+    translation='Original rule fixes the round hole at the shared guide endpoint. Native output is compared against that rule explicitly.';
+    fidelity='changed corner rule';
+  } else if(spec.kind==='line-arc') {
+    primitives=[line([-spec.length,0],[0,0]),arc([0,spec.radius],spec.radius,-Math.PI/2,rad(spec.sweep))];
+  } else if(spec.kind==='circle') {
+    primitives=[arc([0,0],spec.radius,-Math.PI/2,2*Math.PI)];closed=true;
+    const step=2*Math.asin(pitch/(2*spec.radius))*spec.radius;
+    const count=Math.floor((rad(spec.builtSweep)+1e-12)/(step/spec.radius));
+    for(let i=0;i<count;i++)landmarks.push({primitive:0,station:(i+.5)*step});
+    landmarks.push({primitive:0,station:length(primitives[0])-step/2});
+    translation='Every committed prefix interval and the final closure chord are encoded as exact protected landmark pairs. This checks fixed-prefix geometry, not a UI resume command.';
+    fidelity='equivalent constraints';
+  } else if(spec.kind==='rectangle') {
+    const vertices=[[0,0],[spec.width,0],[spec.width,spec.height],[0,spec.height]];
+    primitives=vertices.map((v,i)=>line(v,vertices[(i+1)%4]));closed=true;
+  } else throw new Error(`Unmapped original case: ${spec.id}`);
+  if(['continuation','corner','curved-junction','line-arc'].includes(spec.kind) && original.slits.length) {
+    const first=reflect(original.slits[0].center),last=reflect(original.slits.at(-1).center);
+    settings.start=station(primitives[0],first);
+    settings.end=primitives.slice(0,-1).reduce((n,g)=>n+length(g),0)+station(primitives.at(-1),last);
+    translation+=spec.kind==='curved-junction'
+      ? ' The native construction chooses its own nominal phase within the original free outer margins. A separate auxiliary run holds the old phase fixed.'
+      : ' The gallery\'s free outer margins are encoded as explicit start/end positions at its first and last nominal centres.';
+    if(fidelity==='direct')fidelity='equivalent constraints';
+  }
+  return {id:spec.id,pitch,spec,original,route:{primitives,closed},settings,landmarks,translation,fidelity};
+}
+const fixtures=PITCHES.flatMap(p=>CASES.map(s=>fixture(s,p)));
+const symbolKeys=new Set(['kind']);
+function lisp(value,key='') {
+  if(value===null||value===false)return 'nil';
+  if(value===true)return 'T';
+  if(typeof value==='number')return String(value);
+  if(typeof value==='string')return symbolKeys.has(key)?value:JSON.stringify(value);
+  if(Array.isArray(value))return '('+value.map(x=>lisp(x)).join(' ')+')';
+  return '('+Object.entries(value).map(([k,v])=>'('+k+' . '+lisp(v,k)+')').join(' ')+')';
+}
+const cadPath=p=>p.replaceAll('\\','/');
+fs.mkdirSync(output,{recursive:true});
+if(!process.argv.includes('--report')) {
+  const entries=fixtures.map(f=>`(list ${JSON.stringify(f.id)} ${f.pitch} '${lisp(f.route)} '${lisp(f.settings)} '${lisp(f.landmarks)})`);
+  const script=`;;; Generated by tests/build-gallery-parity.mjs; pure native solver, no drawing mutation.
+(load ${JSON.stringify(cadPath(path.join(root,'source/autostitch-geometry.lsp')))})
+(defun ast:gallery-format (value / text item)
+  (cond ((null value) "nil") ((= (type value) 'REAL) (rtos value 2 12))
+    ((listp value) (setq text "(") (foreach item value (setq text (strcat text (if (= text "(") "" " ") (ast:gallery-format item)))) (strcat text ")"))
+    (T (vl-prin1-to-string value))))
+(defun ast:gallery-record (fixture / result openings intervals opening interval)
+  (setq result (vl-catch-all-apply 'ast:g-solve (list (nth 2 fixture) (nth 3 fixture) (nth 4 fixture))))
+  (if (vl-catch-all-error-p result)
+    (list (car fixture) (cadr fixture) nil "exception" (vl-catch-all-error-message result) nil nil)
+    (progn
+      (foreach opening (ast:g-get 'openings result nil)
+        (setq openings (cons (list (ast:g-get 'type opening nil) (ast:g-get 'center opening nil)
+          (ast:g-get 'axis opening nil) (ast:g-get 'length opening nil) (ast:g-get 'diameter opening nil)) openings)))
+      (foreach interval (ast:g-get 'intervals result nil)
+        (setq intervals (cons (list (ast:g-get 'kind interval nil) (ast:g-get 'distance interval nil)
+          (ast:g-get 'reserved interval nil)) intervals)))
+      (list (car fixture) (cadr fixture) (ast:g-get 'ok result nil) (ast:g-get 'status result nil)
+        (ast:g-get 'error result "") (reverse openings) (reverse intervals)))))
+(setq ast:gallery-file (open ${JSON.stringify(cadPath(path.join(output,'gallery-native.txt')))} "w"))
+(foreach ast:gallery-fixture (list\n${entries.join('\n')})
+  (write-line (ast:gallery-format (ast:gallery-record ast:gallery-fixture)) ast:gallery-file))
+(write-line "DONE 88" ast:gallery-file)
+(close ast:gallery-file)
+(princ)
+`;
+  fs.writeFileSync(path.join(output,'gallery-native.lsp'),script);
+  const freeEntries=fixtures.filter(f=>f.spec.kind==='curved-junction').map(f=>
+    `(list ${JSON.stringify(f.id)} ${f.pitch} '${lisp(f.route)} '${lisp({pitch:f.pitch})} nil)`);
+  const freeScript=script.slice(0,script.indexOf('(setq ast:gallery-file'))+`
+(defun ast:gallery-free-corner (fixture / route settings primitives incoming outgoing corner before after start finish step-in step-out)
+  (setq route (nth 2 fixture) settings (nth 3 fixture) primitives (ast:g-get 'primitives route nil)
+    incoming (car primitives) outgoing (cadr primitives) corner (ast:g-corner incoming outgoing settings))
+  (if (not (ast:g-get 'ok corner nil)) (ast:gallery-record fixture)
+    (progn
+      (setq before (ast:g-get 'incoming-station corner nil) after (ast:g-get 'outgoing-station corner nil)
+        step-in (ast:g-step incoming (cadr fixture)) step-out (ast:g-step outgoing (cadr fixture))
+        start (- before (* step-in (ast:g-floor-near (/ before step-in))))
+        finish (+ after (* step-out (ast:g-floor-near (/ (- (ast:g-length outgoing) after) step-out))))
+        settings (append settings (list (cons 'start start) (cons 'end (+ (ast:g-length incoming) finish)))))
+      (ast:gallery-record (list (car fixture) (cadr fixture) route settings nil)))))
+(setq ast:gallery-file (open ${JSON.stringify(cadPath(path.join(output,'gallery-free-corners.txt')))} "w"))
+(foreach ast:gallery-fixture (list\n${freeEntries.join('\n')})
+  (write-line (ast:gallery-format (ast:gallery-free-corner ast:gallery-fixture)) ast:gallery-file))
+(write-line "DONE 8" ast:gallery-file)
+(close ast:gallery-file)
+(princ)
+`;
+  fs.writeFileSync(path.join(output,'gallery-free-corners.lsp'),freeScript);
+  fs.writeFileSync(path.join(output,'gallery-fixtures.json'),JSON.stringify(fixtures,null,2));
+  console.log('Generated 88 original-gallery native cases: output/native/gallery-native.lsp');
+  console.log('Also generated gallery-free-corners.lsp for the 8 changed curved-corner constructions with free outer margins.');
+  console.log('Load both in disposable BricsCAD drawing, then node tests/build-gallery-parity.mjs --report');
+} else {
+  report();
+}
+
+function parse(text) {
+  const tokens=text.match(/"(?:\\.|[^"\\])*"|[()]|[^\s()]+/g)||[];let i=0;
+  function read(){const t=tokens[i++];if(t==='('){const a=[];while(tokens[i]!==')'){if(i>=tokens.length)throw new Error('Unclosed native record');a.push(read());}i++;return a;}
+    if(t[0]==='"')return JSON.parse(t);if(t==='nil'||t==='NIL')return null;if(t==='T')return true;
+    return Number.isFinite(Number(t))?Number(t):t.toLowerCase();}
+  const result=read();if(i!==tokens.length)throw new Error('Extra native tokens');return result;
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function comparisonSvg(result,other){
+  // Identical bounds force identical scale and position on both sides of each comparison.
+  const points=[result,other].flatMap(r=>[
+    ...r.guides.flat(),...r.slits.flatMap(s=>[s.a,s.b]),
+    ...r.holes.flatMap(h=>[h.center.map(x=>x-h.diameter/2),h.center.map(x=>x+h.diameter/2)]),
+    ...r.markers.map(m=>m.point)]);
+  const minimum=[0,1].map(i=>Math.min(...points.map(p=>p[i]))),maximum=[0,1].map(i=>Math.max(...points.map(p=>p[i])));
+  const prefix=`${result.id}-${result.pitch}-${result.title.includes('native BricsCAD')?'native':'original'}`;
+  return renderSvg({...result,guides:[...result.guides,[minimum],[maximum]],virtualSlits:[]},
+    {width:600,height:330,showThreads:true,showVirtuals:false})
+    .replaceAll('figure-title',prefix+'-title').replaceAll('figure-desc',prefix+'-desc');
+}
+function report(){
+  const lines=fs.readFileSync(path.join(output,'gallery-native.txt'),'utf8').trim().split(/\r?\n/);
+  if(lines.pop()!=='DONE 88'||lines.length!==88)throw new Error('Native report incomplete; expected all 88 records and DONE 88.');
+  const records=lines.map(parse), reports=[];
+  const freeLines=fs.readFileSync(path.join(output,'gallery-free-corners.txt'),'utf8').trim().split(/\r?\n/);
+  if(freeLines.pop()!=='DONE 8'||freeLines.length!==8)throw new Error('Native free-corner report incomplete.');
+  const freeRecords=freeLines.map(parse);
+  for(const f of fixtures){
+    const matches=records.filter(r=>r[0]===f.id&&Math.abs(r[1]-f.pitch)<1e-8);
+    if(matches.length!==1)throw new Error(`Missing or duplicate ${f.id}/${f.pitch}`);
+    const freeMatches=f.spec.kind==='curved-junction'?freeRecords.filter(r=>r[0]===f.id&&Math.abs(r[1]-f.pitch)<1e-8):[];
+    if(f.spec.kind==='curved-junction'&&freeMatches.length!==1)throw new Error(`Missing or duplicate free corner ${f.id}/${f.pitch}`);
+    const [,,ok,status,error,rawOpenings,rawIntervals]=freeMatches[0]||matches[0];
+    const openings=(rawOpenings||[]).map(([type,center,axis,length,diameter])=>({type,center,axis,length,diameter}));
+    const intervals=(rawIntervals||[]).map(([kind,distance,reserved])=>({kind,distance,reserved}));
+    const checks=[]; const check=(name,passed)=>checks.push({name,passed:!!passed});
+    check('No native evaluation exception',status!=='exception');
+    check('Same feasible / invalid outcome as the original fixture',!!ok===(f.original.status!=='invalid'));
+    if(!ok)check('Rejected generation emits no partial openings',openings.length===0);
+    if(ok){
+      check('Interval and opening counts describe one complete route',intervals.length===openings.length-(f.route.closed?0:1));
+      check('Every opening is unique',openings.every((o,i)=>openings.slice(0,i).every(other=>!near(o.center,other.center))));
+      check('All finite slit axes and round disks are disjoint (uncalibrated zero-thickness profile)',openings.every((o,i)=>openings.slice(0,i).every(other=>openingClearance(o,other)>1e-8)));
+      check('Round holes retain 0.5 mm diameter',openings.filter(o=>o.type==='round').every(o=>Math.abs(o.diameter-.5)<1e-7));
+      check('Slits retain 1.5 mm length and unit axis',openings.filter(o=>o.type==='slit').every(o=>Math.abs(o.length-1.5)<1e-7&&Math.abs(Math.hypot(...o.axis)-1)<1e-5));
+      check('Slit centres lie on finite original guides and axes lean 40 degrees',openings.filter(o=>o.type==='slit').every(o=>f.route.primitives.some(g=>{
+        const s=station(g,o.center);if(s < -1e-5||s>length(g)+1e-5||distance(pointAt(g,s),o.center)>1e-5)return false;
+        const angle=g.kind==='line'?Math.atan2(g.b[1]-g.a[1],g.b[0]-g.a[0]):g['start-angle']+Math.sign(g.sweep)*s/g.radius+Math.sign(g.sweep)*Math.PI/2;
+        return Math.abs(Math.abs(o.axis[0]*Math.cos(angle+rad(40))+o.axis[1]*Math.sin(angle+rad(40)))-1)<1e-5;
+      })));
+      check('Measured direct intervals agree with native distances',intervals.every((v,i)=>Math.abs(distance(openings[i].center,openings[(i+1)%openings.length].center)-v.distance)<1e-4));
+      check('Junction distances have a round endpoint; slit-to-slit distances are ordinary or corrected',intervals.every((v,i)=>{
+        const hasRound=openings[i].type==='round'||openings[(i+1)%openings.length].type==='round';
+        return hasRound?v.kind==='junction':['ordinary','corrected'].includes(v.kind);
+      }));
+      check('Ordinary intervals remain inside the ten-percent limit',intervals.filter(v=>v.kind!=='junction').every(v=>Math.abs(v.distance-f.pitch)<=.1*f.pitch+1e-6));
+      check('Nominal and protected ordinary intervals retain nominal pitch',intervals.filter(v=>v.kind==='ordinary'||v.reserved).every(v=>Math.abs(v.distance-f.pitch)<1e-6));
+      check('All original fixed landmark/protection pairs remain at their exact stations',f.landmarks.every(m=>{
+        const g=f.route.primitives[m.primitive],step=g.kind==='line'?f.pitch:2*g.radius*Math.asin(f.pitch/(2*g.radius));
+        return [-.5,.5].every(sign=>openings.some(o=>o.type==='slit'&&distance(o.center,pointAt(g,m.station+sign*step))<1e-5));
+      }));
+      check('Correction count matches the original minimum under these anchors',intervals.filter(v=>v.kind==='corrected').length===f.original.intervals.filter(v=>v.adjusted).length);
+      check('All original prescribed round-hole centres are retained',f.original.holes.length===openings.filter(o=>o.type==='round').length&&f.original.holes.every(h=>openings.some(o=>o.type==='round'&&distance(o.center,reflect(h.center))<1e-5)));
+      if(!f.route.closed&&f.spec.kind!=='curved-junction')check('Original first and last centres remain fixed',f.original.slits.length>0&&near(openings[0].center,reflect(f.original.slits[0].center))&&distance(openings.at(-1).center,reflect(f.original.slits.at(-1).center))<1e-5);
+      if(f.spec.kind==='curved-junction'){
+        check('Free-margin current construction retains only nominal ordinary spacing',intervals.filter(v=>v.kind!=='junction').every(v=>Math.abs(v.distance-f.pitch)<1e-6));
+        const holeIndex=openings.findIndex(o=>o.type==='round'),hole=openings[holeIndex];
+        check('Exactly one round hole has both real neighbouring slits',openings.filter(o=>o.type==='round').length===1&&holeIndex>0&&holeIndex<openings.length-1);
+        if(hole&&holeIndex>0&&holeIndex<openings.length-1){
+          const virtualTips=[-1,1].map((side,i)=>{
+            const g=f.route.primitives[i],real=openings[holeIndex+side],step=g.kind==='line'?f.pitch:2*g.radius*Math.asin(f.pitch/(2*g.radius));
+            const s=station(g,real.center)-side*step,center=pointAt(g,s);
+            const tangent=g.kind==='line'?Math.atan2(g.b[1]-g.a[1],g.b[0]-g.a[0]):g['start-angle']+Math.sign(g.sweep)*s/g.radius+Math.sign(g.sweep)*Math.PI/2;
+            return center.map((x,k)=>x+side*.75*(k?Math.sin(tangent+rad(40)):Math.cos(tangent+rad(40))));
+          });
+          check('Independent reconstructed virtual tips meet at the emitted round hole',virtualTips.every(tip=>distance(tip,hole.center)<1e-5));
+        }
+      }
+    }
+    const native={id:f.id,pitch:f.pitch,title:`${f.id} — native BricsCAD solver`,question:f.spec.question,status:ok?status:'invalid',reason:error||status,
+      guides:f.original.guides,markers:[],helpers:[],slits:[],holes:[],virtualSlits:[],threads:[],intervals:[]};
+    for(const o of openings){const center=reflect(o.center);if(o.type==='round')native.holes.push({center,diameter:o.diameter});else {
+      const axis=reflect(o.axis);native.slits.push({center,a:center.map((x,i)=>x-axis[i]*o.length/2),b:center.map((x,i)=>x+axis[i]*o.length/2)});
+    }}
+    for(let i=0;i<intervals.length;i++){
+      const v=intervals[i],first=openings[i],second=openings[(i+1)%openings.length];
+      const a=reflect(first.center),b=reflect(second.center);
+      native.intervals.push({a,b,length:v.distance,adjusted:v.kind==='corrected',junction:v.kind==='junction',protected:v.reserved});
+      native.threads.push({
+        a:reflect(first.type==='round'?first.center:first.center.map((x,j)=>x+first.axis[j]*first.length/2)),
+        b:reflect(second.type==='round'?second.center:second.center.map((x,j)=>x-second.axis[j]*second.length/2))
+      });
+    }
+    const ruleComparisons=new Set(['All original prescribed round-hole centres are retained']);
+    for(const c of checks)c.expectedRuleDifference=!c.passed&&f.fidelity==='changed corner rule'&&ruleComparisons.has(c.name);
+    const failures=checks.filter(c=>!c.passed),passed=failures.length===0;
+    const unexpectedFailures=failures.filter(c=>!c.expectedRuleDifference);
+    reports.push({id:f.id,pitch:f.pitch,title:f.spec.title,fidelity:f.fidelity,translation:f.translation,originalStatus:f.original.status,nativeStatus:ok?status:'invalid',error,checks,passed,
+      category:passed?'pass':unexpectedFailures.length?'defect':'rule difference',original:f.original,native,
+      fixedOldPhase:f.spec.kind==='curved-junction'?{status:matches[0][2]?matches[0][3]:'invalid',error:matches[0][4]}:null});
+  }
+  const passed=reports.filter(r=>r.passed).length;
+  const summary={fixtures:reports.length,nativeSolverRuns:records.length+freeRecords.length,passed,failed:reports.length-passed,
+    ruleDifferences:reports.filter(r=>r.category==='rule difference').length,unexpectedFailures:reports.filter(r=>r.category==='defect').length,
+    checks:reports.reduce((n,r)=>n+r.checks.length,0),failedChecks:reports.flatMap(r=>r.checks.filter(c=>!c.passed)).length};
+  fs.writeFileSync(path.join(output,'gallery-parity.json'),JSON.stringify({summary,cases:reports},null,2));
+  const cssClass=r=>r.category==='pass'?'pass':r.category==='rule difference'?'change':'fail';
+  const anchor=r=>`${r.id}-${String(r.pitch).replace('.','-')}`;
+  const matrix=`<div style="overflow-x:auto"><table><thead><tr><th>Original case</th>${PITCHES.map(p=>`<th>${p} mm</th>`).join('')}</tr></thead><tbody>${CASES.map(s=>`<tr><th>${esc(s.id)} · ${esc(s.title)}</th>${PITCHES.map(p=>{const r=reports.find(r=>r.id===s.id&&r.pitch===p);return `<td><a class="${cssClass(r)}" href="#${anchor(r)}">${r.category==='pass'?'Pass':r.category==='rule difference'?'Rule change':'Defect'}</a></td>`;}).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const sections=reports.map(r=>`<details id="${anchor(r)}" ${!r.passed?'open':''}><summary class="${cssClass(r)}">${esc(r.id)} · ${r.pitch} mm · ${esc(r.title)} — ${r.category.toUpperCase()}</summary><p>${esc(r.translation)}</p><p>Original: ${esc(r.originalStatus)}. Native: ${esc(r.nativeStatus)}${r.error?'. '+esc(r.error):''}.</p>${r.fixedOldPhase?`<p>Auxiliary check with the old outer phase held fixed: ${esc(r.fixedOldPhase.status)}. ${esc(r.fixedOldPhase.error||"The fixed phase remains feasible.")} This stricter check is not the free-margin source case.</p>`:""}<div class="pair"><figure><figcaption>Original HTML construction</figcaption>${comparisonSvg(r.original,r.native)}</figure><figure><figcaption>Actual native solver output</figcaption>${comparisonSvg(r.native,r.original)}</figure></div><ul>${r.checks.map(c=>`<li class="${c.passed?'pass':c.expectedRuleDifference?'change':'fail'}">${c.passed?'PASS':c.expectedRuleDifference?'RULE DIFFERENCE':'FAIL'} — ${esc(c.name)}</li>`).join('')}</ul></details>`).join('\n');
+  const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Original gallery vs native BricsCAD — 88 cases</title><style>body{max-width:1320px;margin:32px auto;padding:0 24px;font:16px/1.5 system-ui;color:#182024;background:#fafafa}h1{font-size:28px}details{border-top:1px solid #c9cdcf;padding:15px 0}summary{font-weight:650;cursor:pointer}table{border-collapse:collapse;width:100%;margin:24px 0}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #ddd}.change{color:#946000}.pass{color:#176d44}.fail{color:#a42624}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}figure{margin:0;background:white;border:1px solid #ddd}figcaption{padding:8px 14px;font-weight:600}svg{width:100%;height:auto}.guide{fill:none;stroke:#aab1b6;stroke-width:1.2}.slit{stroke:#172d37;stroke-width:2}.hole{fill:white;stroke:#172d37;stroke-width:1.5}.adjustment{stroke:#d78528;stroke-width:5;opacity:.5}.protected{stroke:#2d98b8;stroke-width:4;opacity:.4}.thread{stroke:#999}.helper{stroke:#bbb}.label{font:12px system-ui;fill:#4a5055}.marker{fill:#3695a6}.virtual{stroke:#999;stroke-dasharray:3 3}@media(max-width:800px){.pair{grid-template-columns:1fr}}</style><h1>Original gallery vs native BricsCAD</h1><p><strong>${passed} / 88 fixtures satisfy the checked original geometric constraints.</strong> ${summary.ruleDifferences} documented curved-corner rule changes; ${summary.unexpectedFailures} unexpected defects. Every one of the original 22 cases is run at all four original pitches.</p><p>These are actual AutoLISP solver results exported by BricsCAD. The independent JavaScript checks measure the emitted geometry. The original latest-eligible correction placement is deliberately replaced by central placement; minimum counts and protected constraints are still checked. Fixed-prefix and free-margin cases use explicitly stated, geometrically equivalent constraints. On rejected input, the original gallery retains a diagnostic prefix; the native solver returns no partial generation. That intentional failure-policy difference is not scored as geometric parity. Physical material behaviour and UI editing are outside this report.</p>${matrix}${sections}</html>`;
+  fs.writeFileSync(path.join(output,'gallery-parity.html'),html);
+  console.log(JSON.stringify(summary));
+  for(const r of reports.filter(r=>!r.passed))console.log(`${r.id} @ ${r.pitch}: ${r.error||r.checks.filter(c=>!c.passed).map(c=>c.name).join('; ')}`);
+  process.exitCode=summary.unexpectedFailures?1:0;
+}

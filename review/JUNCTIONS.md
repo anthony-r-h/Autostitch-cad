@@ -15,7 +15,7 @@ Nigel Armitage's own [beginner tuition catalog](https://secretsfromtheworkshop.c
 - A shared hole means one emitted opening identity, used by every participating path. Never punch overlapping differently oriented slits to represent that identity.
 - The user selects paths to **stitch together with shared holes at their intersections**. This operation explicitly declares a common workpiece and permits detecting intersections inside that selection. Selecting several drawing objects, proximity, or drawing-wide coincidence alone does not establish it.
 - No CAD Join operation or single traversal is required. Preserve each source path's identity and station order. A physical opening graph does not prescribe a sewing itinerary.
-- **Leave a gap here** remains a separate, concrete constraint: two ordinary centres symmetric in station about the pick, exactly one nominal chord/line pitch apart, no opening at the pick. It does not secretly connect another path. If the user applies that requirement to several crossing paths, derive their reservations separately and validate all cuts together.
+- **Select landmark** selects an existing pattern reference. It requires two ordinary centres symmetric in station about the pick, exactly one nominal chord/line pitch apart, with no opening at the pick. It does not connect another stitch line. If the requirement applies to several connected paths, derive their reservations separately and validate all openings together.
 - Different faces/layers remain separate declarations. Within one declaration validate clearance across all emitted paths, not merely inside each path.
 
 ## Analytic construction

@@ -4034,6 +4034,761 @@
         }
       ],
       "kind": "rectangle"
+    },
+    {
+      "id": "J07",
+      "title": "Reported shallow corner",
+      "description": "Can two separate guides meeting at a shallow turn use the bounded corner-step allowance?",
+      "group": "Junctions",
+      "svg": true,
+      "notes": "Exact reported guide coordinates. At 3 mm pitch the outgoing corner step is 3.097120227 mm; 2.7 mm cannot reach the guide within its allowance. The same route is tested as connected guides in NET.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -38,
+                  258
+                ],
+                "b": [
+                  107.80342046542515,
+                  215.0423163964531
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  107.80342046542515,
+                  215.0423163964531
+                ],
+                "b": [
+                  285.06457440910435,
+                  231.24365283994626
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "changedGaps": 0,
+            "roundHoles": 0,
+            "cornerAdjustments": 0
+          },
+          "notes": "Fixed endpoints; independently derived straight-corner stations and fit counts. Corner steps are separate from adjusted slit-to-slit gaps."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -38,
+                  258
+                ],
+                "b": [
+                  107.80342046542515,
+                  215.0423163964531
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  107.80342046542515,
+                  215.0423163964531
+                ],
+                "b": [
+                  285.06457440910435,
+                  231.24365283994626
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 5,
+            "roundHoles": 1,
+            "cornerAdjustments": 1
+          },
+          "notes": "Fixed endpoints; independently derived straight-corner stations and fit counts. Corner steps are separate from adjusted slit-to-slit gaps."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -38,
+                  258
+                ],
+                "b": [
+                  107.80342046542515,
+                  215.0423163964531
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  107.80342046542515,
+                  215.0423163964531
+                ],
+                "b": [
+                  285.06457440910435,
+                  231.24365283994626
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 9,
+            "roundHoles": 1,
+            "cornerAdjustments": 0
+          },
+          "notes": "Fixed endpoints; independently derived straight-corner stations and fit counts. Corner steps are separate from adjusted slit-to-slit gaps."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -38,
+                  258
+                ],
+                "b": [
+                  107.80342046542515,
+                  215.0423163964531
+                ]
+              },
+              {
+                "kind": "line",
+                "a": [
+                  107.80342046542515,
+                  215.0423163964531
+                ],
+                "b": [
+                  285.06457440910435,
+                  231.24365283994626
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 2,
+            "roundHoles": 1,
+            "cornerAdjustments": 0
+          },
+          "notes": "Fixed endpoints; independently derived straight-corner stations and fit counts. Corner steps are separate from adjusted slit-to-slit gaps."
+        }
+      ]
+    },
+    {
+      "id": "J08",
+      "title": "Shallow line�arc corner",
+      "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
+      "group": "Junctions",
+      "svg": true,
+      "kind": "shallow-corner",
+      "notes": "21.5 degree turn; 30 mm arms; independent line/circle tip-locus intersection. At 2.7 mm pitch the finite-arm requirement exceeds the allowance; at 3 mm it needs adjustment.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -36.650122672429724,
+                  93.04175679820246
+                ],
+                "radius": 100,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.3
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "changedGaps": 0,
+            "roundHoles": 0,
+            "cornerAdjustments": 0
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -36.650122672429724,
+                  93.04175679820246
+                ],
+                "radius": 100,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.3
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 5,
+            "roundHoles": 1,
+            "cornerAdjustments": 1,
+            "hole": [
+              -2.6290364710588867,
+              -0.48209070726490444
+            ],
+            "cornerSteps": [
+              3,
+              3.212927180382096
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -36.650122672429724,
+                  93.04175679820246
+                ],
+                "radius": 100,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.3
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 5,
+            "roundHoles": 1,
+            "cornerAdjustments": 0,
+            "hole": [
+              -2.6290364710588867,
+              -0.48209070726490444
+            ],
+            "cornerSteps": [
+              3.38,
+              3.38
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "line",
+                "a": [
+                  -30,
+                  0
+                ],
+                "b": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -36.650122672429724,
+                  93.04175679820246
+                ],
+                "radius": 100,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.3
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 7,
+            "roundHoles": 1,
+            "cornerAdjustments": 0,
+            "hole": [
+              -2.6290364710588867,
+              -0.48209070726490444
+            ],
+            "cornerSteps": [
+              3.85,
+              3.85
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        }
+      ]
+    },
+    {
+      "id": "J09",
+      "title": "Shallow arc�line corner",
+      "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
+      "group": "Junctions",
+      "svg": true,
+      "kind": "shallow-corner",
+      "notes": "21.5 degree turn; 30 mm arms; independent line/circle tip-locus intersection. At 2.7 mm pitch the finite-arm requirement exceeds the allowance; at 3 mm it needs adjustment.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  27.912527039460738,
+                  10.995036801728917
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "changedGaps": 0,
+            "roundHoles": 0,
+            "cornerAdjustments": 0
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  27.912527039460738,
+                  10.995036801728917
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 4,
+            "roundHoles": 1,
+            "cornerAdjustments": 1,
+            "hole": [
+              -2.466550782328343,
+              -0.45345573294716557
+            ],
+            "cornerSteps": [
+              3.0000000000000004,
+              3.035647594927632
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  27.912527039460738,
+                  10.995036801728917
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 7,
+            "roundHoles": 1,
+            "cornerAdjustments": 0,
+            "hole": [
+              -2.466550782328343,
+              -0.45345573294716557
+            ],
+            "cornerSteps": [
+              3.38,
+              3.38
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "line",
+                "a": [
+                  0,
+                  0
+                ],
+                "b": [
+                  27.912527039460738,
+                  10.995036801728917
+                ]
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 9,
+            "roundHoles": 1,
+            "cornerAdjustments": 0,
+            "hole": [
+              -2.466550782328343,
+              -0.45345573294716557
+            ],
+            "cornerSteps": [
+              3.85,
+              3.85
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        }
+      ]
+    },
+    {
+      "id": "J10",
+      "title": "Shallow arc�arc corner",
+      "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
+      "group": "Junctions",
+      "svg": true,
+      "kind": "shallow-corner",
+      "notes": "21.5 degree turn; 30 mm arms; independent line/circle tip-locus intersection. At 2.7 mm pitch the finite-arm requirement exceeds the allowance; at 3 mm it needs adjustment.",
+      "variants": [
+        {
+          "pitch": 2.7,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -29.32009813794378,
+                  74.43340543856196
+                ],
+                "radius": 80,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.375
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 2.7
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": false,
+            "changedGaps": 0,
+            "roundHoles": 0,
+            "cornerAdjustments": 0
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -29.32009813794378,
+                  74.43340543856196
+                ],
+                "radius": 80,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.375
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 5,
+            "roundHoles": 1,
+            "cornerAdjustments": 1,
+            "hole": [
+              -2.5663951189312115,
+              -0.4509544879813632
+            ],
+            "cornerSteps": [
+              3.0000000000000004,
+              3.1467510666803493
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3.38,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -29.32009813794378,
+                  74.43340543856196
+                ],
+                "radius": 80,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.375
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.38
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 5,
+            "roundHoles": 1,
+            "cornerAdjustments": 0,
+            "hole": [
+              -2.5663951189312115,
+              -0.4509544879813632
+            ],
+            "cornerSteps": [
+              3.38,
+              3.38
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        },
+        {
+          "pitch": 3.85,
+          "route": {
+            "primitives": [
+              {
+                "kind": "arc",
+                "center": [
+                  0,
+                  100
+                ],
+                "radius": 100,
+                "start-angle": -1.8707963267948966,
+                "sweep": 0.3
+              },
+              {
+                "kind": "arc",
+                "center": [
+                  -29.32009813794378,
+                  74.43340543856196
+                ],
+                "radius": 80,
+                "start-angle": -1.1955505376161157,
+                "sweep": 0.375
+              }
+            ],
+            "closed": false
+          },
+          "settings": {
+            "pitch": 3.85
+          },
+          "landmarks": [],
+          "expected": {
+            "feasible": true,
+            "changedGaps": 7,
+            "roundHoles": 1,
+            "cornerAdjustments": 0,
+            "hole": [
+              -2.5663951189312115,
+              -0.4509544879813632
+            ],
+            "cornerSteps": [
+              3.85,
+              3.85
+            ]
+          },
+          "notes": "Fixed endpoints. Expected hole and corner chords come from independent analytic tip loci; adjusted-gap counts use the independent fit selector."
+        }
+      ]
     }
   ],
   "oracle": {
@@ -4613,6 +5368,103 @@
           "id": "GEO-071",
           "expected": "Adjusted corner at finite arm ends keeps three openings without duplicate zero-span slits",
           "sourceSymbol": "ast:g-test-corner-adjustments"
+        },
+        {
+          "id": "GEO-072",
+          "expected": "independently bounded feasibility (each parameter combination)",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " independently bounded feasibility"
+            }
+          ]
+        },
+        {
+          "id": "GEO-073",
+          "expected": "real neighbours stay on finite arms (each parameter combination)",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " real neighbours stay on finite arms"
+            }
+          ]
+        },
+        {
+          "id": "GEO-074",
+          "expected": "independent direct construction chords stay within allowance (each parameter combination)",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " independent direct construction chords stay within allowance"
+            }
+          ]
+        },
+        {
+          "id": "GEO-075",
+          "expected": "adjusted neighbours reconstruct the fixed selected-tip hole (each parameter combination)",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " adjusted neighbours reconstruct the fixed selected-tip hole"
+            }
+          ]
+        },
+        {
+          "id": "GEO-076",
+          "expected": "nominal-first policy marks only the arm that needs adjustment (each parameter combination)",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " nominal-first policy marks only the arm that needs adjustment"
+            }
+          ]
+        },
+        {
+          "id": "GEO-077",
+          "expected": "complete finite route fits with the expected corner adjustment (each parameter combination)",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " complete finite route fits with the expected corner adjustment"
+            }
+          ]
+        },
+        {
+          "id": "GEO-078",
+          "expected": "Shallow line-to-arc corner rejects an incoming arm shorter than the minimum construction step",
+          "sourceSymbol": "ast:g-test-shallow-curves"
+        },
+        {
+          "id": "GEO-079",
+          "expected": "Shallow arc-to-line corner rejects an outgoing arm shorter than the minimum construction step",
+          "sourceSymbol": "ast:g-test-shallow-curves"
+        },
+        {
+          "id": "GEO-080",
+          "expected": "Shallow curved corner still refuses a clearance margin larger than any allowed construction can provide",
+          "sourceSymbol": "ast:g-test-shallow-curves"
+        },
+        {
+          "id": "GEO-081",
+          "expected": "Curved construction just above the ten-percent contraction boundary remains feasible",
+          "sourceSymbol": "ast:g-test-shallow-curves"
+        },
+        {
+          "id": "GEO-082",
+          "expected": "Curved construction beyond the ten-percent contraction boundary is rejected",
+          "sourceSymbol": "ast:g-test-shallow-curves"
         }
       ],
       "matrices": [
@@ -4677,6 +5529,42 @@
           ],
           "notes": "Radius zero means a line; omit line-line pairs, use winding +1 for a line. Lines are 10 mm long; arc extent is 60 degrees. Test width and margin are each 0.2 mm.",
           "expected": "Selected virtual tips coincide, neighbouring slit chords are nominal, neighbours lie on finite arms, and reversal preserves physical openings."
+        },
+        {
+          "id": "GEO-SHALLOW-CURVES",
+          "sourceSymbol": "ast:g-test-shallow-curves",
+          "pitch": 3,
+          "turnDegrees": [
+            -21.5,
+            21.5
+          ],
+          "radiusPairs": [
+            [
+              0,
+              100
+            ],
+            [
+              100,
+              0
+            ],
+            [
+              100,
+              80
+            ]
+          ],
+          "curveWindings": [
+            -1,
+            1
+          ],
+          "armLengths": [
+            30,
+            30
+          ],
+          "slitLength": 1.5,
+          "leanDegrees": 40,
+          "slitWidth": 0.2,
+          "margin": 0.2,
+          "expected": "Sixteen combinations: fourteen valid (twelve adjusted, two nominal); two opposite-curvature cases exceed the 3.3 mm corner-step limit. Independently reconstruct selected tips and direct chords. Also reject each too-short arm and a 3 mm clearance margin."
         }
       ]
     },
@@ -4901,6 +5789,111 @@
           "id": "NET-042",
           "expected": "Reversing guide selection order preserves the shallow corner and its adjusted slit",
           "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-043",
+          "expected": "matches one route and its independently calculated corner step (each parameter combination)",
+          "sourceSymbol": "ast:n-test-shallow-junctions",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " matches one route and its independently calculated corner step"
+            }
+          ]
+        },
+        {
+          "id": "NET-044",
+          "expected": "keeps the same openings when guide selection is reversed (each parameter combination)",
+          "sourceSymbol": "ast:n-test-shallow-junctions",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " keeps the same openings when guide selection is reversed"
+            }
+          ]
+        },
+        {
+          "id": "NET-045",
+          "expected": "Shallow opposite-curvature connected arcs reject the independently required corner step above 3.3 mm",
+          "sourceSymbol": "ast:n-test-shallow-junctions"
+        },
+        {
+          "id": "NET-046",
+          "expected": " (each parameter combination)",
+          "sourceSymbol": "ast:n-test-shallow-junctions",
+          "labelExpression": [
+            "strcat",
+            "label",
+            [
+              "if",
+              "expected",
+              {
+                "text": " retains every nominal first chord and one shared hole"
+              },
+              {
+                "text": " rejects the independently demonstrated slit-clearance violation"
+              }
+            ]
+          ]
+        },
+        {
+          "id": "NET-047",
+          "expected": "is unchanged by reversed guide selection (each parameter combination)",
+          "sourceSymbol": "ast:n-test-shallow-junctions",
+          "labelExpression": [
+            "strcat",
+            "label",
+            {
+              "text": " is unchanged by reversed guide selection"
+            }
+          ]
+        }
+      ],
+      "matrices": [
+        {
+          "id": "NET-SHALLOW-CORNERS",
+          "sourceSymbol": "ast:n-test-shallow-junctions",
+          "pitch": 3,
+          "turnDegrees": [
+            21.5
+          ],
+          "radiusPairs": [
+            [
+              0,
+              100
+            ],
+            [
+              100,
+              0
+            ],
+            [
+              100,
+              80
+            ]
+          ],
+          "expected": "Connected mixed corners match the full single route and independent corner steps, in either selection order. Opposite-curvature arcs needing 3.349753725 mm reject the allowance."
+        },
+        {
+          "id": "NET-SHALLOW-BRANCHES",
+          "sourceSymbol": "ast:n-test-shallow-junctions",
+          "pitch": 3,
+          "slitLength": 1.5,
+          "leanDegrees": 40,
+          "slitWidth": 0.2,
+          "margin": 0.2,
+          "straightAngles": [
+            5,
+            15
+          ],
+          "curvedAngle": 14,
+          "curveRadius": 30,
+          "curveWindings": [
+            -1,
+            1
+          ],
+          "expected": "Straight T/X: 15 degrees passes, 5 degrees rejects clearance. Curved T at 14 degrees: positive winding passes, negative winding rejects clearance. All passing arms retain a 3 mm first chord and share exactly one hole; reversing selection preserves the result."
         }
       ]
     },

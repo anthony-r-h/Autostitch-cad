@@ -2,6 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Shallow junction boundaries: 2026-11-07
+
+- Geometry: 1,135 checks passed, including 91 new shallow-curve and boundary checks.
+- Connected geometry: 62 checks passed, including 16 new mixed-corner and T/X checks.
+- Visual gallery: 104 fixtures, 112 native solver runs and 1,702 checks passed. J07–J10 include independently calculated expectations.
+- Catalog: 432 stable IDs validated. Production code is unchanged; CAD lifecycle and palette suites were not rerun for this test-only change.
+
 ## Guide connections and corner allowance: 2026-11-07
 
 - All 15 native suites passed 1,348 checks, including 19 deferred-connection checks and the reported shallow corner at a $3\,\mathrm{mm}$ pitch.

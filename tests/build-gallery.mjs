@@ -74,10 +74,10 @@ if(!process.argv.includes('--report')) {
   (cond ((null value) "nil") ((= (type value) 'REAL) (rtos value 2 12))
     ((listp value) (setq text "(") (foreach item value (setq text (strcat text (if (= text "(") "" " ") (ast:gallery-format item)))) (strcat text ")"))
     (T (vl-prin1-to-string value))))
-(defun ast:gallery-record (fixture / result openings intervals opening interval)
+(defun ast:gallery-record (fixture / result openings intervals opening interval virtuals adjustments adjustment)
   (setq result (vl-catch-all-apply 'ast:g-solve (list (nth 2 fixture) (nth 3 fixture) (nth 4 fixture))))
   (if (vl-catch-all-error-p result)
-    (list (car fixture) (cadr fixture) nil "exception" (vl-catch-all-error-message result) nil nil)
+    (list (car fixture) (cadr fixture) nil "exception" (vl-catch-all-error-message result) nil nil nil nil)
     (progn
       (foreach opening (ast:g-get 'openings result nil)
         (setq openings (cons (list (ast:g-get 'type opening nil) (ast:g-get 'center opening nil)
@@ -85,8 +85,14 @@ if(!process.argv.includes('--report')) {
       (foreach interval (ast:g-get 'intervals result nil)
         (setq intervals (cons (list (ast:g-get 'kind interval nil) (ast:g-get 'distance interval nil)
           (ast:g-get 'reserved interval nil)) intervals)))
+      (foreach opening (ast:g-get 'virtual-slits result nil)
+        (setq virtuals (cons (list (ast:g-get 'type opening nil) (ast:g-get 'center opening nil)
+          (ast:g-get 'axis opening nil) (ast:g-get 'length opening nil) nil) virtuals)))
+      (foreach adjustment (ast:g-get 'corner-adjustments result nil)
+        (setq adjustments (cons (list (ast:g-get 'center adjustment nil) (ast:g-get 'virtual-center adjustment nil)
+          (ast:g-get 'nominal adjustment nil) (ast:g-get 'distance adjustment nil)) adjustments)))
       (list (car fixture) (cadr fixture) (ast:g-get 'ok result nil) (ast:g-get 'status result nil)
-        (ast:g-get 'error result "") (reverse openings) (reverse intervals)))))
+        (ast:g-get 'error result "") (reverse openings) (reverse intervals) (reverse virtuals) (reverse adjustments)))))
 (setq ast:gallery-file (open ${JSON.stringify(cadPath(path.join(output,'gallery-native.txt')))} "w"))
 (foreach ast:gallery-fixture (list\n${entries.join('\n')})
   (write-line (ast:gallery-format (ast:gallery-record ast:gallery-fixture)) ast:gallery-file))
@@ -135,7 +141,8 @@ function parse(text) {
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function gallerySvg(result){
   const prefix=`${result.id}-${result.pitch}`;
-  return renderSvg(result,{width:800,height:380,showThreads:true,showVirtuals:false})
+  return renderSvg({...result,slits:[...result.slits,...result.spacingMarks]},
+    {width:800,height:380,showThreads:true,showVirtuals:true})
     .replaceAll('figure-title',prefix+'-title').replaceAll('figure-desc',prefix+'-desc');
 }
 function guides(route){
@@ -146,23 +153,43 @@ function liesOn(g,point){
   const s=station(g,point);
   return s>=-1e-5&&s<=length(g)+1e-5&&distance(pointAt(g,s),point)<1e-5;
 }
-function virtualTip(g,real,pitch,side){
-  const step=g.kind==='line'?pitch:2*g.radius*Math.asin(pitch/(2*g.radius));
-  const s=station(g,real.center)-side*step,center=pointAt(g,s);
+function axisAt(g,s,settings){
   const tangent=g.kind==='line'?Math.atan2(g.b[1]-g.a[1],g.b[0]-g.a[0]):
     g['start-angle']+Math.sign(g.sweep)*s/g.radius+Math.sign(g.sweep)*Math.PI/2;
-  return center.map((x,k)=>x+side*.75*(k?Math.sin(tangent+rad(40)):Math.cos(tangent+rad(40))));
+  const angle=tangent+(settings.lean??rad(40))*(settings.handedness??1);
+  return [Math.cos(angle),Math.sin(angle)];
 }
-function cornerTipsMeet(route,openings,index,pitch){
+function cornerArm(g,real,hole,virtuals,pitch,side,settings){
+  if(!liesOn(g,real.center))return null;
+  const realStation=station(g,real.center);
+  for(const virtual of virtuals){
+    // Signed local arc advance avoids wrapping an extended virtual station by a revolution.
+    const a=g.kind==='arc'?subtract(real.center,g.center):null;
+    const b=g.kind==='arc'?subtract(virtual.center,g.center):null;
+    const advance=g.kind==='line'?station(g,virtual.center)-realStation:
+      Math.sign(g.sweep)*g.radius*Math.atan2(cross(a,b),a[0]*b[0]+a[1]*b[1]);
+    const s=realStation+advance,axis=axisAt(g,s,settings),q=distance(real.center,virtual.center);
+    const step=g.kind==='line'?q:2*g.radius*Math.asin(q/(2*g.radius));
+    const tip=virtual.center.map((x,k)=>x+side*(settings['slit-length']??1.5)*axis[k]/2);
+    if(advance*side>=0||!Number.isFinite(step)||Math.abs(Math.abs(advance)-step)>1e-5)continue;
+    if(distance(pointAt(g,s),virtual.center)>1e-5||distance(axis,virtual.axis)>1e-5||
+      Math.abs(virtual.length-(settings['slit-length']??1.5))>1e-7||distance(tip,hole.center)>1e-5)continue;
+    if(Math.abs(q-pitch)>(settings.corrections===false?0:.1*pitch)+1e-6)continue;
+    return {real,virtual,q};
+  }
+  return null;
+}
+function cornerTipsMeet(route,openings,index,pitch,virtuals,settings){
   const before=openings[(index-1+openings.length)%openings.length],after=openings[(index+1)%openings.length];
-  if(before.type!=='slit'||after.type!=='slit')return false;
-  return route.primitives.some((incoming,i)=>{
+  if(before.type!=='slit'||after.type!=='slit')return null;
+  for(const [i,incoming] of route.primitives.entries()){
     const outgoing=route.primitives[(i+1)%route.primitives.length];
-    if(!route.closed&&i===route.primitives.length-1)return false;
-    return liesOn(incoming,before.center)&&liesOn(outgoing,after.center)&&
-      distance(virtualTip(incoming,before,pitch,-1),openings[index].center)<1e-5&&
-      distance(virtualTip(outgoing,after,pitch,1),openings[index].center)<1e-5;
-  });
+    if(!route.closed&&i===route.primitives.length-1)continue;
+    const first=cornerArm(incoming,before,openings[index],virtuals,pitch,-1,settings);
+    const second=cornerArm(outgoing,after,openings[index],virtuals,pitch,1,settings);
+    if(first&&second)return [first,second];
+  }
+  return null;
 }
 function routePoint(route,s){
   for(const g of route.primitives){if(s<=length(g)+1e-8)return pointAt(g,s);s-=length(g);}
@@ -180,12 +207,18 @@ function report(){
     if(matches.length!==1)throw new Error(`Missing or duplicate ${f.id}/${f.pitch}`);
     const freeMatches=f.spec.kind==='curved-junction'?freeRecords.filter(r=>r[0]===f.id&&Math.abs(r[1]-f.pitch)<1e-8):[];
     if(f.spec.kind==='curved-junction'&&freeMatches.length!==1)throw new Error(`Missing or duplicate free corner ${f.id}/${f.pitch}`);
-    const [,,ok,status,error,rawOpenings,rawIntervals]=freeMatches[0]||matches[0];
+    const record=freeMatches[0]||matches[0];
+    if(record.length!==9)throw new Error('Gallery export lacks corner construction data. Regenerate and load both native gallery scripts.');
+    const [,,ok,status,error,rawOpenings,rawIntervals,rawVirtuals,rawAdjustments]=record;
     const openings=(rawOpenings||[]).map(([type,center,axis,length,diameter])=>({type,center,axis,length,diameter}));
+    const virtuals=(rawVirtuals||[]).map(([type,center,axis,length])=>({type,center,axis,length}));
+    const adjustments=(rawAdjustments||[]).map(([center,virtualCenter,nominal,distance])=>({center,virtualCenter,nominal,distance}));
     const intervals=(rawIntervals||[]).map(([kind,distance,reserved])=>({kind,distance,reserved}));
     const checks=[]; const check=(name,passed)=>checks.push({name,passed:!!passed});
     check('No native evaluation exception',status!=='exception');
     check('Expected feasible or rejected outcome',!!ok===f.expected.feasible);
+    if(f.expected.cornerAdjustments!==undefined)
+      check('Expected number of adjusted corner steps',adjustments.length===f.expected.cornerAdjustments);
     if(freeMatches.length){
       check('Fixed endpoint range has its expected feasibility',!!matches[0][2]===f.expected.fixedRangeFeasible);
       check('Fixed endpoint range has no evaluation exception',matches[0][3]!=='exception');
@@ -216,7 +249,23 @@ function report(){
       }));
       check('Expected minimum number of changed gaps',intervals.filter(v=>v.kind==='corrected').length===f.expected.changedGaps);
       check('Expected number of round holes',openings.filter(o=>o.type==='round').length===f.expected.roundHoles);
-      check('Independent virtual tips meet at every corner hole',openings.every((o,i)=>o.type!=='round'||cornerTipsMeet(f.route,openings,i,f.pitch)));
+      const corners=openings.flatMap((o,i)=>o.type==='round'?[cornerTipsMeet(f.route,openings,i,f.pitch,virtuals,f.settings)]:[]);
+      check('Virtual slits follow guide axes; selected tips meet each hole within the corner spacing allowance',corners.every(Boolean));
+      check('Each corner exports exactly two virtual slits',virtuals.length===corners.length*2);
+      const changedArms=corners.filter(Boolean).flat().filter(arm=>Math.abs(arm.q-f.pitch)>1e-7);
+      check('Corner adjustment metadata matches independently measured real-to-virtual chords',
+        adjustments.length===changedArms.length&&changedArms.every(arm=>adjustments.filter(a=>
+          near(a.center,arm.real.center)&&near(a.virtualCenter,arm.virtual.center)&&
+          Math.abs(a.nominal-f.pitch)<1e-7&&Math.abs(a.distance-arm.q)<1e-7).length===1));
+      if(f.expected.hole){
+        const holes=openings.filter(o=>o.type==='round');
+        check('Corner hole matches the independent analytic position',holes.length===1&&distance(holes[0].center,f.expected.hole)<1e-6);
+      }
+      if(f.expected.cornerSteps){
+        const steps=corners.filter(Boolean).flat().map(arm=>arm.q);
+        check('Corner chords match the independent analytic steps',steps.length===f.expected.cornerSteps.length&&
+          steps.every((q,i)=>Math.abs(q-f.expected.cornerSteps[i])<1e-6));
+      }
       if(!f.route.closed&&f.spec.kind!=='curved-junction'){
         const total=f.route.primitives.reduce((sum,g)=>sum+length(g),0);
         check('Selected first and last centres remain fixed',near(openings[0].center,routePoint(f.route,f.settings.start??0))&&
@@ -228,10 +277,24 @@ function report(){
       }
     }
     const native={id:f.id,pitch:f.pitch,title:`${f.id} - native BricsCAD solver`,question:f.spec.question,status:ok?status:'invalid',reason:error||status,
-      guides:guides(f.route),markers:[],helpers:[],slits:[],holes:[],virtualSlits:[],threads:[],intervals:[]};
+      guides:guides(f.route),markers:[],helpers:[],slits:[],holes:[],virtualSlits:[],spacingMarks:[],threads:[],intervals:[],
+      cornerAdjustments:adjustments.map(a=>({...a,center:reflect(a.center),virtualCenter:reflect(a.virtualCenter)}))};
     for(const o of openings){const center=reflect(o.center);if(o.type==='round')native.holes.push({center,diameter:o.diameter});else {
       const axis=reflect(o.axis);native.slits.push({center,a:center.map((x,i)=>x-axis[i]*o.length/2),b:center.map((x,i)=>x+axis[i]*o.length/2)});
     }}
+    for(const o of virtuals){const center=reflect(o.center),axis=reflect(o.axis);
+      native.virtualSlits.push({center,a:center.map((x,i)=>x-axis[i]*o.length/2),b:center.map((x,i)=>x+axis[i]*o.length/2)});
+    }
+    // Crossbars use the same proportions as the CAD I marks, without adding a second renderer.
+    const changedCenters=adjustments.map(a=>a.center);
+    for(const [i,v] of intervals.entries())if(v.kind==='corrected')changedCenters.push(openings[i].center,openings[(i+1)%openings.length].center);
+    for(const o of openings.filter(o=>o.type==='slit'&&changedCenters.some(p=>near(p,o.center)))){
+      const halfWidth=.65*Math.min(.45,.3*o.length),normal=[-o.axis[1],o.axis[0]];
+      for(const sign of [-1,1]){
+        const tip=o.center.map((x,i)=>x+sign*o.axis[i]*o.length/2);
+        native.spacingMarks.push({a:reflect(tip.map((x,i)=>x+normal[i]*halfWidth)),b:reflect(tip.map((x,i)=>x-normal[i]*halfWidth))});
+      }
+    }
     for(let i=0;i<intervals.length;i++){
       const v=intervals[i],first=openings[i],second=openings[(i+1)%openings.length];
       const a=reflect(first.center),b=reflect(second.center);

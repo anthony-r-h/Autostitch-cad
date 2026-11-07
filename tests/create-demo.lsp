@@ -19,7 +19,7 @@
   (setq ast:demo:*guides* (append ast:demo:*guides* (list first second)))
   result)
 (defun ast:demo-corner-generate (guide / state settings primitives incoming outgoing corner before after step-in step-out start finish result)
-  ;; Match the HTML cases' free outer margins using the native corner's phase.
+  ;; Choose free outer margins that fit the corner's nominal stitch phase.
   (setq state (ast:cad-read guide) settings (ast:cad-default-settings)
         primitives (ast:cad-get 'primitives (ast:cad-get 'route state))
         incoming (car primitives) outgoing (cadr primitives)

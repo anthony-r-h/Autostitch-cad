@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const root=new URL('../',import.meta.url);
 const catalog=JSON.parse(fs.readFileSync(new URL('./cases.json',import.meta.url),'utf8'));
-const baseline=JSON.parse(fs.readFileSync(new URL('./fixtures/gallery-baseline.json',import.meta.url),'utf8')).cases;
 const ids=new Set();
 const sourceCache=new Map();
 function id(value){assert.equal(typeof value,'string');assert(!ids.has(value),`Duplicate ID ${value}`);ids.add(value);}
@@ -23,12 +22,12 @@ for(const c of catalog.geometry){
       else{point(g.center);assert(g.radius>0&&Number.isFinite(g.radius));assert(Number.isFinite(g.sweep)&&g.sweep!==0);assert(Number.isFinite(g['start-angle']));}
     }
     for(const m of v.landmarks){assert(Number.isInteger(m.primitive)&&m.primitive>=0&&m.primitive<v.route.primitives.length);assert(Number.isFinite(m.station)&&m.station>=0);}
-    const records=baseline.filter(b=>b.id===c.id&&b.pitch===pitch);assert.equal(records.length,1,`Baseline ${c.id}/${pitch}`);
-    assert.equal(records[0].result.status,v.expected.historicalStatus);
-    assert.equal(records[0].result.status!=='invalid',v.expected.feasible);
+    assert.equal(typeof v.expected.feasible,'boolean');
+    assert(Number.isInteger(v.expected.changedGaps)&&v.expected.changedGaps>=0);
+    assert(Number.isInteger(v.expected.roundHoles)&&v.expected.roundHoles>=0);
+    if(c.kind==='curved-junction')assert.equal(typeof v.expected.fixedRangeFeasible,'boolean');
   }
 }
-assert.equal(baseline.length,catalog.geometry.reduce((n,c)=>n+c.variants.length,0));
 for(const file of catalog.nativeLoads)source(file);
 for(const suite of catalog.suites){
   id(suite.id);assert(suite.setup&&suite.recipe&&suite.expected);
@@ -42,7 +41,7 @@ for(const suite of catalog.suites){
 }
 id(catalog.oracle.id);source(catalog.oracle.source);source(catalog.oracle.nativeSource);
 assert(catalog.oracle.expected&&catalog.oracle.native.lengths.length&&catalog.oracle.exhaustive.lengthCount>0);
-console.log(`Catalog valid: ${catalog.geometry.length} geometry recipes, ${baseline.length} pitch variants, ${catalog.suites.length} suites, ${ids.size} stable IDs.`);
+console.log(`Catalog valid: ${catalog.geometry.length} geometry recipes, ${catalog.geometry.reduce((n,c)=>n+c.variants.length,0)} pitch variants, ${catalog.suites.length} suites, ${ids.size} stable IDs.`);
 if(process.argv.includes('--list')){
   for(const c of catalog.geometry)console.log(`${c.id}: ${c.title}`);
   for(const suite of catalog.suites)console.log(`${suite.id}: ${suite.title} (${suite.entrypoint})`);

@@ -2,6 +2,14 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Guide connections and corner allowance: 2026-11-07
+
+- All 15 native suites passed 1,348 checks, including 19 deferred-connection checks and the reported shallow corner at a $3\,\mathrm{mm}$ pitch.
+- Save/reopen passed 12 checks for pending connections, retained output, shared IDs and deleted-primary repair.
+- Native MOVE, STRETCH, ERASE, callback rollback and Undo/Redo passed 61 checks.
+- The geometry gallery passed all 88 fixtures: 96 solver runs and 1,284 checks.
+- The canonical catalog validates with 409 stable IDs. `GUIDE-REOPEN` describes the saved-drawing check.
+
 ## Three output layers: 2026-11-07
 
 - The 13 non-display native suites passed 1,273 checks. The display suite passed all 42 checks after correcting its new plot-flag assertion.
@@ -67,6 +75,6 @@ With a saved disposable `output/native/Autostitch-native.dwg` open in the existi
 Get-Content ./output/native/geometry-oracle.txt
 ```
 
-Omit `-IncludeUi` to run only the 13 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
+Omit `-IncludeUi` to run only the 14 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
 
 Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Geometric limits belong in [limits](../docs/LIMITS.md).

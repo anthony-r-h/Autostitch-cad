@@ -10,7 +10,7 @@ Defaults are $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $\alpha=40^\circ$ and 
 
 ## Solution policy
 
-Fix feature positions and protected gaps, fit each free span, then check every distinct opening pair.
+Fix feature positions and protected gaps, fit each free span, then check every distinct opening pair. At a sharp corner, prefer nominal virtual-to-real steps. If a nominal neighbour lies outside its finite arm, choose the nearest step within the adjustment allowance that puts it on the arm. Those neighbours then become fixed constraints for span fitting.
 
 Among feasible fits:
 

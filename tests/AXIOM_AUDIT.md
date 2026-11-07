@@ -9,7 +9,7 @@ Rules: [axioms](../docs/AXIOMS.md). Reusable inputs and test identities: [cases.
 | A3: direct pitch | Actual centre distances by gap type; circular pitch checked as chord distance. |
 | A4: landmark gap | Required centres checked around the reference station; no hole at the reference. |
 | A5: fixed features | Fixed corner neighbours and landmark pairs; S04/J06 protected gaps and L01/L02 fixed opening positions. |
-| A6: sharp corners | Independent virtual-tip reconstruction; straight/curved corner matrices and finite-arm checks. |
+| A6: sharp corners | Independent virtual-tip reconstruction; straight/curved corner matrices, finite-arm checks and bounded corner-step adjustment. The reported shallow corner is catalogued with its exact coordinates. |
 | A7: bounded adjustment | Exported slit-to-slit gaps within $\pm10\%$; protected gaps unchanged. |
 | A8: shared openings | Smooth joins, closure reuse, connected identity and conflicting-opening rejection. |
 | A9: three or more arms | T/X shared holes; nominal neighbours on straight and circular arms; adjacent junction cases. |
@@ -18,6 +18,8 @@ Rules: [axioms](../docs/AXIOMS.md). Reusable inputs and test identities: [cases.
 Solution-policy checks cover fewest adjusted gaps, central placement and deterministic ties: 540 native fits against an independent selector, checked against 8,215 exhaustive count/block cases. F05/J05 reject infeasible spans. Corner checks reject ambiguous roots and do not rescue a failed construction with a farther root.
 
 Straight-corner checks cover 112 pitch/handedness/turn combinations. Curved-corner checks cover line/arc, arc/line and arc/arc combinations, plus reversal and rigid transforms. T/X sharing is covered by the connected-geometry suite.
+
+Corner-step regressions cover nearest-to-nominal placement, the adjustment boundary, disabled adjustment, curved contraction, zero-length free spans and reversed guide selection. Display checks require `I` marks on the adjusted real slit. Guide-workflow checks separate saved connections from generated output.
 
 The tiny-span regression is covered: arithmetic residue around $4.44\times10^{-16}\,\mathrm{mm}$ is treated as zero, while a real $10^{-8}\,\mathrm{mm}$ span still rejects.
 

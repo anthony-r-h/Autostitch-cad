@@ -4557,6 +4557,62 @@
           "id": "GEO-064",
           "expected": "2000 opening inclusive seam limit",
           "sourceSymbol": "ast:g-tests"
+        },
+        {
+          "id": "GEO-065",
+          "expected": "Shallow user corner uses the smallest allowed construction adjustment at the guide vertex",
+          "sourceSymbol": "ast:g-test-corner-adjustments",
+          "inputs": {
+            "points": [
+              [
+                -38,
+                258
+              ],
+              [
+                107.80342046542515,
+                215.0423163964531
+              ],
+              [
+                285.06457440910435,
+                231.24365283994626
+              ]
+            ],
+            "pitch": 3,
+            "slit-length": 1.5,
+            "lean-degrees": 40,
+            "diameter": 0.5
+          },
+          "notes": "Two LINE guides meeting at the middle point. The outgoing corner step adjusts to approximately 3.097120227 mm; the virtual tips and round-hole centre stay fixed."
+        },
+        {
+          "id": "GEO-066",
+          "expected": "Disabling adjustments preserves nominal-only corner rejection",
+          "sourceSymbol": "ast:g-test-corner-adjustments"
+        },
+        {
+          "id": "GEO-067",
+          "expected": "Shallow user route fits with one marked corner adjustment and one vertex slit",
+          "sourceSymbol": "ast:g-test-corner-adjustments"
+        },
+        {
+          "id": "GEO-068",
+          "expected": "Reversing the adjusted shallow corner preserves its adjusted physical slit and virtual centre",
+          "sourceSymbol": "ast:g-test-corner-adjustments"
+        },
+        {
+          "id": "GEO-069",
+          "expected": "Feasible nominal corner construction is not adjusted",
+          "sourceSymbol": "ast:g-test-corner-adjustments"
+        },
+        {
+          "id": "GEO-070",
+          "expected": "Curved corner contracts its direct construction chord without moving the virtual-tip hole",
+          "sourceSymbol": "ast:g-test-corner-adjustments"
+        },
+        {
+          "id": "GEO-071",
+          "expected": "Adjusted corner at finite arm ends keeps three openings without duplicate zero-span slits",
+          "sourceSymbol": "ast:g-test-corner-adjustments"
         }
       ],
       "matrices": [
@@ -4829,6 +4885,21 @@
         {
           "id": "NET-039",
           "expected": "circle-first incidence order preserves reversed-line edited-radius root",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-040",
+          "expected": "Connected shallow guides use the same adjusted corner and physical openings as one polyline",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-041",
+          "expected": "Connected corner respects the outgoing guide's disabled adjustment setting",
+          "sourceSymbol": "ast:n-tests"
+        },
+        {
+          "id": "NET-042",
+          "expected": "Reversing guide selection order preserves the shallow corner and its adjusted slit",
           "sourceSymbol": "ast:n-tests"
         }
       ]
@@ -5379,6 +5450,130 @@
       ]
     },
     {
+      "id": "GUIDE",
+      "title": "Connect guides before generating stitches",
+      "source": "tests/autostitch-connected-tests.lsp",
+      "entrypoint": "ast:cad-guide-workflow-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing under output/native.",
+      "recipe": "Connect two unstitched guides, undo and redo the definition, then Generate. Repeat with existing output, failed corner fitting, disconnect, copies and missing guides.",
+      "expected": "Guide relationships persist independently of generated stitches; failed generation preserves existing output.",
+      "checks": [
+        {
+          "id": "GUIDE-001",
+          "expected": "Connect guides persists one stitch identity without generating output",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-002",
+          "expected": "One Undo removes the ungenerated guide connection",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-003",
+          "expected": "Redo restores guide topology without generating stitches",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-004",
+          "expected": "Generate after connecting unstitched guides creates one current shared output",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-005",
+          "expected": "Disconnect guides saves separate identities and preserves the previous shared geometry",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-006",
+          "expected": "Generating the disconnected second component leaves retained first-component output untouched",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-007",
+          "expected": "Generating the owning component preserves the independently generated component",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-008",
+          "expected": "Connect guides preserves independent existing output and keeps it selectable",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-009",
+          "expected": "An infeasible Generate preserves pending topology and both previous stitch outputs",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-010",
+          "expected": "Disconnecting pending guides retains each independently owned previous output",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-011",
+          "expected": "An ungenerated set reports a deleted primary from surviving guide metadata",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-012",
+          "expected": "Removing a missing guide repairs pending topology without generating output",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-013",
+          "expected": "A retained output remains selectable after its pending primary guide is deleted",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-014",
+          "expected": "Selecting a surviving pending member keeps the shared stitch ID",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-015",
+          "expected": "Retained output stays selectable after pending missing-guide repair",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-016",
+          "expected": "Generate after pending primary deletion reuses the shared ID and retires every superseded output",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-017",
+          "expected": "Copied pending guides generate independently without acquiring or retiring original outputs",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-018",
+          "expected": "Copying pending guides with their old outputs remaps ownership and preserves the original set",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        },
+        {
+          "id": "GUIDE-019",
+          "expected": "Failed guide connection restores both source records and both previous output records",
+          "sourceSymbol": "ast:cad-guide-workflow-tests"
+        }
+      ],
+      "matrices": [
+        {
+          "id": "GUIDE-REOPEN",
+          "sourceSymbol": "ast:cad-pending-reopen-tests",
+          "setup": "Call ast:cad-pending-reopen-fixture with a handle-data path, save and reopen the disposable drawing, reload the plugin and tests, then pass the same path to ast:cad-pending-reopen-tests.",
+          "inputs": {
+            "missingPrimary": [
+              false,
+              true
+            ],
+            "guides": 2,
+            "existingOutputs": 2
+          },
+          "expected": "Pending membership, retained output ownership and shared ID survive save/reopen. Generate reuses the canonical output and retires the other; a deleted primary can be repaired first."
+        }
+      ]
+    },
+    {
       "id": "MISSING",
       "title": "Deleted connected members",
       "source": "tests/autostitch-connected-tests.lsp",
@@ -5919,6 +6114,16 @@
         {
           "id": "DISPLAY-042",
           "expected": "Printed openings and construction share AUTOSTITCH, thread stays separate, and editing markers remain nonprinting",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-043",
+          "expected": "The reported shallow-corner guides connect without creating any stitching",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-044",
+          "expected": "The adjusted corner neighbour has an I mark at both slit tips and complete current output",
           "sourceSymbol": "ast:display-tests"
         }
       ]

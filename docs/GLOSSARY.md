@@ -4,7 +4,7 @@ Terms used by the [axioms](AXIOMS.md), [model](MODEL.md) and [junction construct
 
 ## Guide
 
-The path on which real slit centres lie, made of straight or circular **segments**. A **stitch line** is a chosen portion of that guide with a direction and endpoints, or a closed loop.
+An editable path on which real slit centres lie, made of straight or circular **segments**. A **stitch line** is the stitching defined on one guide or a connected set of guides. Each guide has a chosen extent and direction; it may be open or a closed loop. Connected guides meet at junctions and share one stitch ID.
 
 **Station** is distance along the guide from a chosen origin; on a curve, it is arc length. The **tangent** is the guide's local direction.
 
@@ -22,7 +22,7 @@ A **gap** is the direct centre-to-centre spacing between consecutive openings. *
 - **Adjusted gap:** a slit-to-slit gap changed from $p$, within $0.9p\leq g\leq1.1p$.
 - **Protected gap:** fixed at $p$ and cannot be adjusted, such as the gap centred on a landmark.
 
-Sharp-corner gaps with a round-hole endpoint follow the corner construction instead of the adjustment rule. At junctions with three or more arms, each first neighbour is one nominal pitch from the shared hole.
+Sharp-corner gaps with a round-hole endpoint follow the corner construction. A **corner step** is the centre distance from a virtual slit to its real neighbour: nominally $p$, adjustable within $0.9p\leq q\leq1.1p$ to keep that neighbour on its guide. It is not a real slit-to-slit gap. At junctions with three or more arms, each first neighbour is one nominal pitch from the shared hole.
 
 Consecutive equal adjusted gaps form an **adjustment block** within a free span.
 

@@ -46,9 +46,11 @@ Within one drawing, copy all connected source lines and their output together to
 
 ## Tool assumptions
 
-**Show stitches** adds a schematic thread view between slit tips and round holes. It starts off; slits remain visible. **Spacing marks** starts on and puts monochrome chevrons at both tips of each slit bordering adjusted spacing. Use individual placement at those marks. Derived corner-hole distances are not ordinary pitch corrections.
+Generated stitching always includes thread lines, changed-spacing chevrons and the virtual slits used to construct sharp corner holes. Slits and chevrons use **0.30 mm** strokes; thread and dashed virtual slits use **0.09 mm**. Round holes are filled, black on paper and white on a dark CAD background. These stroke weights control drawing appearance; the physical tool dimensions remain unchanged.
 
-Both controls apply to the drawing and support Undo/Redo. Thread lines are nonplotting on `AUTOSTITCH_STITCHES`; chevrons print on `AUTOSTITCH_NOTES`; actual slit and hole geometry stays on `AUTOSTITCH`. Chevrons are notation only. Older output needs **Generate stitches** once to replace its orange/bracket notation. Nominal spacing on a curve does not guarantee a rigid multi-tooth iron will fit.
+Chevrons mark both tips of slits beside adjusted spacing. Dashed virtual slits meet at the calculated round-hole centre; they are construction guides for sharp two-arm corners. T/X branch holes use their existing guide-intersection rule. Direction arrows sit on the stitch line just after `S`, following its direction.
+
+Generate enables the thread, notation and construction layers for viewing and printing. Actual slits and circle boundaries stay on `AUTOSTITCH`, thread on `AUTOSTITCH_STITCHES`, chevrons and hole fills on `AUTOSTITCH_NOTES`, and dashed virtual slits on `AUTOSTITCH_CONSTRUCTION`. Editing labels remain nonplotting on `AUTOSTITCH_UI`. Older output needs **Generate stitches** once to receive the revised display. Nominal spacing on a curve does not guarantee a rigid multi-tooth iron will fit.
 
 The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated: **Physical clearance unverified** remains visible. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
 

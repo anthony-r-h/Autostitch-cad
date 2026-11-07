@@ -88,7 +88,6 @@
       (setq active (vl-catch-all-apply 'dcl-Form-IsActive (list "AUTOSTITCH" "Palette")))
       (if (and (not (vl-catch-all-error-p active)) active)
         (progn
-          (ast:ui-display-fill)
           (if astui:*guide*
             (if (not (entget astui:*guide*))
               (progn
@@ -124,7 +123,6 @@
 
 (defun ast:ui-fill (/ labels index attachment total start finish reversed control)
   (setq astui:*busy* T labels nil index 0)
-  (ast:ui-display-fill)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
           labels (cons (strcat "Landmark " (itoa index) " | segment "
@@ -167,37 +165,6 @@
             (rtos (if reversed start finish) 2 2) " mm"))))
     (ast:ui-put "Range" "Caption" "Select a stitch line to show its start and end."))
   (setq astui:*busy* nil))
-
-(defun ast:ui-display-fill (/ astui:*busy*)
-  (setq astui:*busy* T)
-  (dcl-Control-SetValue "AUTOSTITCH" "Palette" "ShowStitches"
-    (if (ast:cad-display-visible-p 'stitches) 1 0))
-  (dcl-Control-SetValue "AUTOSTITCH" "Palette" "SpacingNotes"
-    (if (ast:cad-display-visible-p 'notes) 1 0)))
-
-(defun ast:ui-display (key value)
-  (if (and (not astui:*busy*) (not (ast:ui-sync-owner)))
-    (ast:ui-run '(lambda (/ result state message)
-      (setq result (ast:cad-set-display key (= value 1)))
-      (ast:ui-display-fill)
-      (if (ast:ui-result result)
-        (progn
-          (setq message (if (= key 'stitches)
-            (if (= value 1) "Stitches shown in this drawing." "Stitches hidden; slit and round holes remain visible.")
-            (if (= value 1) "Chevrons mark slits beside adjusted spacing." "Spacing marks hidden.")))
-          (if (and astui:*guide* (entget astui:*guide*))
-            (progn
-              (setq state (ast:cad-read astui:*guide*))
-              (cond
-                ((not (cdr (assoc 'ok state)))
-                  (setq message (strcat message "\n" (cdr (assoc 'error state)))))
-                ((and (cdr (assoc 'output state)) (cdr (assoc 'stale state)))
-                  (setq message (strcat message "\nGenerate to update this line."))))))
-          (ast:ui-status message))))))
-  (princ))
-
-(defun c:ASTUISHOWSTITCHES (value) (ast:ui-display 'stitches value))
-(defun c:ASTUINOTES (value) (ast:ui-display 'notes value))
 
 (defun ast:ui-adopt (result)
   (setq astui:*state* result astui:*guide* (cdr (assoc 'guide result))

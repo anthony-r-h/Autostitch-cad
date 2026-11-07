@@ -295,7 +295,8 @@
                             hole (list '(type . round) (cons 'center joint) (cons 'diameter (ast:g-get 'diameter settings 0.5)))
                             error (ast:g-validate-openings (list before hole after) settings))))))))
       (if error (ast:g-error error)
-        (list '(ok . T) (cons 'incoming-station (+ in-length ci (- di))) (cons 'outgoing-station (+ co dout)) (cons 'opening hole))))))
+        (list '(ok . T) (cons 'incoming-station (+ in-length ci (- di))) (cons 'outgoing-station (+ co dout))
+          (cons 'opening hole) (cons 'virtual-slits (list virtual-in virtual-out)))))))
 
 (defun ast:g-mergeable (aa bb / kind)
   (setq kind (ast:g-get 'kind aa nil))
@@ -421,7 +422,7 @@
           (setq cursor (+ cursor (ast:g-length primitive)) index (1+ index))))))
   (if error (ast:g-error error) (list '(ok . T) (cons 'primitives selected) (cons 'landmarks (reverse remapped)))))
 
-(defun ast:g-solve (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner starts finishes openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted)
+(defun ast:g-solve (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner starts finishes openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted virtual-slits)
   (setq primitives (ast:g-get 'primitives route nil) closed (ast:g-get 'closed route nil) error (ast:g-profile-error settings))
   (if (null primitives) (setq error "No guide primitives."))
   (foreach primitive primitives (if (null error) (setq error (ast:g-primitive-error primitive))))
@@ -454,7 +455,8 @@
           (setq join (list '(kind . smooth) (cons 'incoming-station (ast:g-length incoming)) '(outgoing-station . 0.0)))
           (progn (setq corner (ast:g-corner incoming outgoing settings))
             (if (not (ast:g-get 'ok corner nil)) (setq error (ast:g-get 'error corner nil))
-              (setq join (cons '(kind . sharp) corner)))))
+              (setq join (cons '(kind . sharp) corner)
+                    virtual-slits (append virtual-slits (ast:g-get 'virtual-slits corner nil))))))
         (setq joins (append joins (list join)) idx (1+ idx)))
       (setq idx 0)
       (foreach primitive primitives
@@ -489,5 +491,6 @@
       (if (vl-some '(lambda (item) (= (ast:g-get 'kind item nil) 'arc)) primitives) (setq warnings (cons "Curved openings follow individual tangents and require individual placement." warnings)))
       (setq adjusted (vl-some '(lambda (item) (= (ast:g-get 'kind item nil) 'corrected)) intervals))
       (if adjusted (setq warnings (cons "Corrected gaps require individual placement; nominal multi-tooth runs stop at the correction block." warnings)))
-      (list '(ok . T) (cons 'status (if adjusted 'adjusted 'exact)) (cons 'openings openings) (cons 'intervals intervals) (cons 'warnings warnings) (cons 'primitives primitives) (cons 'landmarks landmarks)))))
+      (list '(ok . T) (cons 'status (if adjusted 'adjusted 'exact)) (cons 'openings openings) (cons 'intervals intervals)
+        (cons 'virtual-slits virtual-slits) (cons 'warnings warnings) (cons 'primitives primitives) (cons 'landmarks landmarks)))))
 (princ)

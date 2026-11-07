@@ -1,0 +1,166 @@
+[
+  {
+    "name": "Straight 90 deg turn (90 deg included)",
+    "A": {
+      "hole": [
+        0.4821,
+        0.4821
+      ],
+      "centreGaps": [
+        2.4729,
+        2.4729
+      ],
+      "displayLengths": [
+        2.087,
+        2.087
+      ],
+      "displayTurn": 90,
+      "approachKink": 0,
+      "departureKink": 0,
+      "slitAxisClearance": 2.7265,
+      "holeAxisClearance": 2.087
+    },
+    "B": {
+      "hole": [
+        0,
+        0
+      ],
+      "centreGaps": [
+        3,
+        3
+      ],
+      "displayLengths": [
+        2.4729,
+        2.4729
+      ],
+      "displayTurn": 90,
+      "approachKink": -16.274,
+      "departureKink": 16.274,
+      "slitAxisClearance": 3.4765,
+      "holeAxisClearance": 2.4729
+    }
+  },
+  {
+    "name": "Straight 30 deg turn (150 deg included)",
+    "A": {
+      "hole": [
+        1.7992,
+        0.4821
+      ],
+      "centreGaps": [
+        2.4729,
+        2.4729
+      ],
+      "displayLengths": [
+        2.087,
+        2.087
+      ],
+      "displayTurn": 30,
+      "approachKink": 0,
+      "departureKink": 0,
+      "slitAxisClearance": 4.0318,
+      "holeAxisClearance": 2.087
+    },
+    "B": {
+      "hole": [
+        0,
+        0
+      ],
+      "centreGaps": [
+        3,
+        3
+      ],
+      "displayLengths": [
+        2.4729,
+        2.4729
+      ],
+      "displayTurn": 30,
+      "approachKink": -16.274,
+      "departureKink": 16.274,
+      "slitAxisClearance": 4.7773,
+      "holeAxisClearance": 2.4729
+    }
+  },
+  {
+    "name": "Straight 150 deg turn (30 deg included)",
+    "A": {
+      "hole": [
+        0.1292,
+        0.4821
+      ],
+      "centreGaps": [
+        2.4729,
+        2.4729
+      ],
+      "displayLengths": [
+        2.087,
+        2.087
+      ],
+      "displayTurn": 150,
+      "approachKink": 0,
+      "departureKink": 0,
+      "slitAxisClearance": 0.6574,
+      "holeAxisClearance": 2.087
+    },
+    "B": {
+      "hole": [
+        0,
+        0
+      ],
+      "centreGaps": [
+        3,
+        3
+      ],
+      "displayLengths": [
+        2.4729,
+        2.4729
+      ],
+      "displayTurn": 150,
+      "approachKink": -16.274,
+      "departureKink": 16.274,
+      "slitAxisClearance": 1.0324,
+      "holeAxisClearance": 2.4729
+    }
+  },
+  {
+    "name": "R10 incoming arc to line, 90 deg tangent turn",
+    "A": {
+      "hole": [
+        0.4821,
+        0.477
+      ],
+      "centreGaps": [
+        2.3917,
+        2.4729
+      ],
+      "displayLengths": [
+        2.0936,
+        2.087
+      ],
+      "displayTurn": 92.7037,
+      "approachKink": 17.2539,
+      "departureKink": 0,
+      "slitAxisClearance": 2.448,
+      "holeAxisClearance": 2.087
+    },
+    "B": {
+      "hole": [
+        0,
+        0
+      ],
+      "centreGaps": [
+        3,
+        3
+      ],
+      "displayLengths": [
+        2.5667,
+        2.4729
+      ],
+      "displayTurn": 97.2023,
+      "approachKink": 2.8336,
+      "departureKink": 16.274,
+      "slitAxisClearance": 3.1578,
+      "holeAxisClearance": 2.4729
+    }
+  }
+]

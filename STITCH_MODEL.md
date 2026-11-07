@@ -1,261 +1,146 @@
-# Stitch geometry
+# Stitch model: line/arc paths and declared connections
 
-The intended product is a BricsCAD plugin for placing leather stitching holes. The HTML viewer is a way to inspect the geometry while deciding the rules. It is not the product or a general CAD path editor.
+The native solver in `source/autostitch-geometry.lsp` implements the bounded single-path foundation. `source/autostitch-network.lsp` applies it to explicitly connected sources with one physical opening at each shared node. `geometry.mjs` and the gallery retain an older baseline. Physical qualification is separate: [PHYSICAL_RULES.md](PHYSICAL_RULES.md). CAD scope and current limits: [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md).
 
-This document records the current model and its limits. The calculations are in [geometry.mjs](geometry.mjs), the examples and their construction order in [case-suite.mjs](case-suite.mjs), and the independent regression checks in [test-core.mjs](test-core.mjs). Passing these checks establishes consistency with the chosen rules, not approval of every construction for leatherwork.
+## Concepts and parameters
 
-## Inputs from the CAD workflow
-
-The user draws the stitch guide, selects it in the tool, places Start, End, Landmark and Intersection annotations on it, and chooses pitch. The tool turns those inputs into the ordered geometric construction described here. The canonical profile and other established rules supply the remaining parameters.
-
-Input symbols identify guide features; they are not physical openings. The original guide remains an editable input. The generated slits, round holes and correction marks form one contained result on AUTOSTITCH. The complete interaction and input/output association are described in [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md).
-
-## Parameters and what is settled
-
-| Item | Current value or rule | Status |
-| --- | --- | --- |
-| Geometry | Planar, in millimetres; straight lines and circular arcs | Initial scope |
-| Ordinary slit | Finite segment, 1.5 mm long | Provisional canonical length, not a measured tool specification |
-| Slit lean | 40° relative to the local tangent | Canonical example; fixed while pitch changes |
-| Pitch | 2.7, 3, 3.38 or 3.85 mm in the viewer | Test options, not a verified catalogue of tool sizes |
-| Round hole | 0.5 mm diameter | User-selected simplification |
-| Ordinary spacing | Direct distance between consecutive slit centres | Current model; chord distance on a circle |
-| Centred crossing | One nominal gap, symmetric along the guide about the landmark | User-confirmed: both nominal and centred |
-| Corrections | Fewest necessary changed intervals, each within ±10% | User requirement; no independent correction-count cap |
-| Correction placement | Equal changes in the latest eligible intervals of each span | Current deterministic choice |
-| Straight corner | Align one specified tip from each virtual slit; replace their meeting point with a round hole | Construction under investigation |
-| Sharp curved corner | Put both virtual centres at the shared guide endpoint | Exploratory alternative; does not preserve the straight-corner angle result |
-
-Pitch changes must not rescale slit length, slit lean or hole diameter. Thread is only a display line. Thickness, tension, entry into the leather and stitch mechanics are not modelled.
-
-## Axioms
-
-1. A route has an ordered sequence of segments, a start, a travel direction, and an explicit open or closed state. Coincident start and end coordinates alone do not define a full loop.
-2. An ordinary opening is a finite slit with the canonical length and lean at its own local tangent. A round opening is a separate opening type.
-3. Consecutive ordinary slit centres use nominal pitch unless that interval is explicitly marked as corrected. Corner-to-slit distances are derived junction geometry and are reported separately.
-4. A centred landmark lies between two slit centres. Their gap remains nominal, and their distances along the guide to the landmark are equal. There is no hole at the landmark.
-5. A feature can reserve incoming and outgoing anchors and intervals that must stay unchanged. Establish those targets before fitting the approach.
-6. Minimize corrections subject to those fixed anchors, protected intervals and construction order. There is no fixed limit such as one, two or three corrections for a whole route.
-7. Each corrected ordinary gap stays between 0.9 and 1.1 times nominal pitch. Protected ordinary gaps stay exactly nominal. Corrections do not move an already committed feature.
-8. Solve the next span, commit its feature, and continue from its exit. Accepted earlier openings remain fixed. Closing a route targets its existing starting geometry and reuses its opening.
-9. A span is decided by direct formulas and explicit conditions. No numerical search, repeated trial placement, convergence or backtracking chooses a solution.
-10. If the selected construction cannot fit, report the failed condition. Do not silently extend the guide, relax a landmark, alter earlier holes or substitute another corner rule.
-
-These are geometric rules. Whole-tool placement, clearance from a material boundary, leather thickness and deformation are outside this model. A pocket edge is represented only by its crossing landmark.
-
-Ordered passes through segments and loops that emit calculated holes are allowed. The restriction concerns searching for placement, not generating the resulting geometry.
-
-## Direction and coordinates
-
-The prototype uses screen coordinates: x increases rightward, y downward, and positive turns are clockwise. `geometry.mjs` uses radians except `solveCorner(turnDeg, ...)`, which takes degrees.
-
-For tangent angle `t`, the slit axis is `t - 40°`. With slit length `l`, centre `C`, and unit slit direction `u`, its endpoints are:
-
-```text
-a = C - (l/2) u
-b = C + (l/2) u
-```
-
-The display thread runs from one slit's `b` tip to the next slit's `a` tip. At a round hole it uses the hole centre. This tip convention is part of the current corner construction.
-
-The signed turn is the change from the incoming to outgoing travel tangent. The displayed included corner angle is `180° - abs(turn)`. Thus J03's 135° corner uses a 45° turn; J04's 45° corner uses a 135° turn.
-
-The CAD adapter must convert coordinates consistently. Reversing travel changes construction order and the location of the latest eligible corrections. It is not the same operation as reflecting a pattern. Reflection also reverses slit handedness: transforming existing slit endpoints is different from regenerating a fixed 40° profile on a reflected guide. The intended treatment of a mirrored punching face must be explicit in the plugin.
-
-## What features fix
-
-On a straight line, a landmark at station `c` reserves centres at `c - p/2` and `c + p/2`. Fit to the first, retain their nominal gap, then continue from the second.
-
-On a circle of radius `R`, nominal pitch subtends `A = 2 asin(p/(2R))`. A landmark at angular station `phi` reserves centres at `phi - A/2` and `phi + A/2`. Symmetry is measured along the arc. The midpoint of the straight chord lies inside the circle and is not the landmark. A02 draws both points to make that distinction inspectable.
-
-A corner reserves the last ordinary incoming centre, the shared opening, and the first outgoing centre. The next ordinary fit starts or ends at those real centres. It does not use the guide vertex as an interchangeable substitute.
-
-If two consecutive reservations name the same slit, reuse it. A zero remaining span with no protected intervals needs no additional hole or gap. Overlapping reservations fail. A small positive remaining span also fails if no allowed interval count fits; it must not become an invented tiny gap.
-
-The user initially described corrections at beginnings or ends. Here, an interior feature creates local span boundaries. The implemented policy puts corrections at the end of each newly solved span, before its protected suffix. Beginning-only and split-between-ends policies are not implemented.
-
-Minimality is conditional on the prescribed anchors and order. It is not global optimization over starting phases, feature definitions, corner constructions or alternative orders.
-
-## Direct fits
-
-### Straight span
-
-`fitSpan(D, p, options)` fits a nonnegative distance `D` between ordinary slit-centre anchors. Let `qStart` and `qEnd` be protected interval counts, `q = qStart + qEnd`, and `delta = 0.1 p`.
-
-For `D > 0`, the feasible integer counts are:
-
-```text
-low  = max(1, q, ceil((D + q delta) / (p + delta)))
-high = floor((D - q delta) / (p - delta))
-```
-
-If `low > high`, reject the span. Otherwise choose `n`, the nearest integer to `D/p`, clamped to `[low, high]`. Equal-distance ties use the smaller count.
-
-```text
-r = D - n p
-k = 0                         if r = 0
-k = ceil(abs(r) / delta)       otherwise
-changed gap = p + r/k          when k > 0
-```
-
-Reject if `k > n - q`. With zero-based interval indices, change the last `k` eligible intervals:
-
-```text
-n - qEnd - k, ..., n - qEnd - 1
-```
-
-Every other interval remains nominal. Each changed gap can absorb at most `delta`, so `k` is a lower bound; equal changes attain it. The nearest feasible count minimizes the required residual capacity and therefore the correction count.
-
-Example: 31 mm at 3 mm pitch needs six 3 mm gaps and four 3.25 mm gaps. Four corrections are valid. For a 30.3 mm span with one protected final gap, the 3.3 mm correction is second-last and the final gap remains 3 mm.
-
-With corrections disabled, only an exact nominal fit is admitted. Zero distance returns no intervals unless protected intervals were requested, which is invalid.
-
-### Circular span
-
-`fitCircularSpan(R, sweep, p, options)` fits signed angular advance, with `abs(sweep) <= 2 pi`. Centres remain on the actual circle. It does not divide arc length by pitch.
-
-Let `S = abs(sweep)`. Reject `p > 2R`. All individual steps use the minor-arc branch:
-
-```text
-A    = 2 asin(p / (2R))
-Amin = 2 asin(min(1, 0.9p / (2R)))
-Amax = 2 asin(min(1, 1.1p / (2R)))
-e = Amax - A
-c = A - Amin
-
-low  = max(1, q, ceil((S + q e) / Amax))
-high = floor((S - q c) / Amin)
-```
-
-Reject an empty range. An exact feasible integer `S/A` needs no correction. Otherwise set `x = S/A`, `m = floor(x)`, and `f = x - m`:
-
-```text
-preferred = m       if f <= e / (e + c)
-preferred = m + 1   otherwise
-n = clamp(preferred, low, high)
-r = S - n A
-capacity = e if r > 0, otherwise c
-k = ceil(abs(r) / capacity)
-adjusted angle = A + r/k
-adjusted chord = 2R sin(adjusted angle / 2)
-```
-
-The zero-residual case has `k = 0`. Reject unavailable correction capacity or more corrections than eligible intervals. Apply the same latest-eligible placement as the straight fit, and multiply angular steps by the original sweep sign.
-
-Extension and contraction have different angular capacities. Ordinary rounding of `S/A` can choose more corrections; the weighted threshold above avoids that. Equal raw-capacity ties choose the smaller count. The result minimizes correction count, with this deterministic choice among ties.
-
-The source handles disabled corrections, zero sweep and floating-point boundary comparisons explicitly. Preserve those branches when porting. Arithmetic tolerances absorb rounding error; they do not grant additional pitch deviation. Small count searches in `test-core.mjs` are independent test oracles and must not be copied into production fitting.
-
-## Straight corners at different angles
-
-### Which virtual cuts can merge
-
-`classifySlits` compares finite segments, not infinitely extended lines:
-
-| Finite relationship | Result |
+| Concept | Meaning |
 | --- | --- |
-| The complete segments coincide, including reversed endpoint order | Keep one slit |
-| Non-collinear segments meet, including tip contact | Use one 0.5 mm round hole at the meeting point |
-| Partial collinear overlap, including collinear endpoint contact | Reject this junction construction |
-| Disjoint finite segments | Reject this junction construction |
+| Guide | User-owned, ordered planar line/arc geometry; authoritative location of ordinary opening centres. Explicit start, direction and open/closed state. |
+| Landmark | A deliberately centred **nominal gap**, with no opening at its station. A pocket-edge crossing is this kind of constraint. |
+| Junction | A transition within the ordered guide. Derived from its tangents/curvatures, not from nearby drawing intersections. |
+| Connection | A declared meeting/crossing between source paths; retains their identities and shares one physical opening. |
+| Opening | One real slit or round hole. Virtual slits are construction geometry only. A corner hole may lie off the guide. |
+| Reservation | Fixed entry/exit openings and protected gaps supplied by a feature. |
+| Span | Remaining guide between consecutive reserved ordinary centres; fitted without moving either anchor. |
 
-The last two are defensive conditions, not extra useful junction types to offer the user. An intersection of extended axes outside the finite cuts does not create a valid hole.
+Normal inputs are source lines, pitch and gap picks, with Connect stitch lines for shared openings between sources. Endpoints/direction have visible defaults; corners within a source are derived. A gap pick is the landmark constraint below, not an implicit connection. Do not expose correction count or minimum-angle sliders.
 
-Ordinary spacing has a separate sufficient guard: `0.9p > l`. It prevents adjacent ordinary slits from touching in any orientation. It is conservative and does not check nonadjacent openings, whole-route self-crossings, material clearance or a physical multi-tooth tool.
+| Parameter | Ownership and default |
+| --- | --- |
+| Pitch `p` | Per seam, in mm; remember last choice. The lab's 2.7/3/3.38/3.85 values are examples. |
+| Slit axis length `l`, lean `alpha`, handedness | Named tool profile. Lab: 1.5 mm, 40 degrees; uncalibrated. |
+| Effective slit thickness `w` | Measured tool/opening envelope; initially unknown, never inferred from pitch. |
+| Round-hole diameter `d` | Process setting; current simplified choice 0.5 mm. |
+| Retained-material margin `m` | Process/material setting; deliberately chosen after physical checks, initially unknown. |
+| Maximum ordinary correction | Fixed at +/-10%; no correction-count cap. |
+| Arithmetic tolerance | Internal numerical error allowance; never additional manufacturing clearance or pitch deviation. |
 
-### The current direct construction
+Changing pitch never scales the other dimensions. Revalidate the selected profile for a different iron. Preserve the rule/profile values used by each saved seam; changing a global preset cannot silently alter old work.
 
-Put the guide vertex at `G = (0,0)`, incoming tangent `ti = (1,0)`, outgoing tangent `to = (cos(theta), sin(theta))`, slit lean `alpha = -40°`, and half-length `h = l/2`.
+## Rules and supported domain
 
-Let `ui` and `uo` be unit directions at `alpha` and `theta + alpha`. Choose virtual centres `Ci`, `Co` on the two supporting guide lines so that one specific tip from each slit shares `J`:
+1. Ordinary pitch is direct centre distance: linear distance on a line, **chord** distance on a circle. Each slit follows its own local tangent.
+2. Reserve all feature anchors before fitting the intervening spans. Keep reserved gaps nominal; equal reservations reuse the same opening only when type, position and axis agree. Other overlap fails.
+3. Minimize changed ordinary gaps under those reservations. Then prefer exact centred placement, smaller fractional change, and smaller interval count, in that order.
+4. Keep changes in one contiguous equal-adjustment block per span. If exact centring is unavailable, use the nearest permitted block; half-index ties go toward the end.
+5. Junction-to-round-hole distances are derived geometry, not ordinary pitch corrections.
+6. Within one generation, committed anchors remain fixed. An explicit later Generate recomputes the whole independent path or connected set from current inputs; there is no hidden permanently locked prefix.
+7. Closure reuses the original opening identity. A fresh closed circle fits its full sweep; the lab's arbitrary committed-prefix examples are not a required workflow.
+8. Validate all distinct emitted opening pairs across the entire connected set. A fitted span or one fitted member alone does not establish acceptable combined cuts.
+9. Use direct formulas and bounded analytic candidate selection. No phase search, iterative optimizer, relaxed constraints or substitution of another corner recipe after failure.
+
+Each source is an ordered planar LINE/ARC/CIRCLE or line/arc polyline, with at most one revolution per circular primitive. Connections can form branches across those sources without a global traversal or CAD Join operation. Reject nonfinite data, zero-length primitives, disconnected source segments and ambiguous traversal before construction. Normalize adjoining collinear or co-circular subdivisions; inserting a redundant CAD vertex must not change the layout.
+
+At a genuine smooth change of curvature, reserve one shared slit at the join. This is a deliberate phase constraint. Every free span then lies on one normalized line or circle. A landmark whose required gap straddles such a join needs a mixed-primitive construction and is **unsupported initially**. Overlap with a prescribed slit is a constraint conflict, not permission to move it.
+
+Undeclared crossings, splines, ellipses, nonplanar geometry and free-phase mixed-primitive spans remain unsupported. Raw source paths cannot overlap for a positive length, even if their active ranges divide that overlap into adjacent pieces; trim the source geometry before connecting. Do not approximate unsupported curves with little straight segments. Same-drawing placement alone does not declare a shared workpiece: only the explicit connection operation coordinates independent sources.
+
+## Declared connected sets
+
+Connect stitch lines combines selected sources and their existing connected members. When more than one intersection needs coordination, ConnectAll declares the complete set before solving, avoiding an infeasible intermediate partial declaration. Sources retain individual pitch, direction, ranges and gap attachments; the slit/hole profile and clearance settings must agree. The complete set emits one cut list and one output block.
+
+Classify actual incident arms, not CAD entity boundaries. A sharp two-arm corner uses the selected-tip construction below, including when its arms are separate LINE entities; a smooth two-arm transition uses its shared slit. At a node with three or more arms, emit one round hole at the guide intersection and reserve each arm's first neighbour at nominal direct/chord pitch. Remaining spans use the same bounded fitters. These branch-adjacent gaps are protected reservations, not ordinary corrections. See [junction construction and examples](review/JUNCTIONS.md).
+
+Equal-pitch collinear or co-circular continuations are normalized into one run, including across connected source entities. Such a source boundary does not force an opening. A smooth change of curvature still reserves its shared slit.
+
+Persist a connection's source/primitive incidences and selected analytic root. Recompute its position from current source geometry after edits. Common placement, unchanged supporting geometry and proven root-side correspondence can retain identity; an ambiguous changed root or topology requires explicit repair, never nearest-point reassignment. Every crossing within the declared set must be coordinated, and every distinct emitted cut pair must pass clearance.
+
+Disconnected or missing-source repair solves all resulting components before replacing any output. A failure retains the previous complete cuts. Source inputs remain canonical; saved output topology supports deleted-primary recovery without recreating deleted source geometry. [Connected workflow](review/CONNECTED_WORKFLOW.md) records adapter ownership and recovery details.
+
+## Span fitting and centred placement
+
+Retain the existing direct feasibility/minimum-count mathematics in `fitSpan` and `fitCircularSpan`, including zero spans, disabled corrections, signed sweeps and boundary tolerances. Their current latest-end placement and count tie-break are superseded below.
+
+For a line of length `D`, let `delta=.1p`, `q=qStart+qEnd`:
 
 ```text
-J  = Ci - h ui = Co + h uo
-J  = -h sin(alpha) (cot(theta/2), 1)
-Ci = J + h ui
-Co = J - h uo
-I  = Ci - p ti
-O  = Co + p to
+low  = max(1, q, ceil((D + q delta)/(p + delta)))
+high = floor((D - q delta)/(p - delta))
+n0   = nearest D/p clamped to [low, high]
+r    = D - n0 p
+K    = ceil(abs(r)/delta)                 (zero residual => K=0)
 ```
 
-`I` and `O` are the real neighbouring slit centres. The virtual slits are construction geometry and are replaced by the round hole at `J`. Their centres may be on guide extensions; the required real neighbours must fit the actual finite arms:
+An empty count range fails. The existing floating-point boundary handling remains essential. With `K>0`, every count attaining this minimum lies in:
 
 ```text
--incomingLength <= dot(I, ti) <= 0
-0 <= dot(O, to) <= outgoingLength
+[ceil((D-K delta)/p), floor((D+K delta)/p)] intersect [low, high]
 ```
 
-The incoming display vector is `p ti - l ui`. The outgoing vector is `p to - l uo`. They have equal length and are rotated versions of one another, preserving the same thread angle relative to each straight run. This derives the 90° symmetry and generalizes it to other admitted turns.
-
-The real corner-centre distances are not nominal pitch. At 3 mm pitch and a 90° turn:
+For a circle, let `S=abs(sweep)`, `A=2 asin(p/(2R))`, `Amin=2 asin(.9p/(2R))`, and `Amax=2 asin(min(1,1.1p/(2R)))`. Reject `p>2R`; all steps use the minor branch. The existing weighted count formula yields minimum `K`, with extension capacity `e=Amax-A` and contraction capacity `c=A-Amin`. Its same-`K` range is:
 
 ```text
-J = (0.482091, 0.482091)
-I = (-1.943376, 0)
-O = (0, 2.907557)
-distance(I, J) = distance(J, O) = 2.472913 mm
+[ceil((S-K e)/A), floor((S+K c)/A)] intersect the circular feasible range
 ```
 
-These are derived junction distances, not ordinary pitch corrections. Enforcing 3 mm centre distance to the round hole would define a different corner. Physical acceptance of this construction must consider that distinction.
+Prefer counts in this range satisfying `n-K` even and `(n-K)/2 >= max(qStart,qEnd)`; those permit an exactly centred block. If none exist, keep the full range. Compare its nearest counts below/above the ideal count, respecting parity when restricted; choose the smaller actual fractional pitch change, then smaller `n`. This is bounded arithmetic, not a count search.
 
-Zero turn is handled separately by one shared slit. Exact reversal at ±180° is unsupported by this rule. Other turns can fail because the neighbours leave their arms. For the current profile and 3 mm pitch, even infinite arms need approximately `abs(turn) >= 22.4834°` for this tip convention; finite lengths may be more restrictive. There is no arbitrary angle cutoff or automatic fallback to a hole at the guide vertex.
+For the chosen count:
 
-## Curved joins and closure
+```text
+blockStart = nearestInteger((n-K)/2), half ties toward the end
+blockStart = clamp(blockStart, qStart, n-qEnd-K)
+line changed gap = p + (D-np)/K
+arc changed angle = A + (S-nA)/K
+arc changed chord = 2R sin(changed angle/2)
+```
 
-Each ordinary slit on an arc uses the tangent at its own centre. For a smooth line-to-arc or arc-to-arc join, coincident virtual slits can remain one real slit. A05 fixes that shared slit and leaves both outer margins free, so its exact result does not mean both guide endpoints contain holes.
+When `K=0`, emit nominal gaps only. Use negative angular advances for negative sweep. Corrections on a circle are centred in angular station, not at a chord midpoint.
 
-A03 and A04 are different: both virtual centres are fixed at the actual sharp guide junction. They preserve nominal centre distances but do not establish the straight-corner angle result. At 3 mm pitch their 90° guide turns produce display-line turns of about 97.202° and 105.633°. They remain examples to evaluate, not approved general curved-corner solutions.
+Examples at 3 mm: `30.5 -> n10,K2,3.25 gaps at indices 4-5`; `31.5 -> n11,K5,2.7 gaps at 3-7`; `30.3 -> n10,K1,3.3 gap at 5`. The last case is deliberately only approximately centred. With a protected final gap, `6.3 -> [3.3,3]` remains valid.
 
-L01 and L02 commit whole nominal chords up to the supplied construction limit, then fit only the remaining circle. The last chord is protected, and closure reuses the original opening. R01 reserves all four corners and fits the sides in order, with its final connection returning to the original round hole. None of these searches backwards for a better phase.
+## Features
 
-J06 additionally protects the ordinary gap before the incoming corner neighbour. That is a selected example policy, not a requirement derived from every corner. The corresponding final-gap protection in S04 and the circle cases must also remain explicit in route data.
+**Open endpoints:** default to slit centres at both guide endpoints. User start/end overrides shorten the traversed range; no automatic endpoint drift. Closed routes require an explicit start/phase pick and direction.
 
-## Test inventory
+**Landmark:** on a line at station `s`, reserve centres `s-p/2` and `s+p/2`. On a circle at angle `phi`, reserve `phi-A/2` and `phi+A/2`. Preserve their nominal gap. Station/angle symmetry does not put the chord midpoint on the circle. Reservations must fit within the traversed guide and not conflict with other features.
 
-The gallery intentionally excludes S03, S05 and F04 as redundant. Relevant numerical boundary checks remain in the core suite. J02 through J04 are angle variants of one construction.
+**Smooth join:** one shared slit, unless normalization removed an artificial subdivision. Same type/position/axis means one opening, not two coincident cuts.
 
-| Case | Geometry or behaviour being checked | At 3 mm pitch |
-| --- | --- | --- |
-| S01 | 30 mm straight, fixed endpoint centres | Exact |
-| S02 | 30.5 mm straight, minimum end corrections | Adjusted: 2 gaps |
-| S04 | 30.3 mm straight, final gap protected | Adjusted: second-last gap |
-| F01 | 30 mm line, centred crossing at 16.5 mm | Exact |
-| F02 | Same line, crossing shifted to 16.25 mm | Adjusted: 2 gaps |
-| F03 | 45 mm line, crossings at 16.25 and 31.75 mm | Adjusted: 4 gaps |
-| F05 | 30 mm line, crossings at 10 and 20 mm | Invalid middle span; accepted prefix retained |
-| J01 | Straight continuation, one shared slit, free outer margins | Exact |
-| J02 | 90° included corner, 10 mm arms, free outer margins | Exact under the corner rule |
-| J03 | 135° included corner, same arm lengths | Exact under the corner rule |
-| J04 | 45° included corner, same arm lengths | Exact under the corner rule |
-| J05 | 90° corner, incoming arm only 1 mm | Invalid; required neighbour does not fit |
-| J06 | Corner between fixed outer centres, 30 mm arms; protected approach gap | Adjusted: 5 gaps |
-| N01 | Pocket edge 6.5 mm before corner; 26 mm approach and 12 mm departure | Adjusted: 2 gaps |
-| A01 | Radius 10 mm, 90° arc, fixed endpoint centres | Adjusted: 3 chords |
-| A02 | Same arc, nominal centred crossing at 45° | Adjusted: 4 chords |
-| A03 | Radius 10 mm arc to line, sharp 90° guide turn | Exact spacing; corner rule unresolved |
-| A04 | Radius 10 and 8 mm arcs, sharp 90° guide turn | Exact spacing; corner rule unresolved |
-| A05 | 18 mm line into radius 10 mm quarter-circle; shared slit, free outer ends | Exact |
-| L01 | Circle radius `3 / (2 sin(pi/20))`; committed prefix | Exact: 20 openings |
-| L02 | Radius 10 mm circle; committed prefix and protected final chord | Adjusted: 2 chords |
-| R01 | 31.5 × 22.5 mm rectangle, four corners and ordered closure | Adjusted: 8 gaps; 38 openings |
+**Sharp junction:** use the same selected-tip construction on all admitted line/arc pairs:
 
-The dimensions stay fixed when pitch changes. Outcomes may change; N01 is valid at 3 mm and invalid at the other three available pitches. An expected rejection is a passing test. `exact` means no ordinary spacing corrections under the selected construction, not that every original design question has been solved.
+```text
+h = l/2
+J = Ci - h ui = Co + h uo
+```
 
-The current snapshot has 30 core tests, 22 matching reference outcomes at 3 mm, and 1,637 checks across 88 case-and-pitch runs. [results.json](results.json) holds the computed results. Core checks include signed corners, correction limits without a count cap, independent circular-count comparisons, shared versus overlapping reservations, actual line/circle coordinates and reuse of the first opening on closure.
+Here `Ci,Co` are virtual centres, `ui,uo` their slit-axis directions, and `J` the emitted round-hole centre. Emit the real incoming neighbour one nominal line/chord step before `Ci`, and the real outgoing neighbour one step after `Co`. Virtual slits are replaced by the hole.
 
-## What Codex must preserve and what remains open
+Intersect the incoming minus-tip locus and outgoing plus-tip locus. A line gives a parallel line. For a circle with radius `R`, winding sign `sigma`, and radial/tangential basis `er,ephi`, the slit direction is `u=sigma(sin(alpha)er+cos(alpha)ephi)` and the two locus radii are:
 
-The pure fitting functions can be ported independently of CAD and the viewer. Preserve measured coordinates, interval classifications, correction flags, construction order and rejection reasons. Call `validateSpacing` before constructing a route; the span fits do not inspect the slit profile. Keep an interval's `junction` flag distinct from an ordinary correction. Case-local slit IDs are not persistent seam or imprint identities.
+```text
+sqrt(R^2 + h^2 +/- 2 R h sigma sin(alpha))
+```
 
-`case-suite.mjs` assembles fixed examples; it is not a general route planner. Its sampled `guides` arrays serve SVG drawing. Use analytic line, radius and sweep definitions for CAD calculations, not those display samples.
+Line/line, line/circle or circle/circle intersection yields at most two isolated points. Select the point nearest the guide vertex before testing feasibility; equally near distinct roots make the local construction ambiguous and are rejected. Recover its virtual centres analytically on the principal station branch nearest the junction; reject antipodal station ties and never add a revolution to rescue a candidate. If the nominal arc station step is `b=2R asin(p/(2R))` (or `p` on a line), incoming virtual station must be in `[-L+b,b]` and outgoing in `[-b,L-b]`, measured from the junction. Thus the **real** neighbours remain on their finite arms even when virtual centres lie on extensions.
 
-The following are still unimplemented or unresolved:
+Validate that selected candidate for finite stations, nondegenerate virtual-tip contact, correct feature order, local opening clearance and existing reservations. Failure rejects the junction; never substitute the farther root or another winding. Coincident loci and exact reversal have no unique sharp-corner construction and are rejected; a true smooth join uses its own shared-slit rule. Whole-route clearance is checked afterward, without backtracking.
 
-- A general ordered route representation connecting arbitrary admitted line/arc spans and user-defined features.
-- Free-phase sharp curved junctions satisfying the original corner appearance criterion. A03/A04 do not solve this.
-- General splines, arbitrary self-crossings, branches, T-junctions and multiple seams sharing an opening.
-- Policies for beginning-only or split-end corrections, or a user request to revise previously committed geometry.
-- Mirrored punching-face treatment and persistent correspondence between master seams and underlayer imprints.
-- Whole-tool placement, physical clearances, leather behaviour and validation of the provisional slit profile against the intended tool.
+This preserves each arm's own ordinary tip-to-tip display vector. For straight arms the vector is `p t-l u`; curved arms need not produce a display turn equal to the guide turn. In the A03 geometry the new candidate gives `J=(.482091,.476961)` and display turn `92.703660 degrees`, replacing the old endpoint-centred recipe. This is a geometric decision, not physical stitching validation.
 
-For an unimplemented input class, the plugin should report unsupported. For an implemented construction whose stated conditions fail, report invalid. The current fixed-case wrapper is not yet a general input classifier. Do not make either case pass by quietly changing the rule.
+## Planner contract and failures
+
+Use one small pipeline: **normalize -> derive reservations -> fit spans -> emit/reuse openings -> validate -> result**. Start with simple records for analytic primitives, user features, reservations, openings and intervals. Keep `ordinary`, `corrected` and `junction` interval kinds distinct. Do not port one `case-suite.mjs` builder per shape.
+
+| Result | Meaning |
+| --- | --- |
+| Exact / adjusted | Ordinary spacing classification; meaningful only alongside validation status. |
+| Infeasible span | No admitted interval count under the fixed constraints; identify the two bounding features. |
+| Rejected construction | Chosen junction/clearance rule fails; alternatives are not thereby proven impossible. |
+| Unsupported input | The geometry or requested constraint has no implemented rule. |
+| Physical clearance unverified | Geometry fits, but profile/margin or material-boundary evidence is absent. |
+
+Example: a 7 mm free span at 3 mm pitch cannot use two gaps (maximum 6.6) or three (minimum 8.1). Redesign is a legitimate outcome. A failed route may show a diagnostic prefix, but CAD Generate must preserve the previous complete result.
+
+The existing core uses screen coordinates (`+y` down, positive turns clockwise). Port that convention explicitly or transform all points, tangents and slit axes together (`xCAD=xCore`, `yCAD=-yCore` in a local XY frame). Reflection/face parity is separate from reversing traversal.

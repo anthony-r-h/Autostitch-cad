@@ -1,76 +1,63 @@
-# Leather stitch lines for BricsCAD
+# Autostitch for BricsCAD
 
-This package is the geometry investigation and implementation handoff for a BricsCAD stitching plugin.
+A BricsCAD tool that turns editable stitch lines into regenerable slit and hole layouts, including connected corners, T junctions and crossings.
 
-The user workflow is:
-
-1. Draw the stitch guide in CAD.
-2. Select it in the stitch tool.
-3. Use the tool to mark Start, End, Landmarks and Intersections on that guide with visible symbols.
-4. Choose pitch in the tool.
-5. Generate the slit lines, round holes and correction marks.
-6. Keep each seam's generated result contained in one block on AUTOSTITCH.
-
-The original guide remains an editable input. Reopening the tool restores its annotations and pitch. Generate replaces that seam's output rather than adding duplicate holes. Imprints on other pattern pieces retain correspondence to the successfully generated master.
-
-**The HTML viewer is only an inspection tool. No BricsCAD plugin is included yet.**
+The implementation is tested in **BricsCAD V22.2 / OpenDCL 10.1.2.2**. See [verification results](tests/QUALIFICATION.md) for native checks and limits. Physical tool calibration remains open.
 
 ## Start here
 
-| File | What it contains |
-| --- | --- |
-| [STITCH_MODEL.md](STITCH_MODEL.md) | Parameters, concise axioms, direct formulas, corner construction, correction rules, all 22 examples, and unresolved geometry. |
-| [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md) | Extension choices, supported input scope, block and metadata design, CAD workflow, copies/mirroring/imprints, implementation order, and official API references. |
-| [geometry.mjs](geometry.mjs) | The current independent geometry calculations. |
-| [case-suite.mjs](case-suite.mjs) | Fixed examples and their ordered construction. This is not yet a general CAD route planner. |
-| [test-core.mjs](test-core.mjs) | Numerical and geometric regressions for the chosen rules. |
-| [results.json](results.json) | Full saved outcomes and checks at the four pitches. |
-| [stitch-geometry-lab.html](stitch-geometry-lab.html) | Offline drawings for inspecting the consequences of the rules. |
+1. Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and the `source` folder together. The event bridge uses BricsCAD V22's built-in .NET support; no external package installation is needed.
+2. In BricsCAD, use **APPLOAD** to load [AUTOSTITCH.lsp](AUTOSTITCH.lsp), then run **AUTOSTITCH**.
+3. Click **Select stitch line**, enter **Pitch** in millimetres, then **Generate cuts**. The starting pitch is 3 mm. New lines reuse the last committed pitch; existing work restores its saved inputs.
+4. Edit the original line using normal CAD tools, then **Generate cuts** again. Select a source line, its editing markers or its linked output to reopen the work.
 
-Read the model before treating an exact test result as an approved physical construction. A03/A04 are exploratory curved-junction alternatives. A05 has free outer ends. The real centre distances beside a round corner hole are distinct from ordinary slit pitch.
+After opening the palette once, its commands are available in other drawings opened during that BricsCAD session.
 
-The recommended output container is an ordinary block per seam on AUTOSTITCH, linked to the user-drawn guide, its annotations and selected pitch. The extension language depends on the actual BricsCAD installation and existing extension. The plan distinguishes these recommendations from requirements already established by the user.
+The release ZIP includes `examples/Autostitch-practical-demo.dwg`: eight editable examples covering gaps, curves, corners, meeting lines and crossings. Open it, run AUTOSTITCH, and select a source line to try the controls.
 
-## Handoff to Codex
+Supported source entities are `LINE`, `ARC`, `CIRCLE` and `LWPOLYLINE`, including bulged arc segments. They must lie in **WCS XY at Z=0**, with a positive Z normal. Separate entities can meet or cross without a CAD Join operation. Invalid constructions and overlapping cuts are rejected before output is replaced.
 
-Use this task with the package and the existing CAD extension project:
+Each independent line or connected set is limited to **2,000 openings**. Larger requests fail explicitly; output is never truncated.
 
-> Build the BricsCAD stitch-line tool described in STITCH_MODEL.md and BRICSCAD_PLAN.md. Follow the target repository's instructions. First identify the installed BricsCAD version, edition and OS, and inspect the existing extension rather than assuming its technology.
->
-> Keep the geometry core independent of CAD. Preserve the direct fitting rules, finite-slit corner construction, centred nominal landmark gaps, correction limits, construction order and explicit failures. Do not turn numerical test-oracle searches into production solvers.
->
-> The input workflow is mandatory: the user draws the guide, selects it in the tool, uses the tool to place visible Start/End/Landmark/Intersection annotations, chooses pitch, and generates one contained stitch result on AUTOSTITCH. The guide remains an editable CAD input. The first usable build should complete this flow for a straight guide with Start/End markers, restore the inputs after reopening, replace output on Generate, and support predictable Undo. Then add Landmark and Intersection annotation actions with the admitted line/arc rules and closure. General route assembly, CAD persistence and imprint lineage still need implementation.
->
-> Do not treat the HTML UI as the product or spend effort extending it unless a specific geometric question needs a new example. Do not silently resolve the open corner, curve or mirror questions by changing the rules. Use the supplied examples as regression evidence and verify actual CAD operations in the target host.
+Drawing units come from `INSUNITS`; pitch and tool dimensions are always millimetres. A unitless drawing asks whether one drawing unit means a millimetre or an inch. Saved seams retain their unit conversion.
 
-If host information or extension files are missing, identify precisely what is needed. The plan can be read and the independent core worked on before those details are available; a compatible CAD binary cannot be promised without them.
+## Connecting stitch lines
 
-## Run the geometry checks
+Select one line, click **Connect stitch lines**, then select another line or its cuts. One new intersection connects directly. When several intersections need coordination, the tool reports the count and offers **ConnectAll** or Cancel. This includes intersections with the other lines already connected to either selection. Nearby unselected drawing geometry has no effect.
 
-Node.js 18 or later. No package installation is required.
+Connected lines share one output block on `AUTOSTITCH`. Corners, crossings and branches coordinate their shared opening. Two lines that simply continue along the same straight line or circle, with the same pitch, become one uninterrupted run; their source boundary does not force a hole. Each source keeps its own pitch, range, direction and gap picks; the physical slit/hole profile must agree. Selecting a member edits that line's inputs, while **Generate cuts** recomputes the whole connected set. A failed operation preserves the previous complete output.
 
-```bash
-node run-tests.mjs
-```
+**Disconnect line** removes the selected line's connections and regenerates the resulting independent sets. If a source was deleted, select a surviving line or the old output and use **Remove missing lines**. This repairs the remaining connections without requiring Undo, including when the first selected line was deleted. Generate remains blocked until that explicit repair succeeds.
 
-This writes results.json. The current reference snapshot contains 30 core tests, 22 reference examples at 3 mm, and 1,637 checks across 88 runs. The other pitches use the same drawing dimensions, so an example may correctly change from valid to invalid.
+## Editing a line
 
-Changing a rule requires updating the reasoning and the expected results deliberately. Do not change an expectation merely to make a failed check pass.
+- **Add gap** centres one nominal gap at your pick, with no cut at the pick itself. Select it in **Gaps** to **Move gap** or **Delete gap**. This does not connect another line.
+- **Set start / Set end** trim the working range without trimming the source. The labels follow **Reverse direction**, so Set start always changes the displayed start. Enter **Default** at a pick prompt to restore that endpoint; **Reset range** restores the full line.
+- For a closed line, your first selection pick sets its start phase. **Set start** changes it; Set end is disabled.
+- **Save pitch** saves an input edit separately. **Generate cuts** commits its current pitch and output together. Native **Undo / Redo** can reverse these operations.
+- Reopening **AUTOSTITCH** also reloads saved inputs. After switching drawings, select a guide again before generating; a click cannot reuse another drawing's displayed seam.
+- If output was moved, rotated or scaled independently, **Restore cut position** explicitly regenerates it from its sources. It is enabled when that placement conflict is detected.
 
-## Inspect or rebuild the viewer
+The original sources remain authoritative and stay outside the cut blocks. Editing aids are saved, nonplotting blocks on `AUTOSTITCH_UI`: green START, red END, cyan GAP and yellow JOIN. Point picking temporarily enables exact centre/node snaps and restores your previous settings. Markers survive redraws and reopening, and follow ordinary MOVE, STRETCH and ERASE commands with Undo/Redo. Cuts update only when you Generate. Changes made through Properties or automation refresh markers when the line is selected again.
 
-Open stitch-geometry-lab.html, choose pitch and example, and inspect the drawing. Drawing options and measurements start collapsed. Saved drawings remain available if the file preview does not run the interactive controls.
+Gap and range picks attach to a source segment at a fixed physical distance. Changed polyline topology can require clearing or re-picking them. **Delete gap** offers **ClearAll** when correspondence is invalid; reset or re-pick affected ranges. For a connection whose attachment changed or disappeared, disconnect the affected line, then connect it again.
 
-After a model change:
+Within one drawing, copy all connected source lines and their output together to retain an editable copy. Copying output alone leaves static cuts; a partial source copy cannot edit the originals. Raw source guides must not overlap for a positive length, even when their selected ranges divide that overlap into adjacent pieces. Trim the overlapping source geometry before connecting it.
 
-```bash
+## Tool assumptions
+
+The current profile uses **1.5 mm slits, 0.5 mm hole diameter and 40° lean**. Tool width, retained-material margin and material-edge clearance are uncalibrated: **Physical clearance unverified** remains visible. Curves and adjusted gaps may require individual tool placement; the output does not guarantee a rigid multi-tooth iron will reproduce the pattern.
+
+## Design and development
+
+[STITCH_MODEL.md](STITCH_MODEL.md) defines geometry; [PHYSICAL_RULES.md](PHYSICAL_RULES.md) defines physical claims. [BRICSCAD_PLAN.md](BRICSCAD_PLAN.md) records implementation scope and acceptance gates. [REVIEW.md](REVIEW.md) retains the design review.
+
+The older JavaScript laboratory and gallery remain available and contain earlier rules, including superseded A03/A04 experiments. They are not runtime dependencies of the CAD plugin. To inspect them with Node.js 18+:
+
+```sh
 node run-tests.mjs
 node build.mjs
 node test-viewer.mjs
+node review/model-evidence.mjs
+node review/correction-evidence.mjs
 ```
-
-The viewer checks cover saved HTML, interactive control logic and startup recovery. They are not a full browser rendering test or BricsCAD validation.
-
-An optional local server can be started from this folder with `python3 -m http.server 8000`, or `py -m http.server 8000` on Windows. Open http://localhost:8000/stitch-geometry-lab.html.
-
-The remaining files support that inspection tool: render-svg.mjs, render-static.mjs, presentation.mjs, viewer-template.html, viewer.js, build.mjs and test-viewer.mjs. They do not need to be ported to CAD.

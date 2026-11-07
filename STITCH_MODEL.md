@@ -52,6 +52,8 @@ Connect stitch lines combines selected sources and their existing connected memb
 
 Classify actual incident arms, not CAD entity boundaries. A sharp two-arm corner uses the selected-tip construction below, including when its arms are separate LINE entities; a smooth two-arm transition uses its shared slit. At a node with three or more arms, emit one round hole at the guide intersection and reserve each arm's first neighbour at nominal direct/chord pitch. Remaining spans use the same bounded fitters. These branch-adjacent gaps are protected reservations, not ordinary corrections. See [junction construction and examples](review/JUNCTIONS.md).
 
+Equal-pitch collinear or co-circular continuations are normalized into one run, including across connected source entities. Such a source boundary does not force an opening. A smooth change of curvature still reserves its shared slit.
+
 Persist a connection's source/primitive incidences and selected analytic root. Recompute its position from current source geometry after edits. Common placement, unchanged supporting geometry and proven root-side correspondence can retain identity; an ambiguous changed root or topology requires explicit repair, never nearest-point reassignment. Every crossing within the declared set must be coordinated, and every distinct emitted cut pair must pass clearance.
 
 Disconnected or missing-source repair solves all resulting components before replacing any output. A failure retains the previous complete cuts. Source inputs remain canonical; saved output topology supports deleted-primary recovery without recreating deleted source geometry. [Connected workflow](review/CONNECTED_WORKFLOW.md) records adapter ownership and recovery details.

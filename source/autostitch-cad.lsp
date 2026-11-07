@@ -282,7 +282,7 @@
   (setq group (ast:cad-group-info guide) members (ast:cad-get 'members group) primary (ast:cad-get 'primary group))
   (if (and (ast:cad-get 'primary record) (= 1 (length members)))
     (setq record (vl-remove-if '(lambda (item) (member (car item) '(primary members connections link))) record)))
-  (setq factor (if (and (= 0 (getvar "INSUNITS")) (ast:cad-get 'factor record))
+  (setq factor (if (ast:cad-get 'factor record)
                  (ast:cad-get 'factor record) (ast:cad-unit-factor)))
   (ast:cad-require factor "Set drawing INSUNITS or explicitly choose millimetres per drawing unit.")
   (setq route (ast:cad-extract guide factor) output (ast:cad-get 'link record))
@@ -334,7 +334,7 @@
 
 (defun ast:cad-project (entity world-point / closest parameter index start-parameter station factor data kind record)
   (setq data (entget entity) kind (cdr (assoc 0 data)) record (ast:cad-record entity)
-        factor (if (and (= 0 (getvar "INSUNITS")) (ast:cad-get 'factor record))
+        factor (if (ast:cad-get 'factor record)
                  (ast:cad-get 'factor record) (ast:cad-unit-factor))
         closest (vlax-curve-getClosestPointTo entity world-point)
         parameter (vlax-curve-getParamAtPoint entity closest)

@@ -13,7 +13,7 @@ Host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. All writes used sepa
 | Compact markers, direction arrows, exact CEN/NODE/MID snaps, shared labels and rollback | 42 passed |
 | Native MOVE/STRETCH/ERASE, Undo/Redo, palette input save, event bootstrap and failure rollback | 61 passed |
 | Native paired COPY and source ownership across model/paper space | 5 passed |
-| Mandatory thread/chevrons, stroke weights, filled holes, dashed virtual slits, inch scaling, signatures and rollback | 41 passed |
+| Mandatory thread/spacing marks, stroke weights, filled holes, dashed virtual slits, inch scaling, signatures and rollback | 41 passed |
 | Existing JavaScript laboratory | 30 core tests, 22 references, 1,637 invariants passed |
 
 Actual palette controls were exercised in BricsCAD: Select, Add landmark, Move, Start, End, Reverse and Generate. Picked inputs survived regeneration. Cancelling selection retained the previous seam. Invalid pitch left inputs and output unchanged.
@@ -57,6 +57,8 @@ The 61 native event checks also passed. At that revision, the **Spacing marks** 
 The fixed drawing-style revision passed all **12 native suites: 1,264 assertions**, plus **61 native event checks**. Slits and chevrons use 0.30 mm strokes; thread and dashed virtual slits use 0.09 mm. These displays are always generated and their layers enabled for viewing and printing. Round holes retain their physical circle and receive an exactly sized solid fill. Tests check actual virtual-slit tip contact at straight, curved and separate-source corners, no invented construction at T branches, dimensions in millimetres/inches, migration and rollback. Direction arrows follow the guide near `S`, including reversed and closed paths. Both display checkboxes were removed from the compiled palette.
 
 The updated demo regenerated **14 outputs**, with all **19 guides, settings and landmark lists unchanged** and all source/output associations current. The live palette and filled/dashed corner construction were inspected in BricsCAD.
+
+The subsequent notation-only change replaces chevrons with short perpendicular crossbars at both slit tips, forming a capital `I`. All **41 display checks** passed again, covering straight/reversed/curved guides, inches, deduplication, output migration and rollback. Physical slit geometry and the 0.30 mm stroke remain unchanged.
 
 ## Repeat
 

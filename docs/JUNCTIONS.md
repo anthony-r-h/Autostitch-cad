@@ -1,6 +1,6 @@
 # Junctions
 
-A junction is where stitch arms meet. Its construction depends on the incident arms.
+Construction depends on the incident arms. Terms are defined in the [glossary](GLOSSARY.md).
 
 | Geometry | Opening |
 | --- | --- |

@@ -50,6 +50,7 @@ Slits and `I` marks use $0.30\,\mathrm{mm}$ strokes; thread and construction use
 
 ## Reference
 
+- [Glossary](docs/GLOSSARY.md)
 - [Axioms and their motivation](docs/AXIOMS.md)
 - [Model and fitting mathematics](docs/MODEL.md)
 - [Junction construction](docs/JUNCTIONS.md)

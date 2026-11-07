@@ -1,6 +1,6 @@
 # Axioms
 
-These rules define valid stitch geometry. Pitch is $p$, slit length is $\ell$, slit lean is $\alpha$, and the required clearance margin is $m$.
+These rules define valid stitch geometry. Terms are defined in the [glossary](GLOSSARY.md). Pitch is $p$, slit length is $\ell$, slit lean is $\alpha$, and the required clearance margin is $m$.
 
 | ID | Rule | Motivation |
 | --- | --- | --- |

@@ -1,17 +1,8 @@
 # Model and solution
 
-Rules: [axioms](AXIOMS.md). Construction: [junctions](JUNCTIONS.md).
+Terms: [glossary](GLOSSARY.md). Rules: [axioms](AXIOMS.md). Construction: [junctions](JUNCTIONS.md).
 
-## Objects and parameters
-
-| Object | Meaning |
-| --- | --- |
-| Guide | An oriented chain of straight or circular segments. |
-| Landmark | A guide position requiring a centred nominal gap. |
-| Junction | Incident stitch arms sharing one opening. |
-| Opening | A slit or round hole; virtual slits are construction only. |
-| Reservation | Fixed opening centres and protected nominal gaps. |
-| Free span | The portion between consecutive reservations. |
+## Parameters
 
 The tool profile is slit length $\ell$, transverse slit width $w$, signed lean $\alpha$, hole diameter $d$ and clearance margin $m$. Pitch $p$ can differ between guides sharing a profile. Changing pitch does not scale the tool.
 

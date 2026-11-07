@@ -4,7 +4,7 @@ The AutoLISP/OpenDCL plugin includes independent and explicitly connected stitch
 
 ## Current implementation status
 
-`AUTOSTITCH.lsp` loads the geometry, connected-path solver, DWG adapter, saved markers and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Its 16 controls group selection and stitch length, pitch/direction, landmarks, connections, then Generate and status. Landmark entries use names only. Open seams use guide endpoints; closed seams expose Set loop start. Older open seams retain saved limits and expose Use whole line to clear them. Saved nonplotting markers provide native NODE/CEN snaps.
+`AUTOSTITCH.lsp` loads the geometry, connected-path solver, DWG adapter, saved markers and palette callbacks from `source`; `AUTOSTITCH.odcl` is the compiled palette. Its 18 controls group selection, stitch ID and length, pitch and endpoints, landmarks, connections, then Generate and status. Landmark entries use names only. Set start/end can limit stitching to part of a guide; closed loops use Set start with Set end disabled. Saved nonplotting markers provide native NODE/CEN snaps.
 
 The solver supports line/arc routes and explicit connections between separate sources, including corners, T junctions and crossings. Saved limits, nominal gap reservations and all distinct emitted cuts are validated across the complete connected set. Extraction accepts LINE, ARC, CIRCLE and LWPOLYLINE in WCS XY at Z=0 with a positive Z normal; arbitrary drawing planes are not implemented. Unitless drawings require an explicit millimetre/inch choice.
 
@@ -26,9 +26,10 @@ One `AUTOSTITCH` command opens a compact palette:
 
 ```text
 [Select stitch line]
+Stitch ID: 9F
 Stitch length: 100 mm
 Stitch pitch [3] mm
-[Reverse direction] [Set loop start]
+[Set start] [Set end] [Reverse direction]
 Landmarks
 [Landmark 1]
 [Add landmark] [Remove landmark]
@@ -46,7 +47,7 @@ Short action or error message
 
 Default pitch is provisionally 3 mm, then the last choice; an existing seam restores its own value. Tool/process setup and calibration limits remain outside the normal seam controls. No persistent calibration banner appears in the palette.
 
-Set loop start is disabled for ordinary open lines. An older open seam with saved limits or anchors instead offers Use whole line: remove `start`, `end`, `start-anchor` and `end-anchor`, preserving pitch and landmarks. Existing limits are never silently discarded.
+Set start/end pick the active portion of an open guide; Reverse direction swaps traversal. Set end is disabled on closed loops, where Set start sets the loop phase. Default restores the picked endpoint; WholeLine resets both open limits. Neither changes the source geometry. Existing saved limits remain valid.
 
 Corners within a source derive from normalized geometry. Explicit source-to-source connections persist as source/primitive attachments. Two-arm treatment depends on geometry, not CAD entity boundaries; T and X nodes emit one shared round opening. Lost or ambiguous connection correspondence requires disconnecting the affected line and connecting it again. Raw sources that overlap for a positive length must be trimmed before connection, even if their selected ranges are adjacent.
 
@@ -134,3 +135,5 @@ Stages 1-2 establish the usable editing loop. Do not port every gallery shape be
 Read-only inspection on 2026-11-06 found V22.2.02 running, OpenDCL 10.1.2.2 loaded, OpenDCL Studio installed, and the sibling Csvlabel source/compiled palette. Its README reports native V22 tests; those were not rerun here. Installed `API/dotNet` samples independently confirm Framework 4.8.
 
 During that initial read-only inspection, the licensed edition was unverified. COM probes returned `CO_E_CLASSSTRING` for the unversioned ProgID and `MK_E_UNAVAILABLE` for `.22.0`; the cause was not established. No drawing commands or plugin code were sent during that inspection. Later implementation work ran native checks in a separate test drawing, as distinguished in the current status above.
+
+The palette and a thin boxed marker show the same drawing-local stitch ID: the stable source-handle portion of `AUTOSTITCH_<ID>_R<revision>`. Connected sources share one ID; only their main guide draws the box. The box follows the displayed start and sits opposite `S`, shifted slightly along the guide when its start is a shared junction. It remains a nonplotting editing aid. No new numbering registry or geometry rule is introduced.

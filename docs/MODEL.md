@@ -1,99 +1,144 @@
 # Model and solution
 
-Implementation: [geometry](../source/autostitch-geometry.lsp), [connected sets](../source/autostitch-network.lsp). Rules: [axioms](AXIOMS.md).
+Rules: [axioms](AXIOMS.md). Construction: [junctions](JUNCTIONS.md).
 
-## Inputs and objects
+## Objects and parameters
 
 | Object | Meaning |
 | --- | --- |
-| Guide | Ordered line/arc primitives; original CAD entities remain authoritative. |
-| Landmark | A station requiring one centred nominal gap. |
-| Junction | Incident stitch arms sharing one opening. Corners within a guide are derived; separate guides are connected explicitly. |
-| Opening | One slit or round hole. Virtual slits are construction only. |
+| Guide | An oriented chain of straight or circular segments. |
+| Landmark | A guide position requiring a centred nominal gap. |
+| Junction | Incident stitch arms sharing one opening. |
+| Opening | A slit or round hole; virtual slits are construction only. |
 | Reservation | Fixed opening centres and protected nominal gaps. |
-| Free span | Distance between consecutive reservations, fitted without moving them. |
+| Free span | The portion between consecutive reservations. |
 
-Pitch `p` is per source. Slit length `l`, lean `alpha`, handedness, round-hole diameter `d`, effective thickness `w` and retained-material margin `m` belong to its saved tool settings. Changing pitch does not scale them. Connected members must agree on tool settings; pitch may differ.
+The tool profile is slit length $\ell$, transverse slit width $w$, signed lean $\alpha$, hole diameter $d$ and clearance margin $m$. Pitch $p$ can differ between guides sharing a profile. Changing pitch does not scale the tool.
 
-Default dimensions: `p=3 mm`, `l=1.5 mm`, `alpha=40 degrees`, `d=0.5 mm`. Calibration status is in [limits](LIMITS.md).
+Defaults are $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $\alpha=40^\circ$ and $d=0.5\,\mathrm{mm}$. Width and margin must be specified for an effective angle limit; see [limits](LIMITS.md).
 
-```text
-normalize guide -> reserve features -> fit free spans
--> emit/reuse openings -> validate whole set -> commit output
-```
+## Solution policy
+
+Reserve features, fit each free span, then check every distinct opening pair.
+
+Among feasible fits:
+
+1. Minimize the number of changed gaps.
+2. Prefer interval counts that allow an exactly centred correction block.
+3. Choose smaller fractional pitch change, then fewer intervals.
+4. Give the changed gaps one equal spacing in one contiguous block, placed as centrally as the protected gaps allow. Half-index ties go toward the end.
+
+These choices select a result within the axioms. They do not move reserved features.
 
 ## Span fitting
 
-Let `qStart`, `qEnd` count protected nominal intervals and `q=qStart+qEnd`.
+Let $q_s,q_e$ count protected nominal intervals at either end, and $q=q_s+q_e$. For a positive span:
 
-Use the same arithmetic for lines and circles:
-
-| Quantity | Line | Circle of radius R |
+| Quantity | Straight span | Circular span, radius $R$ |
 | --- | --- | --- |
-| Span `T` | Length D | Absolute sweep |
-| Nominal advance `a` | p | 2 asin(p/(2R)) |
-| Minimum advance `amin` | 0.9p | 2 asin(0.9p/(2R)) |
-| Maximum advance `amax` | 1.1p | 2 asin(min(1,1.1p/(2R))) |
+| Total advance $T$ | Length $D$ | Absolute sweep $\lvert\Delta\phi\rvert$ |
+| Nominal advance $a$ | $p$ | $2\arcsin\left(\frac{p}{2R}\right)$ |
+| Minimum advance $a_-$ | $0.9p$ | $2\arcsin\left(\frac{0.9p}{2R}\right)$ |
+| Maximum advance $a_+$ | $1.1p$ | $2\arcsin\left(\min\left\{1,\frac{1.1p}{2R}\right\}\right)$ |
 
-Circular pitch requires `p <= 2R`; every step uses the minor chord. Define `e=amax-a`, `c=a-amin`.
+Circular pitch requires $p\leq 2R$ and uses the minor chord. Define the per-gap extension and contraction capacities:
 
-```text
-low  = max(1, q, ceil((T + q e)/amax))
-high = floor((T - q c)/amin)
-```
+$$
+e=a_+-a,\qquad c=a-a_-.
+$$
 
-An empty integer range fails. For a candidate interval count `n`, residual `r=T-na` needs:
+The feasible integer interval counts satisfy
 
-```text
-k(n) = 0                  if r=0
-       ceil(r/e)          if r>0
-       ceil(-r/c)         if r<0
-```
+$$
+n_{\min}=
+\max\left\{1,q,\left\lceil\frac{T+qe}{a_+}\right\rceil\right\},
+\qquad
+n_{\max}=\left\lfloor\frac{T-qc}{a_-}\right\rfloor.
+$$
 
-The minimum `K` comes from the clamped floor and ceiling of `T/a`. All counts with that minimum lie in:
+Reject if $n_{\min}>n_{\max}$. For a candidate count $n$, let $r=T-na$. Its required correction count is
 
-```text
-[ceil((T-Ke)/a), floor((T+Kc)/a)] intersect [low, high]
-```
+$$
+k(n)=
+\begin{cases}
+0,&r=0,\\
+\left\lceil r/e\right\rceil,&r>0,\ e>0,\\
+\left\lceil -r/c\right\rceil,&r<0,\ c>0,\\
++\infty,&\text{the required capacity is zero}.
+\end{cases}
+$$
 
-For `K>0`, prefer counts with `n-K` even and `(n-K)/2 >= max(qStart,qEnd)`. These allow exact centring. Compare the nearest admissible counts below and above `T/a`; choose smaller fractional pitch change, then smaller `n`. No count search is needed.
+Only fits with $k(n)\leq n-q$ are usable. The minimum $K$ is obtained from the floor and ceiling of $T/a$, clamped to the feasible count range. Counts with that minimum lie in
 
-```text
-blockStart = clamp(roundHalfUp((n-K)/2), qStart, n-qEnd-K)
-changed advance = a + (T-na)/K
-changed line gap = changed advance
-changed arc chord = 2R sin(changed advance/2)
-```
+$$
+\left[
+\left\lceil\frac{T-Ke}{a}\right\rceil,\,
+\left\lfloor\frac{T+Kc}{a}\right\rfloor
+\right]
+\cap[n_{\min},n_{\max}].
+$$
 
-`K=0` emits nominal intervals only. Negative sweeps reverse angular advances. Circle corrections are centred in angular station. Numeric comparisons use arithmetic tolerances, not added pitch or manufacturing allowances.
+For $K>0$, exact centring requires
 
-| Span at p=3 mm | Result |
+$$
+n-K\equiv0\pmod2,\qquad
+\frac{n-K}{2}\geq\max(q_s,q_e).
+$$
+
+Compare the nearest admissible counts on either side of $T/a$, using the solution policy above. For the selected count, the zero-based correction-block start is
+
+$$
+i=\operatorname{clamp}
+\left(
+\left\lfloor\frac{n-K}{2}+\frac12\right\rfloor,\,
+q_s,\,
+n-q_e-K
+\right).
+$$
+
+Here $\operatorname{clamp}(x,u,v)=\min\{v,\max\{u,x\}\}$. The adjusted advance and pitch are
+
+$$
+a'=a+\frac{T-na}{K},
+\qquad
+p'=
+\begin{cases}
+a',&\text{straight},\\
+2R\sin(a'/2),&\text{circular}.
+\end{cases}
+$$
+
+For $K=0$, all intervals remain nominal. Negative sweep reverses angular advance; circular corrections are centred in angular station. Arithmetic tolerances do not enlarge the permitted pitch adjustment.
+
+| Span with $p=3\,\mathrm{mm}$ | Fit |
 | --- | --- |
-| 30.5 mm | 10 intervals; two central gaps of 3.25 mm. |
-| 31.5 mm | 11 intervals; five central gaps of 2.7 mm. |
-| 30.3 mm | 10 intervals; one 3.3 mm gap nearest the centre. |
-| 6.3 mm, last gap protected | 3.3 mm followed by 3 mm. |
-| 7 mm | No fit: two gaps reach at most 6.6 mm; three need at least 8.1 mm. |
+| $D=30.5\,\mathrm{mm}$ | $n=10$; two central gaps of $3.25\,\mathrm{mm}$. |
+| $D=31.5\,\mathrm{mm}$ | $n=11$; five central gaps of $2.7\,\mathrm{mm}$. |
+| $D=30.3\,\mathrm{mm}$ | $n=10$; one gap of $3.3\,\mathrm{mm}$ nearest the centre. |
+| $D=6.3\,\mathrm{mm}$, final gap protected | $3.3\,\mathrm{mm}$ followed by $3\,\mathrm{mm}$. |
+| $D=7\,\mathrm{mm}$ | No fit: $2(1.1p)=6.6\,\mathrm{mm}<D<8.1\,\mathrm{mm}=3(0.9p)$. |
 
-## Feature reservations
+## Reservations
 
-- Open ends: slit centres at the selected start and end.
-- Closed route: reuse the start opening at closure.
-- Straight landmark at station `s`: reserve `s-p/2` and `s+p/2`.
-- Circular landmark at angle `phi`: reserve `phi-a/2` and `phi+a/2`. This is station symmetry; the chord midpoint is inside the circle.
-- Smooth curvature change: reserve one shared slit. Redundant subdivisions have already been removed.
-- Sharp corners and branches: use [junction reservations](JUNCTIONS.md).
+- Open ends have slit centres at the chosen endpoints.
+- Closure reuses the start opening.
+- A straight landmark at station $s$ reserves $s-p/2$ and $s+p/2$.
+- A circular landmark at angle $\phi$ reserves $\phi-a/2$ and $\phi+a/2$. This is symmetry along the guide; the chord midpoint lies inside the circle.
+- A smooth change of curvature reserves one shared slit. Redundant straight or co-circular subdivisions do not introduce a reservation.
+- Sharp corners and branches use the [junction construction](JUNCTIONS.md).
 
-Reuse reservations only when position, opening type and undirected slit axis agree. Otherwise reject the conflict.
+Overlapping reservations can be reused only when their position, opening type and undirected slit axis agree.
 
-## Clearance
+## Opening clearance
 
-Model a slit as a capsule around its finite axis, and a round hole as a disk. For the shared profile:
+Represent a slit by a finite axis segment $S$ thickened to a capsule of radius $w/2$, and a round hole by a disk. The required separations are
 
-```text
-slit/slit:   axis distance >= w + m
-slit/round:  axis-to-centre distance >= w/2 + d/2 + m
-round/round: centre distance >= (d1+d2)/2 + m
-```
+$$
+\begin{aligned}
+\operatorname{dist}(S_1,S_2)&\geq w+m,\\
+\operatorname{dist}(S,P)&\geq \frac{w+d}{2}+m,\\
+\lVert P_1-P_2\rVert&\geq \frac{d_1+d_2}{2}+m.
+\end{aligned}
+$$
 
-Touching physical envelopes fail even when `m=0`. Check all distinct real pairs, including closure and other paths; omit virtual slits and intentional shared identities. The cut drawing remains axes and circles. Stroke weight is display notation, not physical width.
+Physical envelopes must also be strictly disjoint: touching fails when $m=0$. Check every distinct real opening pair, including closure and other guides. Virtual slits and a shared opening counted twice are excluded.

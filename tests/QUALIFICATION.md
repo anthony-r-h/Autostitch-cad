@@ -1,6 +1,6 @@
 # Qualification
 
-Recorded host: Windows, BricsCAD Ultimate 22.2.02, OpenDCL 10.1.2.2. Native tests write only to disposable drawings under `output/native`.
+Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
 ## Cleanup verification: 2026-11-07
 
@@ -57,4 +57,4 @@ Get-Content ./output/native/geometry-oracle.txt
 
 Omit `-IncludeUi` to run only the 12 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
 
-Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Host and physical uncertainties belong in [limits](../docs/LIMITS.md).
+Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Geometric limits belong in [limits](../docs/LIMITS.md).

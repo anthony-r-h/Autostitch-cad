@@ -29,7 +29,8 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Keep functions focused and explicit. Comment intent where the code cannot explain it.
 - Preserve drawing ownership, rollback and Undo/Redo behavior. Never replace valid output with a partial solution.
 - Keep technical diagnostics in code; user messages must explain the problem and a useful next action.
-- Put uncertainties and unsupported behavior in `docs/LIMITS.md`; link there instead of repeating them.
+- Keep axioms geometric. Put solution choices in `docs/MODEL.md`, application workflow in `README.md`, and geometric limits in `docs/LIMITS.md`.
+- Write mathematical notation in LaTeX. Keep code identifiers and commands as code.
 - Update `tests/cases.json` when adding or changing a test scenario. Keep existing IDs stable.
 
 ## Process

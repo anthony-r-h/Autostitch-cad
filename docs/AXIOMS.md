@@ -1,27 +1,20 @@
 # Axioms
 
-These are the tool's design rules. [Model](MODEL.md) gives the mathematics; [junctions](JUNCTIONS.md) defines shared openings. Physical assumptions and unresolved questions live in [limits](LIMITS.md).
+These rules define valid stitch geometry. Pitch is $p$, slit length is $\ell$, slit lean is $\alpha$, and the required clearance margin is $m$.
 
 | ID | Rule | Motivation |
 | --- | --- | --- |
-| A1 | The user's guide defines an ordered route, start, end and direction. | Editing the pattern must remain simple. |
-| A2 | Ordinary slits have a fixed shape and lean relative to the local tangent. | A tool profile should not change when pitch or curvature changes. |
-| A3 | Ordinary pitch is direct centre distance; on a circle it is a chord. | Tooth spacing measures a straight distance. |
-| A4 | A landmark sits halfway in station between two nominally spaced openings. No opening lies at the landmark. | Keep stitching consistent around a pattern reference. |
-| A5 | Reserve endpoint, landmark and junction constraints before filling free spans. | Fitting must respect the features that define the pattern. |
-| A6 | Use the fewest changed ordinary gaps. | Keep nominal runs usable with the chosen pitch. |
-| A7 | Each changed ordinary gap stays within 90-110% of nominal pitch. Protected gaps stay nominal. | Bound local spacing variation. |
-| A8 | Reuse one opening at closure or a declared shared junction. Keep reserved anchors fixed during a solve. | One physical hole must have one identity. |
-| A9 | Use direct formulas and bounded candidate selection. | Results should be reproducible and explainable. |
-| A10 | Reject an infeasible construction without relaxing its constraints or replacing prior output. | Some patterns need revision. |
+| A1 | A stitch line is an ordered guide with a direction and chosen extent. Ordinary slit centres lie on it. Subdivision alone does not change the layout. | Placement depends on geometry, not how the guide is divided. |
+| A2 | Each ordinary slit has fixed length $\ell$, width and signed lean $\alpha$ relative to the local tangent. | Curvature and pitch do not change the slit profile. |
+| A3 | Ordinary nominal pitch is direct centre distance: $\lVert C_{i+1}-C_i\rVert=p$. On a circle, it is a chord. Sharp-corner intervals follow A6. | Equal pitch means equal straight-line separation. |
+| A4 | A landmark is midway in guide station between two nominally spaced slits. No opening lies at the landmark. | The reference falls inside a full nominal stitch. |
+| A5 | Chosen endpoints, landmark pairs and junction neighbours are fixed constraints. Fitting the intervening spans cannot move them. | Feature placement takes precedence over spacing adjustment. |
+| A6 | At a sharp two-arm junction, one round hole replaces two virtual slits whose selected tips meet. The real neighbours are one nominal step before and after those virtual slits. | Both arms use the same tip-to-tip corner construction. |
+| A7 | An unprotected ordinary gap $g$ may vary within $0.9p\le g\le1.1p$. Protected gaps remain nominal. | Fitting has an explicit adjustment allowance. |
+| A8 | A smooth change of curvature shares one tangent-aligned slit. Closure and connected arms reuse their shared opening once; its centre, type and slit axis must agree. | One shared location has one compatible opening. |
+| A9 | Three or more incident arms share one round hole at their intersection. Each arm's first interval is one nominal pitch. | Every branch leaves the same opening at a defined spacing. |
+| A10 | Distinct real openings must neither touch nor overlap and must retain margin $m$. All openings must satisfy this together. Virtual slits are excluded. | A valid local fit cannot create a collision elsewhere. |
 
-## Decisions that complete the rules
+No solution exists when these constraints cannot all be satisfied.
 
-- Put equal corrections in one contiguous block per free span. Among minimum-correction solutions, prefer exact centring, then smaller fractional change, then fewer intervals. If exact centring is unavailable, use the nearest permitted placement; half-index ties go toward the end.
-- Normalize redundant collinear and co-circular subdivisions. A CAD vertex alone must not change stitching.
-- Use one slit at a genuine smooth change of curvature; use the sharp-corner or branch rule where appropriate.
-- Sharp corners use intersecting virtual slit tips. Their round holes can lie off the guide vertex. T/X junctions use a shared round hole at the intersection.
-- Check every distinct real opening pair across the connected set. Passing each span separately is insufficient.
-- Generate recomputes the complete set from current inputs. There is no permanently committed prefix or automatic incremental regeneration.
-
-[The audit](../tests/AXIOM_AUDIT.md) maps these rules to executable checks.
+[Model and solution](MODEL.md) defines how one valid layout is selected. [Junctions](JUNCTIONS.md) gives the corner construction and angle bounds. [The audit](../tests/AXIOM_AUDIT.md) maps the rules to executable checks.

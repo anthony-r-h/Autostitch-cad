@@ -4,12 +4,12 @@ Lay out stitch holes from editable pattern lines. Set pitch, mark pattern landma
 
 ## Use
 
-1. Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and `source/` together. Requires BricsCAD V22 and OpenDCL 10.1.2.2 on Windows.
+1. Install the [dependencies](docs/LIMITS.md#dependencies). Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and `source/` together.
 2. **APPLOAD** `AUTOSTITCH.lsp`, then run **AUTOSTITCH**.
 3. **Select stitch line**, enter **Stitch pitch**, then **Generate stitches**.
 4. Edit the guide with normal CAD tools. Select its guide, editing marker or generated block to reopen it, then Generate again.
 
-Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation 0 with a positive Z normal. Pitch and tool dimensions are millimetres. Drawing units come from `INSUNITS`; unitless drawings ask for millimetres or inches.
+Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with a positive Z normal. Pitch and tool dimensions are millimetres. Drawing units come from `INSUNITS`; unitless drawings ask for millimetres or inches.
 
 | Control | Action |
 | --- | --- |
@@ -37,7 +37,7 @@ Each connected set has one output block. Members keep their own pitch, direction
 | `J` / `L#` | Junction / landmark. |
 | Boxed ID | Stitch block identity; one label per connected set. |
 
-Slits and `I` marks use 0.30 mm strokes; thread and construction use 0.09 mm. Round holes print black. Generate includes these displays and enables their layers. Editing labels, including boxed IDs, are on nonprinting `AUTOSTITCH_UI`.
+Slits and `I` marks use $0.30\,\mathrm{mm}$ strokes; thread and construction use $0.09\,\mathrm{mm}$. Round holes print black. Generate includes these displays and enables their layers. Editing labels, including boxed IDs, are on nonprinting `AUTOSTITCH_UI`.
 
 ## Edit and repair
 
@@ -53,7 +53,7 @@ Slits and `I` marks use 0.30 mm strokes; thread and construction use 0.09 mm. Ro
 - [Axioms and their motivation](docs/AXIOMS.md)
 - [Model and fitting mathematics](docs/MODEL.md)
 - [Junction construction](docs/JUNCTIONS.md)
-- [Limitations, uncertainties and physical checks](docs/LIMITS.md)
+- [Geometric limits and dependencies](docs/LIMITS.md)
 - [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [axiom coverage](tests/AXIOM_AUDIT.md)
 - [Long-form README outline](docs/README_OUTLINE.md)
 - [Repository and development instructions](AGENTS.md)

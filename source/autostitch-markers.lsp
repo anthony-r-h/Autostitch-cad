@@ -107,6 +107,8 @@
               (if closed (rem (+ phase (* total 0.08)) total) (/ (+ start finish) 2.0)))
             direction (angle '(0.0 0.0 0.0)
               (vlax-curve-getFirstDeriv guide (vlax-curve-getParamAtPoint guide middle))))
+      ;; Keep the cue beside the guide so it cannot obscure a cut or snap marker.
+      (setq middle (polar middle (- direction (/ pi 2.0)) (* size 1.6)))
       (if reversed (setq direction (+ direction pi)))
       ;; Text keeps the direction cue from introducing false endpoint snaps.
       (ast:markers-entity (list '(0 . "TEXT") (cons 10 middle) (cons 11 middle)
@@ -142,7 +144,7 @@
         (strcat "JOIN " (itoa index)) 2 size text-height))))
 
 (defun ast:markers-snapshot (guide settings landmarks factor route)
-  (list '(display-version . 6) (cons 'settings settings) (cons 'landmarks landmarks)
+  (list '(display-version . 7) (cons 'settings settings) (cons 'landmarks landmarks)
     (cons 'factor factor) (cons 'route route) (cons 'style (ast:markers-style guide settings factor))
     (cons 'connections (ast:markers-connections guide))))
 

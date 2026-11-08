@@ -1,33 +1,31 @@
 # Fill recipes
 
-Fills arrange guides inside an area. The stitch model then fits holes to those guides.
+Fills arrange guides; the production solver places the stitches. Fill spacing controls density independently of stitch pitch.
 
-![Reusable fills](../examples/fills/fill-library.png)
+![Solved fill samples](../examples/fills/fill-library.png)
 
-| Recipe | Parameters | Main constraint |
+All samples use pitch $p=3\,\mathrm{mm}$ and slit length $\ell=1.5\,\mathrm{mm}$.
+
+| Recipe | Configuration | Construction |
 | --- | --- | --- |
-| Diagonal hatch | Bounds, angle, lane spacing, offset | Fit each clipped run independently. |
-| Arc spiral | Centre, inner radius, turn spacing, half-turn count | Tangent arc joins; clearance between turns. |
-| Maze meander | Origin, grid order, cell size | One noncrossing route with repeated sharp corners. |
-| Diamond quilt | Bounds, angle, lane spacing, offset | Two hatch families; declare their crossings as junctions. |
-| Flowing hatch | Bounds, row spacing, amplitude, wavelength, phase length | Curvature and clearance between neighbouring rows. Used by Velvet. |
+| Arc spiral | $3\,\mathrm{mm}$ inner radius; $2.5\,\mathrm{mm}$ turn spacing | Thirteen tangent semicircles |
+| Branching maze | $36\times30\,\mathrm{mm}$; $3\,\mathrm{mm}$ corridors | Sharp orthogonal walls with shared junction holes |
+| Diamond quilt | $6\,\mathrm{mm}$ between crossings | Two families of eight lines; 64 shared X junctions |
+| Flow | $35.38\times38.89\,\mathrm{mm}$; $1.5\,\mathrm{mm}$ row spacing | 25 translated circular arcs; free ends stop at nominal pitch |
 
-Fill spacing controls density; stitch pitch $p$ controls hole spacing. They are separate parameters. Quilting and maze fills retain all junction and corner constraints from the [axioms](AXIOMS.md).
+These are tested configurations, not minimum spacings. The maze's short turns are formed at visible T/X junctions; its passages remain connected. Its free gaps and all flow gaps are nominal.
 
 ## Reuse
 
-- Definitions and sample parameters: `fillRecipes` in [cases.json](../tests/cases.json).
-- Shared generator and clipping: [fill-recipes.ps1](../examples/fill-recipes.ps1).
-- Quilt A/B and Velvet call these generators directly in [design-studies.ps1](../examples/design-studies.ps1).
-- An inclusion mask trims guides to a region and splits them around exclusions. The Velvet mask reserves space around the lettering. Clipping does not create landmarks or junctions automatically.
+- [fills.lsp](../examples/fills.lsp): `ast:fill-paths` returns native line/arc polyline vertices. `ASTFILLDEMOS` draws and stitches the samples.
+- [cases.json](../tests/cases.json): stable IDs, parameters and expected results.
+- [fills.dwg](../examples/demos/fills.dwg): editable guides and generated blocks, with a named view per recipe.
+- [Reproduction commands](../demo.md): native generation and preview export.
 
-```powershell
-./examples/design-studies.ps1 -FillSamples -OutputFolder examples/fills
-./tests/check-fill-recipes.ps1
-```
+Maze coordinates define one fixed motif; they are not an arbitrary maze generator. Flow trims the free ends equally without changing the underlying arc. No independent hatch recipe is needed: the crossing grid is the diamond quilt.
 
-## Qualification
+Velvet uses circular-arc rows clipped around letter contours. Fragments too short to fit are omitted; retained fragments can be trimmed symmetrically. The three quilting studies remain separate guide artwork.
 
-Current checks cover guide continuity, hatch spacing, maze topology, clipping, short fragments and invalid parameters. Native stitch qualification remains pending for these fill samples.
+## Validation
 
-Clipping uses samples at most $0.5\,\mathrm{mm}$ apart. The artwork removes runs shorter than $5\,\mathrm{mm}$; retained runs can still be infeasible. For example, a straight $7\,\mathrm{mm}$ run cannot fit pitch $p=3\,\mathrm{mm}$ within the permitted gap adjustment. Curved samples need native arc preparation before stitching. Validate openings across the entire fill, including separate guides.
+Each sample must fit completely and pass combined opening clearance, including openings on separate guides. Crossings are declared junctions with shared holes. Clearance uses default model settings; it is not a calibrated material-width allowance. [Native results](../tests/QUALIFICATION.md).

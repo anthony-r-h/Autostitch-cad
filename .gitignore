@@ -1,2 +1,6 @@
 /.playwright-cli/
 /output/
+
+# BricsCAD drawing locks
+*.dwl
+*.dwl2

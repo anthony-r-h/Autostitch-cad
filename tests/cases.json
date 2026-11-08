@@ -1215,7 +1215,7 @@
     },
     {
       "id": "J02",
-      "title": "90° corner",
+      "title": "90\u00c2\u00b0 corner",
       "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
       "group": "Corner angles",
       "svg": true,
@@ -1394,7 +1394,7 @@
     },
     {
       "id": "J03",
-      "title": "135° corner",
+      "title": "135\u00c2\u00b0 corner",
       "description": "Does the same direct construction fit the supplied wider corner?",
       "group": "Corner angles",
       "svg": true,
@@ -1573,7 +1573,7 @@
     },
     {
       "id": "J04",
-      "title": "45° corner",
+      "title": "45\u00c2\u00b0 corner",
       "description": "Does the same direct construction fit the supplied tighter corner?",
       "group": "Corner angles",
       "svg": true,
@@ -4211,7 +4211,7 @@
     },
     {
       "id": "J08",
-      "title": "Shallow line�arc corner",
+      "title": "Shallow line\u00ef\u00bf\u00bdarc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4406,7 +4406,7 @@
     },
     {
       "id": "J09",
-      "title": "Shallow arc�line corner",
+      "title": "Shallow arc\u00ef\u00bf\u00bdline corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "J10",
-      "title": "Shallow arc�arc corner",
+      "title": "Shallow arc\u00ef\u00bf\u00bdarc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4966,7 +4966,9 @@
     "tests/autostitch-marker-tests.lsp",
     "tests/autostitch-host-tests.lsp",
     "tests/autostitch-display-tests.lsp",
-    "tests/autostitch-matching-cad-tests.lsp"
+    "tests/autostitch-matching-cad-tests.lsp",
+    "examples/fills.lsp",
+    "tests/autostitch-fill-tests.lsp"
   ],
   "suites": [
     {
@@ -8242,63 +8244,110 @@
           "sourceSymbol": "ast:match-reopen-tests"
         }
       ]
+    },
+    {
+      "id": "FILL-NATIVE",
+      "title": "Compact fill recipes",
+      "source": "tests/autostitch-fill-tests.lsp",
+      "entrypoint": "ast:fill-tests",
+      "runner": "suite",
+      "svg": true,
+      "setup": "Load production geometry, CAD defaults, examples/fills.lsp and the native fill tests.",
+      "recipe": "Solve the compact recipes and reject known infeasible alternatives; no drawing writes.",
+      "expected": "All recipes fit and their combined openings clear; gap bounds and shared junction counts hold.",
+      "checks": [
+        {
+          "id": "FILL-NATIVE-002",
+          "expected": "Spiral fill solves at 3 mm",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-003",
+          "expected": "Maze fill solves at 3 mm",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-004",
+          "expected": "Quilt fill solves at 3 mm",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-005",
+          "expected": "Flow fill solves at 3 mm",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-006",
+          "expected": "Spiral tangent joins introduce no round corner holes",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-011",
+          "expected": "Quilt shares one round hole at each of 64 crossings",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-012",
+          "expected": "All unprotected fill gaps stay within pitch allowance",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-013",
+          "expected": "Seven millimetre clipped run is rejected at 3 mm pitch",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-014",
+          "expected": "Spiral radius below half the pitch is rejected",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-015",
+          "expected": "Seven millimetre quilt junction spacing is rejected",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-016",
+          "expected": "Flow uses 300 nominal gaps without adjusted spacing",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-017",
+          "expected": "Flow free ends stop inside the original curve bounds",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-018",
+          "expected": "Maze has 143 openings with 40 shared junction holes",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-019",
+          "expected": "Maze gaps stay nominal without spacing adjustments",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-020",
+          "expected": "Maze stays on a 3 mm grid within a 36 by 30 mm footprint",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-021",
+          "expected": "Maze wall network has four connected groups",
+          "sourceSymbol": "ast:fill-tests"
+        }
+      ]
     }
   ],
   "visualFixtures": [
     {
-      "id": "SHOWCASE",
-      "description": "Fixed editable AUTOSTITCH lettering at 3 mm pitch; rounded, angular and square compositions.",
-      "drawing": "examples/Autostitch-showcase.dwg",
-      "source": "examples/showcase.lsp",
-      "exports": [
-        "examples/autostitch-round.svg",
-        "examples/autostitch-round.png",
-        "examples/autostitch-angular.svg",
-        "examples/autostitch-angular.png",
-        "examples/autostitch-square.svg",
-        "examples/autostitch-square.png",
-        "examples/autostitch-artwork.svg",
-        "examples/autostitch-artwork.png"
-      ],
-      "views": [
-        {
-          "name": "ROUND",
-          "description": "Rounded AUTOSTITCH banner."
-        },
-        {
-          "name": "ANGULAR",
-          "description": "Pointed A, square corners and bevelled C."
-        },
-        {
-          "name": "SQUARE",
-          "description": "Arched AUTO and script Stitch with two unstitched concentric pattern circles, four crossing landmarks and a single round-punch dot; 600 by 600 PNG."
-        }
-      ],
-      "coverage": [
-        "A: curved/pointed crown and two crossbar junctions",
-        "U: paired landmarks and straight-to-curve or square transitions",
-        "T: T junction and translated matched guides",
-        "O: closed loop",
-        "S: reverse curvature and alternating corners",
-        "I/H: connected sets with two T junctions",
-        "C: open curve and bevel corners",
-        "Adjusted gaps, round holes, virtual slits and thread display",
-        "Unstitched artwork is exported before solving; fitting preserves every guide",
-        "Square AUTO: arched placement with square terminals and rounded A crown/U bowl",
-        "Script Stitch: connected crossbars and shoulder; one separate 3 mm round punch for the dot",
-        "Pattern circles: all four lettering intersections are landmarks centred in protected nominal gaps; circles remain unstitched",
-        "Combined clearance validation includes the round-punch dot and all independent stitch lines"
-      ],
-      "expected": "51 guides, 32 output blocks, 28 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Eight landmarks total, including all four circle crossings (three on S, one on h). Each crossing is centred in a nominal 3 mm gap. The two circles have no generated stitching. Artwork exports before/after fitting match. Inspect all three views and validate combined emblem openings under default model settings. Boundary, mirror, ownership and Undo cases remain in focused suites."
-    },
-    {
       "id": "ART-EMBLEM",
       "description": "Centred three-circle emblem proposal",
       "drawing": "examples/demos/emblem.dwg",
-      "source": "examples/showcase.lsp",
+      "source": "examples/emblem.lsp",
       "exports": [
-        "examples/autostitch-emblem-study.png",
-        "examples/autostitch-emblem-study.svg"
+        "examples/demos/emblem.png",
+        "examples/demos/emblem.svg"
       ],
       "views": [
         {
@@ -8309,7 +8358,7 @@
       "coverage": [
         "Vertically centred circle family",
         "21 actual crossing landmarks",
-        "Unstitched artwork; canonical stitched specimen preserved"
+        "Unstitched artwork with saved landmarks"
       ],
       "expected": "Artwork review only. Native fit check currently rejects six of twelve source lines at 3 mm; do not treat this proposal as solved."
     },
@@ -8317,7 +8366,7 @@
       "id": "ART-A",
       "description": "Square diamond quilting with curved side channels",
       "drawing": "examples/studies/quilt-a-bolster.dxf",
-      "source": "examples/design-studies.ps1",
+      "source": "examples/demo.lsp",
       "exports": [
         "examples/studies/quilt-a-bolster.png",
         "examples/studies/quilt-a-bolster.svg"
@@ -8339,7 +8388,7 @@
       "id": "ART-B",
       "description": "Square diamond quilting interrupted by a sweeping ribbon",
       "drawing": "examples/studies/quilt-b-sweep.dxf",
-      "source": "examples/design-studies.ps1",
+      "source": "examples/demo.lsp",
       "exports": [
         "examples/studies/quilt-b-sweep.png",
         "examples/studies/quilt-b-sweep.svg"
@@ -8361,7 +8410,7 @@
       "id": "ART-C",
       "description": "Square fan quilting with paired arcs and straight ribs",
       "drawing": "examples/studies/quilt-c-fan.dxf",
-      "source": "examples/design-studies.ps1",
+      "source": "examples/demo.lsp",
       "exports": [
         "examples/studies/quilt-c-fan.png",
         "examples/studies/quilt-c-fan.svg"
@@ -8382,196 +8431,145 @@
     {
       "id": "ART-D",
       "description": "Portrait Can / You / Really with rounded vintage lettering",
-      "drawing": "examples/studies/banner-a.dxf",
-      "source": "examples/design-studies.ps1",
+      "drawing": "examples/demos/can-you-really.dwg",
+      "source": "examples/velvet.lsp",
       "exports": [
-        "examples/studies/banner-a.png",
-        "examples/studies/banner-a.svg"
+        "examples/demos/can-you-really.png",
+        "examples/demos/can-you-really.svg",
+        "examples/demos/can-you-really-phone.png"
       ],
       "views": [
         {
-          "name": "ARTWORK",
-          "description": "Portrait Can / You / Really with rounded vintage lettering"
+          "name": "VELVET",
+          "description": "Stitched background and unstitched lettering"
         }
       ],
       "coverage": [
-        "10:16 portrait",
-        "Outlined Cooper Black text",
-        "Wavy shading clipped outside lettering"
+        "160 by 256 mm portrait",
+        "Optically spaced Cooper lettering defined by unstitched space",
+        "Exact circular-arc background runs",
+        "Combined clearance across independent stitch lines",
+        "360-pixel-wide proof without letter outlines"
       ],
-      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. Letter boundaries are references; background guides keep 2 mm clear of text. No solver pass is claimed."
-    },
-    {
-      "id": "ART-E",
-      "description": "Portrait Can / You / Really with heavy slab-serif lettering",
-      "drawing": "examples/studies/banner-b.dxf",
-      "source": "examples/design-studies.ps1",
-      "exports": [
-        "examples/studies/banner-b.png",
-        "examples/studies/banner-b.svg"
-      ],
-      "views": [
+      "expected": "344 guides and 3799 openings at 3 mm pitch; combined default-model clearance passes. 33 short fragments omitted; 105 retained guides trimmed symmetrically by at most 1.981 mm total. Letter references are hidden and nonprinting.",
+      "nativeChecks": [
         {
-          "name": "ARTWORK",
-          "description": "Portrait Can / You / Really with heavy slab-serif lettering"
+          "source": "examples/velvet.lsp",
+          "entrypoint": "ast:velvet-clearance-tests",
+          "expected": "18 comparisons agree with the production clearance checker."
+        },
+        {
+          "source": "examples/velvet.lsp",
+          "entrypoint": "ast:velvet-glyph-tests",
+          "expected": "3799 openings remain outside the letters; minimum slit-axis clearance exceeds 0.1515 mm."
         }
-      ],
-      "coverage": [
-        "10:16 portrait",
-        "Outlined Rockwell Extra Bold text",
-        "Chevron shading clipped outside lettering"
-      ],
-      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. Letter boundaries are references; background guides keep 2 mm clear of text. No solver pass is claimed."
+      ]
     }
   ],
   "fillRecipes": [
     {
-      "id": "FILL-HATCH",
-      "title": "Diagonal hatch",
-      "kind": "hatch",
-      "source": "examples/fill-recipes.ps1",
-      "parameters": {
-        "bounds": [
-          8,
-          8,
-          88,
-          88
-        ],
-        "spacing": 8.0,
-        "angle": 45.0,
-        "offset": 0.0
-      },
-      "previewName": "fill-hatch",
-      "exports": [
-        "examples/fills/fill-hatch.png",
-        "examples/fills/fill-hatch.svg",
-        "examples/fills/fill-hatch.dxf"
-      ],
-      "notes": "Parallel guides; lane spacing is independent of stitch pitch.",
-      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
-      "usedBy": []
-    },
-    {
       "id": "FILL-SPIRAL",
       "title": "Arc spiral",
       "kind": "spiral",
-      "source": "examples/fill-recipes.ps1",
+      "source": "examples/fills.lsp",
       "parameters": {
         "center": [
-          48,
-          48
+          24,
+          24
         ],
-        "innerRadius": 6.0,
-        "spacing": 10.0,
-        "halfTurns": 7
+        "inner-radius": 3,
+        "turn-spacing": 2.5,
+        "half-turns": 13
       },
       "previewName": "fill-spiral",
       "exports": [
         "examples/fills/fill-spiral.png",
-        "examples/fills/fill-spiral.svg",
-        "examples/fills/fill-spiral.dxf"
+        "examples/fills/fill-spiral.svg"
       ],
-      "notes": "One tangent-connected arc route; qualify inner curvature and clearance between turns.",
-      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
-      "usedBy": []
+      "notes": "One route of tangent semicircles; 2.5 mm between full turns.",
+      "expected": "144 openings at 3 mm pitch and 1.5 mm slit length. Production solving and combined default-model clearance pass.",
+      "usedBy": [],
+      "drawing": "examples/demos/fills.dwg",
+      "view": "SPIRAL"
     },
     {
       "id": "FILL-MAZE",
-      "title": "Maze meander",
+      "title": "Branching maze",
       "kind": "maze",
-      "source": "examples/fill-recipes.ps1",
-      "parameters": {
-        "origin": [
-          13,
-          13
-        ],
-        "order": 3,
-        "cellSize": 10.0
-      },
+      "source": "examples/fills.lsp",
+      "parameters": {},
       "previewName": "fill-maze",
       "exports": [
         "examples/fills/fill-maze.png",
-        "examples/fills/fill-maze.svg",
-        "examples/fills/fill-maze.dxf"
+        "examples/fills/fill-maze.svg"
       ],
-      "notes": "One noncrossing grid route; repeated sharp corners still require corner fitting.",
-      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
-      "usedBy": []
+      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 3 mm corridors. Visible T junctions replace short isolated turns; all passages remain connected.",
+      "expected": "143 openings, including 40 shared round holes, at 3 mm pitch. No adjusted gaps. Production solving and combined default-model clearance pass.",
+      "usedBy": [],
+      "drawing": "examples/demos/fills.dwg",
+      "view": "MAZE"
     },
     {
       "id": "FILL-QUILT",
       "title": "Diamond quilt",
       "kind": "quilt",
-      "source": "examples/fill-recipes.ps1",
+      "source": "examples/fills.lsp",
       "parameters": {
-        "bounds": [
-          8,
-          8,
-          88,
-          88
-        ],
-        "spacing": 18.0,
-        "angle": 45.0,
-        "offset": 0.0
+        "cells": 7,
+        "extension": 6,
+        "crossing-spacing": 6
       },
       "previewName": "fill-quilt",
       "exports": [
         "examples/fills/fill-quilt.png",
-        "examples/fills/fill-quilt.svg",
-        "examples/fills/fill-quilt.dxf"
+        "examples/fills/fill-quilt.svg"
       ],
-      "notes": "Two hatch families; crossings become X junctions. This sample places crossings 18 mm apart along each guide.",
-      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
-      "usedBy": [
-        "ART-A",
-        "ART-B"
-      ],
-      "checks": {
-        "crossingStep": 18.0
-      }
+      "notes": "Two crossing guide families; 64 X junctions share round holes. Six millimetres between crossings leaves slit holes between nodes.",
+      "expected": "240 openings at 3 mm pitch and 1.5 mm slit length. Production solving and combined default-model clearance pass.",
+      "usedBy": [],
+      "drawing": "examples/demos/fills.dwg",
+      "view": "QUILT"
     },
     {
       "id": "FILL-FLOW",
-      "title": "Flowing hatch",
+      "title": "Flow",
       "kind": "flow",
-      "source": "examples/fill-recipes.ps1",
+      "source": "examples/fills.lsp",
       "parameters": {
-        "bounds": [
-          8,
-          5,
-          88,
-          91
+        "start": [
+          6,
+          6
         ],
-        "spacing": 7.0,
-        "amplitude": 3.0,
-        "wavelength": 100.0,
-        "phaseLength": 70.0
+        "chord": 36,
+        "sag": 3,
+        "rows": 25,
+        "row-spacing": 1.5
       },
       "previewName": "fill-flow",
       "exports": [
         "examples/fills/fill-flow.png",
-        "examples/fills/fill-flow.svg",
-        "examples/fills/fill-flow.dxf"
+        "examples/fills/fill-flow.svg"
       ],
-      "notes": "Curved parallel rows; selected Velvet banner uses this family with a text exclusion.",
-      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
+      "notes": "Translated circular arcs, 1.5 mm between rows. Free ends stop at nominal pitch; the original curve is unchanged.",
+      "expected": "325 openings and 300 nominal gaps; no adjusted gaps. Footprint 35.38 by 38.89 mm. Production solving and combined default-model clearance pass.",
       "usedBy": [
         "ART-D"
-      ]
+      ],
+      "drawing": "examples/demos/fills.dwg",
+      "view": "FLOW"
     }
   ],
   "fillChecks": {
-    "source": "tests/check-fill-recipes.ps1",
-    "command": "./tests/check-fill-recipes.ps1",
+    "source": "tests/autostitch-fill-tests.lsp",
+    "command": "(ast:fill-tests)",
     "coverage": [
-      "Finite nonempty paths",
-      "Nominal hatch lane spacing and direction",
-      "Continuous arc joins",
-      "Unique adjacent maze grid sites",
-      "Measured quilt crossing spacing",
-      "Exclusion clipping in both traversal directions",
-      "Short fragment removal",
-      "Reject nonpositive fill spacing"
+      "Compact recipes solve using production geometry",
+      "Combined opening clearance between independent rows",
+      "Pitch adjustment bounds",
+      "Branching maze with narrow connected passages",
+      "Shared quilt junction holes",
+      "Flow nominal gaps and free-end trimming",
+      "Invalid clipping, tight curvature and infeasible junction spacing"
     ]
   }
 }

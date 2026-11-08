@@ -83,9 +83,9 @@ Generate updates older output to these layers. In existing drawings, merge `AUTO
 
 ## Try it
 
-Open the [lettering specimen](examples/Autostitch-showcase.dwg): rounded and angular AUTOSTITCH, plus a square AUTO / STITCH composition. It includes curves, corners, junctions, landmarks and matched guides. [View instructions and exports](examples/README.md).
+Open the current [demo drawings](demo.md): stitched fill samples, the Velvet banner, emblem and quilting studies. The demo guide lists their status, canonical DWG paths and native reproduction commands.
 
-Use this fixed drawing for routine visual checks, then run the automated tests affected by a change. The full catalog remains available for solver and lifecycle regression checks.
+Use the relevant demo for visual checks, then run the automated tests affected by a change. The [test catalog](tests/cases.json) covers solver and lifecycle regression checks.
 
 ## Reference
 

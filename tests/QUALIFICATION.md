@@ -2,49 +2,22 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
-## Reusable fill guides and canonical demos: 2026-11-08
+## Compact fills and Velvet: 2026-11-08
 
-- Five fill recipes are defined in the catalog and rendered from shared code. Quilt A/B use diamond quilt; selected Velvet uses flowing hatch. Velvet's SVG and DXF are unchanged by extraction.
-- `check-fill-recipes.ps1` passes: hatch direction/spacing, near-vertical hatching, spiral continuity, maze adjacency/uniqueness, quilt crossing spacing, exclusion clipping in both directions, short fragments and invalid spacing.
-- Canonical demos live in `examples/demos/`; `build-demos.ps1 -Publish` builds fresh drawings and checks completion before replacing them. Reproduction steps are in [demo.md](../demo.md).
-- Rebuilt and reopened all three canonical DWGs: emblem has 15 guides and three circles; quilting has 120 guides and its A/B/C views; Velvet has 239 guides and 17 letter boundaries. All retain millimetre units.
-- Catalog validation passes with 559 IDs. These checks qualify guide generation and demo construction; native stitch qualification of the new fill samples remains pending. Production plugin code is unchanged.
-
-## Artwork studies: 2026-11-08
-
-- Added a centred three-circle emblem, three quilting options and two portrait lettering options. These are guide drawings for review, not qualified stitch layouts.
-- Native DXF import: Quilt A has 39 guide entities; Banner D has 239 guides and 17 letter boundaries. Both retain millimetre units and the intended bounds.
-- All five generated options have matching SVG/DXF path counts, unique CAD handles, finite coordinates and correct PNG dimensions. Artwork and comparison sheets were visually reviewed.
-- Catalog validation passes with 554 IDs. Production plugin code is unchanged; the full stitch suite was not rerun. Emblem fit status is recorded in [the specimen notes](../examples/README.md#centred-three-circle-study).
-
-## Unstitched pattern circles: 2026-11-08
-
-- Two concentric circles replace the stitched frame and registration ticks. All four lettering crossings are landmarks: three on S, one on h.
-- Native verification finds a nominal $3\,\mathrm{mm}$ gap centred at every crossing, with no unmatched crossing or extra reserved gap.
-- All 28 sources regenerate: 51 current guides, 32 outputs and eight landmarks across the specimen. Save/reopen preserves those counts, both pattern circles and all three named views.
-- The emblem's 523 openings, including the separate round-punch dot, pass combined clearance under default model settings. Guide artwork exports before and after fitting are identical.
-- Inspected the artwork and stitched exports at 600 × 600. Plugin code is unchanged; the full suite was not rerun.
-
-## Script emblem and sewn frame: 2026-11-07
-
-- Square-ended AUTO outlines retain the rounded A crown and U bowl. Lowercase script, its dot, the swash and the circular frame all use generated stitches.
-- All 32 sources regenerate: 55 current guides, 36 outputs and five landmarks. Save/reopen preserves these and all named views.
-- The final emblem's 731 openings pass combined clearance validation under default model settings, including separate letters and frame arcs.
-- Inspected the 600 × 600 export. Catalog validation passes. Plugin code is unchanged; the full suite was not rerun.
-
-## Stitched badge: 2026-11-07
-
-- Revised square specimen: outlined AUTO, mixed letter shapes and a pattern circle crossing the S and H.
-- All 27 sources regenerate: 54 current guides and 32 output blocks. All three circle crossings have saved landmarks; seven landmarks total across the drawing.
-- Save/reopen preserves those counts, current status and all three named views.
-- Inspected the actual CAD export at 600 × 600. Plugin code is unchanged; the full suite was not rerun.
+- Sixteen focused native fill checks pass: spiral, quilt, branching maze and flow, including clearance, gap bounds and expected failures.
+- Maze: $36\times30\,\mathrm{mm}$, $3\,\mathrm{mm}$ corridors, 143 openings, 40 shared junction holes, no adjusted gaps. Independent source audit confirms that all 120 passage cells remain connected.
+- Saved fill drawing reopened with 86 guides, 31 output blocks, no read failures and no stale output; all four named views remain.
+- Flow: 25 rows, 325 openings and 300 nominal gaps; free ends trimmed equally. Quilt and spiral geometry is unchanged.
+- Velvet: 18 clearance-comparison checks pass. All 3,799 openings clear the lettering; minimum measured glyph clearance is $0.152\,\mathrm{mm}$. Actual output was inspected at 360 ? 576 px without visible letter outlines.
+- Native reproduction checks pass for the emblem (15 guides, three circles) and quilting studies (120 guides); these remain guide artwork.
+- Evidence: `output/native/flow-nominal-tests.txt`, `maze-build.txt`, `maze-fit/static-source-connectivity.json`, `demo-final-verification.txt` and `fills-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
+- Catalog validation passes with 573 stable IDs. Maze generation took 47 seconds on the validation machine; use the saved drawing for routine review.
+- Production plugin code is unchanged. Native recipe checks exercise the production solver; the full plugin suite was not rerun for these artwork changes.
 
 ## Matched guides and lettering specimen: 2026-11-07
 
 - Focused native suites: 52 palette, 31 matching lifecycle and seven connected matching checks passed (90 total).
 - New checks cover stale pitch drafts on children, restoring displaced child output from the source, and keeping the source selectable when a child leaves the drawing plane.
-- The fixed [specimen](../examples/README.md) generates 30 stitch blocks from 54 guides. Regeneration passed for all 24 sources; rounded, angular and square exports were inspected.
-- Reopening preserved all 54 current guides, six matched copies, six landmarks and three named views. Export rejects displaced output until regenerated.
 - Catalog: 548 stable IDs validated. The full suite was not rerun for this change.
 
 ## Spacing labels and linked IDs: 2026-11-07
@@ -143,6 +116,6 @@ With a saved disposable `output/native/Autostitch-native.dwg` open in the existi
 Get-Content ./output/native/geometry-oracle.txt
 ```
 
-Omit `-IncludeUi` to run only the 17 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
+Omit `-IncludeUi` to run only the 18 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
 
 Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Geometric limits belong in [limits](../docs/LIMITS.md).

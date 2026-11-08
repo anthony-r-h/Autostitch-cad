@@ -43,11 +43,13 @@ for(const fixture of catalog.visualFixtures||[]){
   id(fixture.id);assert(fixture.description&&fixture.expected&&fixture.coverage.length);
   for(const file of [fixture.drawing,fixture.source,...fixture.exports])assert(fs.existsSync(new URL(file,root)),`Missing visual fixture asset ${file}`);
   for(const view of fixture.views){assert(view.name&&view.description);}
+  for(const check of fixture.nativeChecks||[]){symbol(check.source,check.entrypoint);assert(check.expected);}
 }
 for(const recipe of catalog.fillRecipes||[]){
   id(recipe.id);assert(recipe.title&&recipe.notes&&recipe.expected&&recipe.parameters);
-  assert(['hatch','spiral','maze','quilt','flow'].includes(recipe.kind));source(recipe.source);
+  assert(['spiral','maze','quilt','flow'].includes(recipe.kind));source(recipe.source);
   for(const file of recipe.exports)assert(fs.existsSync(new URL(file,root)),`Missing fill preview ${file}`);
+  if(recipe.drawing){assert(fs.existsSync(new URL(recipe.drawing,root)),`Missing fill drawing ${recipe.drawing}`);assert(recipe.view);}
 }
 if(catalog.fillChecks){source(catalog.fillChecks.source);assert(catalog.fillChecks.command&&catalog.fillChecks.coverage.length);}
 id(catalog.oracle.id);source(catalog.oracle.source);source(catalog.oracle.nativeSource);

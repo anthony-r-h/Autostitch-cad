@@ -20,9 +20,9 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `AUTOSTITCH.odcl`, `Autostitch.Events.dll` | Distributed runtime assets; rebuild with `build-plugin.ps1` |
 | `package.ps1` | Package a clean Git revision into `output/release/Autostitch-V22.zip` |
 | `docs/` | Glossary, axioms, mathematics, junctions, limitations and README outline |
-| `examples/` | Fixed lettering DWG, reproducible guide recipes, SVG/PNG exports |
+| `examples/demo.lsp`, `examples/` | Native demo commands, guide sources and SVG/PNG exports |
 | `examples/demos/`, `demo.md` | One canonical DWG per demo and reproduction instructions |
-| `examples/fill-recipes.ps1`, `docs/FILLS.md` | Shared fill guide recipes; samples in `tests/cases.json` |
+| `examples/fills.lsp`, `docs/FILLS.md` | Native fill generation and solving; samples in `tests/cases.json` |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
 | `output/` | Ignored generated evidence, local drawings and release packages |
@@ -44,7 +44,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 ## Process
 
 1. Identify the narrowest files and functions. State material assumptions.
-2. Run the smallest relevant check, then the affected native suites. Use the fixed `examples/Autostitch-showcase.dwg` for routine visual review. Run the full suite when the scope warrants it; see `tests/QUALIFICATION.md` for commands.
+2. Run the smallest relevant check, then the affected native suites. Use the relevant canonical drawing under `examples/demos/` for routine visual review. Run the full suite when the scope warrants it; see `tests/QUALIFICATION.md` for commands.
 3. Report failed commands plainly. Do not invent causes or count historical evidence as a new run.
 4. Review documentation for concise, neutral language and consistency with the implementation.
 5. Summarize changes, validation, risks and anything unverified.
@@ -53,6 +53,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 
 - Only one agent or process may drive BricsCAD at a time.
 - Use the existing visible instance and a disposable drawing under `output/native/`.
+- Keep one agent-owned test drawing open at a time. Close it after saving and verifying the result; do not accumulate test tabs.
 - Check for an active command or point pick before switching drawings or sending input. Never cancel user input to run tests.
 - Do not test in, overwrite, close or save a user's working drawing.
 - Drawings and recovery files under `output/` may contain user work. They are not disposable merely because Git ignores them.

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Nominal pitch leaves a remainder</title><desc id="description">Analytic illustration of S02. Final state of the accompanying animation.</desc>
+<line class="guide" x1="60" y1="187.5" x2="502.25" y2="187.5" stroke="#C4C4C4" stroke-width="1"/>
+<line class="fixed-end" x1="60" y1="165.5" x2="60" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="fixed-end" x1="502.25" y1="165.5" x2="502.25" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="proposal" x1="51.669266681" y1="194.490315255" x2="68.330733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="95.169266681" y1="194.490315255" x2="111.830733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="138.669266681" y1="194.490315255" x2="155.330733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="182.169266681" y1="194.490315255" x2="198.830733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="225.669266681" y1="194.490315255" x2="242.330733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="269.169266681" y1="194.490315255" x2="285.830733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="312.669266681" y1="194.490315255" x2="329.330733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="356.169266681" y1="194.490315255" x2="372.830733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="399.669266681" y1="194.490315255" x2="416.330733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="443.169266681" y1="194.490315255" x2="459.830733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="486.669266681" y1="194.490315255" x2="503.330733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="proposal" x1="530.169266681" y1="194.490315255" x2="546.830733319" y2="180.509684745" stroke="#8B8B8B" stroke-width="2.6" stroke-dasharray="4 4"/>
+<line class="dimension" x1="495" y1="232.5" x2="502.25" y2="232.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="495" y1="236.5" x2="495" y2="228.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="502.25" y1="236.5" x2="502.25" y2="228.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="measurement" x="498.625" y="223.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">0.5</text>
+</svg>

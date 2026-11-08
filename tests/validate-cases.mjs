@@ -31,9 +31,10 @@ for(const c of catalog.geometry){
 for(const file of catalog.nativeLoads)source(file);
 for(const illustration of catalog.illustrations||[]){
   id(illustration.id);source(illustration.source);
-  assert(catalog.geometry.some(c=>c.id===illustration.case&&c.variants.some(v=>v.pitch===illustration.pitch)));
+  if(illustration.case)assert(catalog.geometry.some(c=>c.id===illustration.case&&c.variants.some(v=>v.pitch===illustration.pitch)));
+  else assert(illustration.axioms?.length&&illustration.inputs);
   assert(illustration.status&&illustration.assets.length);
-  for(const asset of illustration.assets)for(const extension of ['svg','png'])
+  for(const asset of illustration.assets)for(const extension of illustration.animated?['svg','png','gif']:['svg','png'])
     assert(fs.existsSync(new URL(`${asset.path}.${extension}`,root)),`Missing illustration ${asset.path}.${extension}`);
 }
 for(const suite of catalog.suites){

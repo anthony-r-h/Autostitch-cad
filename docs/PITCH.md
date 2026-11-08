@@ -25,11 +25,11 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - General CAD supplies curves, arrays and blocks; the remaining work is deciding how tool geometry, spacing and required features fit together
 - A local spacing correction can change how the next landmark, corner or closure fits
 
-## Equal redistribution
+## Naive solution
 
 - Evenly distribute
 
-## Local adjustment
+## Good enough solution
 
 - Keep nominal spacing through most of the line; absorb the remainder in a few permitted adjusted gaps near the end
 - Compare how many gaps change separately from where they are placed; central placement is our policy, not the only valid fit
@@ -123,9 +123,9 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 
 ## Atomic demos and SVGs
 
-- [Illustration guidelines and scripts](../examples/illustrated/README.md): small, direct examples, optionally animated to reveal placement, conflict and the resulting decision
+- [Illustration guidelines and scripts](../examples/illustrated/README.md): small embedded animations revealing placement, conflict and the resulting decision
 - Example format: 600 × 375 px, landscape, 16:10; keep each frame readable at 600 px wide
-- Compose diagrams from reusable elements; keep SVG masters and deliver PNG stills, with optional automatically looping GIF/silent WebM animations and no playback controls
+- Compose diagrams from reusable elements; use automatically looping GIF/silent WebM animations, with SVG/PNG still fallbacks and no playback controls; put headings and explanatory prose in the document, not the figure
 - Opening comparison on the same straight span: equal redistribution changes ten gaps; an end adjustment and Autostitch each change two gaps, in different locations. Show a fixed tooth array to explain nominal tool spacing; keep the crowded last gap as a separate failure example
 - Expand the line, curve and intersection gallery into the individual geometric decisions; use test-catalog IDs for future SVGs
 - Straight exact fit, central adjustment and impossible span

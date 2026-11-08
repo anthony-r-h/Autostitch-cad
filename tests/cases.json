@@ -8579,9 +8579,13 @@
       "pitch": 3,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "source": "examples/illustrated/build.ps1",
-      "status": "Analytic static comparison; not a native CAD export or physical clearance qualification.",
+      "source": "examples/illustrated/scenes.mjs",
+      "status": "Analytic looping comparisons; not native CAD output.",
       "assets": [
+        {
+          "path": "examples/illustrated/assets/pitch-problem",
+          "policy": "unresolved"
+        },
         {
           "path": "examples/illustrated/assets/pitch-spread",
           "policy": "spread",
@@ -8603,7 +8607,152 @@
           "firstChangedGap": 4,
           "adjustedPitch": 3.25
         }
-      ]
+      ],
+      "animated": true
+    },
+    {
+      "id": "ILL-CURVE",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A2",
+        "A3",
+        "A7"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-curve"
+        }
+      ],
+      "case": "A01"
+    },
+    {
+      "id": "ILL-LANDMARK",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A4",
+        "A5",
+        "A7"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-landmark"
+        }
+      ],
+      "case": "F02"
+    },
+    {
+      "id": "ILL-CORNER",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A6"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-corner"
+        }
+      ],
+      "case": "J02"
+    },
+    {
+      "id": "ILL-SMOOTH",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A8"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-smooth"
+        }
+      ],
+      "case": "A05"
+    },
+    {
+      "id": "ILL-JUNCTION",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A9"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-junction"
+        }
+      ],
+      "inputs": {
+        "junction": [
+          0,
+          0
+        ],
+        "arms": [
+          [
+            -9,
+            0
+          ],
+          [
+            9,
+            0
+          ],
+          [
+            0,
+            -6
+          ]
+        ],
+        "diameter": 0.5
+      }
+    },
+    {
+      "id": "ILL-CLEARANCE",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A10"
+      ],
+      "animated": true,
+      "status": "Deliberately rejected overlapping layout with specified slit width and margin.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-clearance"
+        }
+      ],
+      "inputs": {
+        "stations": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "width": 0.3,
+        "margin": 0.2,
+        "startSeparation": 2.4,
+        "endSeparation": 0.3
+      }
     }
   ]
 }

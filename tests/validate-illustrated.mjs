@@ -1,66 +1,129 @@
-// Check the drawn SVG geometry, not just the generator's captions.
+// Inspect the emitted figures and GIF structure against their geometric claims.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
+import { createScenes, gifBlocks } from '../examples/illustrated/scenes.mjs';
 
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
-const spec = catalog.illustrations.find(item => item.id === 'ILL-S02');
-const variant = catalog.geometry.find(item => item.id === spec.case).variants.find(item => item.pitch === spec.pitch);
-const primitive = variant.route.primitives[0];
-const length = Math.hypot(primitive.b[0] - primitive.a[0], primitive.b[1] - primitive.a[1]);
-const fit = selectFit({ D: length, p: spec.pitch });
-const near = (actual, expected) => assert(Math.abs(actual - expected) < 1e-6, `${actual} != ${expected}`);
-let checked = 0;
-for (const asset of spec.assets) {
-  const svg = fs.readFileSync(new URL(`${asset.path}.svg`, root), 'utf8');
-  const lines = [...svg.matchAll(/<line\s+([^>]+)\/>/g)].map(match => Object.fromEntries(
-    [...match[1].matchAll(/([\w-]+)="([^"]*)"/g)].map(attribute => [attribute[1], attribute[2]])
-  ));
-  const guide = lines.find(line => line.class === 'guide');
-  const scale = (Number(guide.x2) - Number(guide.x1)) / length;
-  const slits = lines.filter(line => line.class === 'slit');
-  assert.equal(slits.length, fit.n + 1);
-  const centres = slits.map(slit => {
-    const dx = Number(slit.x2) - Number(slit.x1);
-    const dy = Number(slit.y2) - Number(slit.y1);
-    near(Math.hypot(dx, dy) / scale, spec.slitLength);
-    near(Math.atan2(-dy, dx) * 180 / Math.PI, spec.leanDegrees);
-    near((Number(slit.y1) + Number(slit.y2)) / 2, Number(guide.y1));
-    return ((Number(slit.x1) + Number(slit.x2)) / 2 - Number(guide.x1)) / scale;
-  });
-  near(centres[0], 0);
-  near(centres.at(-1), length);
-  const gaps = centres.slice(1).map((station, i) => station - centres[i]);
-  const changed = gaps.map((gap, index) => ({ gap, index })).filter(item => Math.abs(item.gap - spec.pitch) > 1e-6);
-  assert(gaps.every(gap => gap >= .9 * spec.pitch && gap <= 1.1 * spec.pitch));
-  assert.equal(changed.length, asset.changedGaps);
-  assert.equal(changed[0].index, asset.firstChangedGap);
-  assert(changed.every((item, i) => item.index === asset.firstChangedGap + i));
-  changed.forEach(item => near(item.gap, asset.adjustedPitch));
-  assert.equal(lines.filter(line => line.class === 'adjustment-mark').length, (changed.length + 1) * 2);
-  const overlay = lines.filter(line => line.class === 'tool-comparison-slit');
-  assert.equal(overlay.length, 4);
-  const overlayX = overlay.map(line => (Number(line.x1) + Number(line.x2)) / 2);
-  overlayX.forEach((x, i) => near((x - overlayX[0]) / scale, centres[i]));
-  const teeth = lines.filter(line => line.class === 'chisel-tooth');
-  assert.equal(teeth.length, 4);
-  teeth.forEach((tooth, i) => {
-    const x = (Number(tooth.x1) + Number(tooth.x2)) / 2;
-    near((x - overlayX[0]) / scale, i * spec.pitch);
-    near(Math.hypot(Number(tooth.x2) - Number(tooth.x1), Number(tooth.y2) - Number(tooth.y1)) / scale, spec.slitLength);
-  });
-  if (asset.policy === 'central') {
-    assert.equal(changed.length, fit.k);
-    assert.equal(changed[0].index, fit.i);
-    near(changed[0].gap, fit.correctedPitch);
-    near(centres[fit.i], length - centres[fit.i + fit.k]);
-  }
-  const png = fs.readFileSync(new URL(`${asset.path}.png`, root));
-  assert.equal(png.subarray(1, 4).toString(), 'PNG');
-  assert.equal(png.readUInt32BE(16), 600);
-  assert.equal(png.readUInt32BE(20), 375);
-  assert(svg.includes('viewBox="0 0 600 375"'));
-  checked++;
+const scenes = createScenes();
+const near = (a,b,tolerance=1e-6) => assert(Math.abs(a-b)<tolerance,`${a} != ${b}`);
+const dist = (a,b) => Math.hypot(a[0]-b[0],a[1]-b[1]);
+const alpha = 40*Math.PI/180;
+function readSvg(name) {
+  const source=fs.readFileSync(new URL(`examples/illustrated/assets/${name}.svg`,root),'utf8');
+  const elements=[...source.matchAll(/<(line|circle)\s+([^>]+)\/>/g)].map(match=>({type:match[1],...Object.fromEntries(
+    [...match[2].matchAll(/([\w-]+)="([^"]*)"/g)].map(a=>[a[1],a[2]])
+  )}));
+  return {source,elements};
 }
-console.log(`Illustrations valid: ${checked} SVG layouts, gap bounds, slit geometry, marks, tool comparisons and PNG sizes; central fit agrees with the independent selector.`);
+function slits(name,view,kind='slit') {
+  return readSvg(name).elements.filter(e=>e.class===kind).map(e=>{
+    const a=[(+e.x1-view.x)/view.scale,(view.y-e.y1)/view.scale];
+    const b=[(+e.x2-view.x)/view.scale,(view.y-e.y2)/view.scale];
+    near(dist(a,b),1.5);
+    return {a,b,center:[(a[0]+b[0])/2,(a[1]+b[1])/2],angle:Math.atan2(b[1]-a[1],b[0]-a[0]),element:e};
+  });
+}
+function circle(name,view) {
+  const holes=readSvg(name).elements.filter(e=>e.class==='hole');assert.equal(holes.length,1);
+  near(2*holes[0].r/view.scale,.5);
+  return [(holes[0].cx-view.x)/view.scale,(view.y-holes[0].cy)/view.scale];
+}
+const has=(points,p)=>points.some(point=>dist(point,p)<1e-6);
+const bounded=gaps=>assert(gaps.every(g=>g>=2.7-1e-6&&g<=3.3+1e-6));
+
+const fit=selectFit({D:30.5,p:3}),view={x:60,y:187.5,scale:14.5};
+for(const asset of catalog.illustrations.find(i=>i.id==='ILL-S02').assets) {
+  const name=asset.path.split('/').at(-1);
+  if(asset.policy==='unresolved') {
+    const proposals=slits(name,view,'proposal').map(s=>s.center);
+    assert.equal(proposals.length,12);near(proposals.at(-1)[0],33);near(30.5-proposals.at(-2)[0],.5);continue;
+  }
+  const holes=slits(name,view);assert.equal(holes.length,11);
+  holes.forEach(s=>{near(s.center[1],0);near(s.angle,alpha);});
+  const points=holes.map(s=>s.center[0]);near(points[0],0);near(points.at(-1),30.5);
+  const gaps=points.slice(1).map((p,i)=>p-points[i]);bounded(gaps);
+  const changed=gaps.map((gap,i)=>({gap,i})).filter(g=>Math.abs(g.gap-3)>1e-6);
+  assert.equal(changed.length,asset.changedGaps);assert.equal(changed[0].i,asset.firstChangedGap);
+  changed.forEach(g=>near(g.gap,asset.adjustedPitch));
+  assert.equal(readSvg(name).elements.filter(e=>e.class==='adjustment-mark').length,(changed.length+1)*2);
+  if(asset.policy==='central'){assert.equal(changed.length,fit.k);assert.equal(changed[0].i,fit.i);near(changed[0].gap,fit.correctedPitch);}
+}
+
+const curve=slits('axiom-curve',{x:160,y:75,scale:23});
+const arcFit=selectFit({R:10,sweep:-Math.PI/2,p:3});
+assert.equal(curve.length,arcFit.n+1);
+for(const s of curve) {
+  near(Math.hypot(s.center[0],s.center[1]+10),10);
+  const tangent=Math.atan2(s.center[1]+10,s.center[0])-Math.PI/2;
+  near(s.angle,tangent+alpha);
+}
+const chords=curve.slice(1).map((s,i)=>dist(s.center,curve[i].center));bounded(chords);
+assert.equal(chords.filter(g=>Math.abs(g-3)>1e-6).length,3);
+near(curve[0].center[0],0);near(curve.at(-1).center[1],-10);
+
+const landmark=slits('axiom-landmark',{x:60,y:187.5,scale:16}).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
+assert.equal(landmark.length,11);assert(has(landmark,[14.75,0])&&has(landmark,[17.75,0]));
+assert(!has(landmark,[16.25,0]));near((14.75+17.75)/2,16.25);
+bounded(landmark.slice(1).map((p,i)=>dist(p,landmark[i])));
+for(const frame of scenes.find(s=>s.name==='axiom-landmark').frames.filter(f=>!['reference','reset'].includes(f.stage))) {
+  const xs=frame.elements.filter(e=>e.kind==='slit').map(e=>(e.a[0]+e.b[0])/2);
+  for(const station of [14.75,17.75])assert(xs.some(x=>Math.abs(x-(60+station*16))<1e-6),'Protected pair moved during fitting');
+}
+
+const cornerView={x:370,y:105,scale:24};
+const virtuals=slits('axiom-corner',cornerView,'virtual');assert.equal(virtuals.length,2);
+const J=circle('axiom-corner',cornerView);
+near(dist(virtuals[0].a,J),0);near(dist(virtuals[1].b,J),0);
+assert(virtuals.every(s=>s.element['stroke-dasharray']));
+const corner=slits('axiom-corner',cornerView).map(s=>s.center);assert.equal(corner.length,6);
+for(let i=1;i<=3;i++) {
+  assert(has(corner,[virtuals[0].center[0]-3*i,0]));
+  assert(has(corner,[0,virtuals[1].center[1]-3*i]));
+}
+
+const smooth=slits('axiom-smooth',{x:370,y:115,scale:16});
+assert.equal(smooth.length,12);assert.equal(smooth.filter(s=>dist(s.center,[0,0])<1e-6).length,1);
+assert.equal(readSvg('axiom-smooth').elements.filter(e=>e.class==='hole').length,0);
+const straight=smooth.filter(s=>Math.abs(s.center[1])<1e-6).sort((a,b)=>a.center[0]-b.center[0]);
+straight.slice(1).forEach((s,i)=>near(dist(s.center,straight[i].center),3));
+const curved=smooth.filter(s=>s.center[1]<-1e-6).sort((a,b)=>b.center[1]-a.center[1]);
+let previous=[0,0];for(const s of curved){near(dist(previous,s.center),3);previous=s.center;}
+
+const junctionView={x:300,y:145,scale:23},junction=circle('axiom-junction',junctionView);
+near(dist(junction,[0,0]),0);
+const arms=slits('axiom-junction',junctionView).map(s=>s.center);assert.equal(arms.length,8);
+for(const p of [[-3,0],[3,0],[0,-3]])assert(has(arms,p));
+assert(!has(arms,junction));
+
+const clearance=slits('axiom-clearance',{x:120,y:220,scale:40});assert.equal(clearance.length,8);
+for(const s of clearance){near(+s.element['stroke-width']/40,.3);assert.equal(s.element['stroke-linecap'],'round');}
+const zero=clearance.filter(s=>Math.abs(s.center[0])<1e-6);assert.equal(zero.length,2);
+const perpendicular=dist(zero[0].center,zero[1].center)*Math.cos(alpha);
+assert(perpendicular<.3,'The claimed overlap is absent');
+assert.equal(readSvg('axiom-clearance').elements.filter(e=>e.class==='rejected').length,8);
+for(const frame of scenes.find(s=>s.name==='axiom-clearance').frames) {
+  const firstSlit=frame.elements.findIndex(e=>e.kind==='slit');
+  if(firstSlit>=0)assert(frame.elements.slice(firstSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
+}
+
+for(const s of scenes) {
+  const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
+  // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
+  const blocks=gifBlocks(gif).blocks,images=blocks.filter(b=>b.kind==='image'),controls=blocks.filter(b=>b.kind==='control');
+  assert.equal(images.length,s.frames.length);assert.equal(controls.length,images.length);
+  assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
+  assert(gif.includes(Buffer.from([0x21,0xff,11,...Buffer.from('NETSCAPE2.0'),3,1,0,0,0])));
+  assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
+  near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
+  const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));
+  assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
+  const source=readSvg(s.name).source;
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1)$/.test(match[1]),'Prose belongs outside the figure');
+  for(const f of s.frames)for(const e of f.elements) {
+    for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
+  }
+}
+console.log(`Illustrations valid: ${scenes.length} moving GIFs, geometry, fixed constraints, corner construction, shared openings, explicit collision, loop timing and still exports.`);

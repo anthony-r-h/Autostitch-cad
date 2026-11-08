@@ -13,9 +13,9 @@
 
 - Keep illustration guidelines and demo scripts in [examples/illustrated/README.md](../examples/illustrated/README.md). Link to them from the pitch instead of duplicating the production scripts in documentation.
 - Use a 600 × 375 px landscape canvas (16:10) for illustrated examples, including every animation frame. Compose and check label readability at 600 px wide.
-- Compose examples from independent diagram elements. Keep SVG masters and PNG stills; optionally export automatically looping GIF/silent WebM animations, with no playback controls or interactive UI. Generate frames from the elements rather than recording CAD or the screen.
+- Compose examples from independent diagram elements. Use automatically looping GIF/silent WebM animations with SVG masters and PNG still fallbacks, with no playback controls or interactive UI. Generate frames from the elements rather than recording CAD or the screen.
 - Use small, direct examples, each showing one geometric problem or decision. Keep comparison inputs identical and make their different placement policies explicit.
-- Record setup, progressive reveal, conflict, response, final state, captions and source case/rule references. Animation is optional; the sequence must also work as still frames.
+- Record setup, progressive reveal, conflict, response, final state, captions and source case/rule references. Animation is the primary example; keep a final-state still fallback. Keep titles, counters and prose outside the figure.
 - Distinguish explanatory reveal order from solver order and physical execution. Show changing positions as planning revisions; keep deliberate failures distinct from valid Autostitch output.
 - Follow the glossary, axioms, model and junction construction. Reuse catalog IDs where possible; identify unresolved geometry or native verification explicitly rather than inventing evidence.
 - Keep pitch claims and illustration scripts aligned. If an edit changes a demonstrated point, update the affected script and pitch skeleton together, plus authored prose where present.

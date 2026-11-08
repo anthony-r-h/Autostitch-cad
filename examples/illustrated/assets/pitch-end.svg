@@ -1,57 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" font-family="Arial, sans-serif" role="img" aria-labelledby="title description">
-<title id="title">Adjust near the end</title><desc id="description">Analytic S02 comparison. Fixed 30.5 mm guide, nominal pitch 3 mm, eleven slits of length 1.5 mm at 40 degrees. 2 adjusted gaps. Two gaps change. The adjustment sits at the end.</desc>
-<rect width="600" height="375" fill="#F5F0E4"/>
-<text x="32" y="29" fill="#73796F" font-size="11" font-weight="700" text-anchor="start">ONE GUIDE / THREE PLACEMENT DECISIONS</text>
-<text x="32" y="61" fill="#202824" font-size="25" font-weight="700" text-anchor="start">Adjust near the end</text>
-<text x="32" y="84" fill="#73796F" font-size="14" font-weight="400" text-anchor="start">Same endpoints. Same slits. Nominal pitch 3 mm.</text>
-<line class="" x1="60" y1="117" x2="517.5" y2="117" stroke="#B7B9AF" stroke-width="0.8"/>
-<line class="" x1="60" y1="112" x2="60" y2="122" stroke="#73796F" stroke-width="1"/>
-<line class="" x1="517.5" y1="112" x2="517.5" y2="122" stroke="#73796F" stroke-width="1"/>
-<text x="288.75" y="109" fill="#202824" font-size="13" font-weight="400" text-anchor="middle">30.5 mm</text>
-<line class="guide" x1="60" y1="168" x2="517.5" y2="168" stroke="#B7B9AF" stroke-width="1"/>
-<line class="slit" x1="51.382000015" y1="175.231360609" x2="68.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="96.382000015" y1="175.231360609" x2="113.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="141.382000015" y1="175.231360609" x2="158.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="186.382000015" y1="175.231360609" x2="203.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="231.382000015" y1="175.231360609" x2="248.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="276.382000015" y1="175.231360609" x2="293.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="321.382000015" y1="175.231360609" x2="338.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="366.382000015" y1="175.231360609" x2="383.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="411.382000015" y1="175.231360609" x2="428.617999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="adjustment-mark" x1="408.561769377" y1="171.870340615" x2="414.202230652" y2="178.592380603" stroke="#202824" stroke-width="2.4"/>
-<line class="adjustment-mark" x1="425.797769348" y1="157.407619397" x2="431.438230623" y2="164.129659385" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="460.132000015" y1="175.231360609" x2="477.367999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="adjustment-mark" x1="457.311769377" y1="171.870340615" x2="462.952230652" y2="178.592380603" stroke="#202824" stroke-width="2.4"/>
-<line class="adjustment-mark" x1="474.547769348" y1="157.407619397" x2="480.188230623" y2="164.129659385" stroke="#202824" stroke-width="2.4"/>
-<line class="slit" x1="508.882000015" y1="175.231360609" x2="526.117999985" y2="160.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="adjustment-mark" x1="506.061769377" y1="171.870340615" x2="511.702230652" y2="178.592380603" stroke="#202824" stroke-width="2.4"/>
-<line class="adjustment-mark" x1="523.297769348" y1="157.407619397" x2="528.938230623" y2="164.129659385" stroke="#202824" stroke-width="2.4"/>
-<text x="444.375" y="193" fill="#202824" font-size="12" font-weight="400" text-anchor="middle">3.25</text>
-<text x="493.125" y="193" fill="#202824" font-size="12" font-weight="400" text-anchor="middle">3.25</text>
-<text x="60" y="145" fill="#73796F" font-size="11" font-weight="400" text-anchor="start">Fixed start</text>
-<text x="517.5" y="145" fill="#73796F" font-size="11" font-weight="400" text-anchor="end">Fixed end</text>
-<line class="" x1="32" y1="214" x2="568" y2="214" stroke="#B7B9AF" stroke-width="0.8"/>
-<text x="36" y="269" fill="#202824" font-size="40" font-weight="700" text-anchor="start">2</text>
-<text x="36" y="291" fill="#202824" font-size="15" font-weight="400" text-anchor="start">adjusted gaps</text>
-<text x="36" y="312" fill="#73796F" font-size="12" font-weight="400" text-anchor="start">8 nominal / 11 openings</text>
-<text x="308" y="235" fill="#73796F" font-size="12" font-weight="400" text-anchor="start">3 mm tooth spacing</text>
-<line class="" x1="308" y1="249" x2="443" y2="249" stroke="#73796F" stroke-width="2"/>
-<line class="" x1="308" y1="249" x2="308" y2="260" stroke="#73796F" stroke-width="1"/>
-<line class="chisel-tooth" x1="299.382000015" y1="270.231360609" x2="316.617999985" y2="255.768639391" stroke="#73796F" stroke-width="1.6"/>
-<line class="" x1="308" y1="274" x2="308" y2="294" stroke="#B7B9AF" stroke-width="0.8" stroke-dasharray="2.4 2.4"/>
-<line class="tool-comparison-slit" x1="299.382000015" y1="309.231360609" x2="316.617999985" y2="294.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="" x1="353" y1="249" x2="353" y2="260" stroke="#73796F" stroke-width="1"/>
-<line class="chisel-tooth" x1="344.382000015" y1="270.231360609" x2="361.617999985" y2="255.768639391" stroke="#73796F" stroke-width="1.6"/>
-<line class="" x1="353" y1="274" x2="353" y2="294" stroke="#B7B9AF" stroke-width="0.8" stroke-dasharray="2.4 2.4"/>
-<line class="tool-comparison-slit" x1="344.382000015" y1="309.231360609" x2="361.617999985" y2="294.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="" x1="398" y1="249" x2="398" y2="260" stroke="#73796F" stroke-width="1"/>
-<line class="chisel-tooth" x1="389.382000015" y1="270.231360609" x2="406.617999985" y2="255.768639391" stroke="#73796F" stroke-width="1.6"/>
-<line class="" x1="398" y1="274" x2="398" y2="294" stroke="#B7B9AF" stroke-width="0.8" stroke-dasharray="2.4 2.4"/>
-<line class="tool-comparison-slit" x1="389.382000015" y1="309.231360609" x2="406.617999985" y2="294.768639391" stroke="#202824" stroke-width="2.4"/>
-<line class="" x1="443" y1="249" x2="443" y2="260" stroke="#73796F" stroke-width="1"/>
-<line class="chisel-tooth" x1="434.382000015" y1="270.231360609" x2="451.617999985" y2="255.768639391" stroke="#73796F" stroke-width="1.6"/>
-<line class="" x1="443" y1="274" x2="443" y2="294" stroke="#B7B9AF" stroke-width="0.8" stroke-dasharray="2.4 2.4"/>
-<line class="tool-comparison-slit" x1="434.382000015" y1="309.231360609" x2="451.617999985" y2="294.768639391" stroke="#202824" stroke-width="2.4"/>
-<text x="308" y="328" fill="#73796F" font-size="11" font-weight="400" text-anchor="start">First four openings, same scale</text>
-<text x="32" y="359" fill="#202824" font-size="13" font-weight="400" text-anchor="start">Two gaps change. The adjustment sits at the end.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Good enough: adjust near the end</title><desc id="description">Analytic illustration of S02. Final state of the accompanying animation.</desc>
+<line class="guide" x1="60" y1="187.5" x2="502.25" y2="187.5" stroke="#C4C4C4" stroke-width="1"/>
+<line class="fixed-end" x1="60" y1="165.5" x2="60" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="fixed-end" x1="502.25" y1="165.5" x2="502.25" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="51.669266681" y1="194.490315255" x2="68.330733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="95.169266681" y1="194.490315255" x2="111.830733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="138.669266681" y1="194.490315255" x2="155.330733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="182.169266681" y1="194.490315255" x2="198.830733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="225.669266681" y1="194.490315255" x2="242.330733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="269.169266681" y1="194.490315255" x2="285.830733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="312.669266681" y1="194.490315255" x2="329.330733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="356.169266681" y1="194.490315255" x2="372.830733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="399.669266681" y1="194.490315255" x2="416.330733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="adjustment-mark" x1="402.395489631" y1="197.73930125" x2="396.943043731" y2="191.241329261" stroke="#252525" stroke-width="2.6"/>
+<line class="adjustment-mark" x1="419.056956269" y1="183.758670739" x2="413.604510369" y2="177.26069875" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="446.794266681" y1="194.490315255" x2="463.455733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="adjustment-mark" x1="449.520489631" y1="197.73930125" x2="444.068043731" y2="191.241329261" stroke="#252525" stroke-width="2.6"/>
+<line class="adjustment-mark" x1="466.181956269" y1="183.758670739" x2="460.729510369" y2="177.26069875" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="493.919266681" y1="194.490315255" x2="510.580733319" y2="180.509684745" stroke="#252525" stroke-width="2.6"/>
+<line class="adjustment-mark" x1="496.645489631" y1="197.73930125" x2="491.193043731" y2="191.241329261" stroke="#252525" stroke-width="2.6"/>
+<line class="adjustment-mark" x1="513.306956269" y1="183.758670739" x2="507.854510369" y2="177.26069875" stroke="#252525" stroke-width="2.6"/>
+<line class="dimension" x1="408" y1="227.5" x2="455.125" y2="227.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="408" y1="231.5" x2="408" y2="223.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="455.125" y1="231.5" x2="455.125" y2="223.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="measurement" x="431.5625" y="218.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.25</text>
+<line class="dimension" x1="60" y1="153.5" x2="103.5" y2="153.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="60" y1="157.5" x2="60" y2="149.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="103.5" y1="157.5" x2="103.5" y2="149.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="measurement" x="81.75" y="144.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
 </svg>

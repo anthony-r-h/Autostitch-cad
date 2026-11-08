@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Nominal rows still need clearance</title><desc id="description">Analytic illustration of A10. Final state of the accompanying animation.</desc>
+<line class="clearance-envelope" x1="97.018666706" y1="239.283628291" x2="142.981333294" y2="200.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="217.018666706" y1="239.283628291" x2="262.981333294" y2="200.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="337.018666706" y1="239.283628291" x2="382.981333294" y2="200.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="457.018666706" y1="239.283628291" x2="502.981333294" y2="200.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="97.018666706" y1="227.283628291" x2="142.981333294" y2="188.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="217.018666706" y1="227.283628291" x2="262.981333294" y2="188.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="337.018666706" y1="227.283628291" x2="382.981333294" y2="188.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="clearance-envelope" x1="457.018666706" y1="227.283628291" x2="502.981333294" y2="188.716371709" stroke="#E3E3E3" stroke-width="20" stroke-linecap="round"/>
+<line class="guide" x1="120" y1="220" x2="480" y2="220" stroke="#C4C4C4" stroke-width="1"/>
+<line class="guide" x1="120" y1="208" x2="480" y2="208" stroke="#C4C4C4" stroke-width="1"/>
+<line class="slit" x1="97.018666706" y1="239.283628291" x2="142.981333294" y2="200.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="217.018666706" y1="239.283628291" x2="262.981333294" y2="200.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="337.018666706" y1="239.283628291" x2="382.981333294" y2="200.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="457.018666706" y1="239.283628291" x2="502.981333294" y2="200.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="97.018666706" y1="227.283628291" x2="142.981333294" y2="188.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="217.018666706" y1="227.283628291" x2="262.981333294" y2="188.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="337.018666706" y1="227.283628291" x2="382.981333294" y2="188.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="slit" x1="457.018666706" y1="227.283628291" x2="502.981333294" y2="188.716371709" stroke="#252525" stroke-width="12" stroke-linecap="round"/>
+<line class="rejected" x1="116" y1="272" x2="124" y2="280" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="116" y1="280" x2="124" y2="272" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="236" y1="272" x2="244" y2="280" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="236" y1="280" x2="244" y2="272" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="356" y1="272" x2="364" y2="280" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="356" y1="280" x2="364" y2="272" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="476" y1="272" x2="484" y2="280" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="rejected" x1="476" y1="280" x2="484" y2="272" stroke="#8B8B8B" stroke-width="1.3"/>
+<line class="dimension" x1="120" y1="300" x2="240" y2="300" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="120" y1="304" x2="120" y2="296" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="240" y1="304" x2="240" y2="296" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="measurement" x="180" y="291" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+</svg>

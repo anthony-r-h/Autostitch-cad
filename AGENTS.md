@@ -57,7 +57,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Keep artwork recipes, reproduction instructions and current assets under `examples/`. Start with its README; use `demo.lsp` to load native recipes in dependency order.
 - Store one canonical DWG per demo under `examples/demos/`; no revision suffixes or abandoned variations. Preserve user working drawings. Use Git for recipe history and `output/native/` for temporary evidence.
 - A native demo must regenerate from an empty drawing using committed sources. Record export bounds, dimensions and verification commands in `examples/demo.md`; update the test catalog when a scenario changes.
-- Illustrated explanations use a fixed 600 by 375 px canvas, SVG masters and PNG stills. Prove the static composition before optional animation. Keep inputs identical across comparisons and distinguish feasible alternatives from invalid layouts.
+- Illustrated explanations are embedded, animated figures on a fixed 600 by 375 px canvas, with SVG/PNG still fallbacks. Keep headings and explanatory prose in the surrounding document; do not turn figures into standalone infographics. Keep inputs identical across comparisons and distinguish feasible alternatives from invalid layouts.
 - Reuse catalog geometry. Identify whether an illustration is analytic or actual native output; never present a storyboard or arithmetic check as native qualification. Keep source, command and evidence status beside the assets.
 - For documentation-only changes, check references and consistency without driving CAD. For diagram changes, check geometry and inspect the rendered result at its intended size.
 

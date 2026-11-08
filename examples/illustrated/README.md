@@ -102,7 +102,7 @@ The outgoing corner step increases to approximately $3.21\,\mathrm{mm}$ to bring
 
 ## Glossary close-ups
 
-The [glossary](../../docs/GLOSSARY.md) groups the terms around three annotated examples.
+The [glossary](../../docs/GLOSSARY.md) groups the terms around four annotated examples.
 
 ![Guide, gaps, landmark and free span](assets/terms-layout.gif)
 
@@ -115,6 +115,10 @@ The [glossary](../../docs/GLOSSARY.md) groups the terms around three annotated e
 ![Junction, shared round hole and three arms](assets/terms-junction.gif)
 
 `ILL-TERMS-JUNCTION`: the same T junction as `ILL-JUNCTION`, with each arm identified.
+
+![Chord length compared with arc length between the same slit centres](assets/terms-chord.gif)
+
+`ILL-TERMS-CHORD`: a nominal $3\,\mathrm{mm}$ chord on a $3\,\mathrm{mm}$ radius. The corresponding arc length is $\pi\,\mathrm{mm}$.
 
 ## Reproduce
 

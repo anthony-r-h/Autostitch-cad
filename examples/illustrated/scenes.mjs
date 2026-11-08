@@ -453,6 +453,23 @@ function termsJunctionScene() {
   }
   return finish(s,result);
 }
+function termsChordScene() {
+  const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-CHORD').inputs;
+  const view={x:300,y:380,scale:80},half=Math.asin(input.pitch/(2*input.radius));
+  const point=t=>mul(axis(t),input.radius),start=Math.PI/2+half,end=Math.PI/2-half;
+  const a=point(start),b=point(end),guide=[];
+  for(let i=0;i<40;i++)guide.push(worldLine(point(lerp(start,end,i/40)),point(lerp(start,end,(i+1)/40)),view));
+  const s=scene('terms-chord','Chord length and arc length between the same slit centres','A3');
+  let result=[...guide];frame(s,[...result],100,'guide');
+  result.push(...opening(a,start-Math.PI/2+alpha,view),...opening(b,end-Math.PI/2+alpha,view));
+  frame(s,[...result],100,'centres');
+  result.push(...guide.map(e=>({...e,kind:'measured-arc',color:construction,width:1.5,dash:true})),
+    ...termLabel([300,75],'Arc length',[300,137]),text([350,119],(2*input.radius*half).toFixed(2)));
+  frame(s,[...result],180,'arc-length');
+  result.push(worldLine(a,b,view,'chord',ink,1));frame(s,[...result],110,'chord');
+  result.push(...termLabel([300,227],'Chord length',[300,176]),text([350,197],input.pitch.toFixed(2)));
+  return finish(s,result);
+}
 
 const notationText=(p,value,role)=>({...text(p,value),size:12,kind:`notation-${role}`});
 function directionMark(point,tangent) {
@@ -486,6 +503,11 @@ function annotateScene(s) {
   else if(['axiom-landmark','terms-layout'].includes(s.name))marks=routeMarks([60,187.5],[540,187.5]);
   else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
   else if(s.name==='axiom-curve')marks=routeMarks([160,75],[390,305],[1,0],[0,1]);
+  else if(s.name==='terms-chord') {
+    const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-CHORD').inputs;
+    const half=Math.asin(input.pitch/(2*input.radius)),y=380-80*input.radius*Math.cos(half);
+    marks=routeMarks([300-40*input.pitch,y],[300+40*input.pitch,y],[Math.cos(half),-Math.sin(half)],[Math.cos(half),Math.sin(half)]);
+  }
   else if(s.name==='axiom-corner') {
     const v=variant('J02');marks=routeMarks([370+(-10+v.settings.start)*24,105],[370,105+(v.settings.end-10)*24],[1,0],[0,1]);
   } else if(s.name==='axiom-smooth') {
@@ -516,7 +538,7 @@ export function createScenes() {
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
     curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step'),
-    termsLayoutScene(),termsSlitScene(),termsJunctionScene()].map(annotateScene);
+    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene);
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));

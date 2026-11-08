@@ -1215,7 +1215,7 @@
     },
     {
       "id": "J02",
-      "title": "90\u00c2\u00b0 corner",
+      "title": "90Â° corner",
       "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
       "group": "Corner angles",
       "svg": true,
@@ -1394,7 +1394,7 @@
     },
     {
       "id": "J03",
-      "title": "135\u00c2\u00b0 corner",
+      "title": "135Â° corner",
       "description": "Does the same direct construction fit the supplied wider corner?",
       "group": "Corner angles",
       "svg": true,
@@ -1573,7 +1573,7 @@
     },
     {
       "id": "J04",
-      "title": "45\u00c2\u00b0 corner",
+      "title": "45Â° corner",
       "description": "Does the same direct construction fit the supplied tighter corner?",
       "group": "Corner angles",
       "svg": true,
@@ -4211,7 +4211,7 @@
     },
     {
       "id": "J08",
-      "title": "Shallow line\u00ef\u00bf\u00bdarc corner",
+      "title": "Shallow lineï¿½arc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4406,7 +4406,7 @@
     },
     {
       "id": "J09",
-      "title": "Shallow arc\u00ef\u00bf\u00bdline corner",
+      "title": "Shallow arcï¿½line corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "J10",
-      "title": "Shallow arc\u00ef\u00bf\u00bdarc corner",
+      "title": "Shallow arcï¿½arc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -8542,7 +8542,7 @@
         "chord": 36,
         "sag": 3,
         "rows": 25,
-        "row-spacing": 3.0
+        "row-spacing": 3
       },
       "previewName": "fill-flow",
       "exports": [
@@ -9040,6 +9040,38 @@
       ],
       "inputs": {
         "sourceIllustration": "ILL-JUNCTION"
+      }
+    },
+    {
+      "id": "ILL-TERMS-CHORD",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "animated": true,
+      "status": "Annotated chord and arc distances between the same centres.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-chord"
+        }
+      ],
+      "terms": [
+        "Chord length",
+        "Arc length"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "direction"
+      ],
+      "inputs": {
+        "radius": 3,
+        "pitch": 3
       }
     }
   ]

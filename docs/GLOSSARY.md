@@ -24,7 +24,17 @@ A **virtual slit** is construction only: its selected tip helps locate a corner 
 
 ## Gap and pitch
 
-A **gap** is the direct centre-to-centre spacing between consecutive openings. **Pitch** $p$ is the target spacing. On a circle, this distance is a chord, not arc length.
+A **gap** is the direct centre-to-centre spacing between consecutive openings. **Pitch** $p$ is the target spacing. On a circular guide, the gap is the **chord length**: measured straight between the centres. **Arc length** follows the guide between those same centres.
+
+For radius $R$ and angular separation $\theta$ in radians:
+
+$$
+g=2R\sin\left(\frac{\theta}{2}\right),\qquad s_{\mathrm{arc}}=R\theta.
+$$
+
+![Chord length measured straight between slit centres, compared with arc length along the guide](../examples/illustrated/assets/terms-chord.gif)
+
+At $R=3\,\mathrm{mm}$ and $\theta=\pi/3$, the nominal chord gap is $3\,\mathrm{mm}$; the arc length is approximately $3.14\,\mathrm{mm}$.
 
 - **Nominal gap:** equals $p$.
 - **Adjusted gap:** a slit-to-slit gap changed from $p$, within $0.9p\leq g\leq1.1p$.

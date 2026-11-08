@@ -184,6 +184,25 @@ for(const [i,e] of lean.entries())for(const end of [1,2]) {
   near((200- +e['y'+end])/110,.43*Math.sin(theta));
 }
 
+const chordView={x:300,y:380,scale:80};
+const chordSlits=slits('terms-chord',chordView);
+assert.equal(chordSlits.length,2);
+for(const slit of chordSlits) {
+  near(Math.hypot(...slit.center),3);
+  near(slit.angle,Math.atan2(slit.center[1],slit.center[0])-Math.PI/2+alpha);
+}
+near(dist(chordSlits[0].center,chordSlits[1].center),3);
+const chordElements=readSvg('terms-chord').elements;
+const chord=chordElements.find(e=>e.class==='chord');
+for(const [i,end] of [1,2].entries()) {
+  near((+chord['x'+end]-chordView.x)/chordView.scale,chordSlits[i].center[0]);
+  near((chordView.y- +chord['y'+end])/chordView.scale,chordSlits[i].center[1]);
+}
+const measuredArc=chordElements.filter(e=>e.class==='measured-arc');
+assert.equal(measuredArc.length,40);
+const arcLength=measuredArc.reduce((sum,e)=>sum+Math.hypot(e.x2-e.x1,e.y2-e.y1)/80,0);
+near(arcLength,Math.PI,1e-4);assert(arcLength>3);
+
 for(const s of scenes) {
   const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
   // Check the encoded stream, including holds and reset; dispatch is not proof of motion.

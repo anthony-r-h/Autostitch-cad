@@ -83,7 +83,7 @@ Generate updates older output to these layers. In existing drawings, merge `AUTO
 
 ## Try it
 
-Open the current [demo drawings](demo.md): stitched fill samples, the Velvet banner, emblem and quilting studies. The demo guide lists their status, canonical DWG paths and native reproduction commands.
+Open the current [demo drawings](demo.md): stitched fill samples, the Velvet banner and emblem. The demo guide lists their status, canonical DWG paths and native reproduction commands.
 
 Use the relevant demo for visual checks, then run the automated tests affected by a change. The [test catalog](tests/cases.json) covers solver and lifecycle regression checks.
 

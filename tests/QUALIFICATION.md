@@ -9,9 +9,9 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 - Saved fill drawing reopened with 86 guides, 31 output blocks, no read failures and no stale output; all four named views remain.
 - Flow: 25 rows, 325 openings and 300 nominal gaps; free ends trimmed equally. Quilt and spiral geometry is unchanged.
 - Velvet: 18 clearance-comparison checks pass. All 3,799 openings clear the lettering; minimum measured glyph clearance is $0.152\,\mathrm{mm}$. Actual output was inspected at 360 ? 576 px without visible letter outlines.
-- Native reproduction checks pass for the emblem (15 guides, three circles) and quilting studies (120 guides); these remain guide artwork.
+- Native reproduction checks pass for the emblem (15 guides, three circles); this remains guide artwork.
 - Evidence: `output/native/flow-nominal-tests.txt`, `maze-build.txt`, `maze-fit/static-source-connectivity.json`, `demo-final-verification.txt` and `fills-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
-- Catalog validation passes with 573 stable IDs. Maze generation took 47 seconds on the validation machine; use the saved drawing for routine review.
+- Catalog validation passes with 570 stable IDs. Maze generation took 47 seconds on the validation machine; use the saved drawing for routine review.
 - Production plugin code is unchanged. Native recipe checks exercise the production solver; the full plugin suite was not rerun for these artwork changes.
 
 ## Matched guides and lettering specimen: 2026-11-07

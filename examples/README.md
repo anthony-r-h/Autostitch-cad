@@ -4,7 +4,6 @@
 
 - `demos/`: one canonical DWG per demo. Save a copy before experimenting.
 - `fills/`: previews of actual stitched fill samples.
-- `studies/`: retained quilting guide artwork and DXF sources.
 - `demo.lsp`: native command loader.
 - `emblem.lsp`, `fills.lsp`, `velvet.lsp`: current demo geometry and fitting.
 - `demo-export.lsp`: exports actual generated drawing entities.

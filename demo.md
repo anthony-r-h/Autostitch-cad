@@ -7,7 +7,6 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | Fill samples | [fills.dwg](examples/demos/fills.dwg) | Spiral, branching maze, diamond quilt and flow with generated stitches. [Qualification](tests/QUALIFICATION.md). |
 | Velvet | [can-you-really.dwg](examples/demos/can-you-really.dwg) | **Can / You / Really**, rounded heavy lettering with stitched background fill. [Qualification](tests/QUALIFICATION.md). |
 | Emblem | [emblem.dwg](examples/demos/emblem.dwg) | Centred AUTO Stitch, three concentric circles, 21 landmarks. Guide artwork; fitting still needs adjustment. |
-| Quilting studies | [quilting.dwg](examples/demos/quilting.dwg) | Bolster, Sweep and Fan. Guide artwork; direction not selected. |
 
 ## Reproduce in BricsCAD
 
@@ -20,9 +19,8 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | `ASTFILLDEMOS` | Stitched fill samples with named views |
 | `ASTVELVETDEMO` | Velvet banner |
 | `ASTEMBLEMDEMO` | Current emblem guides and landmarks |
-| `ASTQUILTSTUDIES` | Quilting guides with `A-BOLSTER`, `B-SWEEP`, `C-FAN` views |
 
-The native commands create geometry; fills and Velvet also call the stitch solver. Velvet's lettering is embedded, with no installed font dependency. Quilt studies import their committed DXFs from `examples/studies/`.
+The native commands create geometry; fills and Velvet also call the stitch solver. Velvet's lettering is embedded, with no installed font dependency.
 
 Use the saved DWGs for routine review; generating connected stitch blocks can take a minute or more. Close each test drawing after checking it.
 

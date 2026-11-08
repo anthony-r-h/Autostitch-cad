@@ -24,7 +24,7 @@ These are tested configurations, not minimum spacings. The maze's short turns ar
 
 Maze coordinates define one fixed motif; they are not an arbitrary maze generator. Flow trims the free ends equally without changing the underlying arc. No independent hatch recipe is needed: the crossing grid is the diamond quilt.
 
-Velvet uses circular-arc rows clipped around letter contours. Fragments too short to fit are omitted; retained fragments can be trimmed symmetrically. The three quilting studies remain separate guide artwork.
+Velvet uses circular-arc rows clipped around letter contours. Fragments too short to fit are omitted; retained fragments can be trimmed symmetrically.
 
 ## Validation
 

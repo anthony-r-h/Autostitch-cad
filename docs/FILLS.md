@@ -22,7 +22,7 @@ These are tested configurations, not minimum spacings. The maze's short turns ar
 - [fills.lsp](../examples/fills.lsp): `ast:fill-paths` returns native line/arc polyline vertices. `ASTFILLDEMOS` draws and stitches the samples.
 - [cases.json](../tests/cases.json): stable IDs, parameters and expected results.
 - [fills.dwg](../examples/demos/fills.dwg): editable guides and generated blocks, with a named view per recipe.
-- [Reproduction commands](../demo.md): native generation and preview export.
+- [Reproduction commands](../examples/demo.md): native generation and preview export.
 
 Maze coordinates define one fixed motif; they are not an arbitrary maze generator. Flow trims the free ends equally without changing the underlying arc. No independent hatch recipe is needed: the crossing grid is the diamond quilt.
 

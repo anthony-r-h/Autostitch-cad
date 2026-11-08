@@ -83,19 +83,19 @@ Generate updates older output to these layers. In existing drawings, merge `AUTO
 
 ## Try it
 
-Open the current [demo drawings](demo.md): stitched fill samples, the emblem and can / YOU / really? banner. The demo guide lists their status, canonical DWG paths and native reproduction commands.
+Open the current [demo drawings](examples/demo.md): stitched fill samples, the emblem and can / YOU / really? banner. The demo guide lists their status, canonical DWG paths and native reproduction commands.
 
 Use the relevant demo for visual checks, then run the automated tests affected by a change. The [test catalog](tests/cases.json) covers solver and lifecycle regression checks.
 
 ## Reference
 
-- [Demo drawings and reproduction](demo.md), [reusable fill recipes](docs/FILLS.md)
+- [Demo drawings and reproduction](examples/demo.md), [reusable fill recipes](docs/FILLS.md)
 - [Glossary](docs/GLOSSARY.md)
 - [Axioms and their motivation](docs/AXIOMS.md)
 - [Model and fitting mathematics](docs/MODEL.md)
 - [Junction construction](docs/JUNCTIONS.md)
 - [Geometric limits and dependencies](docs/LIMITS.md)
 - [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [axiom coverage](tests/AXIOM_AUDIT.md)
-- [Long-form README outline](docs/README_OUTLINE.md)
+- [Long-form pitch outline](docs/PITCH.md)
 - [Repository and development instructions](AGENTS.md)
 - [Why this exists](docs/WHY-THIS-EXISTS.md)

@@ -28,7 +28,7 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 - Saved fill drawing reopened with 58 guides, 36 output blocks, no read failures and no stale output; all four named views remain.
 - Concentric circles: five closed guides, $9\,\mathrm{mm}$ inner radius, $6\,\mathrm{mm}$ radial spacing, 220 openings and ten diameter landmarks; adjusted gaps match across opposite halves.
 - Flow: 25 rows, 325 openings and 300 nominal gaps; free ends trimmed equally. Quilt geometry is unchanged.
-- Evidence: `output/native/circle-landmarks-build.txt`, `maze-simple-build.txt`, `maze-simple-connectivity.json`, `circle-landmarks-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
+- Evidence: `output/native/circle-landmarks-build.txt`, `maze-simple-build.txt`, `maze-simple-connectivity.json`, `circle-landmarks-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../examples/demo.md).
 - Catalog validation passes with 572 stable IDs. Use the saved drawing for routine review.
 - Production plugin code is unchanged. Native recipe checks exercise the production solver; the full plugin suite was not rerun for these artwork changes.
 

@@ -19,9 +19,12 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `source/install-ribbon.ps1`, `AUTOSTITCH.bmp` | Home / Annotations launcher and icon |
 | `AUTOSTITCH.odcl`, `Autostitch.Events.dll` | Distributed runtime assets; rebuild with `build-plugin.ps1` |
 | `package.ps1` | Package a clean Git revision into `output/release/Autostitch-V22.zip` |
-| `docs/` | Glossary, axioms, mathematics, junctions, limitations and README outline |
-| `examples/demo.lsp`, `examples/` | Native demo commands, guide sources and SVG/PNG exports |
-| `examples/demos/`, `demo.md` | One canonical DWG per demo and reproduction instructions |
+| `docs/` | Glossary, axioms, mathematics, junctions, limitations and pitch outline |
+| `examples/README.md`, `examples/demo.md` | Example inventory, dependency map and exact reproduction/export commands |
+| `examples/demo.lsp`, `examples/{emblem,fills,banner}.lsp` | Native loader and complete artwork recipes |
+| `examples/demo-export.lsp`, `examples/render-demos.ps1` | Actual drawing export and SVG/PNG rendering |
+| `examples/demos/`, `examples/fills/` | Canonical demo DWGs and current artwork/fill previews |
+| `examples/illustrated/` | Pitch storyboards, diagram generators and their SVG/PNG assets |
 | `examples/fills.lsp`, `docs/FILLS.md` | Native fill generation and solving; samples in `tests/cases.json` |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
@@ -48,6 +51,15 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 3. Report failed commands plainly. Do not invent causes or count historical evidence as a new run.
 4. Review documentation for concise, neutral language and consistency with the implementation.
 5. Summarize changes, validation, risks and anything unverified.
+
+## Examples and illustrations
+
+- Keep artwork recipes, reproduction instructions and current assets under `examples/`. Start with its README; use `demo.lsp` to load native recipes in dependency order.
+- Store one canonical DWG per demo under `examples/demos/`; no revision suffixes or abandoned variations. Preserve user working drawings. Use Git for recipe history and `output/native/` for temporary evidence.
+- A native demo must regenerate from an empty drawing using committed sources. Record export bounds, dimensions and verification commands in `examples/demo.md`; update the test catalog when a scenario changes.
+- Illustrated explanations use a fixed 600 by 375 px canvas, SVG masters and PNG stills. Prove the static composition before optional animation. Keep inputs identical across comparisons and distinguish feasible alternatives from invalid layouts.
+- Reuse catalog geometry. Identify whether an illustration is analytic or actual native output; never present a storyboard or arithmetic check as native qualification. Keep source, command and evidence status beside the assets.
+- For documentation-only changes, check references and consistency without driving CAD. For diagram changes, check geometry and inspect the rendered result at its intended size.
 
 ## Native validation
 

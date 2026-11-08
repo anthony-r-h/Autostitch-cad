@@ -97,3 +97,4 @@ Use this fixed drawing for routine visual checks, then run the automated tests a
 - [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [axiom coverage](tests/AXIOM_AUDIT.md)
 - [Long-form README outline](docs/README_OUTLINE.md)
 - [Repository and development instructions](AGENTS.md)
+- [Why this exists](docs/WHY-THIS-EXISTS.md)

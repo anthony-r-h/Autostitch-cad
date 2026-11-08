@@ -8256,7 +8256,9 @@
         "examples/autostitch-angular.svg",
         "examples/autostitch-angular.png",
         "examples/autostitch-square.svg",
-        "examples/autostitch-square.png"
+        "examples/autostitch-square.png",
+        "examples/autostitch-artwork.svg",
+        "examples/autostitch-artwork.png"
       ],
       "views": [
         {
@@ -8269,7 +8271,7 @@
         },
         {
           "name": "SQUARE",
-          "description": "Flat-ended AUTO outlines, lowercase script Stitch, sewn circular frame and swash; 600 by 600 PNG."
+          "description": "Arched AUTO and script Stitch inside two complete circular stitch rows, with a single round-punch dot and top/bottom registration ticks; 600 by 600 PNG."
         }
       ],
       "coverage": [
@@ -8281,12 +8283,13 @@
         "I/H: connected sets with two T junctions",
         "C: open curve and bevel corners",
         "Adjusted gaps, round holes, virtual slits and thread display",
-        "Square AUTO: square terminals, rounded A crown and U bowl, separate inner and outer contours",
-        "Script Stitch: slanted lowercase forms, tangent arcs, connected crossbars and shoulder, stitched dot",
-        "Sewn frame: two circular arcs separated around the lettering",
-        "Swash: centre landmark and symmetric pitch adjustment; combined opening-clearance check across the emblem"
+        "Unstitched artwork is exported before solving; fitting preserves every guide",
+        "Square AUTO: arched placement with square terminals and rounded A crown/U bowl",
+        "Script Stitch: connected crossbars and shoulder; one separate 3 mm round punch for the dot",
+        "Double frame: two closed circular rows and four protected nominal gaps at top/bottom registration ticks",
+        "Combined clearance validation includes the round-punch dot and all independent stitch lines"
       ],
-      "expected": "55 guides, 36 output blocks, 32 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Five landmarks total, including the swash centre. Inspect all three named views and validate the combined emblem openings under default model settings. Automated boundary, mirror, ownership and Undo cases remain in their focused suites."
+      "expected": "53 guides, 34 output blocks, 30 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Eight landmarks total, including four on the double circular border. Artwork exports before/after fitting match. Inspect all three views and validate combined emblem openings under default model settings. Boundary, mirror, ownership and Undo cases remain in focused suites."
     }
   ]
 }

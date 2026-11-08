@@ -9,11 +9,11 @@ All samples use pitch $p=3\,\mathrm{mm}$ and slit length $\ell=1.5\,\mathrm{mm}$
 | Recipe | Configuration | Construction |
 | --- | --- | --- |
 | Concentric circles | $9\,\mathrm{mm}$ inner radius; $6\,\mathrm{mm}$ radial spacing | Five closed circles |
-| Branching maze | $36\times30\,\mathrm{mm}$; $3\,\mathrm{mm}$ corridors | Sharp orthogonal walls with shared junction holes |
+| Branching maze | $36\times30\,\mathrm{mm}$; $6\,\mathrm{mm}$ corridors | Twelve wall lines with seven shared T junctions |
 | Diamond quilt | $6\,\mathrm{mm}$ between crossings | Two families of eight lines; 64 shared X junctions |
 | Flow | $35.38\times74.89\,\mathrm{mm}$; $3\,\mathrm{mm}$ row spacing | 25 translated circular arcs; free ends stop at nominal pitch |
 
-These are tested configurations, not minimum spacings. The maze's short turns are formed at visible T/X junctions; its passages remain connected. Its free gaps and all flow gaps are nominal.
+These are tested configurations, not minimum spacings. The maze's short turns are formed at visible T junctions; its passages remain connected. Its free gaps and all flow gaps are nominal.
 
 ## Reuse
 

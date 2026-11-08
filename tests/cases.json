@@ -8318,7 +8318,7 @@
         },
         {
           "id": "FILL-NATIVE-018",
-          "expected": "Maze has 143 openings with 40 shared junction holes",
+          "expected": "Maze has 77 openings with 7 shared junction holes",
           "sourceSymbol": "ast:fill-tests"
         },
         {
@@ -8328,12 +8328,12 @@
         },
         {
           "id": "FILL-NATIVE-020",
-          "expected": "Maze stays on a 3 mm grid within a 36 by 30 mm footprint",
+          "expected": "Maze stays on a 6 mm grid within a 36 by 30 mm footprint",
           "sourceSymbol": "ast:fill-tests"
         },
         {
           "id": "FILL-NATIVE-021",
-          "expected": "Maze wall network has four connected groups",
+          "expected": "Maze wall network has five connected groups",
           "sourceSymbol": "ast:fill-tests"
         }
       ]
@@ -8437,8 +8437,8 @@
         "examples/fills/fill-maze.png",
         "examples/fills/fill-maze.svg"
       ],
-      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 3 mm corridors. Visible T junctions replace short isolated turns; all passages remain connected.",
-      "expected": "143 openings, including 40 shared round holes, at 3 mm pitch. No adjusted gaps. Production solving and combined default-model clearance pass.",
+      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 6 mm corridors. Twelve wall lines and seven T junctions; all passages remain connected.",
+      "expected": "77 openings, including 7 shared round holes, at 3 mm pitch. No adjusted gaps. Production solving and combined default-model clearance pass.",
       "usedBy": [],
       "drawing": "examples/demos/fills.dwg",
       "view": "MAZE"

@@ -62,10 +62,10 @@
           (if (or (< distance (- 2.7 1e-8)) (> distance (+ 3.3 1e-8))) (setq gaps-ok nil)))))
     (if (= (car fixture) "MAZE")
       (progn
-        (ast:fill-test-check (and (= 143 (length (ast:g-get 'openings result nil)))
-          (= 40 (length (vl-remove-if-not '(lambda (opening) (= 'round (ast:g-get 'type opening nil)))
+        (ast:fill-test-check (and (= 77 (length (ast:g-get 'openings result nil)))
+          (= 7 (length (vl-remove-if-not '(lambda (opening) (= 'round (ast:g-get 'type opening nil)))
             (ast:g-get 'openings result nil)))))
-          "Maze has 143 openings with 40 shared junction holes")
+          "Maze has 77 openings with 7 shared junction holes")
         (ast:fill-test-check (and
           (vl-every '(lambda (gap) (< (abs (- (ast:g-get 'distance gap 0.0) 3.0)) 1e-8)) (ast:g-get 'intervals result nil))
           (not (vl-some '(lambda (gap) (= 'corrected (ast:g-get 'kind gap nil))) (ast:g-get 'intervals result nil))))
@@ -74,13 +74,13 @@
         (ast:fill-test-check (and
           (= 0.0 (apply 'min (mapcar 'car points)) (apply 'min (mapcar 'cadr points)))
           (= 36.0 (apply 'max (mapcar 'car points))) (= 30.0 (apply 'max (mapcar 'cadr points)))
-          (vl-every '(lambda (point) (and (= (car point) (* 3.0 (fix (/ (car point) 3.0))))
-            (= (cadr point) (* 3.0 (fix (/ (cadr point) 3.0)))))) points)
+          (vl-every '(lambda (point) (and (= (car point) (* 6.0 (fix (/ (car point) 6.0))))
+            (= (cadr point) (* 6.0 (fix (/ (cadr point) 6.0)))))) points)
           (vl-every '(lambda (path) (and (= 2 (length path))
             (or (= (caar path) (caadr path)) (= (cadar path) (cadadr path))))) paths))
-          "Maze stays on a 3 mm grid within a 36 by 30 mm footprint")
-        (ast:fill-test-check (= 4 (length (ast:cad-components (length paths) (ast:g-get 'connections result nil))))
-          "Maze wall network has four connected groups")))
+          "Maze stays on a 6 mm grid within a 36 by 30 mm footprint")
+        (ast:fill-test-check (= 5 (length (ast:cad-components (length paths) (ast:g-get 'connections result nil))))
+          "Maze wall network has five connected groups")))
     (if (= (car fixture) "FLOW")
       (progn
         (ast:fill-test-check (and (= 300 (length (ast:g-get 'intervals result nil)))

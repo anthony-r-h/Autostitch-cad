@@ -5,14 +5,14 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 ## Compact fills and Velvet: 2026-11-08
 
 - Sixteen focused native fill checks pass: concentric circles, quilt, branching maze and flow, including clearance, gap bounds and expected failures.
-- Maze: $36\times30\,\mathrm{mm}$, $3\,\mathrm{mm}$ corridors, 143 openings, 40 shared junction holes, no adjusted gaps. Independent source audit confirms that all 120 passage cells remain connected.
-- Saved fill drawing reopened with 90 guides, 35 output blocks, no read failures and no stale output; all four named views remain.
+- Maze: $36\times30\,\mathrm{mm}$, $6\,\mathrm{mm}$ corridors, 77 openings, seven shared junction holes, no adjusted gaps. Independent source audit confirms that all 30 passage cells remain connected.
+- Saved fill drawing reopened with 58 guides, 36 output blocks, no read failures and no stale output; all four named views remain.
 - Concentric circles: five closed guides, $9\,\mathrm{mm}$ inner radius, $6\,\mathrm{mm}$ radial spacing, 220 openings; native output remains current.
 - Flow: 25 rows, 325 openings and 300 nominal gaps; free ends trimmed equally. Quilt geometry is unchanged.
 - Velvet: 18 clearance-comparison checks pass. All 3,799 openings clear the lettering; minimum measured glyph clearance is $0.152\,\mathrm{mm}$. Actual output was inspected at 360 ? 576 px without visible letter outlines.
 - Native reproduction checks pass for the emblem (15 guides, three circles); this remains guide artwork.
-- Evidence: `output/native/circles-build.txt`, `maze-build.txt`, `maze-fit/static-source-connectivity.json`, `demo-final-verification.txt` and `circles-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
-- Catalog validation passes with 570 stable IDs. Maze generation took 47 seconds on the validation machine; use the saved drawing for routine review.
+- Evidence: `output/native/circles-build.txt`, `maze-simple-build.txt`, `maze-simple-connectivity.json`, `demo-final-verification.txt` and `maze-simple-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
+- Catalog validation passes with 570 stable IDs. Use the saved drawing for routine review.
 - Production plugin code is unchanged. Native recipe checks exercise the production solver; the full plugin suite was not rerun for these artwork changes.
 
 ## Matched guides and lettering specimen: 2026-11-07

@@ -9,6 +9,19 @@
 - An axiomatic approach grounded in manufacturability, visual balance and precision
 - Bring specialized stitch-layout tools into established CAD: pitch, landmarks, corners and shared junctions from editable pattern guides
 
+# Even Big Fashion Gets It Wrong
+
+Research note: Anthony to find stitching examples from:
+
+- Hermès
+- Louis Vuitton
+- Loewe
+- Delvaux
+- Berluti
+- Valextra
+- Gucci
+- Bottega Veneta
+
 # The spacing problem
 
 - Seam lengths and required features rarely fall on exact multiples of the tool's pitch

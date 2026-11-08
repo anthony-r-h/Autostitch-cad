@@ -2,6 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Spacing labels and linked IDs: 2026-11-07
+
+- All 18 native suites passed 2,014 checks. Matching save/reopen passed seven checks.
+- Display checks cover smaller text centred on straight and curved guides, two decimal places, reversal and inch drawings.
+- Naming checks cover letter rollover, matching block/boxed IDs, migration, collision avoidance and stable sibling names after unlinking.
+- Catalog: 542 stable IDs validated. Four matching assertions failed in an earlier session; they passed after restart, in an isolated diagnostic, the original test sequence and the complete suite. The initial cause remains unconfirmed.
+
 ## Matching pieces and face views: 2026-11-07
 
 - All 18 native suites passed 2,007 checks, including 488 exact-mapping checks, 31 matching lifecycle/connected-piece checks and 47 palette checks.

@@ -10,7 +10,7 @@ Lay out stitch holes from editable pattern guides. Connect guides to define a st
 4. Enter **Stitch pitch**, set endpoints or landmarks, then **Generate stitches**.
 5. Edit guides with normal CAD tools. Select a guide, editing marker or generated block to reopen it, then Generate again.
 
-To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home → Annotations**, run this from the installation folder with BricsCAD open and no command active:
+To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home â†’ Annotations**, run this from the installation folder with BricsCAD open and no command active:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\source\install-ribbon.ps1
@@ -41,7 +41,7 @@ Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated bl
 
 ## Matching pattern pieces
 
-Draw matching guides on each piece. They must have the same shape and size; their position, rotation and face may differ. Connect any junctions within each piece first, then select the source and **Link piece**. Each piece keeps its own stitch ID.
+Draw matching guides on each piece. They must have the same shape and size; their position, rotation and face may differ. Connect any junctions within each piece first, then select the source and **Link piece**. Linked pieces use the source ID with letter suffixes: `ST-10-A`, `ST-10-B`, through `Z`, then `AA`, `AB` and onward. Removing a copy does not renumber the others. Generate updates existing linked names and their blocks.
 
 The source owns pitch, endpoints and landmarks. **Generate stitches** updates the source and its linked pieces together. Copies receive the complete layout, including junction holes and adjusted spacing, without fitting again. A failed match preserves all previous output. Unlink pieces before changing their guide connections. If a copy was deleted, select the source and use **Remove missing**.
 
@@ -54,7 +54,7 @@ Front/Back describes the face represented by the supplied guides; it does not mi
 | Slit or filled circle | Physical opening. |
 | Thin connecting line | Thread display. |
 | Capital `I` at a slit | An adjacent gap or its corner construction step differs from nominal pitch; place it individually. |
-| Small spacing number | Actual adjusted spacing in millimetres, on nonprinting `AUTOSTITCH_UI`. At an adjusted corner, this measures the virtual-to-real step. |
+| Small spacing number | Actual adjusted spacing in millimetres, rounded to two decimal places and centred on the guide, on nonprinting `AUTOSTITCH_UI`. At an adjusted corner, this measures the virtual-to-real step. |
 | Dashed virtual slits | Construction for a sharp corner's round hole. |
 | `S`, `E`, arrow | Start, end and direction. |
 | `J` / `L#` | Junction / landmark. |

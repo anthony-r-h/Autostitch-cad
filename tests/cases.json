@@ -6353,6 +6353,41 @@
           "id": "MATCH-024",
           "expected": "An unknown copy metadata version blocks family generation and preserves both outputs",
           "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-025",
+          "expected": "Matching suffixes continue from Z to AA and from ZZ to AAA",
+          "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "MATCH-026",
+          "expected": "Stitch IDs accept letter suffixes while rejecting malformed names",
+          "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "MATCH-027",
+          "expected": "Linked copies receive their source ID with stable A and B suffixes",
+          "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "MATCH-028",
+          "expected": "Matching copy block names and boxed labels agree with their suffixed IDs",
+          "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "MATCH-029",
+          "expected": "Unlinking a copy preserves its ID and never renumbers or reuses a live sibling ID",
+          "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "MATCH-030",
+          "expected": "Regeneration migrates existing linked copies from independent IDs to family block names",
+          "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "MATCH-031",
+          "expected": "Matching IDs skip an existing unrelated block name without replacing it",
+          "sourceSymbol": "ast:match-name-tests"
         }
       ]
     },
@@ -7590,7 +7625,7 @@
         },
         {
           "id": "DISPLAY-047",
-          "expected": "Adjusted arc labels report measured chords at their local midpoints with readable rotations",
+          "expected": "Adjusted arc labels report rounded chords on the guide with readable rotations",
           "sourceSymbol": "ast:display-tests"
         },
         {
@@ -7610,7 +7645,7 @@
         },
         {
           "id": "DISPLAY-051",
-          "expected": "Spacing values trim decimal zeros without depending on drawing dimension suppression",
+          "expected": "Spacing values use two decimal places without depending on drawing dimension suppression",
           "sourceSymbol": "ast:display-tests"
         }
       ]

@@ -4,9 +4,9 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 
 ## Stitched banner: 2026-11-08
 
-- `ASTBANNERDEMO`: 19 lettering guides in 14 blocks, 528 lettering openings; 91 fill guides with 324 openings; one round question-mark dot. Page: $160\times256\,\mathrm{mm}$.
-- All lettering solves at $3\,\mathrm{mm}$ pitch. Script joins and short terminals are fitted geometrically; the e crossbar follows the script slant.
-- Fill gaps remain nominal. Every fragment belongs to the shared arc field with $3\,\mathrm{mm}$ row spacing; O's counter stays empty.
+- `ASTBANNERDEMO`: 19 lettering guides in 16 blocks, 611 lettering openings; 104 fill guides with 404 openings; one round question-mark dot. Page: $160\times256\,\mathrm{mm}$.
+- Both script rows share a scale. The two a bowls are full circles with radius $10.08\,\mathrm{mm}$; no lettering stroke intersects them. The e crossbar follows the script slant.
+- All guides use $2.7\,\mathrm{mm}$ pitch. Fill gaps remain nominal; every fragment belongs to the shared arc field with $3\,\mathrm{mm}$ row spacing. Short complete stitches fill the tapered Y arms; O's counter stays empty.
 - Combined clearance and a $3\,\mathrm{mm}$ hole-to-hole clear band pass. Fill clipping uses a $3.75\,\mathrm{mm}$ inset to allow for outline slit footprints.
 - Native generation and save/reopen checked; actual output inspected at $600\times960$ px. Evidence: `output/native/banner-stitched-check.txt` and `banner-stitched-reopen.txt`.
 - Core solver unchanged; full plugin suites were not rerun.

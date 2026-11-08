@@ -24,7 +24,7 @@ All commands generate stitches. The banner includes stitched letter outlines, fl
 
 The emblem keeps the lettering shapes, clips the rings around them and omits remnants shorter than three nominal stitches. Its clear band is measured between hole outlines; ring fragments use nominal spacing.
 
-The banner clips one field of translated flow arcs across all three YOU letters. Rows and pitch are $3\,\mathrm{mm}$; free ends trim symmetrically to nominal spacing. Fragments shorter than two nominal gaps are omitted. The fill stays at least $3\,\mathrm{mm}$ from the outline holes, including O's counter. Its guide clipping inset is $3.75\,\mathrm{mm}$ to allow for the outline slits. Script joins and short terminals are shaped to fit the same pitch.
+The banner clips one field of translated flow arcs across all three YOU letters. Rows are $3\,\mathrm{mm}$ apart; all stitching uses $2.7\,\mathrm{mm}$ pitch; free ends trim symmetrically to nominal spacing. Fragments with at least one complete stitch are retained, including the tapered Y arms. The fill stays at least $3\,\mathrm{mm}$ from the outline holes, including O's counter. Its guide clipping inset is $3.75\,\mathrm{mm}$ to allow for the outline slits. Both script rows use the same size. The a bowls are true circles, separated from their uprights.
 
 Use the saved DWGs for routine review; generating connected stitch blocks can take a minute or more. Close each test drawing after checking it.
 

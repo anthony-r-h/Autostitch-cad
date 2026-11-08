@@ -8408,14 +8408,16 @@
       ],
       "coverage": [
         "Portrait 10:16 page, 160 by 256 mm",
-        "Script lettering and closed YOU contours solved at 3 mm pitch",
-        "Shared translated flow arcs clipped inside all three YOU letters",
+        "Equal-sized script rows with tighter spacing and true circular a bowls",
+        "No upright or other lettering stroke crosses an a bowl",
+        "All lettering and fill solved at 2.7 mm pitch",
+        "Wider Y arms filled from the shared translated arc field",
         "3 mm clearance between fill holes and lettering holes; empty O counter",
         "One round punch for the question-mark dot",
-        "Nominal fill pitch, symmetric free-end trimming and combined hole clearance",
+        "Nominal fill pitch, symmetric free-end trimming; single-stitch fragments retained",
         "600 by 960 pixel preview of native stitched output"
       ],
-      "expected": "19 lettering guides in 14 blocks with 528 openings; 91 fill guides with 324 openings; one separate round dot. All fill gaps nominal at 3 mm. Combined clearance and a 3 mm fill-to-lettering hole border pass.",
+      "expected": "19 lettering guides in 16 blocks with 611 openings; 104 fill guides with 404 openings; one separate round dot. All guides use 2.7 mm pitch; fill gaps are nominal. Round non-crossing a bowls, combined clearance and the 3 mm fill-to-lettering border pass.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 256,
@@ -8432,20 +8434,22 @@
           "script"
         ],
         "outlineInset": 3.75,
-        "pitch": 3,
+        "pitch": 2.7,
         "slitLength": 1.5,
         "flowChord": 160,
         "flowSag": 20,
         "flowRows": 31,
         "flowRowSpacing": 3,
-        "minimumFragmentGaps": 2,
-        "fillToLetteringClearance": 3
+        "minimumFragmentGaps": 1,
+        "fillToLetteringClearance": 3,
+        "scriptScale": 0.84,
+        "aBowlRadius": 10.08
       },
       "nativeChecks": [
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "105 current blocks; 528 lettering openings, 324 fill openings and one round dot. Shared-arc membership, nominal fill pitch, 3 mm hole-to-hole border and combined clearance pass."
+          "expected": "120 current blocks; 611 lettering openings, 404 fill openings and one round dot. Round non-crossing a bowls, shared script size, 2.7 mm pitch, shared-arc membership, 3 mm hole-to-hole border and combined clearance pass."
         }
       ]
     }

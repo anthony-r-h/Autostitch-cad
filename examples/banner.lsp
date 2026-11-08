@@ -1,48 +1,59 @@
 ;;; Banner with shared flow arcs clipped inside YOU. Load examples/demo.lsp, then ASTBANNERDEMO.
-(defun ast:banner-script (letter scale / tail head)
+(defun ast:banner-settings ()
+  (ast:cad-put 'pitch 2.7 (ast:cad-default-settings)))
+(defun ast:banner-configure (guides / guide result)
+  (foreach guide guides
+    (setq result (ast:cad-save-inputs guide (ast:banner-settings) nil))
+    (ast:cad-require (ast:cad-get 'ok result) (ast:cad-get 'error result))))
+(defun ast:banner-script (letter scale / tail rise crossing ux uy)
   (cond
     ((= letter "c") (list (ast:show-stroke
       '((20.48528137424 20.48528137424 2.414213562373095)
-        (20.48528137424 3.51471862576) (27.98528137424 11.01471862576)) nil)))
+        (20.48528137424 3.51471862576) (27.88528137424 10.91471862576)) nil)))
     ((= letter "a")
-      ;; Separate the bowl's directions at the stem; exact tangency cannot be punched.
-      ;; Keep two nominal gaps below the junction and three above, at either row scale.
-      (setq tail (- 12.0 (/ 6.0 scale)) head (+ 12.0 (/ 9.0 scale)))
-      (list (ast:show-stroke '((24 12 0.8) (0 12 0.8)) T)
-        (ast:show-stroke (list (list 24 head) (list 24 tail 1.0) (list (+ 24 (* 2.0 tail)) tail)) nil)))
+      ;; A true circle and a separate upright: no cusp or crossing through the bowl.
+      (list (ast:show-stroke '((24 12 1.0) (0 12 1.0)) T)
+        (ast:show-stroke '((26.4 24) (26.4 6 1.0) (34.2 6)) nil)))
     ((= letter "n") (list
-      (ast:show-stroke '((0 0) (0 15 -1.0) (18 15) (18 4.285714285714286 1.0) (30 4.285714285714286)) nil)))
+      (ast:show-stroke '((0 0) (0 15 -1.0) (18 15) (18 5.357142857142857 1.0) (30 5.357142857142857)) nil)))
     ((= letter "r") (list
       (ast:show-stroke '((0 0) (0 15 -1.0) (18 15)) nil)))
     ((= letter "e") (list
-      (ast:show-stroke '((2 12) (18 12 1.0) (0 12 0.414213562373095)
+      (ast:show-stroke '((2.9 12) (18 12 1.0) (0 12 0.414213562373095)
                         (12 0 0.414213562373095) (24 12)) nil)))
-    ((= letter "l") (list
-      ;; The rising stroke meets the loop tangentially; its crossing remains a junction.
-      (ast:show-stroke '((-5.24711808396387 1.57432326112480) (11.41287932795540 36.41142174524449)) nil)
-      (ast:show-stroke '((11.41287932795540 36.41142174524449 1.252211308703801) (0 39) (0 4.43826784481818 1.0) (12 4.43826784481818)) nil)))
+    ((= letter "l")
+      ;; Preserve the tangent loop while reserving nominal spans beside its crossing.
+      (setq rise (sqrt (+ (expt 17.41287932795540 2.0) (expt 36.41142174524449 2.0)))
+        ux (/ 17.41287932795540 rise) uy (/ 36.41142174524449 rise)
+        crossing (* 6.0 (/ uy ux)) tail (- crossing (/ 5.4 scale)))
+      (list
+        (ast:show-stroke (list (list (- (* ux (/ 8.1 scale))) (- crossing (* uy (/ 8.1 scale))))
+          '(11.41287932795540 36.41142174524449)) nil)
+        (ast:show-stroke (list '(11.41287932795540 36.41142174524449 1.252211308703801)
+          '(0 39) (list 0 tail 1.0) (list 12 tail)) nil)))
     ((= letter "y") (list
-      (ast:show-stroke '((0 24) (0 9 0.414213562373095) (8.5 0.5) (18 12)) nil)
-      (ast:show-stroke '((18 24) (18 -9 -1.0) (0 -9) (0 -4.945945945945946)) nil)))
+      (ast:show-stroke '((0 24) (0 9 0.414213562373095) (8.9 0.1) (18 12.2)) nil)
+      (ast:show-stroke (list (list 18 (+ 12.2 (/ 8.1 scale))) '(18 -9 -1.0)
+        '(0 -9) (list 0 (+ -9.0 (/ 2.7 scale)))) nil)))
     ((= letter "?") (list
-      (ast:show-stroke '((0 30 -2.414213562373095) (10 20) (10 9.25)) nil)
+      (ast:show-stroke '((0 30 -2.414213562373095) (10 20) (10 11.5)) nil)
       (ast:show-stroke '((8.5 3 1.0) (11.5 3 1.0)) T)))))
 
 (defun ast:banner-outline (letter)
   (cond
     ((= letter "Y") (list (ast:show-stroke
-      '((0 70) (17 70) (22 51) (27 70) (44 70) (30 36) (30 0) (14 0) (14 36)) T)))
+      '((0 70) (19 70) (25 54.2) (31 70) (50 70) (35 36) (35 0) (15 0) (15 36)) T)))
     ((= letter "O") (list
       (ast:show-stroke '((0 0) (44 0) (44 70) (0 70)) T)
-      (ast:show-stroke '((16.3 16) (27.7 16) (27.7 54) (16.3 54)) T)))
+      (ast:show-stroke '((16 16) (28 16) (28 54) (16 54)) T)))
     ((= letter "U") (list (ast:show-stroke
       '((0 70) (0 22 1.0) (44 22) (44 70) (28 70) (28 22 -1.0) (16 22) (16 70)) T)))))
 
 (setq ast:banner-lettering-layout
-  '(("can" 0.84 -12.0 (("c" 0.0) ("a" 32.0) ("n" 72.0)))
-    ("YOU" 1.0 0.0 (("Y" 0.0) ("O" 50.0) ("U" 100.0)))
-    ("really?" 0.74 -12.0
-      (("r" 0.0) ("e" 23.0) ("a" 52.0) ("l" 94.0) ("l" 115.0) ("y" 135.0) ("?" 165.0)))))
+  '(("can" 0.84 -12.0 (("c" 0.0) ("a" 30.0) ("n" 65.0)))
+    ("YOU" 1.0 0.0 (("Y" 0.0) ("O" 56.0) ("U" 106.0)))
+    ("really?" 0.84 -12.0
+      (("r" 0.0) ("e" 20.0) ("a" 46.0) ("l" 80.0) ("l" 100.0) ("y" 119.0) ("?" 145.0)))))
 
 (defun ast:banner-poly (stroke origin layer / data point)
   (setq data (list '(0 . "LWPOLYLINE") '(100 . "AcDbEntity") (cons 8 layer) '(370 . 30)
@@ -106,11 +117,11 @@
       (if start (setq runs (cons (list start (* index cell)) runs) start nil)))
     (setq index (1+ index)))
   (if start (setq runs (cons (list start total) runs)))
-  (setq step (ast:g-step arc 3.0))
+  (setq step (ast:g-step arc 2.7))
   (foreach run (reverse runs)
     (setq length (- (cadr run) (car run)) gaps (ast:g-floor-near (/ length step)))
-    ;; A retained fragment has at least three holes; trim free ends symmetrically.
-    (if (>= gaps 2)
+    ;; Keep even one complete stitch in a tapered arm; trim free ends symmetrically.
+    (if (>= gaps 1)
       (progn
         (setq extra (- length (* gaps step)))
         (setq result (cons (ast:banner-subarc arc (+ (car run) (* 0.5 extra)) (* gaps step)) result)))))
@@ -142,11 +153,11 @@
   (ast:cad-require (>= minimum 3.75) "A fill slit enters the 3.75 mm guide border.")
   (foreach plan plans
     (foreach gap (ast:cad-get 'intervals (ast:cad-get 'solution plan))
-      (ast:cad-require (equal 3.0 (ast:cad-get 'distance gap) 1e-7) "A flow gap is not nominal.")))
-  (setq error (ast:g-validate-openings openings (ast:cad-default-settings)))
+      (ast:cad-require (equal 2.7 (ast:cad-get 'distance gap) 1e-7) "A flow gap is not nominal.")))
+  (setq error (ast:g-validate-openings openings (ast:banner-settings)))
   (ast:cad-require (null error) "Two fill holes overlap; increase the flow row spacing.")
   (list '(ok . T) (cons 'fill-guides (length guides)) (cons 'openings (length openings))
-    (cons 'minimum-outline-clearance minimum) '(pitch . 3.0) '(row-spacing . 3.0)
+    (cons 'minimum-outline-clearance minimum) '(pitch . 2.7) '(row-spacing . 3.0)
     '(outline-inset . 3.75) '(combined-clearance . T) '(all-gaps-nominal . T)))
 (defun ast:banner-fill (outlines / mask bounds path whole arc fragments fragment guides report)
   (setq mask (ast:banner-mask outlines) bounds (ast:banner-bounds outlines))
@@ -160,7 +171,9 @@
     (entdel whole)
     (setq fragments (append fragments (ast:banner-clip arc mask 3.75))))
   (foreach fragment fragments (setq guides (cons (ast:banner-arc-guide fragment) guides)))
-  (setq guides (reverse guides) report (ast:banner-fill-check outlines guides))
+  (setq guides (reverse guides))
+  (ast:banner-configure guides)
+  (setq report (ast:banner-fill-check outlines guides))
   (cons (cons 'plans (ast:fill-plans guides nil)) report))
 
 (defun ast:banner-dot (guide / bounds center radius)
@@ -170,27 +183,56 @@
   (list '(type . round) (cons 'center center) (cons 'diameter (* 2.0 radius))))
 (defun ast:banner-text-check (text-plans fill-plans dot / text fill error clearance)
   (setq text (ast:emblem-openings text-plans) fill (ast:emblem-openings fill-plans)
-    error (ast:g-validate-openings (cons dot (append text fill)) (ast:cad-default-settings)))
+    error (ast:g-validate-openings (cons dot (append text fill)) (ast:banner-settings)))
   (ast:cad-require (null error) error)
   (setq clearance (ast:emblem-halo-check fill text dot 3.0))
   (ast:cad-require (ast:cad-get 'ok clearance) "A fill hole is within 3 mm of the outline stitching.")
   (list (cons 'lettering-sources (length text-plans)) (cons 'lettering-openings (length text))
     '(round-dots . 1) '(fill-to-lettering-clearance . 3.0) '(combined-clearance . T)))
+(defun ast:banner-shape-check (/ letters guide route bowls primitives first-arc arc other other-arc hit)
+  (setq letters (ast:emblem-guides "BANNER_LETTERS"))
+  (foreach guide letters
+    (setq route (ast:cad-get 'route (ast:cad-read guide)))
+    (if (ast:cad-get 'closed route)
+      (progn
+        (setq bowls (cons guide bowls) primitives (ast:cad-get 'primitives route) first-arc (car primitives))
+        (foreach arc primitives
+          (ast:cad-require (and (= 'arc (ast:cad-get 'kind arc))
+            (equal 10.08 (ast:cad-get 'radius arc) 1e-8)
+            (equal (ast:cad-get 'center first-arc) (ast:cad-get 'center arc) 1e-8))
+            "An a bowl is no longer a true circle at the shared script size."))
+        (ast:cad-require (equal (* 2.0 pi)
+          (apply '+ (mapcar '(lambda (arc) (abs (ast:cad-get 'sweep arc))) primitives)) 1e-8)
+          "An a bowl is not a complete circle.")
+        (foreach other letters
+          (if (not (equal guide other))
+            (foreach other-arc (ast:cad-get 'primitives (ast:cad-get 'route (ast:cad-read other)))
+              (foreach arc primitives
+                (setq hit (ast:n-hits arc other-arc))
+                (ast:cad-require (and (null (ast:cad-get 'points hit)) (null (ast:cad-get 'overlap hit)))
+                  "A lettering stroke crosses an a bowl."))))))))
+  (ast:cad-require (= 2 (length bowls)) "The banner needs two round a bowls.")
+  (ast:cad-require (= (cadr (car ast:banner-lettering-layout)) (cadr (caddr ast:banner-lettering-layout)))
+    "The two script rows must use the same size.")
+  T)
 (defun ast:banner-check (/ outlines guides lettering guide state report selection dot text-report)
   (setq outlines (ast:emblem-guides "BANNER_YOU") guides (ast:emblem-guides "BANNER_FLOW")
     lettering (append outlines (ast:emblem-guides "BANNER_LETTERS")))
   (ast:cad-require (= 4 (length outlines)) "The banner needs the four YOU contours.")
+  (ast:banner-shape-check)
   (foreach guide (append guides lettering)
     (setq state (ast:cad-read guide))
     (ast:cad-require (and (ast:cad-get 'output state) (not (ast:cad-get 'stale state)))
-      "A banner guide needs regeneration."))
+      "A banner guide needs regeneration.")
+    (ast:cad-require (equal 2.7 (ast:cad-get 'pitch (ast:cad-get 'settings state)) 1e-8)
+      "A banner guide has the wrong pitch."))
   (setq selection (ssget "_X" '((0 . "CIRCLE") (8 . "BANNER_PUNCTUATION"))))
   (ast:cad-require (and selection (= 1 (sslength selection))) "The question mark needs one round dot.")
   (setq dot (ast:banner-dot (ssname selection 0)) report (ast:banner-fill-check outlines guides)
     text-report (ast:banner-text-check (ast:fill-plans lettering T) (ast:fill-plans guides nil) dot))
-  (ast:cad-require (and (= 19 (length lettering)) (= 91 (length guides))
-    (= 324 (ast:cad-get 'openings report)) (= 528 (ast:cad-get 'lettering-openings text-report))
-    (= 14 (ast:cad-get 'lettering-sources text-report))) "The banner geometry or hole count has changed.")
+  (ast:cad-require (and (= 19 (length lettering)) (= 104 (length guides))
+    (= 404 (ast:cad-get 'openings report)) (= 611 (ast:cad-get 'lettering-openings text-report))
+    (= 16 (ast:cad-get 'lettering-sources text-report))) "The banner geometry or hole count has changed.")
   (append report text-report))
 
 (defun c:ASTBANNERDEMO (/ entry rows row total cursor guides outlines fill text-plans dot-guide dot report result entity)
@@ -212,6 +254,8 @@
   ;; The question-mark dot is one punch, not a tiny loop of slit holes.
   (setq dot-guide (last guides) dot (ast:banner-dot dot-guide) guides (vl-remove dot-guide guides))
   (entdel dot-guide)
+  (ast:banner-shape-check)
+  (ast:banner-configure guides)
   (setq text-plans (ast:fill-plans guides T) fill (ast:banner-fill outlines)
     report (ast:banner-text-check text-plans (ast:cad-get 'plans fill) dot)
     result (ast:cad-transaction 'ast:cad-write-components-inner (list (append text-plans (ast:cad-get 'plans fill)))))

@@ -49,5 +49,5 @@
   (vl-mkdir (strcat ast:*home* "/output"))
   (vl-mkdir (strcat ast:*home* "/output/native"))
   (setq path (strcat ast:*home* "/output/native/demo-export.jsonl"))
-  (ast:demo-export path '("SHOWCASE_PATTERN" "SHOWCASE_CIRCLES" "VELVET_FRAME"))
+  (ast:demo-export path '("SHOWCASE_PATTERN" "SHOWCASE_CIRCLES" "VELVET_FRAME" "FILL_REFERENCES"))
   (princ (strcat "\nExported actual stitches to " path)) (princ))

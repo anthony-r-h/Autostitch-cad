@@ -86,6 +86,33 @@
   (foreach path (ast:fill-paths kind nil)
     (setq guides (append guides (list (ast:fill-poly path origin)))))
   guides)
+(defun ast:fill-circle-settings (radius settings / half-step)
+  (setq half-step (* radius (ast:g-asin (/ (ast:cad-get 'pitch settings) (* 2.0 radius)))))
+  ;; Start beside the right-hand landmark so the loop seam does not split a free span.
+  (ast:cad-put 'phase (- (* 2.0 pi radius) half-step) settings))
+(defun ast:fill-circle-reference (guides / guide route primitive center radius maximum reference points point landmarks settings result)
+  (foreach guide guides
+    (setq route (ast:cad-get 'route (ast:cad-read guide)) primitive (car (ast:cad-get 'primitives route))
+      center (ast:cad-get 'center primitive) radius (ast:cad-get 'radius primitive)
+      maximum (max (if maximum maximum 0.0) radius)))
+  (if (not (tblsearch "LAYER" "FILL_REFERENCES"))
+    (entmake '((0 . "LAYER") (100 . "AcDbSymbolTableRecord") (100 . "AcDbLayerTableRecord")
+      (2 . "FILL_REFERENCES") (70 . 0) (62 . 8) (6 . "Continuous"))))
+  (setq reference (entmakex (list '(0 . "LINE") '(8 . "FILL_REFERENCES") '(370 . 13)
+    (cons 10 (ast:g-add center (list (- (+ maximum 2.0)) 0.0)))
+    (cons 11 (ast:g-add center (list (+ maximum 2.0) 0.0))))))
+  (ast:cad-require reference "Could not draw the circle landmark reference.")
+  (foreach guide guides
+    (setq route (ast:cad-get 'route (ast:cad-read guide)) radius (ast:cad-get 'radius (car (ast:cad-get 'primitives route)))
+      settings (ast:fill-circle-settings radius (ast:cad-default-settings)) landmarks nil
+      points (vlax-invoke (vlax-ename->vla-object guide) 'IntersectWith (vlax-ename->vla-object reference) 0))
+    (while points
+      (setq point (list (car points) (cadr points) (caddr points)) points (cdddr points)
+        landmarks (append landmarks (list (ast:cad-project guide point)))))
+    (ast:cad-require (= 2 (length landmarks)) "The diameter must cross each circle twice.")
+    (setq result (ast:cad-save-inputs guide settings landmarks))
+    (ast:cad-require (ast:cad-get 'ok result) (ast:cad-get 'error result)))
+  reference)
 (defun ast:fill-plans (guides connected / states connections groups group members group-states group-connections solved plans node)
   (setq states (ast:cad-set-states guides nil (ast:cad-default-settings) nil))
   (ast:cad-set-check states nil)
@@ -115,8 +142,9 @@
     (cons 'guide-width (- (car maximum) (car minimum))) (cons 'guide-height (- (cadr maximum) (cadr minimum)))))
 (defun ast:fill-case (kind origin / settings guides plans plan openings result error width bounds)
   (setq settings (ast:cad-default-settings) guides (ast:fill-guides kind origin)
-        bounds (ast:fill-bounds guides) width (ast:cad-get 'width bounds)
-        plans (ast:fill-plans guides (member kind '("QUILT" "MAZE"))))
+        bounds (ast:fill-bounds guides) width (ast:cad-get 'width bounds))
+  (if (= kind "CIRCLES") (ast:fill-circle-reference guides))
+  (setq plans (ast:fill-plans guides (member kind '("QUILT" "MAZE"))))
   ;; Fit every component and check clearance before writing any stitch output.
   (foreach plan plans
     (setq openings (append openings (ast:cad-get 'openings (ast:cad-get 'solution plan)))))

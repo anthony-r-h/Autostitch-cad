@@ -8335,6 +8335,16 @@
           "id": "FILL-NATIVE-021",
           "expected": "Maze wall network has five connected groups",
           "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-022",
+          "expected": "Circle diameter landmarks reserve ten nominal gaps",
+          "sourceSymbol": "ast:fill-tests"
+        },
+        {
+          "id": "FILL-NATIVE-023",
+          "expected": "Circle adjustments match on opposite halves",
+          "sourceSymbol": "ast:fill-tests"
         }
       ]
     }
@@ -8420,8 +8430,8 @@
         "examples/fills/fill-circles.png",
         "examples/fills/fill-circles.svg"
       ],
-      "notes": "Five closed circles with a common centre; 6 mm radial spacing and 9 mm inner radius.",
-      "expected": "Five closed loops, 220 openings at 3 mm pitch and 1.5 mm slit length, no round corner holes; combined opening clearance passes.",
+      "notes": "Five closed circles with a common centre; 6 mm radial spacing and 9 mm inner radius. A horizontal diameter supplies two landmark intersections per circle; the loop start borders one landmark gap.",
+      "expected": "Five closed loops, 220 openings at 3 mm pitch and 1.5 mm slit length. Ten landmark gaps remain nominal; adjusted gaps match across opposite halves. Combined opening clearance passes.",
       "usedBy": [],
       "drawing": "examples/demos/fills.dwg",
       "view": "CIRCLES"
@@ -8503,7 +8513,8 @@
       "Branching maze with narrow connected passages",
       "Shared quilt junction holes",
       "Flow nominal gaps and free-end trimming",
-      "Invalid clipping, tight curvature and infeasible junction spacing"
+      "Invalid clipping, tight curvature and infeasible junction spacing",
+      "Diameter landmarks preserve nominal gaps and balance circle adjustments"
     ]
   }
 }

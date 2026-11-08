@@ -1,6 +1,7 @@
-﻿param([string]$OutputFolder = (Join-Path $PSScriptRoot 'studies'))
+﻿param([string]$OutputFolder = (Join-Path $PSScriptRoot 'studies'), [switch]$FillSamples)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
+. (Join-Path $PSScriptRoot 'fill-recipes.ps1')
 New-Item -ItemType Directory -Force -Path $OutputFolder | Out-Null
 $ink = '#202824'
 $paper = '#F5F0E4'
@@ -117,16 +118,48 @@ function Save-Study([string]$name,[string]$title,[double]$width,[double]$height,
     $script:shapes.Clear()
 }
 
+function Add-RecipeFill([string]$Kind,[hashtable]$Config,[scriptblock]$Mask,[double]$Weight = 0.3) {
+    $paths=Get-AstFillPaths $Kind $Config
+    foreach($path in (Get-AstClippedFillPaths $paths $Mask 5.0)) { Add-Linework $path $false $Weight }
+}
+
+function Save-Sheet([string]$name,$items,[int]$tileWidth,[int]$tileHeight,[int]$columns = $items.Count) {
+    $margin=36;$heading=52;$width=$columns*$tileWidth+($columns+1)*$margin
+    $height=[int][Math]::Ceiling($items.Count/$columns)*($tileHeight+$heading+$margin)+$margin
+    $bitmap=[Drawing.Bitmap]::new($width,$height);$g=[Drawing.Graphics]::FromImage($bitmap)
+    $g.Clear([Drawing.ColorTranslator]::FromHtml($paper))
+    $g.TextRenderingHint=[Drawing.Text.TextRenderingHint]::AntiAliasGridFit
+    $font=[Drawing.Font]::new('Arial',18,[Drawing.FontStyle]::Bold)
+    $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($ink))
+    for($i=0;$i -lt $items.Count;$i++) {
+        $x=$margin+($i%$columns)*($tileWidth+$margin)
+        $y=$margin+[int][Math]::Floor($i/$columns)*($tileHeight+$heading+$margin)
+        $g.DrawString($items[$i][1],$font,$brush,[single]$x,[single]$y)
+        $image=[Drawing.Image]::FromFile((Join-Path $OutputFolder ($items[$i][0]+'.png')))
+        $g.DrawImage($image,$x,($y+$heading),$tileWidth,$tileHeight);$image.Dispose()
+    }
+    $bitmap.Save((Join-Path $OutputFolder ($name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
+    $brush.Dispose();$font.Dispose();$g.Dispose();$bitmap.Dispose()
+}
+if($FillSamples) {
+    $catalog=Get-Content -Raw -Encoding UTF8 (Join-Path $PSScriptRoot '../tests/cases.json') | ConvertFrom-Json
+    $items=@()
+    foreach($recipe in $catalog.fillRecipes) {
+        $config=@{}; foreach($property in $recipe.parameters.PSObject.Properties){$config[$property.Name]=$property.Value}
+        Add-RecipeFill $recipe.kind $config {param($x,$y) $x -ge 8 -and $x -le 88 -and $y -ge 8 -and $y -le 88} 0.35
+        Save-Study $recipe.previewName $recipe.title 96 96 480
+        $items+=,@($recipe.previewName,$recipe.title.ToUpperInvariant())
+    }
+    Save-Sheet 'fill-library' $items 400 400 3
+    return
+}
+
 # A: diamond quilting follows the waist of a sculpted centre panel.
 Add-Frame 240 240 8 18
 Add-Frame 240 240 13 15 0.25
 function Waist([double]$y) { 47+25*[Math]::Pow([Math]::Sin([Math]::PI*$y/240),2) }
 $central={param($x,$y) (In-Panel $x $y) -and $x -ge (Waist $y) -and $x -le (240-(Waist $y))}
-foreach($slope in @(-1.0,1.0)) {
-    for($offset=-240;$offset -le 480;$offset+=26) {
-        Add-Clipped {param($x) Point $x ($slope*$x+$offset)} $central 13 227 650 0.34
-    }
-}
+Add-RecipeFill 'quilt' @{bounds=@(13,13,227,227);angle=45.0;spacing=(26/[Math]::Sqrt(2));offset=(-240/[Math]::Sqrt(2))} $central 0.34
 foreach($side in @(0,1)) {
     foreach($offset in @(0,4,16,28,40)) {
         Add-Clipped {param($y) $x=(Waist $y)-$offset; if($side){$x=240-$x}; Point $x $y} {param($x,$y) In-Panel $x $y} 13 227 500 $(if($offset -le 4){0.42}else{0.30})
@@ -139,11 +172,7 @@ Add-Frame 240 240 8 18
 Add-Frame 240 240 13 15 0.25
 function Sweep([double]$x) { 120-56*[Math]::Sin(($x-120)*[Math]::PI/190) }
 $field={param($x,$y) (In-Panel $x $y) -and [Math]::Abs($y-(Sweep $x)) -ge 22}
-foreach($slope in @(-0.8,0.8)) {
-    for($offset=-240;$offset -le 480;$offset+=24) {
-        Add-Clipped {param($x) Point $x ($slope*$x+$offset)} $field 13 227 650 0.32
-    }
-}
+Add-RecipeFill 'quilt' @{bounds=@(13,13,227,227);angle=([Math]::Atan(0.8)*180/[Math]::PI);spacing=(24/[Math]::Sqrt(1.64))} $field 0.32
 foreach($offset in @(-22,-18,-6,6,18,22)) {
     Add-Clipped {param($x) Point $x ((Sweep $x)+$offset)} {param($x,$y) In-Panel $x $y} 13 227 600 $(if([Math]::Abs($offset) -ge 18){0.4}else{0.3})
 }
@@ -204,9 +233,7 @@ foreach($variant in @('a','b')) {
     Add-Frame 200 320 7 12 0.55
     Add-Frame 200 320 11 9 0.25
     if($variant -eq 'a') {
-        for($row=13;$row -le 308;$row+=2.8) {
-            Add-Clipped {param($x) Point $x ($row+4.5*[Math]::Sin(($x/174)*[Math]::PI*1.6+$row/70))} $mask 13 187 750 0.4
-        }
+        Add-RecipeFill 'flow' @{bounds=@(13,13,187,308);spacing=2.8;amplitude=4.5;wavelength=217.5;phaseLength=70.0} $mask 0.4
     } else {
         for($row=-18;$row -le 326;$row+=3.2) {
             Add-Clipped {param($x) Point $x ($row+0.28*[Math]::Abs($x-100))} $mask 13 187 750 0.4
@@ -218,22 +245,5 @@ foreach($variant in @('a','b')) {
     Save-Study ('banner-'+$variant) $title 200 320 600
 }
 
-function Save-Sheet([string]$name,$items,[int]$tileWidth,[int]$tileHeight) {
-    $margin=36;$heading=52;$width=$items.Count*$tileWidth+($items.Count+1)*$margin
-    $height=$tileHeight+$heading+2*$margin
-    $bitmap=[Drawing.Bitmap]::new($width,$height);$g=[Drawing.Graphics]::FromImage($bitmap)
-    $g.Clear([Drawing.ColorTranslator]::FromHtml($paper))
-    $g.TextRenderingHint=[Drawing.Text.TextRenderingHint]::AntiAliasGridFit
-    $font=[Drawing.Font]::new('Arial',18,[Drawing.FontStyle]::Bold)
-    $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($ink))
-    for($i=0;$i -lt $items.Count;$i++) {
-        $x=$margin+$i*($tileWidth+$margin)
-        $g.DrawString($items[$i][1],$font,$brush,[single]$x,[single]$margin)
-        $image=[Drawing.Image]::FromFile((Join-Path $OutputFolder ($items[$i][0]+'.png')))
-        $g.DrawImage($image,$x,($margin+$heading),$tileWidth,$tileHeight);$image.Dispose()
-    }
-    $bitmap.Save((Join-Path $OutputFolder ($name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
-    $brush.Dispose();$font.Dispose();$g.Dispose();$bitmap.Dispose()
-}
 Save-Sheet 'quilting-options' @(@('quilt-a-bolster','A / BOLSTER'),@('quilt-b-sweep','B / SWEEP'),@('quilt-c-fan','C / FAN')) 600 600
 Save-Sheet 'banner-options' @(@('banner-a','D / VELVET LETTERPRESS'),@('banner-b','E / MOTOR CLUB')) 500 800

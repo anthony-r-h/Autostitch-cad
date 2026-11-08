@@ -21,6 +21,8 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `package.ps1` | Package a clean Git revision into `output/release/Autostitch-V22.zip` |
 | `docs/` | Glossary, axioms, mathematics, junctions, limitations and README outline |
 | `examples/` | Fixed lettering DWG, reproducible guide recipes, SVG/PNG exports |
+| `examples/demos/`, `demo.md` | One canonical DWG per demo and reproduction instructions |
+| `examples/fill-recipes.ps1`, `docs/FILLS.md` | Shared fill guide recipes; samples in `tests/cases.json` |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
 | `output/` | Ignored generated evidence, local drawings and release packages |

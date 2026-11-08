@@ -89,6 +89,7 @@ Use this fixed drawing for routine visual checks, then run the automated tests a
 
 ## Reference
 
+- [Demo drawings and reproduction](demo.md), [reusable fill recipes](docs/FILLS.md)
 - [Glossary](docs/GLOSSARY.md)
 - [Axioms and their motivation](docs/AXIOMS.md)
 - [Model and fitting mathematics](docs/MODEL.md)

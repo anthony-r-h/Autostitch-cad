@@ -44,6 +44,12 @@ for(const fixture of catalog.visualFixtures||[]){
   for(const file of [fixture.drawing,fixture.source,...fixture.exports])assert(fs.existsSync(new URL(file,root)),`Missing visual fixture asset ${file}`);
   for(const view of fixture.views){assert(view.name&&view.description);}
 }
+for(const recipe of catalog.fillRecipes||[]){
+  id(recipe.id);assert(recipe.title&&recipe.notes&&recipe.expected&&recipe.parameters);
+  assert(['hatch','spiral','maze','quilt','flow'].includes(recipe.kind));source(recipe.source);
+  for(const file of recipe.exports)assert(fs.existsSync(new URL(file,root)),`Missing fill preview ${file}`);
+}
+if(catalog.fillChecks){source(catalog.fillChecks.source);assert(catalog.fillChecks.command&&catalog.fillChecks.coverage.length);}
 id(catalog.oracle.id);source(catalog.oracle.source);source(catalog.oracle.nativeSource);
 assert(catalog.oracle.expected&&catalog.oracle.native.lengths.length&&catalog.oracle.exhaustive.lengthCount>0);
 console.log(`Catalog valid: ${catalog.geometry.length} geometry recipes, ${catalog.geometry.reduce((n,c)=>n+c.variants.length,0)} pitch variants, ${catalog.suites.length} suites, ${ids.size} stable IDs.`);

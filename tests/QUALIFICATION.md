@@ -2,6 +2,14 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Reusable fill guides and canonical demos: 2026-11-08
+
+- Five fill recipes are defined in the catalog and rendered from shared code. Quilt A/B use diamond quilt; selected Velvet uses flowing hatch. Velvet's SVG and DXF are unchanged by extraction.
+- `check-fill-recipes.ps1` passes: hatch direction/spacing, near-vertical hatching, spiral continuity, maze adjacency/uniqueness, quilt crossing spacing, exclusion clipping in both directions, short fragments and invalid spacing.
+- Canonical demos live in `examples/demos/`; `build-demos.ps1 -Publish` builds fresh drawings and checks completion before replacing them. Reproduction steps are in [demo.md](../demo.md).
+- Rebuilt and reopened all three canonical DWGs: emblem has 15 guides and three circles; quilting has 120 guides and its A/B/C views; Velvet has 239 guides and 17 letter boundaries. All retain millimetre units.
+- Catalog validation passes with 559 IDs. These checks qualify guide generation and demo construction; native stitch qualification of the new fill samples remains pending. Production plugin code is unchanged.
+
 ## Artwork studies: 2026-11-08
 
 - Added a centred three-circle emblem, three quilting options and two portrait lettering options. These are guide drawings for review, not qualified stitch layouts.

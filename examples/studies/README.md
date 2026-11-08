@@ -16,6 +16,8 @@ Each square is $240\times240\,\mathrm{mm}$, exported at 720 Ã— 720 pixels.
 
 ## Portrait lettering
 
+**Selected: D / Velvet letterpress.** Its curved background uses the reusable flowing-hatch recipe.
+
 ![Portrait options](banner-options.png)
 
 | Option | Direction | CAD |
@@ -27,7 +29,9 @@ Portrait proportions are $10:16$: $200\times320\,\mathrm{mm}$, exported at 600 Ã
 
 ## Next pass
 
-Choose a quilting direction and a lettering direction. Prepare their curves and junctions, fit the stitches, then inspect the result. These draft DXFs use sampled polylines; they are not solver-qualified routes. Shading fragments shorter than $5\,\mathrm{mm}$ are omitted.
+Choose a quilting direction; Velvet is selected for the banner. Prepare curves and junctions, fit the stitches, then inspect the result. These draft DXFs use sampled polylines; they are not solver-qualified routes. Shading fragments shorter than $5\,\mathrm{mm}$ are omitted.
+
+[Reusable fills](../../docs/FILLS.md) define the shared recipes and sample cases. [Demo drawings and reproduction](../../demo.md) lists the canonical DWGs.
 
 The [centred three-circle emblem](../autostitch-emblem-study.png) is a separate proposal; its current fit status is recorded in the [specimen notes](../README.md#centred-three-circle-study).
 

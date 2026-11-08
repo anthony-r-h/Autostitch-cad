@@ -1,5 +1,7 @@
 # Stitch specimen
 
+[Demo drawings and reproduction steps](../demo.md).
+
 [New artwork options: quilting and portrait lettering](studies/README.md).
 
 Open [Autostitch-showcase.dwg](Autostitch-showcase.dwg). Save a copy before experimenting.
@@ -51,7 +53,7 @@ In a new empty drawing, load the plugin and `showcase.lsp`, then run **ASTSHOWCA
 
 ### Centred three-circle study
 
-[Artwork](autostitch-emblem-study.png) · [Editable DWG](Autostitch-emblem-study.dwg). The circles are centred vertically on the lettering and create 21 crossing landmarks. This is an unstitched design proposal: six of its 12 stitch lines do not yet fit at $3\,\mathrm{mm}$ pitch. The validated specimen above is unchanged.
+[Artwork](autostitch-emblem-study.png) · [Editable DWG](demos/emblem.dwg). The circles are centred vertically on the lettering and create 21 crossing landmarks. This is an unstitched design proposal: six of its 12 stitch lines do not yet fit at $3\,\mathrm{mm}$ pitch. The validated specimen above is unchanged.
 
 Run **ASTSHOWCASEARTMORE** in an empty drawing to reproduce the study. Render its artwork export with `-SquareCenterY 7.07097512664247`.
 

@@ -8294,7 +8294,7 @@
     {
       "id": "ART-EMBLEM",
       "description": "Centred three-circle emblem proposal",
-      "drawing": "examples/Autostitch-emblem-study.dwg",
+      "drawing": "examples/demos/emblem.dwg",
       "source": "examples/showcase.lsp",
       "exports": [
         "examples/autostitch-emblem-study.png",
@@ -8423,5 +8423,155 @@
       ],
       "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. Letter boundaries are references; background guides keep 2 mm clear of text. No solver pass is claimed."
     }
-  ]
+  ],
+  "fillRecipes": [
+    {
+      "id": "FILL-HATCH",
+      "title": "Diagonal hatch",
+      "kind": "hatch",
+      "source": "examples/fill-recipes.ps1",
+      "parameters": {
+        "bounds": [
+          8,
+          8,
+          88,
+          88
+        ],
+        "spacing": 8.0,
+        "angle": 45.0,
+        "offset": 0.0
+      },
+      "previewName": "fill-hatch",
+      "exports": [
+        "examples/fills/fill-hatch.png",
+        "examples/fills/fill-hatch.svg",
+        "examples/fills/fill-hatch.dxf"
+      ],
+      "notes": "Parallel guides; lane spacing is independent of stitch pitch.",
+      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
+      "usedBy": []
+    },
+    {
+      "id": "FILL-SPIRAL",
+      "title": "Arc spiral",
+      "kind": "spiral",
+      "source": "examples/fill-recipes.ps1",
+      "parameters": {
+        "center": [
+          48,
+          48
+        ],
+        "innerRadius": 6.0,
+        "spacing": 10.0,
+        "halfTurns": 7
+      },
+      "previewName": "fill-spiral",
+      "exports": [
+        "examples/fills/fill-spiral.png",
+        "examples/fills/fill-spiral.svg",
+        "examples/fills/fill-spiral.dxf"
+      ],
+      "notes": "One tangent-connected arc route; qualify inner curvature and clearance between turns.",
+      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
+      "usedBy": []
+    },
+    {
+      "id": "FILL-MAZE",
+      "title": "Maze meander",
+      "kind": "maze",
+      "source": "examples/fill-recipes.ps1",
+      "parameters": {
+        "origin": [
+          13,
+          13
+        ],
+        "order": 3,
+        "cellSize": 10.0
+      },
+      "previewName": "fill-maze",
+      "exports": [
+        "examples/fills/fill-maze.png",
+        "examples/fills/fill-maze.svg",
+        "examples/fills/fill-maze.dxf"
+      ],
+      "notes": "One noncrossing grid route; repeated sharp corners still require corner fitting.",
+      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
+      "usedBy": []
+    },
+    {
+      "id": "FILL-QUILT",
+      "title": "Diamond quilt",
+      "kind": "quilt",
+      "source": "examples/fill-recipes.ps1",
+      "parameters": {
+        "bounds": [
+          8,
+          8,
+          88,
+          88
+        ],
+        "spacing": 18.0,
+        "angle": 45.0,
+        "offset": 0.0
+      },
+      "previewName": "fill-quilt",
+      "exports": [
+        "examples/fills/fill-quilt.png",
+        "examples/fills/fill-quilt.svg",
+        "examples/fills/fill-quilt.dxf"
+      ],
+      "notes": "Two hatch families; crossings become X junctions. This sample places crossings 18 mm apart along each guide.",
+      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
+      "usedBy": [
+        "ART-A",
+        "ART-B"
+      ],
+      "checks": {
+        "crossingStep": 18.0
+      }
+    },
+    {
+      "id": "FILL-FLOW",
+      "title": "Flowing hatch",
+      "kind": "flow",
+      "source": "examples/fill-recipes.ps1",
+      "parameters": {
+        "bounds": [
+          8,
+          5,
+          88,
+          91
+        ],
+        "spacing": 7.0,
+        "amplitude": 3.0,
+        "wavelength": 100.0,
+        "phaseLength": 70.0
+      },
+      "previewName": "fill-flow",
+      "exports": [
+        "examples/fills/fill-flow.png",
+        "examples/fills/fill-flow.svg",
+        "examples/fills/fill-flow.dxf"
+      ],
+      "notes": "Curved parallel rows; selected Velvet banner uses this family with a text exclusion.",
+      "expected": "Reusable guide geometry only; stitch pitch fitting, junction solutions and combined opening clearance require native qualification.",
+      "usedBy": [
+        "ART-D"
+      ]
+    }
+  ],
+  "fillChecks": {
+    "source": "tests/check-fill-recipes.ps1",
+    "command": "./tests/check-fill-recipes.ps1",
+    "coverage": [
+      "Finite nonempty paths",
+      "Nominal hatch lane spacing and direction",
+      "Continuous arc joins",
+      "Unique adjacent maze grid sites",
+      "Measured quilt crossing spacing",
+      "Exclusion clipping in both traversal directions",
+      "Short fragment removal",
+      "Reject nonpositive fill spacing"
+    ]
+  }
 }

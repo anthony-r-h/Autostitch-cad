@@ -10,6 +10,6 @@
   (if (findfile path) (load path)
     (princ (strcat "\nDemo module is not available: " name))))
 
-(foreach ast:demo-module '("emblem.lsp" "fills.lsp" "velvet.lsp" "demo-export.lsp") (ast:demo-load-module ast:demo-module))
-(princ "\nDemos: ASTFILLDEMOS, ASTVELVETDEMO, ASTEMBLEMDEMO, ASTDEMOEXPORT.")
+(foreach ast:demo-module '("emblem.lsp" "fills.lsp" "banner.lsp" "demo-export.lsp") (ast:demo-load-module ast:demo-module))
+(princ "\nDemos: ASTFILLDEMOS, ASTBANNERDEMO, ASTEMBLEMDEMO, ASTDEMOEXPORT.")
 (princ)

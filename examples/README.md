@@ -5,7 +5,7 @@
 - `demos/`: one canonical DWG per demo. Save a copy before experimenting.
 - `fills/`: previews of actual stitched fill samples.
 - `demo.lsp`: native command loader.
-- `emblem.lsp`, `fills.lsp`, `velvet.lsp`: current demo geometry and fitting.
+- `emblem.lsp`, `fills.lsp`, `banner.lsp`: current demo geometry and fitting.
 - `demo-export.lsp`: exports actual generated drawing entities.
 - `render-demos.ps1`: converts exported entities to PNG/SVG.
 

@@ -8393,40 +8393,42 @@
     },
     {
       "id": "ART-D",
-      "description": "Portrait Can / You / Really with rounded vintage lettering",
+      "description": "Portrait can / YOU / really lettering study",
       "drawing": "examples/demos/can-you-really.dwg",
-      "source": "examples/velvet.lsp",
+      "source": "examples/banner.lsp",
       "exports": [
         "examples/demos/can-you-really.png",
-        "examples/demos/can-you-really.svg",
-        "examples/demos/can-you-really-phone.png"
+        "examples/demos/can-you-really.svg"
       ],
       "views": [
         {
-          "name": "VELVET",
-          "description": "Stitched background and unstitched lettering"
+          "name": "BANNER",
+          "description": "Centred script can and really around outlined YOU"
         }
       ],
       "coverage": [
-        "160 by 256 mm portrait",
-        "Optically spaced Cooper lettering defined by unstitched space",
-        "Exact circular-arc background runs",
-        "Combined clearance across independent stitch lines",
-        "360-pixel-wide proof without letter outlines"
+        "Portrait 10:16 page, 160 by 256 mm",
+        "Emblem-style script and outlined lettering",
+        "600 by 960 pixel artwork preview"
       ],
-      "expected": "344 guides and 3799 openings at 3 mm pitch; combined default-model clearance passes. 33 short fragments omitted; 105 retained guides trimmed symmetrically by at most 1.981 mm total. Letter references are hidden and nonprinting.",
-      "nativeChecks": [
-        {
-          "source": "examples/velvet.lsp",
-          "entrypoint": "ast:velvet-clearance-tests",
-          "expected": "18 comparisons agree with the production clearance checker."
-        },
-        {
-          "source": "examples/velvet.lsp",
-          "entrypoint": "ast:velvet-glyph-tests",
-          "expected": "3799 openings remain outside the letters; minimum slit-axis clearance exceeds 0.1515 mm."
-        }
-      ]
+      "expected": "20 editable lettering polylines; page and text centred. Lettering artwork only: stitching and background remain pending.",
+      "parameters": {
+        "pageWidth": 160,
+        "pageHeight": 256,
+        "previewWidth": 600,
+        "previewHeight": 960,
+        "plannedClearBand": 6,
+        "words": [
+          "can",
+          "YOU",
+          "really"
+        ],
+        "styles": [
+          "script",
+          "outlined",
+          "script"
+        ]
+      }
     }
   ],
   "fillRecipes": [
@@ -8515,9 +8517,7 @@
       ],
       "notes": "Translated circular arcs, 3 mm between rows. Free ends stop at nominal pitch; the original curve is unchanged.",
       "expected": "325 openings and 300 nominal gaps; no adjusted gaps. Footprint 35.38 by 74.89 mm. Production solving and combined default-model clearance pass.",
-      "usedBy": [
-        "ART-D"
-      ],
+      "usedBy": [],
       "drawing": "examples/demos/fills.dwg",
       "view": "FLOW"
     }

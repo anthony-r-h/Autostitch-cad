@@ -2,6 +2,12 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Portrait lettering study: 2026-11-08
+
+- `ASTBANNERDEMO` creates 20 editable lettering guides on a $160\times256\,\mathrm{mm}$ page. Both script rows share a scale; YOU uses the emblem's outlined style.
+- Native generation and save/reopen pass. Text is centred on the page, with room for a $6\,\mathrm{mm}$ clear band. The $600\times960$ px export shows guides only; no stitch-fit result is claimed.
+- Evidence: `output/native/banner-lettering-check.txt` and `banner-lettering-reopen.txt`.
+
 ## Stitched emblem: 2026-11-08
 
 - `ASTEMBLEMDEMO` reproduces the finished drawing from an empty DWG. The existing lettering shapes fit without their obsolete circle landmarks.
@@ -11,15 +17,14 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 - Actual CAD output inspected at $600\times600$ px. Save/reopen retains current output and zero landmarks. Evidence: `output/native/emblem-reproduction.txt` and `emblem-reopen-check.txt`.
 - Core solver unchanged; the full plugin suite was not rerun.
 
-## Compact fills and Velvet: 2026-11-08
+## Compact fills: 2026-11-08
 
 - Eighteen focused native fill checks pass: concentric circles, quilt, branching maze and flow, including clearance, gap bounds and expected failures.
 - Maze: $36\times30\,\mathrm{mm}$, $6\,\mathrm{mm}$ corridors, 77 openings, seven shared junction holes, no adjusted gaps. Independent source audit confirms that all 30 passage cells remain connected.
 - Saved fill drawing reopened with 58 guides, 36 output blocks, no read failures and no stale output; all four named views remain.
 - Concentric circles: five closed guides, $9\,\mathrm{mm}$ inner radius, $6\,\mathrm{mm}$ radial spacing, 220 openings and ten diameter landmarks; adjusted gaps match across opposite halves.
 - Flow: 25 rows, 325 openings and 300 nominal gaps; free ends trimmed equally. Quilt geometry is unchanged.
-- Velvet: 18 clearance-comparison checks pass. All 3,799 openings clear the lettering; minimum measured glyph clearance is $0.152\,\mathrm{mm}$. Actual output was inspected at $360\times576$ px without visible letter outlines.
-- Evidence: `output/native/circle-landmarks-build.txt`, `maze-simple-build.txt`, `maze-simple-connectivity.json`, `demo-final-verification.txt` and `circle-landmarks-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
+- Evidence: `output/native/circle-landmarks-build.txt`, `maze-simple-build.txt`, `maze-simple-connectivity.json`, `circle-landmarks-reopen-check.txt`. Actual stitched previews and canonical drawings: [demo.md](../demo.md).
 - Catalog validation passes with 572 stable IDs. Use the saved drawing for routine review.
 - Production plugin code is unchanged. Native recipe checks exercise the production solver; the full plugin suite was not rerun for these artwork changes.
 

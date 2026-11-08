@@ -4,9 +4,9 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 
 ## Stitched banner: 2026-11-08
 
-- `ASTBANNERDEMO`: 19 lettering guides in 16 blocks, 611 lettering openings; 104 fill guides with 404 openings; one round question-mark dot. Page: $160\times256\,\mathrm{mm}$.
-- The diamond background adds 41 guides in 16 blocks, 464 openings and 25 shared junctions. Fifteen background gaps are adjusted. Text-to-background clearance is at least $6\,\mathrm{mm}$; all background holes stay inside the frame and outside letter interiors.
-- Both script rows share a scale. The two a bowls are full circles with radius $10.08\,\mathrm{mm}$; no lettering stroke intersects them. The e crossbar follows the script slant.
+- `ASTBANNERDEMO`: 19 lettering guides in 16 blocks, 604 lettering openings; 104 fill guides with 404 openings; one round question-mark dot. Page: $160\times256\,\mathrm{mm}$.
+- The diamond background adds 41 guides in 15 blocks, 467 openings and 26 shared junctions. Fifteen background gaps are adjusted. Text-to-background clearance is at least $6\,\mathrm{mm}$; all background holes stay inside the frame and outside letter interiors.
+- Both script rows share a scale. The two a bowls are full circles with radius $10.08\,\mathrm{mm}$; no lettering stroke intersects them. The e spine follows the script slant; l loops start at their junctions, without low entry strokes. The can artwork is unchanged (231 exported elements match).
 - All guides use $2.7\,\mathrm{mm}$ pitch. Fill gaps remain nominal; every fragment belongs to the shared arc field with $3\,\mathrm{mm}$ row spacing. Short complete stitches fill the tapered Y arms; O's counter stays empty.
 - Combined clearance and a $3\,\mathrm{mm}$ hole-to-hole clear band pass. Fill clipping uses a $3.75\,\mathrm{mm}$ inset to allow for outline slit footprints.
 - Native generation and save/reopen checked; actual output inspected at $600\times960$ px. Evidence: `output/native/banner-diamond-check.txt` and `banner-diamond-reopen.txt`.

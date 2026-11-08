@@ -8418,9 +8418,10 @@
         "600 by 960 pixel preview of native stitched output",
         "Loose diamond quilt with shared crossings, clipped outside a 6 mm text perimeter",
         "Outer frame acts as a stopping boundary; every background hole stays inside it",
-        "Closed letter interiors and counters remain free of background stitches"
+        "Closed letter interiors and counters remain free of background stitches",
+        "Sloping e spine, l loops without low entry strokes, closer question mark; can unchanged"
       ],
-      "expected": "19 lettering guides in 16 blocks with 611 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 41 guides in 16 blocks with 464 openings, 25 shared junctions and 15 adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
+      "expected": "19 lettering guides in 16 blocks with 604 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 41 guides in 15 blocks with 467 openings, 26 shared junctions and 15 adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 256,
@@ -8457,7 +8458,7 @@
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "136 current blocks, 1480 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
+          "expected": "135 current blocks, 1476 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
         }
       ]
     }

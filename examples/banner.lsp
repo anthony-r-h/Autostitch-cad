@@ -20,15 +20,14 @@
     ((= letter "r") (list
       (ast:show-stroke '((0 0) (0 15 -1.0) (18 15)) nil)))
     ((= letter "e") (list
-      (ast:show-stroke '((2.9 12) (18 12 1.0) (0 12 0.414213562373095)
-                        (12 0 0.414213562373095) (24 12)) nil)))
+      (ast:show-stroke '((2.9 12) (18 12 1.0) (0 12) (0 6 1.0) (18 6)) nil)))
     ((= letter "l")
-      ;; Preserve the tangent loop while reserving nominal spans beside its crossing.
+      ;; Start at the loop junction; omit the low entry stroke that crowds the previous letter.
       (setq rise (sqrt (+ (expt 17.41287932795540 2.0) (expt 36.41142174524449 2.0)))
         ux (/ 17.41287932795540 rise) uy (/ 36.41142174524449 rise)
         crossing (* 6.0 (/ uy ux)) tail (- crossing (/ 5.4 scale)))
       (list
-        (ast:show-stroke (list (list (- (* ux (/ 8.1 scale))) (- crossing (* uy (/ 8.1 scale))))
+        (ast:show-stroke (list (list 0 crossing)
           '(11.41287932795540 36.41142174524449)) nil)
         (ast:show-stroke (list '(11.41287932795540 36.41142174524449 1.252211308703801)
           '(0 39) (list 0 tail 1.0) (list 12 tail)) nil)))
@@ -54,7 +53,7 @@
   '(("can" 0.84 -12.0 (("c" 0.0) ("a" 30.0) ("n" 65.0)))
     ("YOU" 1.0 0.0 (("Y" 0.0) ("O" 56.0) ("U" 106.0)))
     ("really?" 0.84 -12.0
-      (("r" 0.0) ("e" 20.0) ("a" 46.0) ("l" 80.0) ("l" 100.0) ("y" 119.0) ("?" 145.0)))))
+      (("r" 0.0) ("e" 20.0) ("a" 42.0) ("l" 78.0) ("l" 96.0) ("y" 114.0) ("?" 134.0)))))
 
 (defun ast:banner-poly (stroke origin layer / data point)
   (setq data (list '(0 . "LWPOLYLINE") '(100 . "AcDbEntity") (cons 8 layer) '(370 . 30)
@@ -307,10 +306,10 @@
     background-report (ast:banner-background-check (ast:fill-plans background T)
       (cons dot (append (ast:emblem-openings text-plans) (ast:emblem-openings fill-plans))) (car frame) lettering))
   (ast:cad-require (and (= 19 (length lettering)) (= 104 (length guides))
-    (= 404 (ast:cad-get 'openings report)) (= 611 (ast:cad-get 'lettering-openings text-report))
+    (= 404 (ast:cad-get 'openings report)) (= 604 (ast:cad-get 'lettering-openings text-report))
     (= 16 (ast:cad-get 'lettering-sources text-report))) "The banner geometry or hole count has changed.")
-  (ast:cad-require (and (= 41 (length background)) (= 464 (ast:cad-get 'background-openings background-report))
-    (= 16 (ast:cad-get 'background-blocks background-report)) (= 25 (ast:cad-get 'background-junctions background-report)))
+  (ast:cad-require (and (= 41 (length background)) (= 467 (ast:cad-get 'background-openings background-report))
+    (= 15 (ast:cad-get 'background-blocks background-report)) (= 26 (ast:cad-get 'background-junctions background-report)))
     "The background geometry or hole count has changed.")
   (append report text-report background-report))
 

@@ -8269,7 +8269,7 @@
         },
         {
           "name": "SQUARE",
-          "description": "Double-row AUTO / mixed-letter STITCH badge with a crossing reference circle; 600 by 600 PNG."
+          "description": "Flat-ended AUTO outlines, lowercase script Stitch, sewn circular frame and swash; 600 by 600 PNG."
         }
       ],
       "coverage": [
@@ -8281,11 +8281,12 @@
         "I/H: connected sets with two T junctions",
         "C: open curve and bevel corners",
         "Adjusted gaps, round holes, virtual slits and thread display",
-        "Square AUTO: separate inner and outer contours, rounded caps and quarter-circle returns",
-        "Square I/C: slanted serif and bevelled letter shapes",
-        "Pattern circle: three actual intersections stored as landmarks on S/H"
+        "Square AUTO: square terminals, rounded A crown and U bowl, separate inner and outer contours",
+        "Script Stitch: slanted lowercase forms, tangent arcs, connected crossbars and shoulder, stitched dot",
+        "Sewn frame: two circular arcs separated around the lettering",
+        "Swash: centre landmark and symmetric pitch adjustment; combined opening-clearance check across the emblem"
       ],
-      "expected": "54 guides, 32 output blocks, 27 source stitch lines; ASTSHOWCASEREGEN reports zero failures. All three circle crossings have saved landmarks (seven landmarks total). Inspect all three named views. Automated boundary, mirror, ownership and Undo cases remain in their focused suites."
+      "expected": "55 guides, 36 output blocks, 32 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Five landmarks total, including the swash centre. Inspect all three named views and validate the combined emblem openings under default model settings. Automated boundary, mirror, ownership and Undo cases remain in their focused suites."
     }
   ]
 }

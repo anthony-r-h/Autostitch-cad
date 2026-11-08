@@ -2,6 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Script emblem and sewn frame: 2026-11-07
+
+- Square-ended AUTO outlines retain the rounded A crown and U bowl. Lowercase script, its dot, the swash and the circular frame all use generated stitches.
+- All 32 sources regenerate: 55 current guides, 36 outputs and five landmarks. Save/reopen preserves these and all named views.
+- The final emblem's 731 openings pass combined clearance validation under default model settings, including separate letters and frame arcs.
+- Inspected the 600 × 600 export. Catalog validation passes. Plugin code is unchanged; the full suite was not rerun.
+
 ## Stitched badge: 2026-11-07
 
 - Revised square specimen: outlined AUTO, mixed letter shapes and a pattern circle crossing the S and H.

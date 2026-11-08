@@ -2,32 +2,33 @@
 
 Open [Autostitch-showcase.dwg](Autostitch-showcase.dwg). Save a copy before experimenting.
 
-Three named views: **ROUND**, **ANGULAR**, **SQUARE**. Use BricsCAD's View Manager to switch. All use a $3\,\mathrm{mm}$ pitch: 54 guides, 30 letters, 32 stitch blocks and 27 independent sources.
+Three named views: **ROUND**, **ANGULAR**, **SQUARE**. Use BricsCAD's View Manager to switch. All use a $3\,\mathrm{mm}$ pitch: 55 guides, 30 letters, 36 stitch blocks and 32 independent sources.
 
 ![Square stitch specimen](autostitch-square.png)
 
-The square badge uses double-row AUTO outlines, a slanted serif I and a bevelled C. Its circle crosses the S and H at three saved landmarks. Each crossing falls in a reserved nominal gap. The circle is pattern geometry, not another stitch line.
+The square emblem pairs flat-ended AUTO outlines with slanted lowercase script. The A crown and U bowl stay round. A sewn circular frame opens around the lettering; a stitched swash underlines it. The swash has a centre landmark.
 
 ## Inspect
 
 - `SHOWCASE_GUIDES`: editable polylines.
 - `AUTOSTITCH_UI`: turn on for IDs, landmarks, junctions and spacing values.
-- `SHOWCASE_REFERENCES`: turn on for the U's landmark reference ticks.
-- `SHOWCASE_PATTERN`: the badge circle; prints with the stitching.
+- `SHOWCASE_REFERENCES`: turn on for the banner U landmarks and the swash's centre reference.
 - `AUTOSTITCH` and `AUTOSTITCH_STITCHES`: generated holes and thread.
 
 The saved drawing hides editing labels. Generate turns them on again.
-If you move the circle, remove and re-add its landmarks at the new intersections; landmarks store positions, not live object links.
+Landmarks store guide positions, not live links to reference objects.
 
 | Letters | Coverage |
 | --- | --- |
 | A | Curved crown or pointed corner; two crossbar junctions |
 | U | Straight-to-curve transitions or square corners; paired landmarks |
-| T | T junction; repeated single-row letters are matched guides within each view |
+| T | T junction; repeated letters are matched guides in the two banners |
 | O | Closed curved loop or rectangle |
 | S | Reversed curvature or alternating square corners |
 | I, H | Connected guides with two T junctions |
 | C | Open curves or bevel corners |
+| Script t / h | Connected crossbars and a sloping shoulder; tangent curve transitions |
+| Frame / swash | Open circular arcs; centre landmark; clearance between separate stitch lines |
 
 Adjusted spacing, round holes and dashed virtual slits appear where required. This drawing samples successful layouts; boundary failures, mirrored matches, ownership and Undo remain covered by focused tests in [the catalog](../tests/cases.json).
 
@@ -35,7 +36,7 @@ Adjusted spacing, round holes and dashed virtual slits appear where required. Th
 
 1. APPLOAD `AUTOSTITCH.lsp` from the repository root.
 2. Load `examples/showcase.lsp`.
-3. Run **ASTSHOWCASEREGEN**. Expect 27 sources and zero failures on the supplied drawing.
+3. Run **ASTSHOWCASEREGEN**. Expect 32 sources and zero failures on the supplied drawing.
 4. Inspect the three views. On a repeated T, **Select source** edits the shared layout; **Unlink guide** makes that T independent.
 
 ## Reproduce

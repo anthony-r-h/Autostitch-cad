@@ -1,6 +1,30 @@
 # Illustrated pitch demos
 
-Text scripts for the small examples in [the pitch](../../docs/PITCH.md). Each example shows one geometric problem or decision directly. These are plans for later illustrations and optional animation; no drawings or rendered results have been produced here.
+Small examples for [the pitch](../../docs/PITCH.md). Each shows one geometric problem or placement decision. The opening comparison has static SVG/PNG proofs; the remaining scripts are plans.
+
+## Current proof set
+
+| Equal redistribution | End adjustment | Central adjustment |
+| --- | --- | --- |
+| [SVG](assets/pitch-spread.svg) / [PNG](assets/pitch-spread.png) | [SVG](assets/pitch-end.svg) / [PNG](assets/pitch-end.png) | [SVG](assets/pitch-centre.svg) / [PNG](assets/pitch-centre.png) |
+
+![Equal redistribution](assets/pitch-spread.png)
+
+![Two end adjustments](assets/pitch-end.png)
+
+![Two central adjustments](assets/pitch-centre.png)
+
+These are analytic diagrams of `S02` at $3\,\mathrm{mm}$ pitch, not exported CAD output. All three satisfy the spacing bounds. The central arrangement agrees with the independent fit selector. Stroke weight is graphical; no finite-width physical clearance claim is made. The lower schematic shows four teeth above the first four openings, at the same scale as the main guide.
+
+Rebuild from the repository root using Windows PowerShell and its built-in `System.Drawing` support; no packages or CAD session are needed:
+
+```powershell
+./examples/illustrated/build.ps1
+node tests/validate-illustrated.mjs
+node tests/validate-cases.mjs
+```
+
+`build.ps1` reads the catalog guide and emits editable SVG elements plus PNG proofs. `-OutputDirectory` selects a temporary export directory. The validator measures the emitted SVG slit geometry, spacing and adjustment marks, compares the central layout with the independent selector, and checks PNG dimensions. Native qualification and animation remain pending.
 
 ## Canvas and layout
 
@@ -102,7 +126,7 @@ Use the same four-tooth chisel diagram at $3\,\mathrm{mm}$ pitch in each compari
 
 At 600 px, the difference between $3$ and $3.05\,\mathrm{mm}$ is subtle. Show adjustment marks and counts; do not exaggerate hole positions to make the difference visible. Central placement is the chosen balance policy, not the only valid fit or a claim of universal visual superiority.
 
-**Source and status for all three:** `S02` supplies the shared guide and Autostitch's expected two adjusted gaps. The first two scripts deliberately apply different placement policies to that guide. Spacing arithmetic follows [the model](../../docs/MODEL.md#span-fitting); animation, tool-width choices and native output review remain to be done.
+**Source and status for all three:** `S02` supplies the shared guide and Autostitch's expected two adjusted gaps; `ILL-S02` indexes the static assets. The first two scripts deliberately apply different placement policies to that guide. Static SVG geometry is checked against [the model](../../docs/MODEL.md#span-fitting) and the independent selector; animation, tool-width choices and native output review remain to be done.
 
 ## Next small scripts
 

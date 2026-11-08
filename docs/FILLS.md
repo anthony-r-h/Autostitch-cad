@@ -28,6 +28,8 @@ Maze coordinates define one fixed motif; they are not an arbitrary maze generato
 
 The banner reuses Flow as one shared field with $3\,\mathrm{mm}$ row spacing, clips it inside YOU, then trims each retained fragment to $2.7\,\mathrm{mm}$ pitch. Its holes stay $3\,\mathrm{mm}$ from the stitched lettering; O's counter stays empty.
 
+The banner also uses a looser diamond quilt: crossings $27\,\mathrm{mm}$ apart, $2.7\,\mathrm{mm}$ pitch. The quilt is clipped around a $6\,\mathrm{mm}$ text perimeter and stops inside the image frame.
+
 ## Validation
 
 Each sample must fit completely and pass combined opening clearance, including openings on separate guides. Crossings are declared junctions with shared holes. Clearance uses default model settings; it is not a calibrated material-width allowance. [Native results](../tests/QUALIFICATION.md).

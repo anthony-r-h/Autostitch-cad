@@ -8393,7 +8393,7 @@
     },
     {
       "id": "ART-D",
-      "description": "Stitched can / YOU / really? banner with shared flow inside YOU",
+      "description": "Stitched can / YOU / really? banner with flow fill and an open diamond background",
       "drawing": "examples/demos/can-you-really.dwg",
       "source": "examples/banner.lsp",
       "exports": [
@@ -8403,7 +8403,7 @@
       "views": [
         {
           "name": "BANNER",
-          "description": "Stitched script and outlined YOU, with an inset shared flow fill"
+          "description": "Stitched lettering and flow fill, isolated from a loose diamond quilt by a clear perimeter"
         }
       ],
       "coverage": [
@@ -8415,9 +8415,12 @@
         "3 mm clearance between fill holes and lettering holes; empty O counter",
         "One round punch for the question-mark dot",
         "Nominal fill pitch, symmetric free-end trimming; single-stitch fragments retained",
-        "600 by 960 pixel preview of native stitched output"
+        "600 by 960 pixel preview of native stitched output",
+        "Loose diamond quilt with shared crossings, clipped outside a 6 mm text perimeter",
+        "Outer frame acts as a stopping boundary; every background hole stays inside it",
+        "Closed letter interiors and counters remain free of background stitches"
       ],
-      "expected": "19 lettering guides in 16 blocks with 611 openings; 104 fill guides with 404 openings; one separate round dot. All guides use 2.7 mm pitch; fill gaps are nominal. Round non-crossing a bowls, combined clearance and the 3 mm fill-to-lettering border pass.",
+      "expected": "19 lettering guides in 16 blocks with 611 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 41 guides in 16 blocks with 464 openings, 25 shared junctions and 15 adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 256,
@@ -8443,13 +8446,18 @@
         "minimumFragmentGaps": 1,
         "fillToLetteringClearance": 3,
         "scriptScale": 0.84,
-        "aBowlRadius": 10.08
+        "aBowlRadius": 10.08,
+        "backgroundCrossingSpacing": 27,
+        "backgroundTextPerimeter": 6,
+        "backgroundMinimumFragmentGaps": 3,
+        "frameMode": "stop-inside",
+        "frameHoleInset": 1.35
       },
       "nativeChecks": [
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "120 current blocks; 611 lettering openings, 404 fill openings and one round dot. Round non-crossing a bowls, shared script size, 2.7 mm pitch, shared-arc membership, 3 mm hole-to-hole border and combined clearance pass."
+          "expected": "136 current blocks, 1480 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
         }
       ]
     }
@@ -8514,7 +8522,9 @@
       ],
       "notes": "Two crossing guide families; 64 X junctions share round holes. Six millimetres between crossings leaves slit holes between nodes.",
       "expected": "240 openings at 3 mm pitch and 1.5 mm slit length. Production solving and combined default-model clearance pass.",
-      "usedBy": [],
+      "usedBy": [
+        "ART-D"
+      ],
       "drawing": "examples/demos/fills.dwg",
       "view": "QUILT"
     },

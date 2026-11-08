@@ -76,4 +76,10 @@
 <line class="dimension" x1="374.65" y1="84.350734103" x2="375.85" y2="76.44124613" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="422.10692784" y1="91.550734103" x2="423.30692784" y2="83.64124613" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="measurement" x="398.97846392" y="74.995990117" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<text class="notation-start" x="70" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="100" y1="115" x2="112" y2="115" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="112" y1="115" x2="106" y2="111.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="112" y1="115" x2="106" y2="118.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="547.405723124" y="275.457605536" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<text class="notation-junction" x="384" y="97" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
 </svg>

@@ -154,4 +154,10 @@
 <line class="dimension" x1="275.815590919" y1="264.270703272" x2="273.003534021" y2="256.781221581" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="338.981384062" y1="240.554001415" x2="336.169327164" y2="233.064519724" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="measurement" x="305.992459042" y="239.667611498" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.21</text>
+<text class="notation-start" x="75.855434087" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="105.855434087" y1="190" x2="117.855434087" y2="190" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="117.855434087" y1="190" x2="111.855434087" y2="186.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="117.855434087" y1="190" x2="111.855434087" y2="193.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="439.494997768" y="119.855994843" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<text class="notation-junction" x="282.790234108" y="218.123904853" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
 </svg>

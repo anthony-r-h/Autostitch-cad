@@ -16,4 +16,10 @@
 <line class="dimension" x1="323.35897695" y1="73" x2="323.35897695" y2="65" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="395.35897695" y1="73" x2="395.35897695" y2="65" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="measurement" x="359.35897695" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<text class="notation-start" x="167.35897695" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="197.35897695" y1="105" x2="209.35897695" y2="105" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="209.35897695" y1="105" x2="203.35897695" y2="101.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="209.35897695" y1="105" x2="203.35897695" y2="108.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="387" y="330.781376998" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<text class="notation-junction" x="399.570176974" y="134.570176974" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
 </svg>

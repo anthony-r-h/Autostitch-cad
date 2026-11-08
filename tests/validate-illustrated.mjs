@@ -175,7 +175,20 @@ for(const s of scenes) {
   const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));
   assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
   const source=readSvg(s.name).source;
-  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s)$/.test(match[1]),'Prose belongs outside the figure');
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1]),'Prose belongs outside the figure');
+  const labels=s.final.filter(e=>e.type==='text');
+  if(s.name!=='axiom-clearance') {
+    assert(labels.some(e=>e.kind==='notation-start'&&e.value==='s'),`${s.name} needs a start`);
+    assert(s.final.filter(e=>e.kind==='direction').length>=3,`${s.name} needs a direction arrow`);
+    if(s.name!=='axiom-closure')assert(labels.some(e=>e.kind==='notation-end'&&e.value==='e'),`${s.name} needs an end`);
+  }
+  if(s.final.some(e=>e.kind==='hole')||s.name==='axiom-smooth')assert(labels.some(e=>e.value==='j'),`${s.name} needs its junction label`);
+  for(const role of ['notation-start','notation-end','notation-id'])for(const f of s.frames)
+    assert.deepEqual(f.elements.filter(e=>e.kind===role),s.final.filter(e=>e.kind===role),`${s.name} notation moved during reveal`);
+  if(s.name==='matched-guides') {
+    assert.deepEqual(labels.filter(e=>e.kind==='notation-id').map(e=>e.value),['ST-1','ST-1-A']);
+    assert.equal(s.final.filter(e=>e.kind==='id-box').length,8);
+  }
   for(const f of s.frames)for(const e of f.elements) {
     for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
   }

@@ -10,4 +10,9 @@
 <line class="dimension" x1="160" y1="129" x2="160" y2="121" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="440" y1="129" x2="440" y2="121" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="measurement" x="300" y="116" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">7</text>
+<text class="notation-start" x="148" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="178" y1="190" x2="190" y2="190" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="190" y1="190" x2="184" y2="186.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="190" y1="190" x2="184" y2="193.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="452" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 </svg>

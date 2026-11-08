@@ -9,7 +9,9 @@
 - Develop the authored prose from the skeleton. Preserve its meaning while turning the outline into readable words.
 - Keep the skeleton up to date as the pitch evolves. When an authored edit adds, removes or changes meaning, update the skeleton in the same edit. Wording-only edits need no skeleton change.
 - When the skeleton changes, update any affected authored prose to match. Preserve unresolved points as explicit notes rather than inventing answers.
-- Position the pitch around bringing specialized tools into industry-standard, enterprise CAD. Identify BricsCAD as the current implementation when relevant; describe additional ports as planned.
+- Preserve the introduction as a bird's-eye view of the stitching problem: design intent, tool geometry, physical execution, manual effort and the motivation for explicit rules. Do not reduce it to a product summary or a CAD justification.
+- Put Why CAD after the problem and solution overview, before CAD-specific workflow or implementation.
+- Remove self-rebuttal, project status, unfinished-work notes, narration instructions and filler from pitch copy. Keep production notes and evidence status in the illustration README or test catalog.
 
 ## Illustrated pitch demos
 

@@ -1,6 +1,6 @@
 # Illustrated examples
 
-Supporting figures for [the pitch](../../docs/PITCH_skeleton.md). Explanation belongs in the document; the figures show the geometry changing. These are planning illustrations, not a punching order: proposed openings can move before the layout is accepted.
+Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
 ## The problem
 
@@ -16,13 +16,13 @@ Distribute the openings evenly between the endpoints. It fits, but every gap dep
 
 ## Good enough solution
 
-Keep most gaps nominal and adjust the last two. This is a valid spacing solution; the correction sits at one end.
+Keep most gaps nominal and adjust the last two.
 
 ![Adjust the last two gaps](assets/pitch-end.gif)
 
 ## Autostitch solution
 
-Reserve the endpoints and plan the fewest adjusted gaps centrally, then fill the nominal runs. Central placement is a selection policy, not the only valid layout.
+Reserve the endpoints and plan the fewest adjusted gaps centrally, then fill the nominal runs.
 
 ![Plan the central adjustment before filling the line](assets/pitch-centre.gif)
 
@@ -88,7 +88,7 @@ Solve one source, then reveal corresponding openings on its reflected copy. The 
 
 ### Curved corners
 
-The same selected-tip construction applies to an arc/line pair and an arc/arc pair. `A03`, `A04`, nominal outer-margin variants; the fixed-range failures are separate tests.
+The same selected-tip construction applies to an arc/line pair and an arc/arc pair. `A03`, `A04`.
 
 ![Curved and straight arms share a corner hole](assets/corner-arc-line.gif)
 
@@ -96,7 +96,7 @@ The same selected-tip construction applies to an arc/line pair and an arc/arc pa
 
 ### Shallow curved corner
 
-The outgoing corner step increases to approximately $3.21\,\mathrm{mm}$ to bring its neighbour onto the finite arc. `J08` detail; the full fixed-end layout is not shown.
+The outgoing corner step increases to approximately $3.21\,\mathrm{mm}$ to bring its neighbour onto the finite arc. `J08`.
 
 ![A bounded corner adjustment keeps the neighbour on its guide](assets/corner-shallow.gif)
 
@@ -115,7 +115,20 @@ node tests/validate-cases.mjs
 - `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state for still-image use.
 - `tests/cases.json`: source cases and stable illustration IDs. The validator checks drawn geometry, constraints, GIF frame counts, delays and looping.
 
-These are analytic explanations, not native CAD exports. The fit selector is the existing independent test oracle. Width and margin are explicit only in the clearance example; other figures do not certify physical clearance.
+### Notation
+
+- `s`, `e`: extent and direction of the stitch line; closed loops reuse `s`.
+- `j`: shared slit or round hole at a junction.
+- `L1`: landmark reference; `I` crossbars mark adjusted spacing.
+- Boxed `ST-1` / `ST-1-A`: source and matched-copy IDs.
+
+### Updating after plugin changes
+
+1. Update the affected canonical cases and run their native solver checks.
+2. Align `scenes.mjs` constructions and the independent `tests/fit-oracle.mjs` selector with the changed rules. Keep comparison inputs identical.
+3. Run the build and validation commands above; inspect the rebuilt GIFs and commit the sources and assets together.
+
+The builder reads catalog inputs and analytic scene recipes. It does not load the production LISP solver. Native artwork regeneration uses [the demo commands](../demo.md).
 
 ## Figure rules
 
@@ -126,5 +139,3 @@ These are analytic explanations, not native CAD exports. The fit selector is the
 - Keep comparison geometry and tool profile identical. Do not exaggerate small pitch changes.
 - Use movement to explain construction and decisions; do not merely fade in a finished infographic.
 - Animation is the primary example. Keep a still fallback and editable vector elements.
-
-Remaining: native editing and regeneration, and broader same-input comparisons of placement policies on curved and connected guides.

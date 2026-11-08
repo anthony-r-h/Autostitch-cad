@@ -39,4 +39,24 @@
 <line class="slit" x1="193.080733319" y1="266.990315255" x2="176.419266681" y2="253.009684745" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="149.580733319" y1="266.990315255" x2="132.919266681" y2="253.009684745" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="106.080733319" y1="266.990315255" x2="89.419266681" y2="253.009684745" stroke="#252525" stroke-width="2.6"/>
+<text class="notation-start" x="48" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="78" y1="115" x2="90" y2="115" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="90" y1="115" x2="84" y2="111.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="90" y1="115" x2="84" y2="118.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="514.25" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<text class="notation-start" x="552" y="277" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="522" y1="260" x2="510" y2="260" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="510" y1="260" x2="516" y2="263.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="510" y1="260" x2="516" y2="256.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="85.75" y="277" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<line class="id-box" x1="42" y1="138" x2="78" y2="138" stroke="#8B8B8B" stroke-width="0.7"/>
+<line class="id-box" x1="78" y1="138" x2="78" y2="154" stroke="#8B8B8B" stroke-width="0.7"/>
+<line class="id-box" x1="78" y1="154" x2="42" y2="154" stroke="#8B8B8B" stroke-width="0.7"/>
+<line class="id-box" x1="42" y1="154" x2="42" y2="138" stroke="#8B8B8B" stroke-width="0.7"/>
+<text class="notation-id" x="60" y="150" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8B8B8B">ST-1</text>
+<line class="id-box" x1="516" y1="213" x2="564" y2="213" stroke="#8B8B8B" stroke-width="0.7"/>
+<line class="id-box" x1="564" y1="213" x2="564" y2="229" stroke="#8B8B8B" stroke-width="0.7"/>
+<line class="id-box" x1="564" y1="229" x2="516" y2="229" stroke="#8B8B8B" stroke-width="0.7"/>
+<line class="id-box" x1="516" y1="229" x2="516" y2="213" stroke="#8B8B8B" stroke-width="0.7"/>
+<text class="notation-id" x="540" y="225" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8B8B8B">ST-1-A</text>
 </svg>

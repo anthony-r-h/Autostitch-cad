@@ -97,4 +97,9 @@
 <line class="dimension" x1="164.5" y1="45.3394201" x2="165.7" y2="37.429932127" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="232.71933377" y1="55.6894201" x2="233.91933377" y2="47.779932127" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="measurement" x="199.209666885" y="37.559676113" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<text class="notation-start" x="148" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="178" y1="75" x2="190" y2="75" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="190" y1="75" x2="184" y2="71.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="190" y1="75" x2="184" y2="78.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="407" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 </svg>

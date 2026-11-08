@@ -274,7 +274,7 @@ function closureScene() {
   for(let i=0;i<120;i++)base.push(worldLine(point(start-i*2*Math.PI/120),point(start-(i+1)*2*Math.PI/120),view));
   const s=scene('axiom-closure','Close the loop without duplicating the start','A8');
   frame(s,base,75,'guide');
-  let result=[...base,...opening(point(start),alpha,view),text(add(project(point(start),view),[0,-24]),'s')];
+  let result=[...base,...opening(point(start),alpha,view)];
   frame(s,result,100,'reserved-start');
   for(let i=1;i<input.count;i++) {
     result.push(...opening(point(start-i*step),alpha-i*step,view));
@@ -396,12 +396,68 @@ function curvedCornerScene(caseId,name,title) {
   return finish(s,result);
 }
 
+const notationText=(p,value,role)=>({...text(p,value),size:12,kind:`notation-${role}`});
+function directionMark(point,tangent) {
+  const normal=[tangent[1],-tangent[0]],tip=add(point,mul(tangent,30)),back=add(tip,mul(tangent,-6));
+  return [line(add(point,mul(tangent,18)),tip,'direction',construction,1.1),
+    line(tip,add(back,mul(normal,3.5)),'direction',construction,1.1),
+    line(tip,add(back,mul(normal,-3.5)),'direction',construction,1.1)];
+}
+function startMark(point,tangent) {
+  const normal=[tangent[1],-tangent[0]];
+  return [notationText(add(point,add(mul(tangent,-12),mul(normal,17))),'s','start'),...directionMark(point,tangent)];
+}
+function endMark(point,tangent) {
+  return notationText(add(point,add(mul(tangent,12),mul([tangent[1],-tangent[0]],17))),'e','end');
+}
+function routeMarks(start,end,incoming=[1,0],outgoing=incoming) {
+  return [...startMark(start,incoming),endMark(end,outgoing)];
+}
+function idTag(point,value) {
+  const half=(value.length*6+12)/2,low=add(point,[-half,-12]),high=add(point,[half,4]);
+  return [line(low,[high[0],low[1]],'id-box',construction,.7),line([high[0],low[1]],high,'id-box',construction,.7),
+    line(high,[low[0],high[1]],'id-box',construction,.7),line([low[0],high[1]],low,'id-box',construction,.7),
+    {...notationText(point,value,'id'),size:10}];
+}
+function screenTangent(g,station) {
+  const angle=primitiveAxis(g,station)-alpha;return [Math.cos(angle),-Math.sin(angle)];
+}
+function annotateScene(s) {
+  let marks=[];
+  if(s.name.startsWith('pitch-'))marks=routeMarks([60,187.5],[502.25,187.5]);
+  else if(s.name==='axiom-landmark')marks=routeMarks([60,187.5],[540,187.5]);
+  else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
+  else if(s.name==='axiom-curve')marks=routeMarks([160,75],[390,305],[1,0],[0,1]);
+  else if(s.name==='axiom-corner') {
+    const v=variant('J02');marks=routeMarks([370+(-10+v.settings.start)*24,105],[370,105+(v.settings.end-10)*24],[1,0],[0,1]);
+  } else if(s.name==='axiom-smooth') {
+    const v=variant('A05'),g=v.route.primitives[1],station=v.settings.end-18;
+    marks=[...routeMarks([82,115],project(primitivePoint(g,station),{x:370,y:115,scale:16}),[1,0],screenTangent(g,station)),notationText([384,97],'j','junction')];
+  } else if(s.name==='axiom-junction') {
+    marks=[...routeMarks([93,145],[507,145]),endMark([300,283],[0,1]),...directionMark([300,145],[0,1])];
+  } else if(s.name==='axiom-closure') {
+    const count=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs.count;
+    marks=startMark([300,187.5-13*3/(2*Math.sin(Math.PI/count))],[1,0]);
+  } else if(s.name==='matched-guides') {
+    marks=[...routeMarks([60,115],[502.25,115]),...routeMarks([540,260],[97.75,260],[-1,0]),
+      ...idTag([60,150],'ST-1'),...idTag([540,225],'ST-1-A')];
+  } else if(s.name.startsWith('corner-')) {
+    const id={'corner-arc-line':'A03','corner-arc-arc':'A04','corner-shallow':'J08'}[s.name];
+    const model=illustratedCorner(id),view=id==='J08'?{x:320,y:190,scale:21}:{x:365,y:90,scale:27};
+    const [incoming,outgoing]=model.primitives,a=model.stations[0].at(-1),b=model.stations[1].at(-1);
+    marks=routeMarks(project(primitivePoint(incoming,a),view),project(primitivePoint(outgoing,b),view),screenTangent(incoming,a),screenTangent(outgoing,b));
+  }
+  const annotate=elements=>[...elements,...marks,...elements.filter(e=>e.kind==='hole').map(e=>
+    notationText(add(e.p,s.name==='axiom-junction'?[16,-14]:[18,18]),'j','junction'))];
+  return {...s,final:annotate(s.final),frames:s.frames.map(f=>({...f,elements:annotate(f.elements)}))};
+}
+
 export function createScenes() {
   return [...pitchScenes(),curveScene(),landmarkScene(),cornerScene(),smoothScene(),junctionScene(),clearanceScene(),
     noFitScene(),closureScene(),matchedScene(),
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
-    curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step')];
+    curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step')].map(annotateScene);
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));

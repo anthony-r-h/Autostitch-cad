@@ -8608,7 +8608,12 @@
           "adjustedPitch": 3.25
         }
       ],
-      "animated": true
+      "animated": true,
+      "notation": [
+        "s",
+        "direction",
+        "e"
+      ]
     },
     {
       "id": "ILL-CURVE",
@@ -8629,7 +8634,12 @@
           "path": "examples/illustrated/assets/axiom-curve"
         }
       ],
-      "case": "A01"
+      "case": "A01",
+      "notation": [
+        "s",
+        "direction",
+        "e"
+      ]
     },
     {
       "id": "ILL-LANDMARK",
@@ -8649,7 +8659,13 @@
           "path": "examples/illustrated/assets/axiom-landmark"
         }
       ],
-      "case": "F02"
+      "case": "F02",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "L1"
+      ]
     },
     {
       "id": "ILL-CORNER",
@@ -8667,7 +8683,13 @@
           "path": "examples/illustrated/assets/axiom-corner"
         }
       ],
-      "case": "J02"
+      "case": "J02",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ]
     },
     {
       "id": "ILL-SMOOTH",
@@ -8685,7 +8707,13 @@
           "path": "examples/illustrated/assets/axiom-smooth"
         }
       ],
-      "case": "A05"
+      "case": "A05",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ]
     },
     {
       "id": "ILL-JUNCTION",
@@ -8723,7 +8751,13 @@
           ]
         ],
         "diameter": 0.5
-      }
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ]
     },
     {
       "id": "ILL-CLEARANCE",
@@ -8752,7 +8786,8 @@
         "margin": 0.2,
         "startSeparation": 2.4,
         "endSeparation": 0.3
-      }
+      },
+      "notation": []
     },
     {
       "id": "ILL-NOFIT",
@@ -8775,7 +8810,12 @@
         "length": 7,
         "minimumGap": 2.7,
         "maximumGap": 3.3
-      }
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e"
+      ]
     },
     {
       "id": "ILL-CLOSURE",
@@ -8797,7 +8837,11 @@
         "count": 20,
         "radiusRule": "p / (2 sin(pi / count))",
         "landmarks": []
-      }
+      },
+      "notation": [
+        "s",
+        "direction"
+      ]
     },
     {
       "id": "ILL-MATCHED",
@@ -8817,7 +8861,14 @@
       "inputs": {
         "screenReflectionX": 300,
         "screenTranslationY": 145
-      }
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "ST-1",
+        "ST-1-A"
+      ]
     },
     {
       "id": "ILL-ARC-LINE",
@@ -8835,7 +8886,13 @@
           "path": "examples/illustrated/assets/corner-arc-line"
         }
       ],
-      "case": "A03"
+      "case": "A03",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ]
     },
     {
       "id": "ILL-ARC-ARC",
@@ -8853,7 +8910,13 @@
           "path": "examples/illustrated/assets/corner-arc-arc"
         }
       ],
-      "case": "A04"
+      "case": "A04",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ]
     },
     {
       "id": "ILL-SHALLOW",
@@ -8871,7 +8934,13 @@
           "path": "examples/illustrated/assets/corner-shallow"
         }
       ],
-      "case": "J08"
+      "case": "J08",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ]
     }
   ]
 }

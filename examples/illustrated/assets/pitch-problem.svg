@@ -18,4 +18,9 @@
 <line class="dimension" x1="495" y1="236.5" x2="495" y2="228.5" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="502.25" y1="236.5" x2="502.25" y2="228.5" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="measurement" x="498.625" y="223.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">0.5</text>
+<text class="notation-start" x="48" y="170.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="78" y1="187.5" x2="90" y2="187.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="90" y1="187.5" x2="84" y2="184" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="90" y1="187.5" x2="84" y2="191" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="514.25" y="170.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 </svg>

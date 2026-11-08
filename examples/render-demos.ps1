@@ -12,7 +12,7 @@ Add-Type -AssemblyName System.Drawing
 if($FillLibrary){
  $samples=@(
   @('quilt','Diamond quilt','67.88 x 67.88 mm'),
-  @('spiral','Arc spiral','36 x 34.75 mm'),
+  @('circles','Concentric circles','66 x 66 mm; 6 mm spacing'),
   @('flow','Flow','35.38 x 74.89 mm'),
   @('maze','Branching maze','36 x 30 mm; 3 mm corridors')
  )

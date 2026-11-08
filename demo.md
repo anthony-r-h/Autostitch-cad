@@ -4,7 +4,7 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 
 | Demo | Drawing | Contents / status |
 | --- | --- | --- |
-| Fill samples | [fills.dwg](examples/demos/fills.dwg) | Spiral, branching maze, diamond quilt and flow with generated stitches. [Qualification](tests/QUALIFICATION.md). |
+| Fill samples | [fills.dwg](examples/demos/fills.dwg) | Concentric circles, branching maze, diamond quilt and flow with generated stitches. [Qualification](tests/QUALIFICATION.md). |
 | Velvet | [can-you-really.dwg](examples/demos/can-you-really.dwg) | **Can / You / Really**, rounded heavy lettering with stitched background fill. [Qualification](tests/QUALIFICATION.md). |
 | Emblem | [emblem.dwg](examples/demos/emblem.dwg) | Centred AUTO Stitch, three concentric circles, 21 landmarks. Guide artwork; fitting still needs adjustment. |
 

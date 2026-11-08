@@ -47,7 +47,7 @@ for(const fixture of catalog.visualFixtures||[]){
 }
 for(const recipe of catalog.fillRecipes||[]){
   id(recipe.id);assert(recipe.title&&recipe.notes&&recipe.expected&&recipe.parameters);
-  assert(['spiral','maze','quilt','flow'].includes(recipe.kind));source(recipe.source);
+  assert(['circles','maze','quilt','flow'].includes(recipe.kind));source(recipe.source);
   for(const file of recipe.exports)assert(fs.existsSync(new URL(file,root)),`Missing fill preview ${file}`);
   if(recipe.drawing){assert(fs.existsSync(new URL(recipe.drawing,root)),`Missing fill drawing ${recipe.drawing}`);assert(recipe.view);}
 }

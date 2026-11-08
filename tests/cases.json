@@ -8258,7 +8258,7 @@
       "checks": [
         {
           "id": "FILL-NATIVE-002",
-          "expected": "Spiral fill solves at 3 mm",
+          "expected": "Concentric circles solve at 3 mm",
           "sourceSymbol": "ast:fill-tests"
         },
         {
@@ -8278,7 +8278,7 @@
         },
         {
           "id": "FILL-NATIVE-006",
-          "expected": "Spiral tangent joins introduce no round corner holes",
+          "expected": "Concentric circles have no round corner holes",
           "sourceSymbol": "ast:fill-tests"
         },
         {
@@ -8298,7 +8298,7 @@
         },
         {
           "id": "FILL-NATIVE-014",
-          "expected": "Spiral radius below half the pitch is rejected",
+          "expected": "Circle radius below half the pitch is rejected",
           "sourceSymbol": "ast:fill-tests"
         },
         {
@@ -8403,28 +8403,28 @@
   "fillRecipes": [
     {
       "id": "FILL-SPIRAL",
-      "title": "Arc spiral",
-      "kind": "spiral",
+      "title": "Concentric circles",
+      "kind": "circles",
       "source": "examples/fills.lsp",
       "parameters": {
         "center": [
           24,
           24
         ],
-        "inner-radius": 3,
-        "turn-spacing": 2.5,
-        "half-turns": 13
+        "inner-radius": 9,
+        "spacing": 6,
+        "count": 5
       },
-      "previewName": "fill-spiral",
+      "previewName": "fill-circles",
       "exports": [
-        "examples/fills/fill-spiral.png",
-        "examples/fills/fill-spiral.svg"
+        "examples/fills/fill-circles.png",
+        "examples/fills/fill-circles.svg"
       ],
-      "notes": "One route of tangent semicircles; 2.5 mm between full turns.",
-      "expected": "144 openings at 3 mm pitch and 1.5 mm slit length. Production solving and combined default-model clearance pass.",
+      "notes": "Five closed circles with a common centre; 6 mm radial spacing and 9 mm inner radius.",
+      "expected": "Five closed loops, 220 openings at 3 mm pitch and 1.5 mm slit length, no round corner holes; combined opening clearance passes.",
       "usedBy": [],
       "drawing": "examples/demos/fills.dwg",
-      "view": "SPIRAL"
+      "view": "CIRCLES"
     },
     {
       "id": "FILL-MAZE",

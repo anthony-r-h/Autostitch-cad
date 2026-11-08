@@ -5,7 +5,7 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | Demo | Drawing | Contents / status |
 | --- | --- | --- |
 | Fill samples | [fills.dwg](examples/demos/fills.dwg) | Concentric circles, branching maze, diamond quilt and flow with generated stitches. [Qualification](tests/QUALIFICATION.md). |
-| can / YOU / really? | [can-you-really.dwg](examples/demos/can-you-really.dwg) | Script outer rows and outlined YOU; lettering study at 600 by 960 px. Stitch fitting and background design are pending; reserve a 6 mm clear band. |
+| can / YOU / really? | [can-you-really.dwg](examples/demos/can-you-really.dwg) | Shared flow arcs stitched inside YOU with a $3\,\mathrm{mm}$ border; script rows remain guides. Preview: $600\times960$ px. |
 | Emblem | [emblem.dwg](examples/demos/emblem.dwg) | Stitched AUTO Stitch with three concentric rings interrupted around a clear lettering border. |
 
 ## Reproduce in BricsCAD
@@ -17,12 +17,14 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | Command | Creates |
 | --- | --- |
 | `ASTFILLDEMOS` | Stitched fill samples with named views |
-| `ASTBANNERDEMO` | Three-row lettering study |
+| `ASTBANNERDEMO` | Lettering with stitched flow inside YOU |
 | `ASTEMBLEMDEMO` | Stitched emblem with a 6 mm clear band around the lettering |
 
-Fills and emblem commands generate stitches. The banner command creates lettering guides. All lettering uses editable geometry, with no installed font dependency.
+All commands generate stitches. The banner stitches only the flow inside YOU; its script rows remain guides. All lettering uses editable geometry, with no installed font dependency.
 
 The emblem keeps the lettering shapes, clips the rings around them and omits remnants shorter than three nominal stitches. Its clear band is measured between hole outlines; ring fragments use nominal spacing.
+
+The banner clips one field of translated flow arcs across all three YOU letters. Rows and pitch are $3\,\mathrm{mm}$; free ends trim symmetrically to nominal spacing. Fragments shorter than two nominal gaps are omitted. The $3\,\mathrm{mm}$ border is measured from slit footprints to the outlines, including O's counter.
 
 Use the saved DWGs for routine review; generating connected stitch blocks can take a minute or more. Close each test drawing after checking it.
 

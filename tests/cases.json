@@ -8393,7 +8393,7 @@
     },
     {
       "id": "ART-D",
-      "description": "Portrait can / YOU / really? lettering study",
+      "description": "Portrait can / YOU / really? with stitched flow inside YOU",
       "drawing": "examples/demos/can-you-really.dwg",
       "source": "examples/banner.lsp",
       "exports": [
@@ -8403,21 +8403,22 @@
       "views": [
         {
           "name": "BANNER",
-          "description": "Centred script can and really? around outlined YOU"
+          "description": "Script outer rows around YOU filled from one shared arc field"
         }
       ],
       "coverage": [
         "Portrait 10:16 page, 160 by 256 mm",
-        "Emblem-style script and outlined lettering",
-        "600 by 960 pixel artwork preview"
+        "Shared translated flow arcs clipped inside all three YOU letters",
+        "3 mm slit-to-outline border, including the empty O counter",
+        "Nominal pitch, symmetric free-end trimming and combined hole clearance",
+        "600 by 960 pixel preview of native stitched output"
       ],
-      "expected": "22 editable lettering polylines; page and text centred. Lettering artwork only: stitching and background remain pending.",
+      "expected": "22 lettering polylines and 100 clipped fill guides; 385 openings at nominal 3 mm pitch. Conservative minimum slit-to-outline clearance 3.1626 mm. Script rows remain unstitched guides.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 256,
         "previewWidth": 600,
         "previewHeight": 960,
-        "plannedClearBand": 6,
         "words": [
           "can",
           "YOU",
@@ -8427,8 +8428,23 @@
           "script",
           "outlined",
           "script"
-        ]
-      }
+        ],
+        "outlineInset": 3,
+        "pitch": 3,
+        "slitLength": 1.5,
+        "flowChord": 160,
+        "flowSag": 20,
+        "flowRows": 31,
+        "flowRowSpacing": 3,
+        "minimumFragmentGaps": 2
+      },
+      "nativeChecks": [
+        {
+          "source": "examples/banner.lsp",
+          "entrypoint": "ast:banner-check",
+          "expected": "100 current fill blocks, 385 openings, shared-arc membership, nominal pitch, 3 mm border and combined opening clearance pass."
+        }
+      ]
     }
   ],
   "fillRecipes": [
@@ -8517,7 +8533,9 @@
       ],
       "notes": "Translated circular arcs, 3 mm between rows. Free ends stop at nominal pitch; the original curve is unchanged.",
       "expected": "325 openings and 300 nominal gaps; no adjusted gaps. Footprint 35.38 by 74.89 mm. Production solving and combined default-model clearance pass.",
-      "usedBy": [],
+      "usedBy": [
+        "ART-D"
+      ],
       "drawing": "examples/demos/fills.dwg",
       "view": "FLOW"
     }

@@ -49,5 +49,5 @@
   (vl-mkdir (strcat ast:*home* "/output"))
   (vl-mkdir (strcat ast:*home* "/output/native"))
   (setq path (strcat ast:*home* "/output/native/demo-export.jsonl"))
-  (ast:demo-export path '("SHOWCASE_PATTERN" "BANNER_LETTERS" "FILL_REFERENCES"))
+  (ast:demo-export path '("SHOWCASE_PATTERN" "BANNER_LETTERS" "BANNER_YOU" "FILL_REFERENCES"))
   (princ (strcat "\nExported demo geometry to " path)) (princ))

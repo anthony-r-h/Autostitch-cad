@@ -1,5 +1,4 @@
-;;; Banner lettering study. Load examples/demo.lsp, then ASTBANNERDEMO.
-;;; Circular-arc letterforms match the emblem; stitch fitting follows artwork review.
+;;; Banner with shared flow arcs clipped inside YOU. Load examples/demo.lsp, then ASTBANNERDEMO.
 (defun ast:banner-script (letter)
   (cond
     ((= letter "c") (ast:show-script "c"))
@@ -33,13 +32,19 @@
                         (20 30 -0.414213562373095) (10 20) (10 12)) nil)
       (ast:show-stroke '((8.5 3 1.0) (11.5 3 1.0)) T)))))
 
-(defun ast:banner-outline-y ()
-  (list (ast:show-stroke '((0 57.6) (9 57.6) (16 36) (23 57.6)
-    (32 57.6) (20.05 25) (20.05 0) (11.95 0) (11.95 25)) T)))
+(defun ast:banner-outline (letter)
+  (cond
+    ((= letter "Y") (list (ast:show-stroke
+      '((0 70) (17 70) (22 51) (27 70) (44 70) (30 36) (30 0) (14 0) (14 36)) T)))
+    ((= letter "O") (list
+      (ast:show-stroke '((0 0) (44 0) (44 70) (0 70)) T)
+      (ast:show-stroke '((16 16) (28 16) (28 54) (16 54)) T)))
+    ((= letter "U") (list (ast:show-stroke
+      '((0 70) (0 22 1.0) (44 22) (44 70) (28 70) (28 22 -1.0) (16 22) (16 70)) T)))))
 
 (setq ast:banner-lettering-layout
   '(("can" 0.84 -12.0 (("c" 0.0) ("a" 32.0) ("n" 72.0)))
-    ("YOU" 1.0 0.0 (("Y" 0.0) ("O" 48.0) ("U" 91.6)))
+    ("YOU" 1.0 0.0 (("Y" 0.0) ("O" 50.0) ("U" 100.0)))
     ("really?" 0.74 -12.0
       (("r" 0.0) ("e" 23.0) ("a" 52.0) ("l" 94.0) ("l" 115.0) ("y" 135.0) ("?" 165.0)))))
 
@@ -63,10 +68,11 @@
 (defun ast:banner-row (entry / letter strokes stroke guide guides bounds shift height)
   (foreach letter (cadddr entry)
     (setq strokes (if (= (car entry) "YOU")
-      (if (= (car letter) "Y") (ast:banner-outline-y) (ast:show-outline (car letter)))
+      (ast:banner-outline (car letter))
       (ast:banner-script (car letter))))
     (foreach stroke strokes
-      (setq guide (ast:banner-poly (ast:show-turn stroke (caddr entry) '(0 0)) (list (cadr letter) 0.0) "BANNER_LETTERS"))
+      (setq guide (ast:banner-poly (ast:show-turn stroke (caddr entry) '(0 0)) (list (cadr letter) 0.0)
+        (if (= (car entry) "YOU") "BANNER_YOU" "BANNER_LETTERS")))
       (vla-ScaleEntity (vlax-ename->vla-object guide) (vlax-3d-point '(0.0 0.0 0.0)) (cadr entry))
       (setq guides (append guides (list guide)))))
   (setq bounds (ast:banner-bounds guides)
@@ -74,10 +80,114 @@
     height (- (cadadr bounds) (cadar bounds)))
   (ast:banner-move guides shift (- (cadar bounds)))
   (list (cons 'label (car entry)) (cons 'guides guides) (cons 'height height)))
-(defun c:ASTBANNERDEMO (/ entry rows row total cursor guides)
+;;; The even/odd mask keeps O's counter empty as well as the spaces between letters.
+(defun ast:banner-mask (outlines / guide primitives polygons route)
+  (foreach guide outlines
+    (setq route (ast:cad-get 'route (ast:cad-read guide))
+      primitives (append primitives (ast:cad-get 'primitives route))
+      polygons (cons (ast:emblem-route-polygon (ast:cad-get 'primitives route)) polygons)))
+  (list primitives polygons))
+(defun ast:banner-inside (point mask / polygon inside)
+  (foreach polygon (cadr mask)
+    (if (ast:emblem-point-inside point polygon) (setq inside (not inside)))) inside)
+(defun ast:banner-inset (point mask inset / clear rest)
+  (setq clear (ast:banner-inside point mask) rest (car mask))
+  (while (and clear rest)
+    (if (< (ast:emblem-point-primitive-distance point (car rest)) inset) (setq clear nil))
+    (setq rest (cdr rest))) clear)
+(defun ast:banner-subarc (arc start length / radius sign)
+  (setq radius (ast:cad-get 'radius arc) sign (if (< (ast:cad-get 'sweep arc) 0.0) -1.0 1.0))
+  (list '(kind . arc) (cons 'center (ast:cad-get 'center arc)) (cons 'radius radius)
+    (cons 'start-angle (+ (ast:cad-get 'start-angle arc) (* sign (/ start radius))))
+    (cons 'sweep (* sign (/ length radius)))))
+(defun ast:banner-clip (arc mask inset / total count cell index start runs point run length step gaps extra result)
+  (setq total (ast:g-length arc) count (1+ (fix (/ total 0.2))) cell (/ total count) index 0)
+  ;; Midpoint padding bounds the whole cell, including the half-slit footprint.
+  (repeat count
+    (setq point (ast:g-point arc (* (+ index 0.5) cell)))
+    (if (ast:banner-inset point mask (+ inset 0.75 (* 0.5 cell)))
+      (if (null start) (setq start (* index cell)))
+      (if start (setq runs (cons (list start (* index cell)) runs) start nil)))
+    (setq index (1+ index)))
+  (if start (setq runs (cons (list start total) runs)))
+  (setq step (ast:g-step arc 3.0))
+  (foreach run (reverse runs)
+    (setq length (- (cadr run) (car run)) gaps (ast:g-floor-near (/ length step)))
+    ;; A retained fragment has at least three holes; trim free ends symmetrically.
+    (if (>= gaps 2)
+      (progn
+        (setq extra (- length (* gaps step)))
+        (setq result (cons (ast:banner-subarc arc (+ (car run) (* 0.5 extra)) (* gaps step)) result)))))
+  (reverse result))
+(defun ast:banner-arc-guide (arc / quarter)
+  (setq quarter (* 0.25 (ast:cad-get 'sweep arc)))
+  (ast:banner-poly (ast:show-stroke
+    (list (append (ast:g-point arc 0.0) (list (/ (sin quarter) (cos quarter))))
+          (ast:g-point arc (ast:g-length arc))) nil) '(0.0 0.0) "BANNER_FLOW"))
+(defun ast:banner-fill-check (outlines guides / mask plans openings opening point primitive minimum distance error plan gap bounds guide arc center row)
+  (setq mask (ast:banner-mask outlines) plans (ast:fill-plans guides nil)
+    openings (ast:emblem-openings plans) minimum 1e99 bounds (ast:banner-bounds outlines))
+  (foreach guide guides
+    (setq arc (car (ast:cad-get 'primitives (ast:cad-get 'route (ast:cad-read guide))))
+      center (ast:cad-get 'center arc)
+      row (/ (- (cadr center) (- (cadar bounds) 170.0)) 3.0))
+    (ast:cad-require (and (equal (ast:cad-get 'radius arc) 170.0 1e-6)
+      (equal (car center) 80.0 1e-6) (<= -1e-6 row 30.000001)
+      (equal row (float (fix (+ row 0.5))) 1e-6))
+      "A fill fragment no longer follows the shared flow field."))
+  (ast:cad-require openings "The banner has no stitched fill.")
+  (foreach opening openings
+    (setq point (ast:cad-get 'center opening))
+    (ast:cad-require (ast:banner-inside point mask) "A fill hole is outside YOU.")
+    (foreach primitive (car mask)
+      (setq distance (- (ast:emblem-point-primitive-distance point primitive)
+                        (* 0.5 (ast:cad-get 'length opening)))
+        minimum (min minimum distance))))
+  (ast:cad-require (>= minimum 3.0) "A fill slit enters the 3 mm outline border.")
+  (foreach plan plans
+    (foreach gap (ast:cad-get 'intervals (ast:cad-get 'solution plan))
+      (ast:cad-require (equal 3.0 (ast:cad-get 'distance gap) 1e-7) "A flow gap is not nominal.")))
+  (setq error (ast:g-validate-openings openings (ast:cad-default-settings)))
+  (ast:cad-require (null error) "Two fill holes overlap; increase the flow row spacing.")
+  (list '(ok . T) (cons 'fill-guides (length guides)) (cons 'openings (length openings))
+    (cons 'minimum-outline-clearance minimum) '(pitch . 3.0) '(row-spacing . 3.0)
+    '(outline-inset . 3.0) '(combined-clearance . T) '(all-gaps-nominal . T)))
+(defun ast:banner-fill (outlines / mask bounds path whole arc fragments fragment guides plans report result)
+  (setq mask (ast:banner-mask outlines) bounds (ast:banner-bounds outlines))
+  (ast:show-layer "BANNER_FLOW" 8 nil)
+  ;; All fragments come from this single translated arc field across the entire word.
+  (foreach path (ast:fill-paths "FLOW"
+      (list (cons 'start (list 0.0 (- (cadar bounds) 20.0))) '(chord . 160.0)
+            '(sag . 20.0) '(rows . 31) '(row-spacing . 3.0)))
+    (setq whole (ast:banner-poly (ast:show-stroke path nil) '(0.0 0.0) "BANNER_FLOW")
+      arc (car (ast:cad-get 'primitives (ast:cad-get 'route (ast:cad-read whole)))))
+    (entdel whole)
+    (setq fragments (append fragments (ast:banner-clip arc mask 3.0))))
+  (foreach fragment fragments (setq guides (cons (ast:banner-arc-guide fragment) guides)))
+  (setq guides (reverse guides) report (ast:banner-fill-check outlines guides)
+    plans (ast:fill-plans guides nil)
+    result (ast:cad-transaction 'ast:cad-write-components-inner (list plans)))
+  (ast:cad-require (ast:cad-get 'ok result) (ast:cad-get 'error result))
+  (vl-cmdf "_.-LAYER" "_OFF" "BANNER_FLOW,AUTOSTITCH_UI" "")
+  report)
+
+(defun ast:banner-check (/ outlines guides guide state report)
+  (setq outlines (ast:emblem-guides "BANNER_YOU") guides (ast:emblem-guides "BANNER_FLOW"))
+  (ast:cad-require (= 4 (length outlines)) "The banner needs the four YOU contours.")
+  (foreach guide guides
+    (setq state (ast:cad-read guide))
+    (ast:cad-require (and (ast:cad-get 'output state) (not (ast:cad-get 'stale state)))
+      "A banner fill guide needs regeneration."))
+  (setq report (ast:banner-fill-check outlines guides))
+  (ast:cad-require (= 100 (ast:cad-get 'fill-guides report)) "The banner fill has missing or extra guides.")
+  (ast:cad-require (= 385 (ast:cad-get 'openings report)) "The banner fill hole count has changed.")
+  report)
+
+(defun c:ASTBANNERDEMO (/ entry rows row total cursor guides outlines fill)
   (ast:cad-require (null (ssget "_X" '((410 . "Model")))) "Build the banner in a new empty drawing.")
   (setvar "INSUNITS" 4)
   (ast:show-layer "BANNER_LETTERS" 7 T)
+  (ast:show-layer "BANNER_YOU" 7 T)
   (ast:show-layer "BANNER_PAGE" 8 nil)
   (foreach entry ast:banner-lettering-layout
     (setq rows (append rows (list (ast:banner-row entry)))))
@@ -87,12 +197,13 @@
   (foreach row rows
     (setq cursor (- cursor (ast:cad-get 'height row)))
     (ast:banner-move (ast:cad-get 'guides row) 0.0 cursor)
+    (if (= (ast:cad-get 'label row) "YOU") (setq outlines (ast:cad-get 'guides row)))
     (setq cursor (- cursor 28.0) guides (append guides (ast:cad-get 'guides row))))
+  (setq fill (ast:banner-fill outlines))
   (ast:banner-poly (ast:show-stroke '((0 0) (160 0) (160 256) (0 256)) T) '(0.0 0.0) "BANNER_PAGE")
   (setvar "LWDISPLAY" 1) (setvar "UCSICON" 0)
   (vl-cmdf "_.ZOOM" "_W" '(0.0 0.0) '(160.0 256.0))
   (vl-cmdf "_.-VIEW" "_Save" "BANNER")
-  (princ "\nBanner lettering created. Background and stitch fitting remain to be designed.")
-  (list '(ok . T) (cons 'guides (length guides)) '(page-width . 160.0) '(page-height . 256.0)
-    '(planned-clear-band . 6.0) '(stage . lettering)))
+  (princ "\nYOU filled with shared flow arcs. Script rows remain artwork guides.")
+  (append fill (list (cons 'lettering-guides (length guides)) '(page-width . 160.0) '(page-height . 256.0))))
 (princ)

@@ -2,11 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
-## Portrait lettering study: 2026-11-08
+## Flow-filled banner: 2026-11-08
 
-- `ASTBANNERDEMO` creates 22 editable lettering guides on a $160\times256\,\mathrm{mm}$ page. The final row includes a question mark and a horizontal e crossbar; YOU uses the emblem's outlined style.
-- Native generation and save/reopen pass. Text is centred on the page, with room for a $6\,\mathrm{mm}$ clear band. The $600\times960$ px export shows guides only; no stitch-fit result is claimed.
-- Evidence: `output/native/banner-lettering-check.txt` and `banner-lettering-reopen.txt`.
+- `ASTBANNERDEMO` creates 22 lettering guides and 100 clipped fill guides on a $160\times256\,\mathrm{mm}$ page. Only YOU is stitched; the script rows remain guides.
+- All 385 openings fit at nominal $3\,\mathrm{mm}$ pitch. Every fragment belongs to one shared circular-arc field with $3\,\mathrm{mm}$ row spacing.
+- Combined hole clearance passes. Conservative minimum slit-to-outline clearance is $3.1626\,\mathrm{mm}$; no holes enter O's counter or the spaces between letters.
+- Native generation and save/reopen checked; actual output inspected at $600\times960$ px. Evidence: `output/native/banner-flow-check.txt` and `banner-flow-reopen.txt`.
+- Core solver unchanged; full plugin suites were not rerun.
 
 ## Stitched emblem: 2026-11-08
 

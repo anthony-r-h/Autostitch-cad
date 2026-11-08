@@ -2,6 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Stitched badge: 2026-11-07
+
+- Revised square specimen: outlined AUTO, mixed letter shapes and a pattern circle crossing the S and H.
+- All 27 sources regenerate: 54 current guides and 32 output blocks. All three circle crossings have saved landmarks; seven landmarks total across the drawing.
+- Save/reopen preserves those counts, current status and all three named views.
+- Inspected the actual CAD export at 600 × 600. Plugin code is unchanged; the full suite was not rerun.
+
 ## Matched guides and lettering specimen: 2026-11-07
 
 - Focused native suites: 52 palette, 31 matching lifecycle and seven connected matching checks passed (90 total).

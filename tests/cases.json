@@ -8269,7 +8269,7 @@
         },
         {
           "name": "SQUARE",
-          "description": "Condensed AUTO / STITCH; 600 by 600 PNG."
+          "description": "Double-row AUTO / mixed-letter STITCH badge with a crossing reference circle; 600 by 600 PNG."
         }
       ],
       "coverage": [
@@ -8280,9 +8280,12 @@
         "S: reverse curvature and alternating corners",
         "I/H: connected sets with two T junctions",
         "C: open curve and bevel corners",
-        "Adjusted gaps, round holes, virtual slits and thread display"
+        "Adjusted gaps, round holes, virtual slits and thread display",
+        "Square AUTO: separate inner and outer contours, rounded caps and quarter-circle returns",
+        "Square I/C: slanted serif and bevelled letter shapes",
+        "Pattern circle: three actual intersections stored as landmarks on S/H"
       ],
-      "expected": "54 guides, 30 output blocks, 24 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Inspect all three named views. Automated boundary, mirror, ownership and Undo cases remain in their focused suites."
+      "expected": "54 guides, 32 output blocks, 27 source stitch lines; ASTSHOWCASEREGEN reports zero failures. All three circle crossings have saved landmarks (seven landmarks total). Inspect all three named views. Automated boundary, mirror, ownership and Undo cases remain in their focused suites."
     }
   ]
 }

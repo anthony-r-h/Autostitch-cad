@@ -8352,7 +8352,7 @@
   "visualFixtures": [
     {
       "id": "ART-EMBLEM",
-      "description": "Centred three-circle emblem proposal",
+      "description": "Stitched AUTO Stitch emblem with an interrupted concentric frame",
       "drawing": "examples/demos/emblem.dwg",
       "source": "examples/emblem.lsp",
       "exports": [
@@ -8361,16 +8361,35 @@
       ],
       "views": [
         {
-          "name": "ARTWORK",
-          "description": "Centred three-circle emblem proposal"
+          "name": "EMBLEM",
+          "description": "Lettering with three stitched rings and a blank border"
         }
       ],
       "coverage": [
-        "Vertically centred circle family",
-        "21 actual crossing landmarks",
-        "Unstitched artwork with saved landmarks"
+        "Closed lettering outlines and connected script junctions",
+        "Circles clipped around letter contours and the separate dot",
+        "Six millimetre separation between circle holes and lettering holes",
+        "Nominal circle spacing with short remnants omitted"
       ],
-      "expected": "Artwork review only. Native fit check currently rejects six of twelve source lines at 3 mm; do not treat this proposal as solved."
+      "expected": "15 lettering guides and 11 circle arcs generate 23 stitch blocks: 521 lettering openings and 444 circle openings, plus one separate round dot. Combined clearance and the 6 mm blank border pass.",
+      "parameters": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "circleRadii": [
+          110,
+          95,
+          80
+        ],
+        "clearBand": 6,
+        "minimumCircleGaps": 3
+      },
+      "nativeChecks": [
+        {
+          "source": "examples/emblem.lsp",
+          "entrypoint": "ast:emblem-check",
+          "expected": "Every guide has current output, no obsolete circle landmarks remain, circular gaps are nominal, and all circle holes clear the text by at least 6 mm."
+        }
+      ]
     },
     {
       "id": "ART-D",

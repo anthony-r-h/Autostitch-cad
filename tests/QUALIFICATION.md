@@ -2,12 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
-## Flow-filled banner: 2026-11-08
+## Stitched banner: 2026-11-08
 
-- `ASTBANNERDEMO` creates 22 lettering guides and 100 clipped fill guides on a $160\times256\,\mathrm{mm}$ page. Only YOU is stitched; the script rows remain guides.
-- All 385 openings fit at nominal $3\,\mathrm{mm}$ pitch. Every fragment belongs to one shared circular-arc field with $3\,\mathrm{mm}$ row spacing.
-- Combined hole clearance passes. Conservative minimum slit-to-outline clearance is $3.1626\,\mathrm{mm}$; no holes enter O's counter or the spaces between letters.
-- Native generation and save/reopen checked; actual output inspected at $600\times960$ px. Evidence: `output/native/banner-flow-check.txt` and `banner-flow-reopen.txt`.
+- `ASTBANNERDEMO`: 19 lettering guides in 14 blocks, 528 lettering openings; 91 fill guides with 324 openings; one round question-mark dot. Page: $160\times256\,\mathrm{mm}$.
+- All lettering solves at $3\,\mathrm{mm}$ pitch. Script joins and short terminals are fitted geometrically; the e crossbar follows the script slant.
+- Fill gaps remain nominal. Every fragment belongs to the shared arc field with $3\,\mathrm{mm}$ row spacing; O's counter stays empty.
+- Combined clearance and a $3\,\mathrm{mm}$ hole-to-hole clear band pass. Fill clipping uses a $3.75\,\mathrm{mm}$ inset to allow for outline slit footprints.
+- Native generation and save/reopen checked; actual output inspected at $600\times960$ px. Evidence: `output/native/banner-stitched-check.txt` and `banner-stitched-reopen.txt`.
 - Core solver unchanged; full plugin suites were not rerun.
 
 ## Stitched emblem: 2026-11-08

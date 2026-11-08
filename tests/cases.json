@@ -8393,7 +8393,7 @@
     },
     {
       "id": "ART-D",
-      "description": "Portrait can / YOU / really? with stitched flow inside YOU",
+      "description": "Stitched can / YOU / really? banner with shared flow inside YOU",
       "drawing": "examples/demos/can-you-really.dwg",
       "source": "examples/banner.lsp",
       "exports": [
@@ -8403,17 +8403,19 @@
       "views": [
         {
           "name": "BANNER",
-          "description": "Script outer rows around YOU filled from one shared arc field"
+          "description": "Stitched script and outlined YOU, with an inset shared flow fill"
         }
       ],
       "coverage": [
         "Portrait 10:16 page, 160 by 256 mm",
+        "Script lettering and closed YOU contours solved at 3 mm pitch",
         "Shared translated flow arcs clipped inside all three YOU letters",
-        "3 mm slit-to-outline border, including the empty O counter",
-        "Nominal pitch, symmetric free-end trimming and combined hole clearance",
+        "3 mm clearance between fill holes and lettering holes; empty O counter",
+        "One round punch for the question-mark dot",
+        "Nominal fill pitch, symmetric free-end trimming and combined hole clearance",
         "600 by 960 pixel preview of native stitched output"
       ],
-      "expected": "22 lettering polylines and 100 clipped fill guides; 385 openings at nominal 3 mm pitch. Conservative minimum slit-to-outline clearance 3.1626 mm. Script rows remain unstitched guides.",
+      "expected": "19 lettering guides in 14 blocks with 528 openings; 91 fill guides with 324 openings; one separate round dot. All fill gaps nominal at 3 mm. Combined clearance and a 3 mm fill-to-lettering hole border pass.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 256,
@@ -8429,20 +8431,21 @@
           "outlined",
           "script"
         ],
-        "outlineInset": 3,
+        "outlineInset": 3.75,
         "pitch": 3,
         "slitLength": 1.5,
         "flowChord": 160,
         "flowSag": 20,
         "flowRows": 31,
         "flowRowSpacing": 3,
-        "minimumFragmentGaps": 2
+        "minimumFragmentGaps": 2,
+        "fillToLetteringClearance": 3
       },
       "nativeChecks": [
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "100 current fill blocks, 385 openings, shared-arc membership, nominal pitch, 3 mm border and combined opening clearance pass."
+          "expected": "105 current blocks; 528 lettering openings, 324 fill openings and one round dot. Shared-arc membership, nominal fill pitch, 3 mm hole-to-hole border and combined clearance pass."
         }
       ]
     }

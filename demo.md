@@ -5,7 +5,7 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | Demo | Drawing | Contents / status |
 | --- | --- | --- |
 | Fill samples | [fills.dwg](examples/demos/fills.dwg) | Concentric circles, branching maze, diamond quilt and flow with generated stitches. [Qualification](tests/QUALIFICATION.md). |
-| can / YOU / really? | [can-you-really.dwg](examples/demos/can-you-really.dwg) | Shared flow arcs stitched inside YOU with a $3\,\mathrm{mm}$ border; script rows remain guides. Preview: $600\times960$ px. |
+| can / YOU / really? | [can-you-really.dwg](examples/demos/can-you-really.dwg) | All lettering stitched; shared flow arcs inside YOU with a $3\,\mathrm{mm}$ clear band between holes. Preview: $600\times960$ px. |
 | Emblem | [emblem.dwg](examples/demos/emblem.dwg) | Stitched AUTO Stitch with three concentric rings interrupted around a clear lettering border. |
 
 ## Reproduce in BricsCAD
@@ -17,14 +17,14 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | Command | Creates |
 | --- | --- |
 | `ASTFILLDEMOS` | Stitched fill samples with named views |
-| `ASTBANNERDEMO` | Lettering with stitched flow inside YOU |
+| `ASTBANNERDEMO` | Stitched lettering and flow inside YOU |
 | `ASTEMBLEMDEMO` | Stitched emblem with a 6 mm clear band around the lettering |
 
-All commands generate stitches. The banner stitches only the flow inside YOU; its script rows remain guides. All lettering uses editable geometry, with no installed font dependency.
+All commands generate stitches. The banner includes stitched letter outlines, flow fill and one round question-mark dot. All lettering uses editable geometry, with no installed font dependency.
 
 The emblem keeps the lettering shapes, clips the rings around them and omits remnants shorter than three nominal stitches. Its clear band is measured between hole outlines; ring fragments use nominal spacing.
 
-The banner clips one field of translated flow arcs across all three YOU letters. Rows and pitch are $3\,\mathrm{mm}$; free ends trim symmetrically to nominal spacing. Fragments shorter than two nominal gaps are omitted. The $3\,\mathrm{mm}$ border is measured from slit footprints to the outlines, including O's counter.
+The banner clips one field of translated flow arcs across all three YOU letters. Rows and pitch are $3\,\mathrm{mm}$; free ends trim symmetrically to nominal spacing. Fragments shorter than two nominal gaps are omitted. The fill stays at least $3\,\mathrm{mm}$ from the outline holes, including O's counter. Its guide clipping inset is $3.75\,\mathrm{mm}$ to allow for the outline slits. Script joins and short terminals are shaped to fit the same pitch.
 
 Use the saved DWGs for routine review; generating connected stitch blocks can take a minute or more. Close each test drawing after checking it.
 

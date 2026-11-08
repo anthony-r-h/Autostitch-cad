@@ -26,7 +26,7 @@ These are tested configurations, not minimum spacings. The maze's short turns ar
 
 Maze coordinates define one fixed motif; they are not an arbitrary maze generator. Flow trims the free ends equally without changing the underlying arc. No independent hatch recipe is needed: the crossing grid is the diamond quilt.
 
-The banner reuses Flow as one shared field, clips it inside YOU, then trims each retained fragment to nominal pitch. Its slit-to-outline border is $3\,\mathrm{mm}$; O's counter stays empty.
+The banner reuses Flow as one shared field, clips it inside YOU, then trims each retained fragment to nominal pitch. Its holes stay $3\,\mathrm{mm}$ from the stitched lettering; O's counter stays empty.
 
 ## Validation
 

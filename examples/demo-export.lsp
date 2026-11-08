@@ -16,7 +16,7 @@
     width (if (and (assoc 370 data) (> (cdr (assoc 370 data)) 0)) (/ (cdr (assoc 370 data)) 100.0) (if reference 0.2 0.09)))
   (cond
     ((= kind "LINE") (ast:demo-export-line (cdr (assoc 10 data)) (cdr (assoc 11 data)) width layer file))
-    ((and (= kind "CIRCLE") (or (not reference) (= layer "SHOWCASE_PATTERN")))
+    ((and (= kind "CIRCLE") (or (not reference) (member layer '("SHOWCASE_PATTERN" "BANNER_PUNCTUATION"))))
       (write-line (ast:demo-json (list "circle" layer (car (cdr (assoc 10 data)))
         (cadr (cdr (assoc 10 data))) (cdr (assoc 40 data)))) file))
     ((and (not reference) (= kind "LWPOLYLINE") (= 0 (cdr (assoc 70 data))) (= 2 (cdr (assoc 90 data))))
@@ -49,5 +49,5 @@
   (vl-mkdir (strcat ast:*home* "/output"))
   (vl-mkdir (strcat ast:*home* "/output/native"))
   (setq path (strcat ast:*home* "/output/native/demo-export.jsonl"))
-  (ast:demo-export path '("SHOWCASE_PATTERN" "BANNER_LETTERS" "BANNER_YOU" "FILL_REFERENCES"))
+  (ast:demo-export path '("SHOWCASE_PATTERN" "BANNER_PUNCTUATION" "FILL_REFERENCES"))
   (princ (strcat "\nExported demo geometry to " path)) (princ))

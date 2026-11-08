@@ -8543,15 +8543,15 @@
         "chord": 36,
         "sag": 3,
         "rows": 25,
-        "row-spacing": 1.5
+        "row-spacing": 3.0
       },
       "previewName": "fill-flow",
       "exports": [
         "examples/fills/fill-flow.png",
         "examples/fills/fill-flow.svg"
       ],
-      "notes": "Translated circular arcs, 1.5 mm between rows. Free ends stop at nominal pitch; the original curve is unchanged.",
-      "expected": "325 openings and 300 nominal gaps; no adjusted gaps. Footprint 35.38 by 38.89 mm. Production solving and combined default-model clearance pass.",
+      "notes": "Translated circular arcs, 3 mm between rows. Free ends stop at nominal pitch; the original curve is unchanged.",
+      "expected": "325 openings and 300 nominal gaps; no adjusted gaps. Footprint 35.38 by 74.89 mm. Production solving and combined default-model clearance pass.",
       "usedBy": [
         "ART-D"
       ],

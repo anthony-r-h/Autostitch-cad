@@ -109,7 +109,7 @@
         chord (ast:g-get 'chord parameters 36.0) sag (ast:g-get 'sag parameters 3.0))
       (repeat (ast:g-get 'rows parameters 25)
         (setq paths (cons (ast:fill-flow-row (list (car center) value) chord sag 3.0) paths)
-          value (+ value (ast:g-get 'row-spacing parameters 1.5)))))
+          value (+ value (ast:g-get 'row-spacing parameters 3.0)))))
     (T (ast:cad-require nil "Unknown fill recipe.")))
   paths)
 (defun ast:fill-guides (kind origin / guides path)

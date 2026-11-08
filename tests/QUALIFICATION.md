@@ -2,6 +2,14 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Unstitched pattern circles: 2026-11-08
+
+- Two concentric circles replace the stitched frame and registration ticks. All four lettering crossings are landmarks: three on S, one on h.
+- Native verification finds a nominal $3\,\mathrm{mm}$ gap centred at every crossing, with no unmatched crossing or extra reserved gap.
+- All 28 sources regenerate: 51 current guides, 32 outputs and eight landmarks across the specimen. Save/reopen preserves those counts, both pattern circles and all three named views.
+- The emblem's 523 openings, including the separate round-punch dot, pass combined clearance under default model settings. Guide artwork exports before and after fitting are identical.
+- Inspected the artwork and stitched exports at 600 × 600. Plugin code is unchanged; the full suite was not rerun.
+
 ## Script emblem and sewn frame: 2026-11-07
 
 - Square-ended AUTO outlines retain the rounded A crown and U bowl. Lowercase script, its dot, the swash and the circular frame all use generated stitches.

@@ -8271,7 +8271,7 @@
         },
         {
           "name": "SQUARE",
-          "description": "Arched AUTO and script Stitch inside two complete circular stitch rows, with a single round-punch dot and top/bottom registration ticks; 600 by 600 PNG."
+          "description": "Arched AUTO and script Stitch with two unstitched concentric pattern circles, four crossing landmarks and a single round-punch dot; 600 by 600 PNG."
         }
       ],
       "coverage": [
@@ -8286,10 +8286,10 @@
         "Unstitched artwork is exported before solving; fitting preserves every guide",
         "Square AUTO: arched placement with square terminals and rounded A crown/U bowl",
         "Script Stitch: connected crossbars and shoulder; one separate 3 mm round punch for the dot",
-        "Double frame: two closed circular rows and four protected nominal gaps at top/bottom registration ticks",
+        "Pattern circles: all four lettering intersections are landmarks centred in protected nominal gaps; circles remain unstitched",
         "Combined clearance validation includes the round-punch dot and all independent stitch lines"
       ],
-      "expected": "53 guides, 34 output blocks, 30 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Eight landmarks total, including four on the double circular border. Artwork exports before/after fitting match. Inspect all three views and validate combined emblem openings under default model settings. Boundary, mirror, ownership and Undo cases remain in focused suites."
+      "expected": "51 guides, 32 output blocks, 28 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Eight landmarks total, including all four circle crossings (three on S, one on h). Each crossing is centred in a nominal 3 mm gap. The two circles have no generated stitching. Artwork exports before/after fitting match. Inspect all three views and validate combined emblem openings under default model settings. Boundary, mirror, ownership and Undo cases remain in focused suites."
     }
   ]
 }

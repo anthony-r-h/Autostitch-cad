@@ -2,6 +2,10 @@
 
 Terms used by the [axioms](AXIOMS.md), [model](MODEL.md) and [junction construction](JUNCTIONS.md).
 
+![Guide, slit, nominal and adjusted gaps, landmark, protected gap and free span](../examples/illustrated/assets/terms-layout.gif)
+
+Notation: `s` start, `e` end, arrow for direction, `L1` landmark. The `I` crossbars identify slits bordering adjusted gaps.
+
 ## Guide
 
 An editable path on which real slit centres lie, made of straight or circular **segments**. A **stitch line** is the stitching defined on one guide or a connected set of guides. Each guide has a chosen extent and direction; it may be open or a closed loop. Connected guides meet at junctions and share one stitch ID.
@@ -13,6 +17,8 @@ An editable path on which real slit centres lie, made of straight or circular **
 ## Slit
 
 A slit is one type of **opening**; a round hole is the other. Its **axis** is the finite centreline between its tips. **Length** $\ell$ runs along that axis, **width** $w$ across it, and **lean** $\alpha$ is its signed angle to the guide tangent.
+
+![Magnified slit showing its axis, length, width and lean relative to the tangent](../examples/illustrated/assets/terms-slit.gif)
 
 A **virtual slit** is construction only: its selected tip helps locate a corner hole. It is not a separate opening.
 
@@ -31,6 +37,8 @@ Consecutive equal adjusted gaps form an **adjustment block** within a free span.
 ## Junction
 
 A meeting with two or more **arms**: portions of stitch lines extending away from it. A through-line contributes two arms, a T has three, and an X has four.
+
+![A T junction with one shared round hole and three arms](../examples/illustrated/assets/terms-junction.gif)
 
 - A **smooth join** keeps the tangent direction. Straight or co-circular continuation at equal pitch remains one run; a smooth change of curvature shares one slit.
 - A **sharp corner** has two arms with different tangent directions. Virtual slits locate its shared round hole.

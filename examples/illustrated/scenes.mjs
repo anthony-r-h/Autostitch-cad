@@ -396,6 +396,64 @@ function curvedCornerScene(caseId,name,title) {
   return finish(s,result);
 }
 
+function termLabel(point,value,target) {
+  const label={...text(point,value),kind:'term-label',color:ink};
+  if(!target)return [label];
+  const start=[point[0],point[1]+(target[1]>point[1]?8:-16)];
+  return [line(start,target,'term-leader',construction,.8),label];
+}
+function termsLayoutScene() {
+  const original=landmarkScene(),view={x:60,y:187.5,scale:16};
+  const s=scene('terms-layout','Guide, gaps, landmark and free span','F02');
+  let result=original.final.filter(e=>['guide','fixed-end'].includes(e.kind));
+  result.push(...termLabel([510,310],'Guide',[515,187.5]));frame(s,[...result],140,'guide-term');
+  result.push(...original.final.filter(e=>['slit','adjustment-mark'].includes(e.kind)),...termLabel([455,94],'Slit',[401,180]));
+  frame(s,[...result],160,'slit-term');
+  result.push(...measure([0,0],[3,0],'p',view,-68),...termLabel([84,284],'Nominal gap'));
+  frame(s,[...result],160,'nominal-term');
+  result.push(...measure([6,0],[8.75,0],'g',view,-68),...termLabel([178,284],'Adjusted gap'));
+  frame(s,[...result],160,'adjusted-term');
+  result.push(...original.final.filter(e=>['landmark','dimension','measurement'].includes(e.kind)),
+    ...termLabel([395,66],'Landmark',[320,133]),...termLabel([320,294],'Protected gap'));
+  frame(s,[...result],180,'landmark-term');
+  result.push(...measure([0,0],[14.75,0],'Free span',view,83));
+  return finish(s,result);
+}
+function termsSlitScene() {
+  const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-SLIT').inputs;
+  const view={x:270,y:200,scale:110},direction=axis(alpha),normal=axis(alpha+Math.PI/2);
+  const a=mul(direction,-input.length/2),b=mul(direction,input.length/2);
+  const tangent=[line([70,200],[520,200],'tangent',guideInk,1),...termLabel([472,222],'Tangent')];
+  const profile={...worldLine(a,b,view,'slit-profile',ink,input.width*view.scale),round:true};
+  const s=scene('terms-slit','Slit axis, length, width and lean','A2');
+  let result=[...tangent,profile,...termLabel([104,183],'Slit',[228,237])];frame(s,[...result],140,'profile-term');
+  result.push(worldLine(a,b,view,'slit-axis','#FFFFFF',1,true),...termLabel([161,316],'Axis',[253,214]));
+  frame(s,[...result],150,'axis-term');
+  const lengthDimension=measure(a,b,'',view,55).filter(e=>e.type!=='text');
+  result.push(...lengthDimension,...termLabel([177,116],'Length',[235,158]));frame(s,[...result],160,'length-term');
+  const center=mul(direction,1.05),halfWidth=mul(normal,input.width/2);
+  const wa=add(center,mul(halfWidth,-1)),wb=add(center,halfWidth);
+  const A=project(wa,view),B=project(wb,view),tick=[direction[0]*4,-direction[1]*4];
+  result.push(line(A,B,'width-dimension',construction,.8),line(add(A,mul(tick,-1)),add(A,tick),'width-dimension',construction,.8),
+    line(add(B,mul(tick,-1)),add(B,tick),'width-dimension',construction,.8),
+    worldLine(add(b,mul(halfWidth,-1)),wa,view,'width-extension',guideInk,.8),worldLine(add(b,halfWidth),wb,view,'width-extension',guideInk,.8),
+    ...termLabel([427,81],'Width',project(center,view)));
+  frame(s,[...result],170,'width-term');
+  for(let i=0;i<20;i++)result.push(worldLine(mul(axis(alpha*i/20),.43),mul(axis(alpha*(i+1)/20),.43),view,'lean-angle',construction,1));
+  result.push(...termLabel([387,157],'Lean',project(mul(axis(alpha/2),.43),view)));
+  return finish(s,result);
+}
+function termsJunctionScene() {
+  const original=junctionScene(),s=scene('terms-junction','Junction, round hole and arms','A9');
+  let result=original.final.filter(e=>['guide','hole','slit'].includes(e.kind));
+  frame(s,[...result],100,'junction-layout');
+  result.push(...termLabel([300,71],'Junction / round hole',[300,134]));frame(s,[...result],160,'junction-term');
+  for(const [label,target] of [[[142,237],[186,145]],[[464,237],[417,145]],[[385,310],[300,250]]]) {
+    result.push(...termLabel(label,'Arm',target));frame(s,[...result],110,'arm-term');
+  }
+  return finish(s,result);
+}
+
 const notationText=(p,value,role)=>({...text(p,value),size:12,kind:`notation-${role}`});
 function directionMark(point,tangent) {
   const normal=[tangent[1],-tangent[0]],tip=add(point,mul(tangent,30)),back=add(tip,mul(tangent,-6));
@@ -425,7 +483,7 @@ function screenTangent(g,station) {
 function annotateScene(s) {
   let marks=[];
   if(s.name.startsWith('pitch-'))marks=routeMarks([60,187.5],[502.25,187.5]);
-  else if(s.name==='axiom-landmark')marks=routeMarks([60,187.5],[540,187.5]);
+  else if(['axiom-landmark','terms-layout'].includes(s.name))marks=routeMarks([60,187.5],[540,187.5]);
   else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
   else if(s.name==='axiom-curve')marks=routeMarks([160,75],[390,305],[1,0],[0,1]);
   else if(s.name==='axiom-corner') {
@@ -433,7 +491,7 @@ function annotateScene(s) {
   } else if(s.name==='axiom-smooth') {
     const v=variant('A05'),g=v.route.primitives[1],station=v.settings.end-18;
     marks=[...routeMarks([82,115],project(primitivePoint(g,station),{x:370,y:115,scale:16}),[1,0],screenTangent(g,station)),notationText([384,97],'j','junction')];
-  } else if(s.name==='axiom-junction') {
+  } else if(['axiom-junction','terms-junction'].includes(s.name)) {
     marks=[...routeMarks([93,145],[507,145]),endMark([300,283],[0,1]),...directionMark([300,145],[0,1])];
   } else if(s.name==='axiom-closure') {
     const count=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs.count;
@@ -448,7 +506,7 @@ function annotateScene(s) {
     marks=routeMarks(project(primitivePoint(incoming,a),view),project(primitivePoint(outgoing,b),view),screenTangent(incoming,a),screenTangent(outgoing,b));
   }
   const annotate=elements=>[...elements,...marks,...elements.filter(e=>e.kind==='hole').map(e=>
-    notationText(add(e.p,s.name==='axiom-junction'?[16,-14]:[18,18]),'j','junction'))];
+    notationText(add(e.p,['axiom-junction','terms-junction'].includes(s.name)?[16,-14]:[18,18]),'j','junction'))];
   return {...s,final:annotate(s.final),frames:s.frames.map(f=>({...f,elements:annotate(f.elements)}))};
 }
 
@@ -457,7 +515,8 @@ export function createScenes() {
     noFitScene(),closureScene(),matchedScene(),
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
-    curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step')].map(annotateScene);
+    curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step'),
+    termsLayoutScene(),termsSlitScene(),termsJunctionScene()].map(annotateScene);
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));

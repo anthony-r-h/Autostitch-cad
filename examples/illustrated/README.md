@@ -100,6 +100,22 @@ The outgoing corner step increases to approximately $3.21\,\mathrm{mm}$ to bring
 
 ![A bounded corner adjustment keeps the neighbour on its guide](assets/corner-shallow.gif)
 
+## Glossary close-ups
+
+The [glossary](../../docs/GLOSSARY.md) groups the terms around three annotated examples.
+
+![Guide, gaps, landmark and free span](assets/terms-layout.gif)
+
+`ILL-TERMS-LAYOUT`: the same `F02` layout as the landmark example, with nominal, adjusted and protected gaps identified.
+
+![Slit axis, length, width, lean and tangent](assets/terms-slit.gif)
+
+`ILL-TERMS-SLIT`: magnified profile with $\ell=1.5\,\mathrm{mm}$, $w=0.15\,\mathrm{mm}$ and $\alpha=40^\circ$.
+
+![Junction, shared round hole and three arms](assets/terms-junction.gif)
+
+`ILL-TERMS-JUNCTION`: the same T junction as `ILL-JUNCTION`, with each arm identified.
+
 ## Reproduce
 
 From the repository root, using Node and Windows PowerShell with built-in `System.Drawing` and WPF. No packages or CAD session are needed.

@@ -163,6 +163,27 @@ for(const [caseId,name] of [['A03','corner-arc-line'],['A04','corner-arc-arc'],[
   if(caseId==='J08'){near(dist(J,v.expected.hole),0);assert.equal(readSvg(name).elements.filter(e=>e.class==='adjustment-mark').length,2);}
 }
 
+// Glossary labels must describe the existing constructions without changing them.
+for(const [name,original,kinds] of [
+  ['terms-layout','axiom-landmark',['slit','adjustment-mark','landmark']],
+  ['terms-junction','axiom-junction',['slit','hole']]
+])for(const kind of kinds)assert.deepEqual(readSvg(name).elements.filter(e=>e.class===kind),readSvg(original).elements.filter(e=>e.class===kind));
+const termJunction=scenes.find(s=>s.name==='terms-junction');
+assert.equal(termJunction.final.filter(e=>e.type==='text'&&e.value==='Arm').length,3);
+const slitDetail=readSvg('terms-slit').elements;
+const profile=slits('terms-slit',{x:270,y:200,scale:110},'slit-profile')[0];
+near(profile.angle,alpha);near(+profile.element['stroke-width']/110,.15);
+const slitAxis=slitDetail.find(e=>e.class==='slit-axis');
+for(const key of ['x1','y1','x2','y2'])near(+slitAxis[key],+profile.element[key]);
+const width=slitDetail.find(e=>e.class==='width-dimension');
+near(Math.hypot(width.x2-width.x1,width.y2-width.y1)/110,.15);
+const lean=slitDetail.filter(e=>e.class==='lean-angle');assert.equal(lean.length,20);
+for(const [i,e] of lean.entries())for(const end of [1,2]) {
+  const theta=alpha*(i+end-1)/20;
+  near((+e['x'+end]-270)/110,.43*Math.cos(theta));
+  near((200- +e['y'+end])/110,.43*Math.sin(theta));
+}
+
 for(const s of scenes) {
   const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
   // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
@@ -175,9 +196,11 @@ for(const s of scenes) {
   const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));
   assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
   const source=readSvg(s.name).source;
-  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1]),'Prose belongs outside the figure');
+  const terms=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)))?.terms??[];
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||terms.includes(match[1]),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
-  if(s.name!=='axiom-clearance') {
+  for(const term of terms)assert(labels.some(e=>e.value===term),`${s.name} missing ${term}`);
+  if(!['axiom-clearance','terms-slit'].includes(s.name)) {
     assert(labels.some(e=>e.kind==='notation-start'&&e.value==='s'),`${s.name} needs a start`);
     assert(s.final.filter(e=>e.kind==='direction').length>=3,`${s.name} needs a direction arrow`);
     if(s.name!=='axiom-closure')assert(labels.some(e=>e.kind==='notation-end'&&e.value==='e'),`${s.name} needs an end`);

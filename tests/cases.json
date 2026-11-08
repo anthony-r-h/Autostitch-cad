@@ -8941,6 +8941,106 @@
         "e",
         "j"
       ]
+    },
+    {
+      "id": "ILL-TERMS-LAYOUT",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A3",
+        "A4",
+        "A5",
+        "A7"
+      ],
+      "animated": true,
+      "status": "Annotated geometric definitions.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-layout"
+        }
+      ],
+      "terms": [
+        "Guide",
+        "Slit",
+        "Nominal gap",
+        "Adjusted gap",
+        "Protected gap",
+        "Landmark",
+        "Free span",
+        "p",
+        "g"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "direction",
+        "L1"
+      ],
+      "case": "F02"
+    },
+    {
+      "id": "ILL-TERMS-SLIT",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A2"
+      ],
+      "animated": true,
+      "status": "Annotated geometric definitions.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-slit"
+        }
+      ],
+      "terms": [
+        "Slit",
+        "Axis",
+        "Length",
+        "Width",
+        "Lean",
+        "Tangent"
+      ],
+      "notation": [],
+      "inputs": {
+        "length": 1.5,
+        "width": 0.15,
+        "leanDegrees": 40
+      }
+    },
+    {
+      "id": "ILL-TERMS-JUNCTION",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A9"
+      ],
+      "animated": true,
+      "status": "Annotated geometric definitions.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-junction"
+        }
+      ],
+      "terms": [
+        "Junction / round hole",
+        "Arm"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "inputs": {
+        "sourceIllustration": "ILL-JUNCTION"
+      }
     }
   ]
 }

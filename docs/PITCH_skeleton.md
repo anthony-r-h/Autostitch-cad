@@ -22,6 +22,12 @@ Research note: Anthony to find stitching examples from:
 - Gucci
 - Bottega Veneta
 
+# Terms
+
+- [Glossary](GLOSSARY.md): guide, slit, gap, landmark, junction and arm
+
+![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.gif)
+
 # The spacing problem
 
 - Seam lengths and required features rarely fall on exact multiples of the tool's pitch

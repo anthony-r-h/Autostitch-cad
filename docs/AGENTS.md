@@ -1,9 +1,11 @@
 # Documentation instructions
 
-## PITCH.md
+## Skeleton and authored files
 
-- The frontmatter between the opening `---` delimiters is the skeleton: the raw meaning and outline of the pitch.
-- Keep the skeleton as concise headings, bullets and notes that capture intent, arguments, examples and open questions. Keep polished prose in the `# Authored` section.
+- Keep outlines and finished writing in separate Markdown files: `<name>_skeleton.md` and `<name>_authored.md`. Do not use frontmatter delimiters or an Authored section to combine them.
+- For the pitch, use `PITCH_skeleton.md` and `PITCH_authored.md`.
+- Keep the skeleton as concise headings, bullets and notes that capture intent, arguments, examples and open questions. Keep polished prose in the matching `_authored.md` file.
+- Embed supporting figures beside the relevant points in the skeleton; keep their production scripts in `examples/illustrated/`.
 - Develop the authored prose from the skeleton. Preserve its meaning while turning the outline into readable words.
 - Keep the skeleton up to date as the pitch evolves. When an authored edit adds, removes or changes meaning, update the skeleton in the same edit. Wording-only edits need no skeleton change.
 - When the skeleton changes, update any affected authored prose to match. Preserve unresolved points as explicit notes rather than inventing answers.

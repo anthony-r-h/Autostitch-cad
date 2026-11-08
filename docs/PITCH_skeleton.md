@@ -1,6 +1,3 @@
----
-% Skeleton %
-
 # Introduction
 
 - Bring specialized stitch-layout tools into industry-standard, enterprise CAD: pitch, landmarks, corners and shared junctions from editable pattern guides
@@ -14,32 +11,46 @@
 
 # Even Big Fashion Gets It Wrong
 
-- Gallery of big name fashion stitching mistakes
+- Gallery of stitching mistakes: collect sourced close-ups
 
 # Current State
 
-For cases below, simple gallery showing: Line, curve, intersection, intersection with curve
+- Begin with the spacing problem, then add curves, fixed features and junctions
 
 - Same guides, tool profile and constraints across approaches
 - Comparisons demonstrated directly in the visible stitching
 - General CAD supplies curves, arrays and blocks; the remaining work is deciding how tool geometry, spacing and required features fit together
 - A local spacing correction can change how the next landmark, corner or closure fits
 
+- Shared example: $30.5\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, both endpoint centres fixed
+- Nominal placement leaves a remainder; the next opening overshoots
+- Dashed openings are proposals. Motion shows planning, not movement of already-punched holes
+
+![Nominal spacing leaves a remainder at the fixed end](../examples/illustrated/assets/pitch-problem.gif)
+
 ## Naive solution
 
-- Evenly distribute
+- Distribute eleven openings evenly: ten $3.05\,\mathrm{mm}$ gaps
+- Fits the endpoints; every gap departs from nominal tool spacing
+
+![Naive solution: redistribute every gap](../examples/illustrated/assets/pitch-spread.gif)
 
 ## Good enough solution
 
 - Keep nominal spacing through most of the line; absorb the remainder in a few permitted adjusted gaps near the end
 - Compare how many gaps change separately from where they are placed; central placement is our policy, not the only valid fit
 - A visually plausible pattern can leave the maker to decide where and how to depart from the tool's nominal spacing
+- Eight nominal gaps, then two $3.25\,\mathrm{mm}$ gaps
 
+![Good enough solution: adjust two gaps near the end](../examples/illustrated/assets/pitch-end.gif)
 
 # Autostitch
 
-- Equivalent gallery showing Autostitch with full UI elements to annotate its geometric decisions
+- Reserve required features; plan the fewest permitted adjustments before filling the nominal runs
+- Same two $3.25\,\mathrm{mm}$ adjustments, placed centrally; mark them for the maker
 - Resolve opening positions and orientations in the same CAD document as the pattern, retaining native editing tools
+
+![Autostitch solution: plan central adjustments before filling the line](../examples/illustrated/assets/pitch-centre.gif)
 
 ## Why CAD
 
@@ -78,10 +89,19 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - Openings are slits or round holes; slit length, width and signed lean relative to the local tangent define the slit geometry, with hole diameter and clearance margin completing the tool profile
 - Real slit centres stay on their guides; subdividing the same geometry alone does not change the layout
 - Distinguish distance along a guide from direct spacing between openings: on a circle, pitch is a chord, and a nominal chord must fit within the diameter
+
+![A1 to A3: fixed slit geometry follows the guide; pitch is a chord](../examples/illustrated/assets/axiom-curve.gif)
+
 - Nominal gaps equal the chosen pitch; protected gaps stay nominal; adjusted gaps use the permitted allowance; consecutive equal adjusted gaps form an adjustment block
 - Open ends fix slit centres at the chosen endpoints; closure reuses the start opening
 - A landmark fixes a nominally spaced slit pair symmetrically along the guide, with no opening at the reference; on a circle, this symmetry follows the arc
 - Endpoints, landmark pairs and junction neighbours bound the free spans; fitting places the remaining openings without moving those fixed features
+
+![A4 and A5: reserve the landmark pair before fitting the free spans](../examples/illustrated/assets/axiom-landmark.gif)
+
+- Closure reuses the start opening; the last gap still has to fit
+
+![A8: close the loop without duplicating its start opening](../examples/illustrated/assets/axiom-closure.gif)
 
 ### Fitting free spans
 
@@ -93,18 +113,42 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - On circles, convert chord spacing to angular advance and centre the adjustment block along the arc
 - Demo anchors at $3\,\mathrm{mm}$ pitch: a $30.5\,\mathrm{mm}$ straight span uses two central $3.25\,\mathrm{mm}$ gaps; a $7\,\mathrm{mm}$ span has no permitted fit
 - Preserve nominal gaps to retain the tool's regular spacing; mark adjusted gaps and corner steps for individual placement and physical execution
+- Reject a $7\,\mathrm{mm}$ span: two gaps would be too long; three would be too short
+- $2(3.3)<7<3(2.7)$; no integer gap count fits the allowed range
+
+![A5 and A7: no permitted gap count fits the fixed span](../examples/illustrated/assets/fit-rejected.gif)
 
 ### Joins, corners and junctions
 
 - Junction arms are the portions of stitch lines extending away from the meeting; a through-line contributes two arms, a T three and an X four
-- Straight or co-circular continuation at equal pitch stays one uninterrupted run; a smooth change of curvature shares one tangent-aligned slit
+- Straight or co-circular continuation at equal pitch stays one uninterrupted run; a smooth change of curvature shares one slit at the specified lean to the common tangent
+
+![A8: a straight and curved portion share one compatible slit](../examples/illustrated/assets/axiom-smooth.gif)
+
 - A sharp two-arm corner shares a round hole where the selected tips of two virtual slits meet; those virtual slits are construction only
 - Construct the corner by intersecting tip loci: lines parallel to straight arms, circles concentric with circular arms; choose the isolated intersection nearest the vertex and the principal-branch virtual stations nearest it
 - Reject ambiguous or failed corner constructions; keep the selected construction rather than substituting a farther intersection or another revolution
 - A corner step measures virtual-to-real centre distance; prefer nominal pitch, adjusting within $10\%$ only as needed to keep the real neighbour on its finite arm; virtual centres may lie on extensions
+
+![A6: virtual tips locate the shared hole at a straight corner](../examples/illustrated/assets/axiom-corner.gif)
+
+- Apply the same tip construction to a circular arm, then to two circular arms
+- These examples choose nominal outer margins; their separately tested fixed-range failures are not shown
+
+![A6: the selected tips meet at an arc-to-line corner](../examples/illustrated/assets/corner-arc-line.gif)
+
+![A6: the selected tips meet between two curved arms](../examples/illustrated/assets/corner-arc-arc.gif)
+
 - T/X junctions share a round hole at the guide intersection, with one nominal-pitch neighbour on each arm; sharp two-arm hole-to-neighbour distances follow the virtual-tip construction
+
+![A9: a T junction reserves one hole and its nominal neighbours](../examples/illustrated/assets/axiom-junction.gif)
+
 - Distinguish a sharp included angle from a shallow change of direction: clearance and finite-arm placement impose different restrictions
 - Usable angles depend on slit length, width, lean, hole diameter, pitch and margin; curved arms also require radii, winding and available lengths; the two-arm angle formula does not apply to T/X junctions
+- Shallow curved-corner detail: the outgoing step increases to approximately $3.21\,\mathrm{mm}$ so its real neighbour lies on the guide
+- The figure shows the corner reservation, not the full fixed-end layout
+
+![A6: bounded corner adjustment brings a shallow curved neighbour onto its finite guide](../examples/illustrated/assets/corner-shallow.gif)
 
 ### Matched guides
 
@@ -113,6 +157,8 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - Preserve slit geometry, spacing, clearance and opening correspondence; matched copies receive the source's adjusted gaps without fitting independently
 - Validate the complete guide geometry under the same transformation; start correspondence fixes registration, and closed guides also need a chosen phase
 
+![One source layout copied onto a reflected guide with matching hole correspondence](../examples/illustrated/assets/matched-guides.gif)
+
 ### Whole-layout clearance
 
 - Model each slit as its finite axis thickened by half its width, and each round hole as a disk; clearance measures edge-to-edge separation
@@ -120,21 +166,17 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - Reuse coincident required openings only when centre, type and slit axis agree; all other openings must remain disjoint and retain the required margin, with touching invalid even at zero margin
 - A successful span or corner construction still needs the complete clearance check; reject output that fails it
 - Regenerable blocks keep the original pattern guides editable
+- Example: two nominal rows approach; slit width $w=0.3\,\mathrm{mm}$ and margin $m=0.2\,\mathrm{mm}$ are explicit
+- Reject the final overlap even though each row retains its own pitch
 
-## Atomic demos and SVGs
+![A10: locally valid rows collide when placed together](../examples/illustrated/assets/axiom-clearance.gif)
 
-- [Illustration guidelines and scripts](../examples/illustrated/README.md): small embedded animations revealing placement, conflict and the resulting decision
-- Example format: 600 × 375 px, landscape, 16:10; keep each frame readable at 600 px wide
-- Compose diagrams from reusable elements; use automatically looping GIF/silent WebM animations, with SVG/PNG still fallbacks and no playback controls; put headings and explanatory prose in the document, not the figure
-- Opening comparison on the same straight span: equal redistribution changes ten gaps; an end adjustment and Autostitch each change two gaps, in different locations. Show a fixed tooth array to explain nominal tool spacing; keep the crowded last gap as a separate failure example
-- Expand the line, curve and intersection gallery into the individual geometric decisions; use test-catalog IDs for future SVGs
-- Straight exact fit, central adjustment and impossible span
-- Landmark with its protected nominal gap and fitting in the adjacent free span
-- Straight corners at several angles
-- Line/arc and arc/arc corners, with virtual slits showing the construction
-- Smooth joins, T/X junctions and connected guides
-- Closed loop, chosen start/end and reversed direction
-- Pattern edit, regeneration and repair
+## Illustration sources and remaining evidence
+
+- [Figure sources and reproduction](../examples/illustrated/README.md); [canonical test cases](../tests/cases.json)
+- Embedded diagrams are analytic explanations; existing composite artwork below is exported from native CAD output
+- Still fallbacks share the GIF filenames with `.png` or `.svg` extensions
+- Remaining: native UI examples of guide editing, regeneration and repair; broader comparisons on the same curved/junction inputs
 
 # 'I can do that'
 
@@ -142,6 +184,12 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - 'Can you really' banner combines the demonstrated geometric decisions into one impressive example
 - Overall view establishes complexity; annotated close-ups reveal the resolved details
 - Difficulty visible to readers with different levels of experience
+
+![Stitched emblem with interrupted concentric rings](../examples/demos/emblem.png)
+
+![Can YOU really banner with stitched lettering, flow fill and diamond background](../examples/demos/can-you-really.png)
+
+- [Canonical DWGs and reproduction](../examples/demo.md); guides remain editable
 
 # Who it helps and where it matters
 
@@ -165,7 +213,3 @@ For cases below, simple gallery showing: Line, curve, intersection, intersection
 - Benefit depends on the required finish, geometry and time spent on layout; straightforward seams with forgiving tolerances have less to gain
 - Automated production is a possible downstream use where resolved opening geometry can feed production preparation; value depends on the process and its precision needs
 - For individuals and teams already designing in enterprise CAD, the benefit includes keeping specialized layout within the tools and drawing practices they already use
-
----
-
-# Authored

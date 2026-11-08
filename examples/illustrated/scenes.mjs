@@ -249,7 +249,160 @@ function clearanceScene() {
   return finish(s,result);
 }
 
-export function createScenes() { return [...pitchScenes(),curveScene(),landmarkScene(),cornerScene(),smoothScene(),junctionScene(),clearanceScene()]; }
+function noFitScene() {
+  const input=catalog.illustrations.find(i=>i.id==='ILL-NOFIT').inputs;
+  const view={x:160,y:190,scale:40},base=straightBase(input.length,view);
+  const fixed=[...base,...opening([0,0],alpha,view),...opening([input.length,0],alpha,view)];
+  const s=scene('fit-rejected','No gap count fits the permitted spacing','A5, A7');
+  frame(s,base,80,'guide');frame(s,fixed,100,'fixed-ends');
+  const reject=[line([294,145],[306,157],'rejected',construction,1.4),line([294,157],[306,145],'rejected',construction,1.4)];
+  for(const count of [2,3]) {
+    const gap=input.length/count;
+    const proposed=Array.from({length:count-1},(_,i)=>opening([(i+1)*gap,0],alpha,view,{proposed:true})).flat();
+    const candidate=[...fixed,...proposed,...measure([0,0],[gap,0],gap.toFixed(2),view,-45)];
+    frame(s,candidate,160,'candidate');frame(s,[...candidate,...reject],90,'outside-bounds');
+    frame(s,fixed,50,'withdraw-proposal');
+  }
+  return finish(s,[...fixed,...reject,...measure([0,0],[input.length,0],'7',view,65)]);
+}
+
+function closureScene() {
+  const input=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
+  const radius=3/(2*Math.sin(Math.PI/input.count)),view={x:300,y:187.5,scale:13};
+  const point=angle=>mul(axis(angle),radius),start=Math.PI/2,step=2*Math.PI/input.count;
+  const base=[];
+  for(let i=0;i<120;i++)base.push(worldLine(point(start-i*2*Math.PI/120),point(start-(i+1)*2*Math.PI/120),view));
+  const s=scene('axiom-closure','Close the loop without duplicating the start','A8');
+  frame(s,base,75,'guide');
+  let result=[...base,...opening(point(start),alpha,view),text(add(project(point(start),view),[0,-24]),'s')];
+  frame(s,result,100,'reserved-start');
+  for(let i=1;i<input.count;i++) {
+    result.push(...opening(point(start-i*step),alpha-i*step,view));
+    frame(s,[...result],i<4?35:18,'around-loop');
+  }
+  frame(s,[...result,...opening(point(start),alpha,view,{proposed:true})],100,'reuse-start');
+  return finish(s,[...result,...measure(point(start-(input.count-1)*step),point(start),'3',view,-30)]);
+}
+
+function matchedScene() {
+  const length=variant('S02').route.primitives[0].b[0],view={x:60,y:115,scale:14.5};
+  const points=stations(selectFit({D:length,p:3}));
+  const reflected=p=>[600-p[0],p[1]+145];
+  const reflect=e=>e.type==='line'?{...e,a:reflected(e.a),b:reflected(e.b)}:{...e,p:reflected(e.p)};
+  const guide=straightBase(length,view),base=[...guide,...guide.map(reflect)];
+  const s=scene('matched-guides','One solved layout, one reflected copy','S02');
+  frame(s,base,90,'guides');
+  const source=points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:i>=4&&i<=6}));
+  let result=[...base,...source];frame(s,result,160,'source-solved');
+  for(const [i,x] of points.entries()) {
+    const copy=opening([x,0],alpha,view,{marked:i>=4&&i<=6}).map(reflect);
+    result.push(...copy);
+    const p=project([x,0],view);
+    frame(s,[...result,line(p,reflected(p),'correspondence',guideInk,.8,true)],35,'copy-correspondence');
+  }
+  return finish(s,result);
+}
+
+// Analytic tip-locus construction for the illustrated line/circle pairs.
+// This illustrates A6; the production solver remains in autostitch-geometry.lsp.
+const wrap=angle=>Math.atan2(Math.sin(angle),Math.cos(angle));
+const primitiveLength=g=>g.kind==='line'?Math.hypot(g.b[0]-g.a[0],g.b[1]-g.a[1]):g.radius*Math.abs(g.sweep);
+function primitivePoint(g,station) {
+  if(g.kind==='line')return add(g.a,mul([g.b[0]-g.a[0],g.b[1]-g.a[1]],station/primitiveLength(g)));
+  return add(g.center,mul(axis(g['start-angle']+Math.sign(g.sweep)*station/g.radius),g.radius));
+}
+function primitiveAxis(g,station) {
+  return g.kind==='line'?Math.atan2(g.b[1]-g.a[1],g.b[0]-g.a[0])+alpha:g['start-angle']+Math.sign(g.sweep)*(station/g.radius+Math.PI/2)+alpha;
+}
+function locus(g,tip) {
+  if(g.kind==='line')return {kind:'line',origin:add(g.a,mul(axis(primitiveAxis(g,0)),tip*.75)),direction:axis(primitiveAxis(g,0)-alpha)};
+  const a=g.radius-tip*.75*Math.sign(g.sweep)*Math.sin(alpha),b=tip*.75*Math.sign(g.sweep)*Math.cos(alpha);
+  return {kind:'circle',center:g.center,radius:Math.hypot(a,b),phase:Math.atan2(b,a)};
+}
+function intersections(a,b) {
+  if(a.kind==='circle'&&b.kind==='line')return intersections(b,a);
+  if(a.kind==='line'&&b.kind==='circle') {
+    const delta=[a.origin[0]-b.center[0],a.origin[1]-b.center[1]],dot=delta[0]*a.direction[0]+delta[1]*a.direction[1];
+    const discriminant=dot*dot-delta[0]**2-delta[1]**2+b.radius**2;
+    if(discriminant<0)throw new Error('Illustrated loci do not meet');
+    return [-1,1].map(sign=>add(a.origin,mul(a.direction,-dot+sign*Math.sqrt(discriminant))));
+  }
+  if(a.kind!=='circle'||b.kind!=='circle')throw new Error('This figure requires at least one curved arm');
+  const delta=[b.center[0]-a.center[0],b.center[1]-a.center[1]],distance=Math.hypot(...delta),direction=mul(delta,1/distance);
+  const along=(a.radius**2-b.radius**2+distance**2)/(2*distance),heightSquared=a.radius**2-along**2;
+  if(heightSquared<0)throw new Error('Illustrated circles do not meet');
+  const foot=add(a.center,mul(direction,along)),normal=[-direction[1],direction[0]];
+  return [-1,1].map(sign=>add(foot,mul(normal,sign*Math.sqrt(heightSquared))));
+}
+function virtualStation(g,tipLocus,joint,reference) {
+  if(g.kind==='line')return (joint[0]-tipLocus.origin[0])*tipLocus.direction[0]+(joint[1]-tipLocus.origin[1])*tipLocus.direction[1];
+  const theta=Math.atan2(joint[1]-g.center[1],joint[0]-g.center[0])-tipLocus.phase;
+  const referenceAngle=g['start-angle']+Math.sign(g.sweep)*reference/g.radius;
+  return reference+Math.sign(g.sweep)*g.radius*wrap(theta-referenceAngle);
+}
+const advance=(g,chord)=>g.kind==='line'?chord:2*g.radius*Math.asin(chord/(2*g.radius));
+export function illustratedCorner(caseId) {
+  const primitives=variant(caseId).route.primitives,[incoming,outgoing]=primitives;
+  const lengths=primitives.map(primitiveLength),loci=[locus(incoming,-1),locus(outgoing,1)],vertex=primitivePoint(incoming,lengths[0]);
+  const roots=intersections(...loci).sort((a,b)=>Math.hypot(a[0]-vertex[0],a[1]-vertex[1])-Math.hypot(b[0]-vertex[0],b[1]-vertex[1]));
+  const joint=roots[0],virtual=[virtualStation(incoming,loci[0],joint,lengths[0]),virtualStation(outgoing,loci[1],joint,0)];
+  const steps=primitives.map((g,i)=>{
+    const low=Math.max(advance(g,2.7),i===0?virtual[i]-lengths[i]:-virtual[i]);
+    const high=Math.min(advance(g,3.3),i===0?virtual[i]:lengths[i]-virtual[i]);
+    if(low>high)throw new Error('No permitted illustrated corner step');
+    return Math.max(low,Math.min(high,advance(g,3)));
+  });
+  const stations=primitives.map((g,i)=>{
+    const result=[];
+    for(let n=0;n<3;n++) {
+      const station=virtual[i]+(i===0?-1:1)*(steps[i]+n*advance(g,3));
+      if(station>=-1e-8&&station<=lengths[i]+1e-8)result.push(station);
+    }
+    return result;
+  });
+  return {primitives,virtual,steps,stations,joint};
+}
+function curvedCornerScene(caseId,name,title) {
+  const model=illustratedCorner(caseId),{primitives,virtual,steps,stations,joint}=model;
+  const view=caseId==='J08'?{x:320,y:190,scale:21}:{x:365,y:90,scale:27};
+  const base=[];
+  for(const [i,g] of primitives.entries()) {
+    const low=i===0?stations[i].at(-1):0,high=i===0?primitiveLength(g):stations[i].at(-1);
+    for(let n=0;n<60;n++)base.push(worldLine(primitivePoint(g,lerp(low,high,n/60)),primitivePoint(g,lerp(low,high,(n+1)/60)),view));
+    const endpoint=i===0?primitiveLength(g):0;
+    if(virtual[i]<0||virtual[i]>primitiveLength(g))for(let n=0;n<20;n++)
+      base.push(worldLine(primitivePoint(g,lerp(endpoint,virtual[i],n/20)),primitivePoint(g,lerp(endpoint,virtual[i],(n+1)/20)),view,'extension',guideInk,1,true));
+  }
+  const s=scene(name,title,caseId);frame(s,base,90,'arms');
+  for(let n=0;n<=24;n++) {
+    const elements=primitives.flatMap((g,i)=>{
+      const station=virtual[i]+(i===0?-1:1)*1.5*(1-ease(n/24));
+      return opening(primitivePoint(g,station),primitiveAxis(g,station),view,{virtual:true});
+    });
+    frame(s,[...base,...elements],5,'tip-construction');
+  }
+  let result=[...base,...primitives.flatMap((g,i)=>opening(primitivePoint(g,virtual[i]),primitiveAxis(g,virtual[i]),view,{virtual:true}))];
+  frame(s,result,120,'tips-meet');result=[...result,hole(joint,view)];frame(s,result,100,'shared-hole');
+  for(let n=0;n<3;n++) {
+    for(const [i,g] of primitives.entries())if(stations[i][n]!==undefined) {
+      const station=stations[i][n];
+      result.push(...opening(primitivePoint(g,station),primitiveAxis(g,station),view,{marked:n===0&&Math.abs(steps[i]-advance(g,3))>1e-8}));
+    }
+    frame(s,[...result],45,'real-neighbours');
+  }
+  const selected=caseId==='J08'?1:0,g=primitives[selected],a=primitivePoint(g,virtual[selected]),b=primitivePoint(g,stations[selected][0]);
+  const gap=Math.hypot(a[0]-b[0],a[1]-b[1]);
+  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:35));
+  return finish(s,result);
+}
+
+export function createScenes() {
+  return [...pitchScenes(),curveScene(),landmarkScene(),cornerScene(),smoothScene(),junctionScene(),clearanceScene(),
+    noFitScene(),closureScene(),matchedScene(),
+    curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
+    curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
+    curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step')];
+}
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 const n=value=>Number(value.toFixed(9));

@@ -19,7 +19,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `source/install-ribbon.ps1`, `AUTOSTITCH.bmp` | Home / Annotations launcher and icon |
 | `AUTOSTITCH.odcl`, `Autostitch.Events.dll` | Distributed runtime assets; rebuild with `build-plugin.ps1` |
 | `package.ps1` | Package a clean Git revision into `output/release/Autostitch-V22.zip` |
-| `docs/` | Glossary, axioms, mathematics, junctions, limitations and pitch outline |
+| `docs/` | Glossary, axioms, mathematics, junctions, limitations, `PITCH_skeleton.md` outline and `PITCH_authored.md` prose |
 | `examples/README.md`, `examples/demo.md` | Example inventory, dependency map and exact reproduction/export commands |
 | `examples/demo.lsp`, `examples/{emblem,fills,banner}.lsp` | Native loader and complete artwork recipes |
 | `examples/demo-export.lsp`, `examples/render-demos.ps1` | Actual drawing export and SVG/PNG rendering |

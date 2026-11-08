@@ -1,6 +1,6 @@
 # Illustrated examples
 
-Supporting figures for [the pitch](../../docs/PITCH.md). Explanation belongs in the document; the figures show the geometry changing. These are planning illustrations, not a punching order: proposed openings can move before the layout is accepted.
+Supporting figures for [the pitch](../../docs/PITCH_skeleton.md). Explanation belongs in the document; the figures show the geometry changing. These are planning illustrations, not a punching order: proposed openings can move before the layout is accepted.
 
 ## The problem
 
@@ -30,41 +30,75 @@ All four use `S02`: the same $30.5\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, 
 
 ## Axioms in geometry
 
-### Follow the guide; keep the slit profile ? A1?A3
+### Follow the guide; keep the slit profile: A1-A3
 
 A slit follows the local tangent without changing length or lean. Pitch is a direct chord between centres, not distance along the curve. `A01`.
 
 ![Slit orientation follows the curve; pitch is a chord](assets/axiom-curve.gif)
 
-### Reserve a landmark pair ? A4, A5, A7
+### Reserve a landmark pair: A4, A5, A7
 
 Place a nominal gap across the reference first. Keep that pair fixed while fitting the remaining spans. There is no opening at L1. `F02`.
 
 ![A landmark protects its nominal pair while the surrounding spans are fitted](assets/axiom-landmark.gif)
 
-### Construct the corner hole ? A6
+### Construct the corner hole: A6
 
 The selected tips of two virtual slits meet at one round hole. Place the real neighbours one corner step away; the virtual slits remain dashed construction. `J02`.
 
 ![Virtual slit tips locate a shared corner hole](assets/axiom-corner.gif)
 
-### Share the smooth join ? A8
+### Share the smooth join: A8
 
 The straight and curved portions use one slit at their common tangent. Revealing both portions does not add a second opening there. `A05`.
 
 ![Straight and curved portions share one slit](assets/axiom-smooth.gif)
 
-### Share the branching junction ? A9
+### Share the branching junction: A9
 
 Reserve one round hole and its nominal neighbours before filling the arms. `ILL-JUNCTION`.
 
 ![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
 
-### Check the whole layout ? A10
+### Check the whole layout: A10
 
 Both rows retain nominal pitch as their guides approach. The final arrangement is rejected because the slit profiles overlap. Light envelopes show the clearance allowance. This example specifies $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$; it is deliberately invalid. `ILL-CLEARANCE`.
 
 ![Individually valid rows collide when placed together](assets/axiom-clearance.gif)
+
+## Further model examples
+
+### No permitted fit
+
+For a $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch, two equal gaps are too long and three are too short. Reject the span rather than move its fixed ends. `ILL-NOFIT`.
+
+![No gap count fits the permitted bounds](assets/fit-rejected.gif)
+
+### Loop closure
+
+Twenty nominal chord gaps return to the reserved start. Count that opening once. `ILL-CLOSURE`.
+
+![Close the loop and reuse the start opening](assets/axiom-closure.gif)
+
+### Matched guides
+
+Solve one source, then reveal corresponding openings on its reflected copy. The copy retains the whole layout, including adjusted gaps and reflected slit axes. `ILL-MATCHED`.
+
+![One solved layout copied to a reflected guide](assets/matched-guides.gif)
+
+### Curved corners
+
+The same selected-tip construction applies to an arc/line pair and an arc/arc pair. `A03`, `A04`, nominal outer-margin variants; the fixed-range failures are separate tests.
+
+![Curved and straight arms share a corner hole](assets/corner-arc-line.gif)
+
+![Two curved arms share a corner hole](assets/corner-arc-arc.gif)
+
+### Shallow curved corner
+
+The outgoing corner step increases to approximately $3.21\,\mathrm{mm}$ to bring its neighbour onto the finite arc. `J08` detail; the full fixed-end layout is not shown.
+
+![A bounded corner adjustment keeps the neighbour on its guide](assets/corner-shallow.gif)
 
 ## Reproduce
 
@@ -93,4 +127,4 @@ These are analytic explanations, not native CAD exports. The fit selector is the
 - Use movement to explain construction and decisions; do not merely fade in a finished infographic.
 - Animation is the primary example. Keep a still fallback and editable vector elements.
 
-Remaining examples: shallow and curved corners, bounded no-fit rejection, loop closure and matched guides. Keep them small; composite artwork belongs later in the pitch.
+Remaining: native editing and regeneration, and broader same-input comparisons of placement policies on curved and connected guides.

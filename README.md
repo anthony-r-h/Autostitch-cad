@@ -96,6 +96,6 @@ Use the relevant demo for visual checks, then run the automated tests affected b
 - [Junction construction](docs/JUNCTIONS.md)
 - [Geometric limits and dependencies](docs/LIMITS.md)
 - [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [axiom coverage](tests/AXIOM_AUDIT.md)
-- [Long-form pitch outline](docs/PITCH.md)
+- [Long-form pitch outline](docs/PITCH_skeleton.md)
 - [Repository and development instructions](AGENTS.md)
 - [Why this exists](docs/WHY-THIS-EXISTS.md)

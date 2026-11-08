@@ -109,6 +109,60 @@ for(const frame of scenes.find(s=>s.name==='axiom-clearance').frames) {
   if(firstSlit>=0)assert(frame.elements.slice(firstSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
 }
 
+assert.equal(selectFit({D:7,p:3}),null);
+const rejected=slits('fit-rejected',{x:160,y:190,scale:40});
+assert.equal(rejected.length,2);near(dist(rejected[0].center,rejected[1].center),7);
+assert.equal(readSvg('fit-rejected').elements.filter(e=>e.class==='rejected').length,2);
+const candidates=scenes.find(s=>s.name==='fit-rejected').frames.filter(f=>f.stage==='candidate');
+assert.deepEqual(candidates.map(f=>f.elements.filter(e=>e.kind==='proposal').length),[1,2]);
+assert(7/2>3.3&&7/3<2.7);
+
+const closure=slits('axiom-closure',{x:300,y:187.5,scale:13});
+assert.equal(closure.length,20);
+for(const [i,s] of closure.entries()) {
+  near(dist(s.center,closure[(i+1)%20].center),3);
+  near(Math.hypot(...s.center),3/(2*Math.sin(Math.PI/20)));
+}
+assert.equal(new Set(closure.map(s=>s.center.map(x=>x.toFixed(6)).join(','))).size,20);
+
+const matched=readSvg('matched-guides').elements.filter(e=>e.class==='slit');
+assert.equal(matched.length,22);
+for(let i=0;i<11;i++) {
+  const a=matched[i],b=matched[i+11];
+  for(const end of ['1','2']) {near(+a['x'+end]+ +b['x'+end],600);near(+b['y'+end]- +a['y'+end],145);}
+}
+assert.equal(readSvg('matched-guides').elements.filter(e=>e.class==='adjustment-mark').length,12);
+
+for(const [caseId,name] of [['A03','corner-arc-line'],['A04','corner-arc-arc'],['J08','corner-shallow']]) {
+  const v=catalog.geometry.find(c=>c.id===caseId).variants.find(v=>v.pitch===3);
+  const view=caseId==='J08'?{x:320,y:190,scale:21}:{x:365,y:90,scale:27};
+  const J=circle(name,view),virtuals=slits(name,view,'virtual'),real=slits(name,view);
+  near(dist(virtuals[0].a,J),0);near(dist(virtuals[1].b,J),0);
+  const groups=[[],[]];
+  for(const slit of real) {
+    const onArm=v.route.primitives.findIndex(g=>{
+      if(g.kind==='arc'){
+        const theta=Math.atan2(slit.center[1]-g.center[1],slit.center[0]-g.center[0]);
+        const expected=theta+Math.sign(g.sweep)*Math.PI/2+alpha;
+        const advance=Math.sign(g.sweep)*Math.atan2(Math.sin(theta-g['start-angle']),Math.cos(theta-g['start-angle']));
+        return Math.abs(dist(slit.center,g.center)-g.radius)<1e-6&&Math.abs(Math.sin(slit.angle-expected))<1e-6&&advance>=-1e-6&&advance<=Math.abs(g.sweep)+1e-6;
+      }
+      const d=[g.b[0]-g.a[0],g.b[1]-g.a[1]],q=[slit.center[0]-g.a[0],slit.center[1]-g.a[1]];
+      const station=(d[0]*q[0]+d[1]*q[1])/Math.hypot(...d);
+      return Math.abs(d[0]*q[1]-d[1]*q[0])/Math.hypot(...d)<1e-6&&Math.abs(Math.sin(slit.angle-Math.atan2(d[1],d[0])-alpha))<1e-6&&station>=-1e-6&&station<=Math.hypot(...d)+1e-6;
+    });
+    assert(onArm>=0,`${name} slit left its arm`);groups[onArm].push(slit.center);
+  }
+  assert(groups.every(group=>group.length>=2));
+  for(let i=0;i<2;i++) {
+    groups[i].sort((a,b)=>dist(a,virtuals[i].center)-dist(b,virtuals[i].center));
+    const step=dist(groups[i][0],virtuals[i].center);bounded([step]);
+    if(caseId==='J08')near(step,v.expected.cornerSteps[i]);else near(step,3);
+    for(let j=1;j<groups[i].length;j++)near(dist(groups[i][j-1],groups[i][j]),3);
+  }
+  if(caseId==='J08'){near(dist(J,v.expected.hole),0);assert.equal(readSvg(name).elements.filter(e=>e.class==='adjustment-mark').length,2);}
+}
+
 for(const s of scenes) {
   const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
   // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
@@ -121,7 +175,7 @@ for(const s of scenes) {
   const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));
   assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
   const source=readSvg(s.name).source;
-  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1)$/.test(match[1]),'Prose belongs outside the figure');
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s)$/.test(match[1]),'Prose belongs outside the figure');
   for(const f of s.frames)for(const e of f.elements) {
     for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
   }

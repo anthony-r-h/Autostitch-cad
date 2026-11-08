@@ -5,7 +5,7 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 | Demo | Drawing | Contents / status |
 | --- | --- | --- |
 | Fill samples | [fills.dwg](examples/demos/fills.dwg) | Concentric circles, branching maze, diamond quilt and flow with generated stitches. [Qualification](tests/QUALIFICATION.md). |
-| can / YOU / really | [can-you-really.dwg](examples/demos/can-you-really.dwg) | Script outer rows and outlined YOU; lettering study at 600 by 960 px. Stitch fitting and background design are pending; reserve a 6 mm clear band. |
+| can / YOU / really? | [can-you-really.dwg](examples/demos/can-you-really.dwg) | Script outer rows and outlined YOU; lettering study at 600 by 960 px. Stitch fitting and background design are pending; reserve a 6 mm clear band. |
 | Emblem | [emblem.dwg](examples/demos/emblem.dwg) | Stitched AUTO Stitch with three concentric rings interrupted around a clear lettering border. |
 
 ## Reproduce in BricsCAD

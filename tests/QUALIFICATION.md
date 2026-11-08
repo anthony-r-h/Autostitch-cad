@@ -4,7 +4,7 @@ Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only
 
 ## Portrait lettering study: 2026-11-08
 
-- `ASTBANNERDEMO` creates 20 editable lettering guides on a $160\times256\,\mathrm{mm}$ page. Both script rows share a scale; YOU uses the emblem's outlined style.
+- `ASTBANNERDEMO` creates 22 editable lettering guides on a $160\times256\,\mathrm{mm}$ page. The final row includes a question mark and a horizontal e crossbar; YOU uses the emblem's outlined style.
 - Native generation and save/reopen pass. Text is centred on the page, with room for a $6\,\mathrm{mm}$ clear band. The $600\times960$ px export shows guides only; no stitch-fit result is claimed.
 - Evidence: `output/native/banner-lettering-check.txt` and `banner-lettering-reopen.txt`.
 

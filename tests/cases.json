@@ -8393,7 +8393,7 @@
     },
     {
       "id": "ART-D",
-      "description": "Portrait can / YOU / really lettering study",
+      "description": "Portrait can / YOU / really? lettering study",
       "drawing": "examples/demos/can-you-really.dwg",
       "source": "examples/banner.lsp",
       "exports": [
@@ -8403,7 +8403,7 @@
       "views": [
         {
           "name": "BANNER",
-          "description": "Centred script can and really around outlined YOU"
+          "description": "Centred script can and really? around outlined YOU"
         }
       ],
       "coverage": [
@@ -8411,7 +8411,7 @@
         "Emblem-style script and outlined lettering",
         "600 by 960 pixel artwork preview"
       ],
-      "expected": "20 editable lettering polylines; page and text centred. Lettering artwork only: stitching and background remain pending.",
+      "expected": "22 editable lettering polylines; page and text centred. Lettering artwork only: stitching and background remain pending.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 256,
@@ -8421,7 +8421,7 @@
         "words": [
           "can",
           "YOU",
-          "really"
+          "really?"
         ],
         "styles": [
           "script",

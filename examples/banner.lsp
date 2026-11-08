@@ -17,7 +17,8 @@
       (ast:show-stroke '((0 15 -0.414213562373095) (9 24 -0.414213562373095)
                         (18 15)) nil)))
     ((= letter "e") (list
-      (ast:show-stroke '((2 12) (18 12 1.0) (0 12 0.414213562373095)
+      ;; Counter the row's rotation so the crossbar stays horizontal.
+      (ast:show-stroke '((2 8.59909501327965) (18 12 1.0) (0 12 0.414213562373095)
                         (12 0 0.414213562373095) (24 12)) nil)))
     ((= letter "l") (list
       (ast:show-stroke '((-6 0) (12 39)) nil)
@@ -26,7 +27,11 @@
     ((= letter "y") (list
       (ast:show-stroke '((0 24) (0 9 0.414213562373095)
                         (9 0 0.414213562373095) (18 9)) nil)
-      (ast:show-stroke '((18 24) (18 -9 -1.0) (0 -9) (0 -6)) nil)))))
+      (ast:show-stroke '((18 24) (18 -9 -1.0) (0 -9) (0 -6)) nil)))
+    ((= letter "?") (list
+      (ast:show-stroke '((0 30 -0.414213562373095) (10 40 -0.414213562373095)
+                        (20 30 -0.414213562373095) (10 20) (10 12)) nil)
+      (ast:show-stroke '((8.5 3 1.0) (11.5 3 1.0)) T)))))
 
 (defun ast:banner-outline-y ()
   (list (ast:show-stroke '((0 57.6) (9 57.6) (16 36) (23 57.6)
@@ -35,8 +40,8 @@
 (setq ast:banner-lettering-layout
   '(("can" 0.84 -12.0 (("c" 0.0) ("a" 32.0) ("n" 72.0)))
     ("YOU" 1.0 0.0 (("Y" 0.0) ("O" 48.0) ("U" 91.6)))
-    ("really" 0.84 -12.0
-      (("r" 0.0) ("e" 23.0) ("a" 52.0) ("l" 94.0) ("l" 115.0) ("y" 135.0)))))
+    ("really?" 0.74 -12.0
+      (("r" 0.0) ("e" 23.0) ("a" 52.0) ("l" 94.0) ("l" 115.0) ("y" 135.0) ("?" 165.0)))))
 
 (defun ast:banner-poly (stroke origin layer / data point)
   (setq data (list '(0 . "LWPOLYLINE") '(100 . "AcDbEntity") (cons 8 layer) '(370 . 30)

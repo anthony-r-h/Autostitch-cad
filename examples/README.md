@@ -1,5 +1,7 @@
 # Stitch specimen
 
+[New artwork options: quilting and portrait lettering](studies/README.md).
+
 Open [Autostitch-showcase.dwg](Autostitch-showcase.dwg). Save a copy before experimenting.
 
 Three named views: **ROUND**, **ANGULAR**, **SQUARE**. Use BricsCAD's View Manager to switch. All use a $3\,\mathrm{mm}$ pitch: 51 guides, 30 letters, 32 stitch blocks and 28 independent sources.
@@ -46,6 +48,12 @@ Adjusted spacing, round holes and dashed virtual slits appear where required. Th
 ## Artwork first
 
 In a new empty drawing, load the plugin and `showcase.lsp`, then run **ASTSHOWCASEART**. It creates the square artwork without fitting stitches. Review the guides, then **ASTSHOWCASEREGEN** fits those exact guides. **ASTSHOWCASEARTEXPORT** writes `output/native/showcase-art.jsonl` for rendering the guide proof.
+
+### Centred three-circle study
+
+[Artwork](autostitch-emblem-study.png) · [Editable DWG](Autostitch-emblem-study.dwg). The circles are centred vertically on the lettering and create 21 crossing landmarks. This is an unstitched design proposal: six of its 12 stitch lines do not yet fit at $3\,\mathrm{mm}$ pitch. The validated specimen above is unchanged.
+
+Run **ASTSHOWCASEARTMORE** in an empty drawing to reproduce the study. Render its artwork export with `-SquareCenterY 7.07097512664247`.
 
 ## Reproduce
 

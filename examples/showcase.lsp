@@ -143,9 +143,10 @@
   (setq fill (entlast))
   (entmod (subst '(8 . "SHOWCASE_PATTERN") (assoc 8 (entget fill)) (entget fill)))
   (ast:show-layer "SHOWCASE_CIRCLES" 7 T)
-  (foreach radius '(114.0 100.5)
+  (foreach radius (if ast:show-circle-radii ast:show-circle-radii '(114.0 100.5))
     (setq circles (cons (entmakex (list '(0 . "CIRCLE") '(8 . "SHOWCASE_CIRCLES")
-      '(370 . 13) '(10 461.0 15.0 0.0) (cons 40 radius))) circles)))
+      '(370 . 13) (cons 10 (list 461.0 (if ast:show-circle-y ast:show-circle-y 15.0) 0.0))
+      (cons 40 radius))) circles)))
   (ast:show-circle-landmarks guides circles settings)
   (if (not ast:show-art-only)
     (foreach root roots
@@ -160,6 +161,10 @@
   (setq ast:show-art-only T)
   (ast:show-square)
   (princ "\nArtwork created without fitting stitches. ASTSHOWCASEREGEN fits it when ready.") (princ))
+(defun c:ASTSHOWCASEARTMORE (/ ast:show-circle-radii ast:show-circle-y)
+  ;; Centre on the lettering's actual vertical bounds; keep this proposal unstitched.
+  (setq ast:show-circle-radii '(110.0 95.0 80.0) ast:show-circle-y 7.07097512664247)
+  (c:ASTSHOWCASEART))
 (defun c:ASTSHOWCASEBUILD (/ ast:show-masters ast:show-report ast:show-height result master)
   (ast:cad-require (null (ssget "_X" '((0 . "LINE,ARC,CIRCLE,LWPOLYLINE,INSERT"))))
     "Build the specimen in a new empty drawing.")

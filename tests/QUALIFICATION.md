@@ -2,6 +2,13 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Artwork studies: 2026-11-08
+
+- Added a centred three-circle emblem, three quilting options and two portrait lettering options. These are guide drawings for review, not qualified stitch layouts.
+- Native DXF import: Quilt A has 39 guide entities; Banner D has 239 guides and 17 letter boundaries. Both retain millimetre units and the intended bounds.
+- All five generated options have matching SVG/DXF path counts, unique CAD handles, finite coordinates and correct PNG dimensions. Artwork and comparison sheets were visually reviewed.
+- Catalog validation passes with 554 IDs. Production plugin code is unchanged; the full stitch suite was not rerun. Emblem fit status is recorded in [the specimen notes](../examples/README.md#centred-three-circle-study).
+
 ## Unstitched pattern circles: 2026-11-08
 
 - Two concentric circles replace the stitched frame and registration ticks. All four lettering crossings are landmarks: three on S, one on h.

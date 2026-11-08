@@ -1,4 +1,4 @@
-﻿param([string]$InputPath, [string]$OutputFolder)
+﻿param([string]$InputPath, [string]$OutputFolder, [double]$SquareCenterY = 15.0)
 $ErrorActionPreference='Stop'
 $stitchRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 if(-not $InputPath){$InputPath=Join-Path $stitchRoot 'output/native/showcase.jsonl'}
@@ -8,7 +8,7 @@ Add-Type -AssemblyName System.Drawing
 $views=@(
  @{Name='autostitch-round';Bounds=@(-8,-12,315,52);Width=1600;Height=320;Paper='#FAF8F0'},
  @{Name='autostitch-angular';Bounds=@(-8,-102,315,-38);Width=1600;Height=320;Paper='#FAF8F0'},
- @{Name='autostitch-square';Bounds=@(333,-113,589,143);Width=600;Height=600;Paper='#F3DA49'}
+ @{Name='autostitch-square';Bounds=@(333,($SquareCenterY-128),589,($SquareCenterY+128));Width=600;Height=600;Paper='#F3DA49'}
 )
 function Number([double]$value){$value.ToString('0.#####',[Globalization.CultureInfo]::InvariantCulture)}
 foreach($view in $views){

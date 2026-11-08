@@ -8290,6 +8290,138 @@
         "Combined clearance validation includes the round-punch dot and all independent stitch lines"
       ],
       "expected": "51 guides, 32 output blocks, 28 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Eight landmarks total, including all four circle crossings (three on S, one on h). Each crossing is centred in a nominal 3 mm gap. The two circles have no generated stitching. Artwork exports before/after fitting match. Inspect all three views and validate combined emblem openings under default model settings. Boundary, mirror, ownership and Undo cases remain in focused suites."
+    },
+    {
+      "id": "ART-EMBLEM",
+      "description": "Centred three-circle emblem proposal",
+      "drawing": "examples/Autostitch-emblem-study.dwg",
+      "source": "examples/showcase.lsp",
+      "exports": [
+        "examples/autostitch-emblem-study.png",
+        "examples/autostitch-emblem-study.svg"
+      ],
+      "views": [
+        {
+          "name": "ARTWORK",
+          "description": "Centred three-circle emblem proposal"
+        }
+      ],
+      "coverage": [
+        "Vertically centred circle family",
+        "21 actual crossing landmarks",
+        "Unstitched artwork; canonical stitched specimen preserved"
+      ],
+      "expected": "Artwork review only. Native fit check currently rejects six of twelve source lines at 3 mm; do not treat this proposal as solved."
+    },
+    {
+      "id": "ART-A",
+      "description": "Square diamond quilting with curved side channels",
+      "drawing": "examples/studies/quilt-a-bolster.dxf",
+      "source": "examples/design-studies.ps1",
+      "exports": [
+        "examples/studies/quilt-a-bolster.png",
+        "examples/studies/quilt-a-bolster.svg"
+      ],
+      "views": [
+        {
+          "name": "ARTWORK",
+          "description": "Square diamond quilting with curved side channels"
+        }
+      ],
+      "coverage": [
+        "Diamond crossings",
+        "Curved panel boundaries",
+        "Paired seam guides"
+      ],
+      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. No solver pass is claimed."
+    },
+    {
+      "id": "ART-B",
+      "description": "Square diamond quilting interrupted by a sweeping ribbon",
+      "drawing": "examples/studies/quilt-b-sweep.dxf",
+      "source": "examples/design-studies.ps1",
+      "exports": [
+        "examples/studies/quilt-b-sweep.png",
+        "examples/studies/quilt-b-sweep.svg"
+      ],
+      "views": [
+        {
+          "name": "ARTWORK",
+          "description": "Square diamond quilting interrupted by a sweeping ribbon"
+        }
+      ],
+      "coverage": [
+        "Diamond crossings",
+        "S-shaped channels",
+        "Trimmed quilt field"
+      ],
+      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. No solver pass is claimed."
+    },
+    {
+      "id": "ART-C",
+      "description": "Square fan quilting with paired arcs and straight ribs",
+      "drawing": "examples/studies/quilt-c-fan.dxf",
+      "source": "examples/design-studies.ps1",
+      "exports": [
+        "examples/studies/quilt-c-fan.png",
+        "examples/studies/quilt-c-fan.svg"
+      ],
+      "views": [
+        {
+          "name": "ARTWORK",
+          "description": "Square fan quilting with paired arcs and straight ribs"
+        }
+      ],
+      "coverage": [
+        "Sweeping arcs",
+        "Radial ribs",
+        "Changing intersection spacing"
+      ],
+      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. No solver pass is claimed."
+    },
+    {
+      "id": "ART-D",
+      "description": "Portrait Can / You / Really with rounded vintage lettering",
+      "drawing": "examples/studies/banner-a.dxf",
+      "source": "examples/design-studies.ps1",
+      "exports": [
+        "examples/studies/banner-a.png",
+        "examples/studies/banner-a.svg"
+      ],
+      "views": [
+        {
+          "name": "ARTWORK",
+          "description": "Portrait Can / You / Really with rounded vintage lettering"
+        }
+      ],
+      "coverage": [
+        "10:16 portrait",
+        "Outlined Cooper Black text",
+        "Wavy shading clipped outside lettering"
+      ],
+      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. Letter boundaries are references; background guides keep 2 mm clear of text. No solver pass is claimed."
+    },
+    {
+      "id": "ART-E",
+      "description": "Portrait Can / You / Really with heavy slab-serif lettering",
+      "drawing": "examples/studies/banner-b.dxf",
+      "source": "examples/design-studies.ps1",
+      "exports": [
+        "examples/studies/banner-b.png",
+        "examples/studies/banner-b.svg"
+      ],
+      "views": [
+        {
+          "name": "ARTWORK",
+          "description": "Portrait Can / You / Really with heavy slab-serif lettering"
+        }
+      ],
+      "coverage": [
+        "10:16 portrait",
+        "Outlined Rockwell Extra Bold text",
+        "Chevron shading clipped outside lettering"
+      ],
+      "expected": "Unstitched artwork review only. Curves and junctions need preparation before stitch fitting. Letter boundaries are references; background guides keep 2 mm clear of text. No solver pass is claimed."
     }
   ]
 }

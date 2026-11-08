@@ -10,7 +10,7 @@ Lay out stitch holes from editable pattern guides. Connect guides to define a st
 4. Enter **Stitch pitch**, set endpoints or landmarks, then **Generate stitches**.
 5. Edit guides with normal CAD tools. Select a guide, editing marker or generated block to reopen it, then Generate again.
 
-To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home â†’ Annotations**, run this from the installation folder with BricsCAD open and no command active:
+To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home → Annotations**, run this from the installation folder with BricsCAD open and no command active:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\source\install-ribbon.ps1
@@ -24,13 +24,13 @@ Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with
 | --- | --- |
 | Set start / Set end | Pick where stitching begins and stops along an open guide. `Default` restores that endpoint; `WholeLine` restores both. |
 | Reverse | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
-| Front face / Back face | Identify the face shown by the drawn guide. On the source, this sets slit lean. On a linked piece, it selects the corresponding view of the source layout. |
+| Front face / Back face | Identify the face shown by the drawn guide. On the source, this sets slit lean. On a matched guide, it selects the corresponding view of the source layout. |
 | Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
 | Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
 | Connect guides | Include another guide in this stitch line and save its junctions. Creates no stitches; Generate lays out the connected guides together. Multiple intersections offer `ConnectAll`. |
 | Disconnect guide | Separate the selected guide. Generate each resulting stitch line to update its stitches. |
-| Link piece | Match this source stitch line to guides on another pattern piece. Select near the corresponding stitch start and choose the face shown. Loops request an exact snapped start point. |
-| Select source / Unlink piece | Return to the source to edit its layout, or make this piece independent. |
+| Match guide | Match this source stitch line to guides on another pattern piece. Select near the corresponding stitch start and choose the face shown. Loops request an exact snapped start point. |
+| Select source / Unlink guide | Return to the source to edit its layout, or make this guide independent. |
 | Generate stitches | Save pitch and replace the complete output in one Undo step. Failure preserves the previous output. Independently moved output returns to its guides. |
 
 Corners within a polyline are automatic. Separate guides need Connect guides; nearby pattern geometry does not connect itself.
@@ -39,13 +39,15 @@ One stitch line can contain several connected guides and has one generated outpu
 
 Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated block has the same name. The set shares one ID, shown in the palette and a small box opposite `S`; regeneration keeps that ID. At a shared start junction, the box sits slightly along the main guide. Existing drawings receive the new labels when selected; Generate updates their old output block names.
 
-## Matching pattern pieces
+## Matched guides
 
-Draw matching guides on each piece. They must have the same shape and size; their position, rotation and face may differ. Connect any junctions within each piece first, then select the source and **Link piece**. Linked pieces use the source ID with letter suffixes: `ST-10-A`, `ST-10-B`, through `Z`, then `AA`, `AB` and onward. Removing a copy does not renumber the others. Generate updates existing linked names and their blocks.
+Draw matching guides on each piece. They must have the same shape and size; their position, rotation and face may differ. Connect any junctions within each piece first, then select the source and **Match guide**. Matched guides use the source ID with letter suffixes: `ST-10-A`, `ST-10-B`, through `Z`, then `AA`, `AB` and onward. Removing a copy does not renumber the others. Generate updates existing linked names and their blocks.
 
-The source owns pitch, endpoints and landmarks. **Generate stitches** updates the source and its linked pieces together. Copies receive the complete layout, including junction holes and adjusted spacing, without fitting again. A failed match preserves all previous output. Unlink pieces before changing their guide connections. If a copy was deleted, select the source and use **Remove missing**.
+The source owns pitch, endpoints and landmarks. **Generate stitches** updates the source and its matched guides together. Copies receive the complete layout, including junction holes and adjusted spacing, without fitting again. A failed match preserves all previous output. Unlink guides before changing their guide connections. If a copy was deleted, select the source and use **Remove missing**.
 
-Front/Back describes the face represented by the supplied guides; it does not mirror CAD geometry. Changing the source face changes its slit profile and requires regeneration. A linked piece on the opposite face must match a reflection of the source guides. **Reverse** still means travel direction.
+On a child, pitch, endpoints and landmarks are read-only. Moving its complete guide set is allowed; a shape change must still match the source before generation can replace output. Native COPY of a child alone creates an independent stitch line. After native REVERSE or rebuilding a guide in the opposite direction, unlink and match it again to confirm the corresponding start.
+
+Front/Back describes the face represented by the supplied guides; it does not mirror CAD geometry. Changing the source face changes its slit profile and requires regeneration. A matched guide on the opposite face must match a reflection of the source guides. **Reverse** still means travel direction.
 
 ## Read the drawing
 
@@ -78,6 +80,12 @@ Generate updates older output to these layers. In existing drawings, merge `AUTO
 - If a source was deleted, select a surviving member or old output and choose **Remove missing lines**. Failed repair preserves the old output.
 - Copy the complete set of sources and output together to retain editability. Output copied alone is static. Partial copies cannot regenerate the originals.
 - After switching drawings, select a guide before generating.
+
+## Try it
+
+Open the [lettering specimen](examples/Autostitch-showcase.dwg): rounded and angular AUTOSTITCH, plus a square AUTO / STITCH composition. It includes curves, corners, junctions, landmarks and matched guides. [View instructions and exports](examples/README.md).
+
+Use this fixed drawing for routine visual checks, then run the automated tests affected by a change. The full catalog remains available for solver and lifecycle regression checks.
 
 ## Reference
 

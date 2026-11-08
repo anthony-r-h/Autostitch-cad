@@ -2,6 +2,14 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Matched guides and lettering specimen: 2026-11-07
+
+- Focused native suites: 52 palette, 31 matching lifecycle and seven connected matching checks passed (90 total).
+- New checks cover stale pitch drafts on children, restoring displaced child output from the source, and keeping the source selectable when a child leaves the drawing plane.
+- The fixed [specimen](../examples/README.md) generates 30 stitch blocks from 54 guides. Regeneration passed for all 24 sources; rounded, angular and square exports were inspected.
+- Reopening preserved all 54 current guides, six matched copies, six landmarks and three named views. Export rejects displaced output until regenerated.
+- Catalog: 548 stable IDs validated. The full suite was not rerun for this change.
+
 ## Spacing labels and linked IDs: 2026-11-07
 
 - All 18 native suites passed 2,014 checks. Matching save/reopen passed seven checks.

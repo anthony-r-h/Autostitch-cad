@@ -10,7 +10,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `source/autostitch-geometry.lsp` | Single-route geometry and pitch fitting; no drawing writes |
 | `source/autostitch-network.lsp` | Connections, shared openings and clearance |
 | `source/autostitch-match-geometry.lsp` | Exact guide matching and rigid/reflected layout transfer |
-| `source/autostitch-matching.lsp` | Associations between pattern pieces and atomic family generation |
+| `source/autostitch-matching.lsp` | Matched guides and atomic family generation |
 | `source/autostitch-cad.lsp` | DWG metadata, blocks, units and undoable transactions |
 | `source/autostitch-markers.lsp` | Editing markers and native-edit synchronization |
 | `source/autostitch-ui.lsp` | Palette state, picking and user messages |
@@ -20,6 +20,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `AUTOSTITCH.odcl`, `Autostitch.Events.dll` | Distributed runtime assets; rebuild with `build-plugin.ps1` |
 | `package.ps1` | Package a clean Git revision into `output/release/Autostitch-V22.zip` |
 | `docs/` | Glossary, axioms, mathematics, junctions, limitations and README outline |
+| `examples/` | Fixed lettering DWG, reproducible guide recipes, SVG/PNG exports |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
 | `output/` | Ignored generated evidence, local drawings and release packages |
@@ -41,7 +42,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 ## Process
 
 1. Identify the narrowest files and functions. State material assumptions.
-2. Run the smallest relevant check, then the affected native suites. Use `tests/QUALIFICATION.md` for commands.
+2. Run the smallest relevant check, then the affected native suites. Use the fixed `examples/Autostitch-showcase.dwg` for routine visual review. Run the full suite when the scope warrants it; see `tests/QUALIFICATION.md` for commands.
 3. Report failed commands plainly. Do not invent causes or count historical evidence as a new run.
 4. Review documentation for concise, neutral language and consistency with the implementation.
 5. Summarize changes, validation, risks and anything unverified.

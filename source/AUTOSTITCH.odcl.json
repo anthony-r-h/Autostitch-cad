@@ -303,7 +303,7 @@
           "FontSize": 10,
           "EventInvoke": 0,
           "VarName": "AUTOSTITCH/Palette/MatchingLabel",
-          "caption": "Matching pieces",
+          "caption": "Matched guides",
           "BackColor": -24,
           "BorderStyle": 0
         },
@@ -318,7 +318,7 @@
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Match",
-          "caption": "Link piece",
+          "caption": "Match guide",
           "events": {
             "Clicked": "c:ASTUIMATCH"
           }
@@ -334,7 +334,7 @@
           "FontSize": 10,
           "EventInvoke": 1,
           "VarName": "AUTOSTITCH/Palette/Unmatch",
-          "caption": "Unlink piece",
+          "caption": "Unlink guide",
           "events": {
             "Clicked": "c:ASTUIUNMATCH"
           }

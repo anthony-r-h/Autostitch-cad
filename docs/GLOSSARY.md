@@ -8,7 +8,7 @@ An editable path on which real slit centres lie, made of straight or circular **
 
 **Station** is distance along the guide from a chosen origin; on a curve, it is arc length. The **tangent** is the guide's local direction.
 
-A **matching piece** uses a source stitch line's complete hole layout on congruent guides. It is a separate pattern piece, not another arm of a junction. **Front face** and **Back face** identify the material face shown in the drawing; opposite-face copies reflect the complete layout. Travel direction remains a separate choice.
+**Matched guides** use one source stitch line's complete hole layout. A match can include a whole connected guide set on another pattern piece; it does not add an arm to a junction. **Front face** and **Back face** identify the material face shown in the drawing; opposite-face copies reflect the complete layout. Travel direction remains a separate choice.
 
 ## Slit
 

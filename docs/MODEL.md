@@ -21,7 +21,7 @@ Among feasible fits:
 
 These choices select a result within the axioms. They do not move fixed features.
 
-## Matching pieces
+## Matched guides
 
 Solve the source once. Transfer its openings and construction by an isometry:
 

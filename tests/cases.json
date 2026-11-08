@@ -7844,6 +7844,31 @@
           "id": "UI-036",
           "expected": "Matching start projection converts drawing units to millimetres",
           "sourceSymbol": "ast:ui-test-matching-registration"
+        },
+        {
+          "id": "UI-037",
+          "expected": "An externally matched copy discards its previous editable pitch draft",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-038",
+          "expected": "Generate from the newly matched copy uses source inputs despite its earlier invalid draft",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-039",
+          "expected": "The source palette detects a matching copy output moved separately from its guide",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-040",
+          "expected": "Generate from the source restores a moved matching output and leaves its guide unchanged",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-041",
+          "expected": "A child guide moved out of plane leaves its valid source selectable and both outputs intact",
+          "sourceSymbol": "ast:ui-test-matching"
         }
       ]
     },
@@ -8217,6 +8242,47 @@
           "sourceSymbol": "ast:match-reopen-tests"
         }
       ]
+    }
+  ],
+  "visualFixtures": [
+    {
+      "id": "SHOWCASE",
+      "description": "Fixed editable AUTOSTITCH lettering at 3 mm pitch; rounded, angular and square compositions.",
+      "drawing": "examples/Autostitch-showcase.dwg",
+      "source": "examples/showcase.lsp",
+      "exports": [
+        "examples/autostitch-round.svg",
+        "examples/autostitch-round.png",
+        "examples/autostitch-angular.svg",
+        "examples/autostitch-angular.png",
+        "examples/autostitch-square.svg",
+        "examples/autostitch-square.png"
+      ],
+      "views": [
+        {
+          "name": "ROUND",
+          "description": "Rounded AUTOSTITCH banner."
+        },
+        {
+          "name": "ANGULAR",
+          "description": "Pointed A, square corners and bevelled C."
+        },
+        {
+          "name": "SQUARE",
+          "description": "Condensed AUTO / STITCH; 600 by 600 PNG."
+        }
+      ],
+      "coverage": [
+        "A: curved/pointed crown and two crossbar junctions",
+        "U: paired landmarks and straight-to-curve or square transitions",
+        "T: T junction and translated matched guides",
+        "O: closed loop",
+        "S: reverse curvature and alternating corners",
+        "I/H: connected sets with two T junctions",
+        "C: open curve and bevel corners",
+        "Adjusted gaps, round holes, virtual slits and thread display"
+      ],
+      "expected": "54 guides, 30 output blocks, 24 source stitch lines; ASTSHOWCASEREGEN reports zero failures. Inspect all three named views. Automated boundary, mirror, ownership and Undo cases remain in their focused suites."
     }
   ]
 }

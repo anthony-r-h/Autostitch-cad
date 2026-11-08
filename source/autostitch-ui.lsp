@@ -68,9 +68,10 @@
           (setq draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text")
                 dirty (not (equal draft astui:*pitch-text*))
                 selected (if (>= astui:*index* 0) (nth astui:*index* astui:*landmarks*)))
-          ;; Undo and external edits own persisted inputs; only an actual text draft survives.
+          ;; Copies use source inputs; only editable guides retain an unsaved draft.
           (ast:ui-adopt result)
-          (if dirty (ast:ui-put "Pitch" "Text" draft))
+          (if (and dirty (not (eq 'copy (ast:cad-get 'match-role result))))
+            (ast:ui-put "Pitch" "Text" draft))
           (if selected
             (progn
               (setq index (vl-position selected astui:*landmarks*)
@@ -171,17 +172,17 @@
   (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Face" '("Front face" "Back face"))
   (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Face" (if (equal face -1) 1 0))
   (ast:ui-put "Face" "Enabled" (if astui:*guide* T nil))
-  (ast:ui-put "Match" "Caption" (if copy "Select source" "Link piece"))
+  (ast:ui-put "Match" "Caption" (if copy "Select source" "Match guide"))
   (ast:ui-put "Match" "Enabled" (and astui:*guide* (or (not copy) (and source (entget source)))))
   (ast:ui-put "Unmatch" "Enabled" (if (or copy (ast:cad-get 'repairable matching)) T nil))
-  (ast:ui-put "Unmatch" "Caption" (if (ast:cad-get 'repairable matching) "Remove missing" "Unlink piece"))
+  (ast:ui-put "Unmatch" "Caption" (if (ast:cad-get 'repairable matching) "Remove missing" "Unlink guide"))
   (ast:ui-put "MatchingInfo" "Caption"
-    (cond ((ast:cad-get 'repairable matching) "A linked piece is missing")
+    (cond ((ast:cad-get 'repairable matching) "A matched guide is missing")
           (copy (if (and source (entget source))
                   (strcat "Uses layout from " (ast:cad-stitch-id source)) "Source guide is missing"))
           ((ast:cad-get 'targets matching)
            (strcat "Source for " (itoa (length (ast:cad-get 'targets matching)))
-             (if (= 1 (length (ast:cad-get 'targets matching))) " linked piece" " linked pieces")))
+             (if (= 1 (length (ast:cad-get 'targets matching))) " matching stitch line" " matching stitch lines")))
           (T "")))
   (if copy
     (foreach control '("Pitch" "Start" "End" "Reverse" "Add" "Delete" "Landmarks")
@@ -386,7 +387,7 @@
         (if (eq 'copy (ast:cad-get 'role info))
           (if (ast:cad-get 'source info)
             (progn (ast:ui-adopt (ast:cad-read (ast:cad-get 'source info)))
-              (ast:ui-status "Source selected. Its settings control the linked pieces.")))
+              (ast:ui-status "Source selected. Its settings control the matched guides.")))
           (progn
             (ast:ui-status "Select the matching guide near the position corresponding to S. A loop's exact start is picked next.")
             (setq selected (entsel "\nSelect matching guide near its corresponding stitch start: "))
@@ -408,7 +409,7 @@
                         (if (ast:ui-result result)
                           (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
                             (ast:ui-put "Pitch" "Text" draft)
-                            (ast:ui-status "Piece linked. Generate stitches to update the matching layouts."))))))))
+                            (ast:ui-status "Guide matched. Generate stitches to update the matching layouts."))))))))
               (ast:ui-status "Link cancelled.")))))))))
 
 (defun c:ASTUIUNMATCH ()
@@ -418,8 +419,8 @@
                    result (ast:match-unlink astui:*guide*))
         (if (ast:ui-result result)
           (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
-            (ast:ui-status (if repairing "Missing pieces removed. Generate stitches to update the remaining pieces."
-              "Piece unlinked. Its stitch settings can now be edited independently.")))))))))
+            (ast:ui-status (if repairing "Missing guides removed. Generate stitches to update the remaining pieces."
+              "Guide unlinked. Its stitch settings can now be edited independently.")))))))))
 
 (defun ast:ui-range-save (key point pitch / anchor-key settings attachment station total lower upper)
   (if (and (cdr (assoc 'closed astui:*route*)) (= key 'end))

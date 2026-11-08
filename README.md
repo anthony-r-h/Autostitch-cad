@@ -24,10 +24,13 @@ Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with
 | --- | --- |
 | Set start / Set end | Pick where stitching begins and stops along an open guide. `Default` restores that endpoint; `WholeLine` restores both. |
 | Reverse | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
+| Front face / Back face | Identify the face shown by the drawn guide. On the source, this sets slit lean. On a linked piece, it selects the corresponding view of the source layout. |
 | Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
 | Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
 | Connect guides | Include another guide in this stitch line and save its junctions. Creates no stitches; Generate lays out the connected guides together. Multiple intersections offer `ConnectAll`. |
 | Disconnect guide | Separate the selected guide. Generate each resulting stitch line to update its stitches. |
+| Link piece | Match this source stitch line to guides on another pattern piece. Select near the corresponding stitch start and choose the face shown. Loops request an exact snapped start point. |
+| Select source / Unlink piece | Return to the source to edit its layout, or make this piece independent. |
 | Generate stitches | Save pitch and replace the complete output in one Undo step. Failure preserves the previous output. Independently moved output returns to its guides. |
 
 Corners within a polyline are automatic. Separate guides need Connect guides; nearby pattern geometry does not connect itself.
@@ -36,6 +39,14 @@ One stitch line can contain several connected guides and has one generated outpu
 
 Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated block has the same name. The set shares one ID, shown in the palette and a small box opposite `S`; regeneration keeps that ID. At a shared start junction, the box sits slightly along the main guide. Existing drawings receive the new labels when selected; Generate updates their old output block names.
 
+## Matching pattern pieces
+
+Draw matching guides on each piece. They must have the same shape and size; their position, rotation and face may differ. Connect any junctions within each piece first, then select the source and **Link piece**. Each piece keeps its own stitch ID.
+
+The source owns pitch, endpoints and landmarks. **Generate stitches** updates the source and its linked pieces together. Copies receive the complete layout, including junction holes and adjusted spacing, without fitting again. A failed match preserves all previous output. Unlink pieces before changing their guide connections. If a copy was deleted, select the source and use **Remove missing**.
+
+Front/Back describes the face represented by the supplied guides; it does not mirror CAD geometry. Changing the source face changes its slit profile and requires regeneration. A linked piece on the opposite face must match a reflection of the source guides. **Reverse** still means travel direction.
+
 ## Read the drawing
 
 | Mark | Meaning |
@@ -43,6 +54,7 @@ Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated bl
 | Slit or filled circle | Physical opening. |
 | Thin connecting line | Thread display. |
 | Capital `I` at a slit | An adjacent gap or its corner construction step differs from nominal pitch; place it individually. |
+| Small spacing number | Actual adjusted spacing in millimetres, on nonprinting `AUTOSTITCH_UI`. At an adjusted corner, this measures the virtual-to-real step. |
 | Dashed virtual slits | Construction for a sharp corner's round hole. |
 | `S`, `E`, arrow | Start, end and direction. |
 | `J` / `L#` | Junction / landmark. |
@@ -54,7 +66,7 @@ Slits and `I` marks use $0.30\,\mathrm{mm}$ strokes; thread and construction use
 | --- | --- | --- |
 | `AUTOSTITCH` | Slits, filled round holes, spacing `I` marks and dashed virtual slits | Yes |
 | `AUTOSTITCH_STITCHES` | Thread connections | Yes |
-| `AUTOSTITCH_UI` | Start/end, direction, junctions, landmarks and boxed IDs | No |
+| `AUTOSTITCH_UI` | Start/end, direction, junctions, landmarks, boxed IDs and adjusted spacing values | No |
 
 Generate updates older output to these layers. In existing drawings, merge `AUTOSTITCH_NOTES` and `AUTOSTITCH_CONSTRUCTION` into `AUTOSTITCH` to remove the old layers, including their use in retained block definitions.
 

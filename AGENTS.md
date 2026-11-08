@@ -9,6 +9,8 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `AUTOSTITCH.lsp` | Loader and command registration |
 | `source/autostitch-geometry.lsp` | Single-route geometry and pitch fitting; no drawing writes |
 | `source/autostitch-network.lsp` | Connections, shared openings and clearance |
+| `source/autostitch-match-geometry.lsp` | Exact guide matching and rigid/reflected layout transfer |
+| `source/autostitch-matching.lsp` | Associations between pattern pieces and atomic family generation |
 | `source/autostitch-cad.lsp` | DWG metadata, blocks, units and undoable transactions |
 | `source/autostitch-markers.lsp` | Editing markers and native-edit synchronization |
 | `source/autostitch-ui.lsp` | Palette state, picking and user messages |

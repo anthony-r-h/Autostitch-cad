@@ -2,6 +2,15 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Matching pieces and face views: 2026-11-07
+
+- All 18 native suites passed 2,007 checks, including 488 exact-mapping checks, 31 matching lifecycle/connected-piece checks and 47 palette checks.
+- Matching save/reopen passed seven checks: stable IDs, both faces, regeneration and missing-copy repair.
+- Native MOVE, STRETCH, ERASE, callback rollback and Undo/Redo passed 61 checks.
+- Inspected the palette and adjusted-spacing labels in BricsCAD. The example drawing includes straight and curved matching pieces and a connected corner with a landmark.
+- Catalog: 535 stable IDs validated. Mapping uses the existing solver unchanged; the gallery and arithmetic oracle were not rerun.
+- An initial closed-loop comparison failed on floating-point error when reconstructing slit lengths from DWG endpoints. The CAD comparison now allows $10^{-7}\,\mathrm{mm}$ in position and $10^{-8}\,\mathrm{mm}$ in slit length; production geometry tolerances are unchanged.
+
 ## Shallow junction boundaries: 2026-11-07
 
 - Geometry: 1,135 checks passed, including 91 new shallow-curve and boundary checks.
@@ -82,6 +91,6 @@ With a saved disposable `output/native/Autostitch-native.dwg` open in the existi
 Get-Content ./output/native/geometry-oracle.txt
 ```
 
-Omit `-IncludeUi` to run only the 14 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
+Omit `-IncludeUi` to run only the 17 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
 
 Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Geometric limits belong in [limits](../docs/LIMITS.md).

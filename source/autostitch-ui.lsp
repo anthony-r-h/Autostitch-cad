@@ -98,6 +98,8 @@
                 (ast:ui-status "Selected guide was erased. Select a guide."))
               (if (ast:ui-ready)
                 (cond
+                  ((cdr (assoc 'match-error astui:*state*))
+                    (ast:ui-status (cdr (assoc 'match-error astui:*state*))))
                   ((cdr (assoc 'connection-conflict astui:*state*))
                     (ast:ui-status (cdr (assoc 'connection-conflict astui:*state*))))
                   ((cdr (assoc 'range-conflict astui:*state*))
@@ -124,7 +126,7 @@
         (ast:ui-result (ast:markers-ensure astui:*guide* astui:*settings*
           astui:*landmarks* astui:*factor* astui:*route*))))))
 
-(defun ast:ui-fill (/ labels index attachment total start finish closed control)
+(defun ast:ui-fill (/ labels index attachment total start finish closed control matching copy source face)
   (setq astui:*busy* T labels nil index 0)
   (foreach attachment astui:*landmarks*
     (setq index (1+ index)
@@ -162,6 +164,30 @@
           (strcat "Guide length: " (rtos (if closed total (- finish start)) 2 2) " mm"
             (if (and (not closed) (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")))))
     (ast:ui-put "Seam" "Caption" "No guide selected"))
+  (setq matching (if astui:*guide* (ast:match-info astui:*guide*))
+        copy (eq 'copy (ast:cad-get 'role matching)) source (ast:cad-get 'source matching)
+        face (if astui:*guide* (ast:cad-get 'face matching) 1))
+  (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Face")
+  (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Face" '("Front face" "Back face"))
+  (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Face" (if (equal face -1) 1 0))
+  (ast:ui-put "Face" "Enabled" (if astui:*guide* T nil))
+  (ast:ui-put "Match" "Caption" (if copy "Select source" "Link piece"))
+  (ast:ui-put "Match" "Enabled" (and astui:*guide* (or (not copy) (and source (entget source)))))
+  (ast:ui-put "Unmatch" "Enabled" (if (or copy (ast:cad-get 'repairable matching)) T nil))
+  (ast:ui-put "Unmatch" "Caption" (if (ast:cad-get 'repairable matching) "Remove missing" "Unlink piece"))
+  (ast:ui-put "MatchingInfo" "Caption"
+    (cond ((ast:cad-get 'repairable matching) "A linked piece is missing")
+          (copy (if (and source (entget source))
+                  (strcat "Uses layout from " (ast:cad-stitch-id source)) "Source guide is missing"))
+          ((ast:cad-get 'targets matching)
+           (strcat "Source for " (itoa (length (ast:cad-get 'targets matching)))
+             (if (= 1 (length (ast:cad-get 'targets matching))) " linked piece" " linked pieces")))
+          (T "")))
+  (if copy
+    (foreach control '("Pitch" "Start" "End" "Reverse" "Add" "Delete" "Landmarks")
+      (ast:ui-put control "Enabled" nil)))
+  (if (ast:cad-get 'active matching)
+    (foreach control '("Connect" "Disconnect") (ast:ui-put control "Enabled" nil)))
   (setq astui:*busy* nil))
 
 (defun ast:ui-adopt (result / markers-ready)
@@ -260,6 +286,7 @@
                     (ast:cad-put 'phase (ast:ui-global-station phase) astui:*settings*)) astui:*landmarks*)
                 (ast:ui-status "Loop starts at your selected point. Generate stitches to apply it.")))
             (ast:ui-status (cond
+              ((cdr (assoc 'match-error result)) (cdr (assoc 'match-error result)))
               ((cdr (assoc 'connection-conflict result)) (cdr (assoc 'connection-conflict result)))
               ((cdr (assoc 'range-conflict result)) (ast:ui-limits-message))
               ((and (cdr (assoc 'output result)) (cdr (assoc 'stale result)))
@@ -305,6 +332,94 @@
     (if (ast:ui-ready)
       (ast:ui-save (ast:cad-put 'reverse (not (cdr (assoc 'reverse astui:*settings*)))
         astui:*settings*) astui:*landmarks*)))))
+
+(defun c:ASTUIFACE (index text)
+  (if (not astui:*busy*)
+    (ast:ui-run '(lambda (/ result draft)
+      (if (ast:ui-ready)
+        (progn
+          (setq draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text"))
+          (setq result (ast:match-set-face astui:*guide* (if (= index 1) -1 1)))
+          (if (ast:ui-result result)
+            (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
+              (ast:ui-put "Pitch" "Text" draft)
+              (ast:ui-status "Face changed. Generate stitches to apply it."))))))))
+  (princ))
+
+(defun ast:ui-match-direction (settings source-total target-total station / start forward backward)
+  (setq start (if (ast:cad-get 'reverse settings) (ast:g-get 'end settings source-total) (ast:g-get 'start settings 0.0))
+        forward (abs (- station start)) backward (abs (- station (- target-total start))))
+  (if (not (equal forward backward 1e-7)) (list (cons 'reversed (< backward forward)))))
+(defun ast:ui-match-toward (settings total station / reversed)
+  (if (not (equal station (/ total 2.0) 1e-7))
+    (progn
+      (setq reversed (if (> station (/ total 2.0)) (if (ast:cad-get 'reverse settings) T nil)
+                       (not (ast:cad-get 'reverse settings))))
+      (list (cons 'reversed reversed)))))
+(defun ast:ui-match-station (state point)
+  (* (ast:cad-get 'factor state)
+    (vlax-curve-getDistAtPoint (ast:cad-get 'guide state)
+      (vlax-curve-getClosestPointTo (ast:cad-get 'guide state) point))))
+(defun ast:ui-match-registration (state selection-point / total station point result)
+  (if (ast:cad-get 'closed (ast:cad-get 'route state))
+    (progn
+      (ast:ui-status "Snap to the matching start on this loop. Use a pattern endpoint, intersection or start marker.")
+      (setq point (ast:ui-pick-point "\nPick the exact loop start corresponding to the source start: " nil))
+      (if point (setq result (list (cons 'phase (ast:ui-match-station state (trans point 1 0)))))))
+    (progn
+      (setq total (ast:match-total (ast:cad-get 'route state)) station (ast:ui-match-station state selection-point)
+            result (ast:ui-match-direction astui:*settings* (ast:match-total astui:*route*) total station))
+      (if (null result)
+        (progn
+          (ast:ui-status "That start does not identify a direction. Pick the guide end that stitching should head toward.")
+          (setq point (ast:ui-pick-point "\nPick the target guide end that stitching should head toward: " nil))
+          (if point (setq result (ast:ui-match-toward astui:*settings* total (ast:ui-match-station state (trans point 1 0)))))))))
+  (if (null result) (ast:ui-status (if point "The direction is still unclear. Link again and pick closer to a guide end." "Link cancelled.")))
+  result)
+
+(defun c:ASTUIMATCH ()
+  (ast:ui-run '(lambda (/ info selected target other face result registration draft)
+    (if (ast:ui-ready)
+      (progn
+        (setq info (ast:match-info astui:*guide*)
+              draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text"))
+        (if (eq 'copy (ast:cad-get 'role info))
+          (if (ast:cad-get 'source info)
+            (progn (ast:ui-adopt (ast:cad-read (ast:cad-get 'source info)))
+              (ast:ui-status "Source selected. Its settings control the linked pieces.")))
+          (progn
+            (ast:ui-status "Select the matching guide near the position corresponding to S. A loop's exact start is picked next.")
+            (setq selected (entsel "\nSelect matching guide near its corresponding stitch start: "))
+            (if selected
+              (progn
+                (setq other (ast:cad-read (if (ast:markers-guide (car selected))
+                  (ast:markers-guide (car selected)) (car selected))))
+                (if (ast:ui-result other)
+                  (progn
+                    (setq target (ast:cad-get 'guide other)
+                          registration (ast:ui-match-registration other (trans (cadr selected) 1 0)))
+                    (if registration
+                      (progn
+                        (initget "Front Back")
+                        (setq face (getkword "\nFace shown on the other piece [Front/Back] <Back>: ")
+                              face (if (equal face "Front") 1 -1)
+                              result (ast:match-link astui:*guide* target
+                                (* face (ast:cad-get 'face info)) registration))
+                        (if (ast:ui-result result)
+                          (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
+                            (ast:ui-put "Pitch" "Text" draft)
+                            (ast:ui-status "Piece linked. Generate stitches to update the matching layouts."))))))))
+              (ast:ui-status "Link cancelled.")))))))))
+
+(defun c:ASTUIUNMATCH ()
+  (ast:ui-run '(lambda (/ result repairing)
+    (if (ast:ui-ready)
+      (progn (setq repairing (ast:cad-get 'repairable (ast:match-info astui:*guide*))
+                   result (ast:match-unlink astui:*guide*))
+        (if (ast:ui-result result)
+          (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
+            (ast:ui-status (if repairing "Missing pieces removed. Generate stitches to update the remaining pieces."
+              "Piece unlinked. Its stitch settings can now be edited independently.")))))))))
 
 (defun ast:ui-range-save (key point pitch / anchor-key settings attachment station total lower upper)
   (if (and (cdr (assoc 'closed astui:*route*)) (= key 'end))
@@ -467,6 +582,7 @@
           (if (cdr (assoc 'ok state))
             (if (ast:ui-adopt state)
               (ast:ui-status (cond
+                ((cdr (assoc 'match-error state)) (cdr (assoc 'match-error state)))
                 ((cdr (assoc 'connection-conflict state)) (cdr (assoc 'connection-conflict state)))
                 ((cdr (assoc 'range-conflict state)) (ast:ui-limits-message))
                 ((cdr (assoc 'stale state)) "Generate stitches to apply your changes.")

@@ -40,7 +40,8 @@
   (if (setq folder (ast:home))
     (progn
       (setq ast:*home* folder)
-      (foreach file '("autostitch-geometry.lsp" "autostitch-network.lsp" "autostitch-cad.lsp" "autostitch-markers.lsp" "autostitch-ui.lsp")
+      (foreach file '("autostitch-geometry.lsp" "autostitch-network.lsp" "autostitch-cad.lsp" "autostitch-markers.lsp"
+                      "autostitch-match-geometry.lsp" "autostitch-matching.lsp" "autostitch-ui.lsp")
         (load (strcat folder "/source/" file)))
       (setq ast:*components-loaded* (ast:load-events folder)))
     (progn

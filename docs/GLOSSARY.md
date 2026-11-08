@@ -8,6 +8,8 @@ An editable path on which real slit centres lie, made of straight or circular **
 
 **Station** is distance along the guide from a chosen origin; on a curve, it is arc length. The **tangent** is the guide's local direction.
 
+A **matching piece** uses a source stitch line's complete hole layout on congruent guides. It is a separate pattern piece, not another arm of a junction. **Front face** and **Back face** identify the material face shown in the drawing; opposite-face copies reflect the complete layout. Travel direction remains a separate choice.
+
 ## Slit
 
 A slit is one type of **opening**; a round hole is the other. Its **axis** is the finite centreline between its tips. **Length** $\ell$ runs along that axis, **width** $w$ across it, and **lean** $\alpha$ is its signed angle to the guide tangent.

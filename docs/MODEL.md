@@ -21,6 +21,18 @@ Among feasible fits:
 
 These choices select a result within the axioms. They do not move fixed features.
 
+## Matching pieces
+
+Solve the source once. Transfer its openings and construction by an isometry:
+
+$$
+F(x)=Qx+t,\qquad Q^\mathsf{T}Q=I,\qquad\det Q\in\{-1,1\}.
+$$
+
+Rotation/translation preserves face; reflection changes face. Transform slit axes by $Q$, and transform round holes, virtual slits and adjusted-step endpoints by $F$. Distances, slit dimensions, clearance and hole correspondence remain unchanged. Copies never fit their spacing independently.
+
+Validate the complete target guides under the same map. Equal length alone is insufficient. Start correspondence fixes registration; closed guides also need a chosen phase. Regenerate text placement so annotations remain readable after reflection.
+
 ## Span fitting
 
 Let $q_s,q_e$ count protected gaps at either end, and $q=q_s+q_e$. For a positive span:

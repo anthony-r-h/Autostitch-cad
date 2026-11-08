@@ -32,6 +32,8 @@ Shallow coverage now includes:
 
 The tiny-span regression is covered: arithmetic residue around $4.44\times10^{-16}\,\mathrm{mm}$ is treated as zero, while a real $10^{-8}\,\mathrm{mm}$ span still rejects.
 
+Matching pieces preserve the source solution under a rigid or reflected transform. The mapping suite checks guide coincidence (A1), slit axes and dimensions (A2), gap distances (A3), shared openings (A8/A9), and clearance (A10). CAD checks compare the openings actually written to both blocks and cover connected pieces, landmarks, face changes, failure rollback and saved links. Copies never run a separate fit.
+
 ## Reproduce
 
 With a disposable `output/native/Autostitch-native.dwg` open:

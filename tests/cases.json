@@ -4956,13 +4956,17 @@
     "source/autostitch-network.lsp",
     "source/autostitch-cad.lsp",
     "source/autostitch-markers.lsp",
+    "source/autostitch-match-geometry.lsp",
+    "source/autostitch-matching.lsp",
     "tests/autostitch-geometry-tests.lsp",
     "tests/autostitch-network-tests.lsp",
+    "tests/autostitch-match-tests.lsp",
     "tests/autostitch-cad-tests.lsp",
     "tests/autostitch-connected-tests.lsp",
     "tests/autostitch-marker-tests.lsp",
     "tests/autostitch-host-tests.lsp",
-    "tests/autostitch-display-tests.lsp"
+    "tests/autostitch-display-tests.lsp",
+    "tests/autostitch-matching-cad-tests.lsp"
   ],
   "suites": [
     {
@@ -5894,6 +5898,461 @@
             1
           ],
           "expected": "Straight T/X: 15 degrees passes, 5 degrees rejects clearance. Curved T at 14 degrees: positive winding passes, negative winding rejects clearance. All passing arms retain a 3 mm first chord and share exactly one hole; reversing selection preserves the result."
+        }
+      ]
+    },
+    {
+      "id": "MAP",
+      "title": "Exact matching layout geometry",
+      "source": "tests/autostitch-match-tests.lsp",
+      "entrypoint": "ast:m-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Load geometry, network and matching geometry; pure tests do not modify drawings.",
+      "recipe": "Match translated, rotated and reflected lines, arcs, polylines, circles and connected groups; transfer complete solved corner and T-junction layouts.",
+      "expected": "One exact isometry matches every target guide and transforms all holes and construction without refitting. Incongruent targets reject.",
+      "checks": [
+        {
+          "id": "MAP-001",
+          "expected": "straight explicit face (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "straight explicit face "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-002",
+          "expected": "straight off-guide point preserves chosen face (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "straight off-guide point preserves chosen face "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-003",
+          "expected": "slit axis excludes translation (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "slit axis excludes translation "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-004",
+          "expected": "selected matching end determines reverse traversal and phase",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-005",
+          "expected": "reversed native line retains the chosen physical registration",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-006",
+          "expected": "line matches redundant polyline vertices",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-007",
+          "expected": "redundant source vertices match unsplit target",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-008",
+          "expected": "length change refuses without scaling",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-009",
+          "expected": "invalid face refuses",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-010",
+          "expected": "registration outside guide refuses",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-011",
+          "expected": "missing target refuses",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-012",
+          "expected": "arc quarter-turn registration",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-013",
+          "expected": "reflection reverses positive arc winding",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-014",
+          "expected": "reflection reverses negative arc winding",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-015",
+          "expected": "wrong face cannot change arc curvature",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-016",
+          "expected": "co-circular subdivisions match analytically",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-017",
+          "expected": "changed arc radius refuses",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-018",
+          "expected": "mixed line-arc polyline matches",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-019",
+          "expected": "circle registration fixes physical stitch phase",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-020",
+          "expected": "opposite circle face preserves registered start and reverses winding",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-021",
+          "expected": "circle target direction must agree with opposite face",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-022",
+          "expected": "open and closed guide topology differs",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-023",
+          "expected": "closed polyline uses selected phase rather than arbitrary entity seam",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-024",
+          "expected": "interior closed-guide registration splits analytical spans",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-025",
+          "expected": "connected group identifies reordered members under one common placement",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-026",
+          "expected": "nonregistration member detects reversed native traversal",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-027",
+          "expected": "independently displaced branch refuses",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-028",
+          "expected": "duplicate target member refuses ambiguous correspondence",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-029",
+          "expected": "source shallow corner has one known adjustment",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-030",
+          "expected": "copy preserves hole count and adjustment status (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "copy preserves hole count and adjustment status "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-031",
+          "expected": "exact transferred opening / (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "exact transferred opening "
+            },
+            [
+              "itoa",
+              "parity"
+            ],
+            {
+              "text": "/"
+            },
+            [
+              "itoa",
+              "index"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-032",
+          "expected": "rigid copy preserves physical clearance (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "rigid copy preserves physical clearance "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-033",
+          "expected": "virtual slits follow physical copy (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "virtual slits follow physical copy "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-034",
+          "expected": "construction adjustment notation follows copy (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "construction adjustment notation follows copy "
+            },
+            [
+              "itoa",
+              "parity"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-035",
+          "expected": "interval classification and coordinates / (each parameter combination)",
+          "sourceSymbol": "ast:m-tests",
+          "labelExpression": [
+            "strcat",
+            {
+              "text": "interval classification and coordinates "
+            },
+            [
+              "itoa",
+              "parity"
+            ],
+            {
+              "text": "/"
+            },
+            [
+              "itoa",
+              "index"
+            ]
+          ]
+        },
+        {
+          "id": "MAP-036",
+          "expected": "copy does not mutate the source solution",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-037",
+          "expected": "inverse reflection restores complete shallow-corner solution",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-038",
+          "expected": "shared connection identity and incidence count survive reflection",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-039",
+          "expected": "saved connection attachment geometry transforms without changing stations",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-040",
+          "expected": "actual connected T copy keeps exactly one shared round hole",
+          "sourceSymbol": "ast:m-tests"
+        },
+        {
+          "id": "MAP-041",
+          "expected": "connected T round trip retains openings and saved junction attachments",
+          "sourceSymbol": "ast:m-tests"
+        }
+      ]
+    },
+    {
+      "id": "MATCH",
+      "title": "Linked pattern piece lifecycle",
+      "source": "tests/autostitch-matching-cad-tests.lsp",
+      "entrypoint": "ast:match-cad-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing; load CAD and matching test helpers.",
+      "recipe": "Link and generate multiple faces, change source inputs, exercise mismatch and transaction failure, copy whole/partial families, delete peers and change circle phases.",
+      "expected": "Copies retain exact source hole correspondence, separate IDs and safe reciprocal ownership. Failure preserves all outputs; registration stays fixed.",
+      "checks": [
+        {
+          "id": "MATCH-001",
+          "expected": "Matching pieces saves separate stitch IDs and reciprocal ownership without creating output",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-002",
+          "expected": "Generate from a matching copy ignores its draft and transfers the source holes exactly",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-003",
+          "expected": "Matching copies reject independent input edits",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-004",
+          "expected": "Connected topology cannot change while a stitch line has matching copies",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-005",
+          "expected": "Source recipe changes mark the entire matching set stale",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-006",
+          "expected": "Adjusted source spacing is copied exactly rather than fitted independently",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-007",
+          "expected": "Deleting a copy output marks its source stale",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-008",
+          "expected": "An incongruent matching guide rejects the entire generation without changing output",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-009",
+          "expected": "Failure after writing a copy rolls back every source, output and association record",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-010",
+          "expected": "Changing a copy face changes inputs without replacing output",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-011",
+          "expected": "One Undo restores a matching copy's previous face",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-012",
+          "expected": "Redo restores the matching face change",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-013",
+          "expected": "Changing source face preserves each copy's absolute face and updates relative parity",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-014",
+          "expected": "A source face change still produces an exact transformed copy",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-015",
+          "expected": "Copying only one matching guide detaches the copy and preserves all original ownership",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-016",
+          "expected": "Copying the complete matching set remaps its links and regenerates independently",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-017",
+          "expected": "Deleting a matching copy blocks generation and retains all previous output",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-018",
+          "expected": "Remove missing repairs the source association without deleting the old copy output",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-019",
+          "expected": "Changing source loop start moves matching holes under the original fixed registration",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-020",
+          "expected": "A closed copy automatically reverses its native traversal when its face becomes Back",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-021",
+          "expected": "Returning a closed copy to Front restores its original registered layout",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-022",
+          "expected": "Unlinking the last copy leaves both layouts and effective inputs intact",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-023",
+          "expected": "Malformed association metadata without an identity cannot silently generate as an independent line",
+          "sourceSymbol": "ast:match-cad-tests"
+        },
+        {
+          "id": "MATCH-024",
+          "expected": "An unknown copy metadata version blocks family generation and preserves both outputs",
+          "sourceSymbol": "ast:match-cad-tests"
         }
       ]
     },
@@ -7118,6 +7577,41 @@
           "id": "DISPLAY-044",
           "expected": "The adjusted corner neighbour has an I mark at both slit tips and complete current output",
           "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-045",
+          "expected": "Adjusted straight gaps show small upright millimetre values only on the nonprinting UI layer",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-046",
+          "expected": "Edited adjusted-spacing value is detected by the output signature",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-047",
+          "expected": "Adjusted arc labels report measured chords at their local midpoints with readable rotations",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-048",
+          "expected": "Inch drawing scales spacing-label placement and height while values remain millimetres",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-049",
+          "expected": "Reversing the guide keeps spacing values upright at the same physical positions",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-050",
+          "expected": "Adjusted corner label measures the virtual-to-real step rather than the round-hole gap",
+          "sourceSymbol": "ast:display-tests"
+        },
+        {
+          "id": "DISPLAY-051",
+          "expected": "Spacing values trim decimal zeros without depending on drawing dimension suppression",
+          "sourceSymbol": "ast:display-tests"
         }
       ]
     },
@@ -7246,6 +7740,75 @@
           "id": "UI-023",
           "expected": "Selecting a legacy connected secondary member refreshes the primary boxed ID without regenerating output",
           "sourceSymbol": "ast:ui-tests"
+        },
+        {
+          "id": "UI-024",
+          "expected": "An independent guide offers face and link actions without claiming a matching source",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-025",
+          "expected": "Changing face preserves the unsaved pitch text without saving it as the source pitch",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-026",
+          "expected": "A matching source keeps layout editing available while connected-guide changes are disabled",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-027",
+          "expected": "A linked copy identifies its source and disables independent layout edits while retaining face and generation actions",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-028",
+          "expected": "Select source on a linked copy selects its source directly without altering either guide",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-029",
+          "expected": "Generate from a copy applies its chosen face to a complete matching family and keeps source-controlled edits disabled",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-030",
+          "expected": "Unlink returns the selected copy to independent editing and preserves both existing stitch outputs",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-031",
+          "expected": "Changing face from a connected secondary guide updates every member while preserving the unsaved pitch draft",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-032",
+          "expected": " (each parameter combination)",
+          "sourceSymbol": "ast:ui-test-matching-registration",
+          "labelExpression": [
+            "cadddr",
+            "fixture"
+          ]
+        },
+        {
+          "id": "UI-033",
+          "expected": "Equidistant matching picks require a direction instead of silently choosing one",
+          "sourceSymbol": "ast:ui-test-matching-registration"
+        },
+        {
+          "id": "UI-034",
+          "expected": "A second midpoint pick remains unresolved and cannot become a valid forward registration",
+          "sourceSymbol": "ast:ui-test-matching-registration"
+        },
+        {
+          "id": "UI-035",
+          "expected": "Exact loop start point projects to its arc-length phase",
+          "sourceSymbol": "ast:ui-test-matching-registration"
+        },
+        {
+          "id": "UI-036",
+          "expected": "Matching start projection converts drawing units to millimetres",
+          "sourceSymbol": "ast:ui-test-matching-registration"
         }
       ]
     },
@@ -7521,6 +8084,102 @@
             "helpersCurrent": false,
             "notes": "Prior complete helpers remain; the failed callback does not undo the native edit."
           }
+        }
+      ]
+    },
+    {
+      "id": "MATCHNET",
+      "title": "Matching connected pieces",
+      "source": "tests/autostitch-matching-cad-tests.lsp",
+      "entrypoint": "ast:match-network-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable saved drawing with matching modules and CAD test helpers loaded.",
+      "recipe": "Run connected copies, source-member registration, landmarks, movement and missing-member checks.",
+      "expected": "Exact correspondence, separate ownership and recoverable missing references survive the tested lifecycle.",
+      "checks": [
+        {
+          "id": "MATCHNET-001",
+          "expected": "Conflicting counterpart landmarks reject matching without discarding either recipe",
+          "sourceSymbol": "ast:match-network-tests"
+        },
+        {
+          "id": "MATCHNET-002",
+          "expected": "Whole connected groups match and inherit source landmarks",
+          "sourceSymbol": "ast:match-network-tests"
+        },
+        {
+          "id": "MATCHNET-003",
+          "expected": "Adding a second connected copy respects the newly selected source registration member",
+          "sourceSymbol": "ast:match-network-tests"
+        },
+        {
+          "id": "MATCHNET-004",
+          "expected": "Matching connected groups preserves junction holes and owns one distinct output per piece",
+          "sourceSymbol": "ast:match-network-tests"
+        },
+        {
+          "id": "MATCHNET-005",
+          "expected": "Moving all guides of a matching piece preserves its mapped landmark and junction recipe",
+          "sourceSymbol": "ast:match-network-tests"
+        },
+        {
+          "id": "MATCHNET-006",
+          "expected": "A missing connected member blocks matching generation without partial output",
+          "sourceSymbol": "ast:match-network-tests"
+        },
+        {
+          "id": "MATCHNET-007",
+          "expected": "A damaged connected copy can be unlinked before repairing its own guide topology",
+          "sourceSymbol": "ast:match-network-tests"
+        }
+      ]
+    },
+    {
+      "id": "MATCH-REOPEN",
+      "title": "Saved matching pieces",
+      "source": "tests/autostitch-matching-cad-tests.lsp",
+      "entrypoint": "ast:match-reopen-tests",
+      "runner": "events",
+      "svg": false,
+      "setup": "Disposable saved drawing with matching modules and CAD test helpers loaded.",
+      "recipe": "Run ast:match-reopen-fixture with a handle-file path; save, close and reopen the disposable drawing, reload modules, then run ast:match-reopen-tests with that path.",
+      "expected": "Exact correspondence, separate ownership and recoverable missing references survive the tested lifecycle.",
+      "checks": [
+        {
+          "id": "MATCH-REOPEN-001",
+          "expected": "Saved matching sets reopen with reciprocal ownership, absolute faces and stable stitch IDs",
+          "sourceSymbol": "ast:match-reopen-tests"
+        },
+        {
+          "id": "MATCH-REOPEN-002",
+          "expected": "A saved matching set remains current after reopening",
+          "sourceSymbol": "ast:match-reopen-tests"
+        },
+        {
+          "id": "MATCH-REOPEN-003",
+          "expected": "Reopened matching sets regenerate both faces from the one source solution",
+          "sourceSymbol": "ast:match-reopen-tests"
+        },
+        {
+          "id": "MATCH-REOPEN-004",
+          "expected": "A deleted copy survives save/reopen as a repairable missing reference without deleting output",
+          "sourceSymbol": "ast:match-reopen-tests"
+        },
+        {
+          "id": "MATCH-REOPEN-005",
+          "expected": "Remove missing repairs an erased copy reference after save/reopen",
+          "sourceSymbol": "ast:match-reopen-tests"
+        },
+        {
+          "id": "MATCH-REOPEN-006",
+          "expected": "Removing one missing copy keeps healthy matching copies and the old missing-piece output",
+          "sourceSymbol": "ast:match-reopen-tests"
+        },
+        {
+          "id": "MATCH-REOPEN-007",
+          "expected": "Healthy copies regenerate normally after missing-copy repair",
+          "sourceSymbol": "ast:match-reopen-tests"
         }
       ]
     }

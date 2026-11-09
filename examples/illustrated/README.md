@@ -40,7 +40,7 @@ A slit follows the local tangent without changing length or lean. Pitch is a dir
 
 ### Reserve a landmark pair: A4, A5, A7
 
-Reserve the endpoints and nominal pair across L1. Distribute the adjustments into the free spans while those four openings stay fixed: $2.75\,\mathrm{mm}$ on the left, $3.25\,\mathrm{mm}$ on the right. Every gap stays within the $2.7$ to $3.3\,\mathrm{mm}$ bounds; the landmark gap remains $3\,\mathrm{mm}$. There is no opening at L1. `F02`.
+Reserve the endpoints and nominal pair across L1. Distribute the adjustments into the free spans while those four openings stay fixed: $2.75\,\mathrm{mm}$ on the left, $3.25\,\mathrm{mm}$ on the right. Each adjusted gap sits exactly at its span's centre. Every gap stays within the $2.7$ to $3.3\,\mathrm{mm}$ bounds; the landmark gap remains $3\,\mathrm{mm}$. There is no opening at L1. `ILL-LANDMARK` uses `F02` shortened by one pitch at the right end, to $27\,\mathrm{mm}$.
 
 ![Adjustments move into the free spans while endpoints and the landmark pair stay fixed](assets/axiom-landmark.gif)
 
@@ -108,7 +108,7 @@ The [glossary](../../docs/GLOSSARY.md) uses four static figures with aligned lab
 
 ![Guide, gaps, landmark and free span](assets/terms-layout.png)
 
-`ILL-TERMS-LAYOUT`: the same `F02` layout as the landmark example, with nominal, adjusted and protected gaps identified.
+`ILL-TERMS-LAYOUT`: the full `F02` layout, with nominal, adjusted and protected gaps identified.
 
 ![Slit axis, length, width, lean and tangent](assets/terms-slit.png)
 

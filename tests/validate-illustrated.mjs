@@ -95,25 +95,30 @@ const chords=curve.slice(1).map((s,i)=>dist(s.center,curve[i].center));bounded(c
 assert.equal(chords.filter(g=>Math.abs(g-3)>1e-6).length,3);
 near(curve[0].center[0],0);near(curve.at(-1).center[1],-10);
 
-const landmark=slits('axiom-landmark',{x:60,y:187.5,scale:16}).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
-assert.equal(landmark.length,11);assert(has(landmark,[14.75,0])&&has(landmark,[17.75,0]));
+const landmark=slits('axiom-landmark',{x:84,y:187.5,scale:16}).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
+assert.equal(landmark.length,10);assert(has(landmark,[14.75,0])&&has(landmark,[17.75,0]));
 assert(!has(landmark,[16.25,0]));near((14.75+17.75)/2,16.25);
 bounded(landmark.slice(1).map((p,i)=>dist(p,landmark[i])));
 for(const frame of scenes.find(s=>s.name==='axiom-landmark').frames.filter(f=>!['reference','reset'].includes(f.stage))) {
   const xs=frame.elements.filter(e=>e.kind==='slit').map(e=>(e.a[0]+e.b[0])/2);
-  for(const station of [0,14.75,17.75,30])assert(xs.some(x=>Math.abs(x-(60+station*16))<1e-6),'Fixed opening moved during fitting');
-  if(xs.length===11) {
-    const points=xs.map(x=>(x-60)/16).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
+  for(const station of [0,14.75,17.75,27])assert(xs.some(x=>Math.abs(x-(84+station*16))<1e-6),'Fixed opening moved during fitting');
+  if(xs.length===10) {
+    const points=xs.map(x=>(x-84)/16).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
     bounded(gaps);near(gaps[5],3);
     const labels=frame.elements.filter(e=>e.kind==='gap-value');
     const adjustable=gaps.filter((g,i)=>i!==5);assert.equal(labels.length,adjustable.length);
     labels.forEach((label,i)=>near(+label.value,adjustable[i],.00501));
     near(gaps.slice(0,5).reduce((a,b)=>a+b,0),14.75);
-    near(gaps.slice(6).reduce((a,b)=>a+b,0),12.25);
+    near(gaps.slice(6).reduce((a,b)=>a+b,0),9.25);
   }
 }
 const landmarkFrames=scenes.find(s=>s.name==='axiom-landmark').frames;
 assert.equal(landmarkFrames.filter(f=>f.stage==='distribute-within-spans').length,30);
+for(const [start,end] of [[0,14.75],[17.75,27]]) {
+  const points=landmark.map(p=>p[0]).filter(x=>x>=start-1e-6&&x<=end+1e-6);
+  const adjusted=points.slice(1).map((x,i)=>({a:points[i],b:x})).filter(g=>Math.abs(g.b-g.a-3)>1e-6);
+  assert.equal(adjusted.length,1);near((adjusted[0].a+adjusted[0].b)/2,(start+end)/2);
+}
 
 const cornerView={x:370,y:105,scale:24};
 const virtuals=slits('axiom-corner',cornerView,'virtual');assert.equal(virtuals.length,2);
@@ -291,9 +296,11 @@ for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-sha
 
 // Glossary labels must describe the existing constructions without changing them.
 for(const [name,original,kinds] of [
-  ['terms-layout','axiom-landmark',['slit','adjustment-mark','landmark']],
   ['terms-junction','axiom-junction',['slit','hole']]
 ])for(const kind of kinds)assert.deepEqual(readSvg(name).elements.filter(e=>e.class===kind),readSvg(original).elements.filter(e=>e.class===kind));
+const glossaryLayout=slits('terms-layout',{x:60,y:187.5,scale:16}).map(s=>s.center[0]).sort((a,b)=>a-b);
+const originalF02=[0,3,6,8.75,11.75,14.75,17.75,20.75,23.75,27,30];
+assert.equal(glossaryLayout.length,originalF02.length);glossaryLayout.forEach((x,i)=>near(x,originalF02[i]));
 const termJunction=scenes.find(s=>s.name==='terms-junction');
 assert.equal(termJunction.final.filter(e=>e.type==='text'&&e.value==='Arm').length,3);
 const slitDetail=readSvg('terms-slit').elements;

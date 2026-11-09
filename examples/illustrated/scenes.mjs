@@ -104,12 +104,12 @@ function pitchScenes() {
   return scenes;
 }
 
-function landmarkScene() {
-  const v=variant('F02'),length=v.route.primitives[0].b[0],reference=v.landmarks[0].station;
-  const view={x:60,y:187.5,scale:16},left=reference-1.5,right=reference+1.5;
+function landmarkScene(endTrim=0) {
+  const v=variant('F02'),length=v.route.primitives[0].b[0]-endTrim,reference=v.landmarks[0].station;
+  const view={x:(600-length*16)/2,y:187.5,scale:16},left=reference-1.5,right=reference+1.5;
   const base=straightBase(length,view),p=project([reference,0],view);
   base.push(line([p[0],p[1]-55],[p[0],p[1]+55],'landmark',ink,1.4),text([p[0],p[1]-67],'L1'));
-  const s=scene('axiom-landmark','Fixed landmark pair; bounded adjustments within each free span','F02');
+  const s=scene('axiom-landmark','Fixed landmark pair; bounded adjustments within each free span',endTrim?'ILL-LANDMARK':'F02');
   frame(s,base,90,'reference');
   const protectedDimension=measure([left,0],[right,0],'3',view,-78);
   const fixed=[...base,...[0,left,right,length].flatMap(x=>opening([x,0],alpha,view)),...protectedDimension];
@@ -506,7 +506,9 @@ function annotateScene(s) {
     marks=routeMarks([300-halfLength,187.5],[300+halfLength,187.5]);
     marks=marks.map(e=>e.kind==='notation-end'?{...e,p:add(e.p,[0,-10])}:e);
   }
-  else if(['axiom-landmark','terms-layout'].includes(s.name))marks=routeMarks([60,187.5],[540,187.5]);
+  else if(['axiom-landmark','terms-layout'].includes(s.name)) {
+    const guide=s.final.find(e=>e.kind==='guide');marks=routeMarks(guide.a,guide.b);
+  }
   else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
   else if(s.name==='axiom-clearance') {
     const ends=s.final.filter(e=>e.kind==='slit').slice(0,2).map(e=>mul(add(e.a,e.b),.5));
@@ -545,7 +547,7 @@ function annotateScene(s) {
 }
 
 export function createScenes() {
-  return [...pitchScenes(),curveScene(),landmarkScene(),cornerScene(),smoothScene(),junctionScene(),clearanceScene(),
+  return [...pitchScenes(),curveScene(),landmarkScene(catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs.endTrim),cornerScene(),smoothScene(),junctionScene(),clearanceScene(),
     noFitScene(),closureScene(),matchedScene(),
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),

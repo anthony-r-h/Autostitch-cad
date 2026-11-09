@@ -8690,7 +8690,10 @@
         "Reserve endpoints and the nominal landmark pair.",
         "Identify the independent free spans.",
         "Move bounded corrections from span ends into their central adjustment blocks while all fixed openings remain stationary."
-      ]
+      ],
+      "inputs": {
+        "endTrim": 3
+      }
     },
     {
       "id": "ILL-CORNER",

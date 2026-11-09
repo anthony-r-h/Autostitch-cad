@@ -399,8 +399,7 @@ for(const treatment of ['vertex-point','bridge']) {
     });
     near(Math.abs(virtuals[0].angle-virtuals[1].angle),Math.PI/2);
     near(dist(circle(name,problemView),[0,0]),0);
-    const frames=scenes.find(s=>s.name===name).frames,holeFrame=frames.findIndex(f=>f.elements.some(e=>e.kind==='hole'));
-    assert.equal(holeFrame,0);assert.equal(frames[0].elements.filter(e=>e.kind==='virtual').length,2);
+    assert.equal(scenes.find(s=>s.name===name).frames.length,0);
   }
   else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
   if(treatment==='bridge') {
@@ -433,7 +432,8 @@ for(const arm of [0,1]) {
 }
 assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
 const crossing=scenes.find(s=>s.name==='problem-corner-vertex-point');
-assert.deepEqual(cornerSolution.frames[0].elements,crossing.frames.find(f=>f.stage==='result').elements);
+const constructionOnly=elements=>elements.filter(e=>!['thread','thread-angle','thread-angle-value','angle-reference','angle-wedge','angle-leader','thread-length-value','thread-length-dimension'].includes(e.kind));
+assert.deepEqual(cornerSolution.frames[0].elements,constructionOnly(crossing.final));
 assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
 const solvedSlits=slits(cornerSolution.name,problemView),solvedVirtuals=slits(cornerSolution.name,problemView,'virtual'),solvedHole=circle(cornerSolution.name,problemView);
 assert.equal(solvedSlits.length,2*count);assert.equal(solvedVirtuals.length,2);
@@ -502,13 +502,13 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
   }
   if(['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name)) {
-    assert.deepEqual(s.frames.map(f=>f.stage),['result',...Array(5).fill('thread-fade'),'thread-reveal','reset']);
+    assert.equal(s.frames.length,0);
     const expectedThreads=s.name==='problem-corner-bridge'?adjacent.slice(0,1):adjacent;
     const lengths=s.final.filter(e=>e.kind==='thread-length-value');
     assert.deepEqual(lengths.map(e=>e.value),expectedThreads.map(e=>(dist(e.a,e.b)/problemView.scale).toFixed(2)));
     assert(!s.final.some(e=>e.kind==='gap-value'));
-    assert(!s.frames[0].elements.some(e=>e.kind==='thread-length-value'));
-    assert.deepEqual(displayElements(s.final).filter(e=>e.kind==='thread-length-value'),lengths);
+    assert(displayElements(s.final).filter(e=>['thread-length-value','thread-length-dimension','slit','hole','virtual'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
+    assert(readSvg(s.name).source.includes('class="thread-length-value"'));
   }
 }
 const balancedMirror=pitchComparisonMetrics(mirroredCorner),balancedAuto=pitchComparisonMetrics(cornerSolution);
@@ -568,8 +568,9 @@ for(const [i,e] of xWorld.entries()) {
 
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
-  assert.equal(Boolean(s.frames.length),entry.animated);
-  if(entry.animated) {
+  const asset=entry.assets.find(a=>a.path.endsWith('/'+s.name)),animated=asset.animated??entry.animated;
+  assert.equal(Boolean(s.frames.length),animated);
+  if(animated) {
     const threadFrames=s.frames.filter(f=>f.stage==='thread-reveal'),threadFrame=threadFrames.at(-1);
     assert.equal(threadFrames.length,1);
     threadFrames.forEach(f=>assert.equal(f.delay,400));

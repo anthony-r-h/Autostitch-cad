@@ -768,14 +768,15 @@ function finishThread(s) {
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,s.emphasisedThreads?.includes(i)?2.6:1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const angles=s.name.startsWith('problem-corner-')?cornerThreadAngles(s,threads):[];
-  const lengths=['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name)?cornerThreadLengths(s,threads):[];
+  const staticResult=['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name);
+  const lengths=staticResult?cornerThreadLengths(s,threads):[];
   const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles,...lengths];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[
     {...f,delay:80},
     ...Array.from({length:5},(_,i)=>({elements:result,delay:6,stage:'thread-fade',holeLightening:(i+1)/5})),
     {elements:result,delay:400,stage:'thread-reveal'}
   ]:[f]);
-  return {...s,final:result,frames};
+  return {...s,final:result,frames:staticResult?[]:frames};
 }
 function cornerThreadLengths(s,threads) {
   const spec=catalog.illustrations.find(i=>i.id===s.source),count=spec.inputs.armIntervals;
@@ -873,7 +874,7 @@ export function pitchComparisonMetrics(s) {
 export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0) {
   if(!amount)return elements;
   return elements.map(e=>{
-    if(!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind))return e;
+    if(!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind))return e;
     const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(e.color.slice(i,i+2),16),196,amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
     return {...e,color};
   });

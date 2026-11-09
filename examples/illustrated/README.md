@@ -32,9 +32,9 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 `ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare Vertex point, Bridge, Shared diagonal slit with mirrored lean, and Autostitch. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
 
-![Nominal rows joined by a round hole at the vertex](assets/problem-corner-vertex-point.gif)
+![Nominal rows joined by a round hole at the vertex](assets/problem-corner-vertex-point.png)
 
-![Stop short and bridge between the arms](assets/problem-corner-bridge.gif)
+![Stop short and bridge between the arms](assets/problem-corner-bridge.png)
 
 ![Shared diagonal slit with mirrored lean](assets/problem-corner-mirrored.gif)
 
@@ -50,7 +50,7 @@ Motion shows planning revisions, not physical punching order; the analytic const
 
 ## Comparison notation and totals
 
-- Vertex point and Bridge start with their complete slit layout, then reveal the thread and lighten the holes. Only the corner thread lengths and angles are annotated; length brackets measure the visible thread between slit tips or the round-hole centre, in millimetres. The final state holds for four seconds
+- Vertex point and Bridge are static final thread views. Holes and length dimensions use the same light grey as the final animated views; angle annotations stay red. Length brackets measure visible thread between slit tips or the round-hole centre, in millimetres
 - Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values

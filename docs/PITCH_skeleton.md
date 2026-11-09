@@ -74,7 +74,7 @@ Research note: Anthony to find stitching examples from:
 
 ## Vertex point
 
-![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.gif)
+![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.png)
 
 - Nominal arm spacing, as the tool lands; round hole at the vertex
 - Residual remains in the two final gaps into the hole
@@ -83,7 +83,7 @@ Research note: Anthony to find stitching examples from:
 
 ## Bridge
 
-![Bridge connecting rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-bridge.gif)
+![Bridge connecting rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-bridge.png)
 
 - Nominal arm spacing, as the tool lands; thread connects the last slit on each arm
 - No corner opening; thread bypasses the vertex

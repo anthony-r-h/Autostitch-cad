@@ -102,21 +102,21 @@ The outgoing corner step increases to approximately $3.21\,\mathrm{mm}$ to bring
 
 ## Glossary close-ups
 
-The [glossary](../../docs/GLOSSARY.md) groups the terms around four annotated examples.
+The [glossary](../../docs/GLOSSARY.md) uses four static figures with aligned labels and horizontal or vertical leaders.
 
-![Guide, gaps, landmark and free span](assets/terms-layout.gif)
+![Guide, gaps, landmark and free span](assets/terms-layout.png)
 
 `ILL-TERMS-LAYOUT`: the same `F02` layout as the landmark example, with nominal, adjusted and protected gaps identified.
 
-![Slit axis, length, width, lean and tangent](assets/terms-slit.gif)
+![Slit axis, length, width, lean and tangent](assets/terms-slit.png)
 
 `ILL-TERMS-SLIT`: magnified profile with $\ell=1.5\,\mathrm{mm}$, $w=0.15\,\mathrm{mm}$ and $\alpha=40^\circ$.
 
-![Junction, shared round hole and three arms](assets/terms-junction.gif)
+![Junction, shared round hole and three arms](assets/terms-junction.png)
 
 `ILL-TERMS-JUNCTION`: the same T junction as `ILL-JUNCTION`, with each arm identified.
 
-![Chord length compared with arc length between the same slit centres](assets/terms-chord.gif)
+![Chord length compared with arc length between the same slit centres](assets/terms-chord.png)
 
 `ILL-TERMS-CHORD`: a nominal $3\,\mathrm{mm}$ chord on a $3\,\mathrm{mm}$ radius. The corresponding arc length is $\pi\,\mathrm{mm}$.
 
@@ -132,7 +132,7 @@ node tests/validate-cases.mjs
 
 - `scenes.mjs`: catalog inputs, analytic constructions, diagram elements and reveal timing.
 - `build.ps1`: renders those elements and encodes the frames. Temporary files stay under `output/illustrated/`.
-- `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state for still-image use.
+- `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state. Glossary figures (`terms-*`) use only SVG/PNG.
 - `tests/cases.json`: source cases and stable illustration IDs. The validator checks drawn geometry, constraints, GIF frame counts, delays and looping.
 
 ### Notation

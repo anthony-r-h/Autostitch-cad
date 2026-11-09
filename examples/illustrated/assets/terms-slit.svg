@@ -1,24 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Slit axis, length, width and lean</title><desc id="description">Analytic illustration of A2. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Slit axis, length, width and lean</title><desc id="description">Analytic illustration of A2. Static terminology figure.</desc>
 <line class="tangent" x1="70" y1="200" x2="520" y2="200" stroke="#C4C4C4" stroke-width="1"/>
 <text class="term-label" x="472" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Tangent</text>
 <line class="slit-profile" x1="206.801333443" y1="253.029977799" x2="333.198666557" y2="146.970022201" stroke="#252525" stroke-width="16.5" stroke-linecap="round"/>
-<line class="term-leader" x1="104" y1="191" x2="228" y2="237" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="term-label" x="104" y="183" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Slit</text>
+<line class="term-leader" x1="210" y1="294" x2="210" y2="257" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="term-label" x="210" y="310" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Slit</text>
 <line class="slit-axis" x1="206.801333443" y1="253.029977799" x2="333.198666557" y2="146.970022201" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="4 4"/>
-<line class="term-leader" x1="161" y1="300" x2="253" y2="214" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="term-label" x="161" y="316" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Axis</text>
+<line class="term-leader" x1="270" y1="294" x2="270" y2="200" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="term-label" x="270" y="310" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Axis</text>
 <line class="dimension" x1="171.44801491" y1="210.897533428" x2="297.845348025" y2="104.837577829" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="174.019165349" y1="213.9617112" x2="168.876864471" y2="207.833355655" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="300.416498463" y1="107.901755602" x2="295.274197586" y2="101.773400057" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="term-leader" x1="177" y1="124" x2="235" y2="158" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="term-label" x="177" y="116" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Length</text>
+<line class="term-leader" x1="235" y1="99" x2="235" y2="158" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="term-label" x="235" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Length</text>
 <line class="width-dimension" x1="363.78113096" y1="132.077897737" x2="353.1751354" y2="119.438164425" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="width-dimension" x1="360.716953188" y1="134.649048176" x2="366.845308733" y2="129.506747298" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="width-dimension" x1="350.110957628" y1="122.009314864" x2="356.239313173" y2="116.867013987" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="width-extension" x1="338.501664337" y1="153.289888857" x2="363.78113096" y2="132.077897737" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="width-extension" x1="327.895668777" y1="140.650155545" x2="353.1751354" y2="119.438164425" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="term-leader" x1="427" y1="89" x2="358.47813318" y2="125.758031081" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="term-label" x="427" y="81" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Width</text>
+<line class="term-leader" x1="358.47813318" y1="99" x2="358.47813318" y2="125.758031081" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="term-label" x="358.47813318" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Width</text>
 <line class="lean-angle" x1="317.3" y1="200" x2="317.271186118" y2="198.349253806" stroke="#8B8B8B" stroke-width="1"/>
 <line class="lean-angle" x1="317.271186118" y1="198.349253806" x2="317.184779577" y2="196.700518792" stroke="#8B8B8B" stroke-width="1"/>
 <line class="lean-angle" x1="317.184779577" y1="196.700518792" x2="317.040885651" y2="195.055803687" stroke="#8B8B8B" stroke-width="1"/>
@@ -39,6 +39,6 @@
 <line class="lean-angle" x1="309.213477182" y1="173.550175666" x2="308.266503834" y2="172.197757567" stroke="#8B8B8B" stroke-width="1"/>
 <line class="lean-angle" x1="308.266503834" y1="172.197757567" x2="307.272908646" y2="170.879212217" stroke="#8B8B8B" stroke-width="1"/>
 <line class="lean-angle" x1="307.272908646" y1="170.879212217" x2="306.23390216" y2="169.596146062" stroke="#8B8B8B" stroke-width="1"/>
-<line class="term-leader" x1="387" y1="165" x2="314.447460963" y2="183.822447221" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="term-label" x="387" y="157" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Lean</text>
+<line class="term-leader" x1="400" y1="183.822447221" x2="314.447460963" y2="183.822447221" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="term-label" x="430" y="187.822447221" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Lean</text>
 </svg>

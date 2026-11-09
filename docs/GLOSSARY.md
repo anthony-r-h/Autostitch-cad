@@ -2,7 +2,7 @@
 
 Terms used by the [axioms](AXIOMS.md), [model](MODEL.md) and [junction construction](JUNCTIONS.md).
 
-![Guide, slit, nominal and adjusted gaps, landmark, protected gap and free span](../examples/illustrated/assets/terms-layout.gif)
+![Guide, slit, nominal and adjusted gaps, landmark, protected gap and free span](../examples/illustrated/assets/terms-layout.png)
 
 Notation: `s` start, `e` end, arrow for direction, `L1` landmark. The `I` crossbars identify slits bordering adjusted gaps.
 
@@ -18,7 +18,7 @@ An editable path on which real slit centres lie, made of straight or circular **
 
 A slit is one type of **opening**; a round hole is the other. Its **axis** is the finite centreline between its tips. **Length** $\ell$ runs along that axis, **width** $w$ across it, and **lean** $\alpha$ is its signed angle to the guide tangent.
 
-![Magnified slit showing its axis, length, width and lean relative to the tangent](../examples/illustrated/assets/terms-slit.gif)
+![Magnified slit showing its axis, length, width and lean relative to the tangent](../examples/illustrated/assets/terms-slit.png)
 
 A **virtual slit** is construction only: its selected tip helps locate a corner hole. It is not a separate opening.
 
@@ -32,7 +32,7 @@ $$
 g=2R\sin\left(\frac{\theta}{2}\right),\qquad s_{\mathrm{arc}}=R\theta.
 $$
 
-![Chord length measured straight between slit centres, compared with arc length along the guide](../examples/illustrated/assets/terms-chord.gif)
+![Chord length measured straight between slit centres, compared with arc length along the guide](../examples/illustrated/assets/terms-chord.png)
 
 At $R=3\,\mathrm{mm}$ and $\theta=\pi/3$, the nominal chord gap is $3\,\mathrm{mm}$; the arc length is approximately $3.14\,\mathrm{mm}$.
 
@@ -48,7 +48,7 @@ Consecutive equal adjusted gaps form an **adjustment block** within a free span.
 
 A meeting with two or more **arms**: portions of stitch lines extending away from it. A through-line contributes two arms, a T has three, and an X has four.
 
-![A T junction with one shared round hole and three arms](../examples/illustrated/assets/terms-junction.gif)
+![A T junction with one shared round hole and three arms](../examples/illustrated/assets/terms-junction.png)
 
 - A **smooth join** keeps the tangent direction. Straight or co-circular continuation at equal pitch remains one run; a smooth change of curvature shares one slit.
 - A **sharp corner** has two arms with different tangent directions. Virtual slits locate its shared round hole.

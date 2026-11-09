@@ -392,28 +392,24 @@ function curvedCornerScene(caseId,name,title) {
   return finish(s,result);
 }
 
-function termLabel(point,value,target) {
+function termLabel(point,value,target,leaderStart) {
   const label={...text(point,value),kind:'term-label',color:ink};
   if(!target)return [label];
-  const start=[point[0],point[1]+(target[1]>point[1]?8:-16)];
+  const start=leaderStart??[point[0],point[1]+(target[1]>point[1]?8:-16)];
   return [line(start,target,'term-leader',construction,.8),label];
 }
 function termsLayoutScene() {
   const original=landmarkScene(),view={x:60,y:187.5,scale:16};
   const s=scene('terms-layout','Guide, gaps, landmark and free span','F02');
-  let result=original.final.filter(e=>['guide','fixed-end'].includes(e.kind));
-  result.push(...termLabel([510,310],'Guide',[515,187.5]));frame(s,[...result],140,'guide-term');
-  result.push(...original.final.filter(e=>['slit','adjustment-mark'].includes(e.kind)),...termLabel([455,94],'Slit',[401,180]));
-  frame(s,[...result],160,'slit-term');
-  result.push(...measure([0,0],[3,0],'p',view,-68),...termLabel([84,284],'Nominal gap'));
-  frame(s,[...result],160,'nominal-term');
-  result.push(...measure([6,0],[8.75,0],'g',view,-68),...termLabel([178,284],'Adjusted gap'));
-  frame(s,[...result],160,'adjusted-term');
+  const result=original.final.filter(e=>['guide','fixed-end'].includes(e.kind));
+  result.push(...termLabel([510,66],'Guide',[510,187.5]));
+  result.push(...original.final.filter(e=>['slit','adjustment-mark'].includes(e.kind)),...termLabel([401,66],'Slit',[401,180]));
+  result.push(...measure([0,0],[3,0],'p',view,-78),...termLabel([84,294],'Nominal gap'));
+  result.push(...measure([6,0],[8.75,0],'g',view,-78),...termLabel([178,294],'Adjusted gap'));
   result.push(...original.final.filter(e=>['landmark','dimension','measurement'].includes(e.kind)),
-    ...termLabel([395,66],'Landmark',[320,133]),...termLabel([320,294],'Protected gap'));
-  frame(s,[...result],180,'landmark-term');
+    ...termLabel([320,66],'Landmark',[320,105]),...termLabel([320,294],'Protected gap'));
   result.push(...measure([0,0],[14.75,0],'Free span',view,83));
-  return finish(s,result);
+  return {...s,final:result};
 }
 function termsSlitScene() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-SLIT').inputs;
@@ -422,32 +418,29 @@ function termsSlitScene() {
   const tangent=[line([70,200],[520,200],'tangent',guideInk,1),...termLabel([472,222],'Tangent')];
   const profile={...worldLine(a,b,view,'slit-profile',ink,input.width*view.scale),round:true};
   const s=scene('terms-slit','Slit axis, length, width and lean','A2');
-  let result=[...tangent,profile,...termLabel([104,183],'Slit',[228,237])];frame(s,[...result],140,'profile-term');
-  result.push(worldLine(a,b,view,'slit-axis','#FFFFFF',1,true),...termLabel([161,316],'Axis',[253,214]));
-  frame(s,[...result],150,'axis-term');
+  const result=[...tangent,profile,...termLabel([210,310],'Slit',[210,257])];
+  result.push(worldLine(a,b,view,'slit-axis','#FFFFFF',1,true),...termLabel([270,310],'Axis',[270,200]));
   const lengthDimension=measure(a,b,'',view,55).filter(e=>e.type!=='text');
-  result.push(...lengthDimension,...termLabel([177,116],'Length',[235,158]));frame(s,[...result],160,'length-term');
+  result.push(...lengthDimension,...termLabel([235,91],'Length',[235,158]));
   const center=mul(direction,1.05),halfWidth=mul(normal,input.width/2);
   const wa=add(center,mul(halfWidth,-1)),wb=add(center,halfWidth);
   const A=project(wa,view),B=project(wb,view),tick=[direction[0]*4,-direction[1]*4];
   result.push(line(A,B,'width-dimension',construction,.8),line(add(A,mul(tick,-1)),add(A,tick),'width-dimension',construction,.8),
     line(add(B,mul(tick,-1)),add(B,tick),'width-dimension',construction,.8),
     worldLine(add(b,mul(halfWidth,-1)),wa,view,'width-extension',guideInk,.8),worldLine(add(b,halfWidth),wb,view,'width-extension',guideInk,.8),
-    ...termLabel([427,81],'Width',project(center,view)));
-  frame(s,[...result],170,'width-term');
+    ...termLabel([project(center,view)[0],91],'Width',project(center,view)));
   for(let i=0;i<20;i++)result.push(worldLine(mul(axis(alpha*i/20),.43),mul(axis(alpha*(i+1)/20),.43),view,'lean-angle',construction,1));
-  result.push(...termLabel([387,157],'Lean',project(mul(axis(alpha/2),.43),view)));
-  return finish(s,result);
+  const leanPoint=project(mul(axis(alpha/2),.43),view);
+  result.push(...termLabel([430,leanPoint[1]+4],'Lean',leanPoint,[400,leanPoint[1]]));
+  return {...s,final:result};
 }
 function termsJunctionScene() {
   const original=junctionScene(),s=scene('terms-junction','Junction, round hole and arms','A9');
-  let result=original.final.filter(e=>['guide','hole','slit'].includes(e.kind));
-  frame(s,[...result],100,'junction-layout');
-  result.push(...termLabel([300,71],'Junction / round hole',[300,134]));frame(s,[...result],160,'junction-term');
-  for(const [label,target] of [[[142,237],[186,145]],[[464,237],[417,145]],[[385,310],[300,250]]]) {
-    result.push(...termLabel(label,'Arm',target));frame(s,[...result],110,'arm-term');
-  }
-  return finish(s,result);
+  const result=original.final.filter(e=>['guide','hole','slit'].includes(e.kind));
+  result.push(...termLabel([300,71],'Junction / round hole',[300,134]));
+  for(const x of [185,415])result.push(...termLabel([x,220],'Arm',[x,145]));
+  result.push(...termLabel([400,264],'Arm',[300,260],[370,260]));
+  return {...s,final:result};
 }
 function termsChordScene() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-CHORD').inputs;
@@ -456,15 +449,13 @@ function termsChordScene() {
   const a=point(start),b=point(end),guide=[];
   for(let i=0;i<40;i++)guide.push(worldLine(point(lerp(start,end,i/40)),point(lerp(start,end,(i+1)/40)),view));
   const s=scene('terms-chord','Chord length and arc length between the same slit centres','A3');
-  let result=[...guide];frame(s,[...result],100,'guide');
+  const result=[...guide];
   result.push(...opening(a,start-Math.PI/2+alpha,view),...opening(b,end-Math.PI/2+alpha,view));
-  frame(s,[...result],100,'centres');
   result.push(...guide.map(e=>({...e,kind:'measured-arc',color:construction,width:1.5,dash:true})),
-    ...termLabel([300,75],'Arc length',[300,137]),text([350,119],(2*input.radius*half).toFixed(2)));
-  frame(s,[...result],180,'arc-length');
-  result.push(worldLine(a,b,view,'chord',ink,1));frame(s,[...result],110,'chord');
-  result.push(...termLabel([300,227],'Chord length',[300,176]),text([350,197],input.pitch.toFixed(2)));
-  return finish(s,result);
+    ...termLabel([300,75],'Arc length',[300,137],[300,105]),text([300,95],(2*input.radius*half).toFixed(2)));
+  result.push(worldLine(a,b,view,'chord',ink,1));
+  result.push(...termLabel([300,242],'Chord length',[300,176]),text([300,262],input.pitch.toFixed(2)));
+  return {...s,final:result};
 }
 
 const notationText=(p,value,role)=>({...text(p,value),size:12,kind:`notation-${role}`});
@@ -554,7 +545,7 @@ export function svg(scene) {
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
     return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}" fill="${e.color}">${escape(e.value)}</text>`;
   });
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. Final state of the accompanying animation.</desc>\n${elements.join('\n')}\n</svg>\n`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':'Static terminology figure.'}</desc>\n${elements.join('\n')}\n</svg>\n`;
 }
 
 // GIF89a blocks: https://www.w3.org/Graphics/GIF/spec-gif89a.txt
@@ -595,6 +586,6 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(scenes));
     for(const scene of scenes)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {
-    for(const scene of scenes)fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
+    for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }

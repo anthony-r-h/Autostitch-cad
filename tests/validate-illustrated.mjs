@@ -288,14 +288,21 @@ const arcLength=measuredArc.reduce((sum,e)=>sum+Math.hypot(e.x2-e.x1,e.y2-e.y1)/
 near(arcLength,Math.PI,1e-4);assert(arcLength>3);
 
 for(const s of scenes) {
-  const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
-  // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
-  const blocks=gifBlocks(gif).blocks,images=blocks.filter(b=>b.kind==='image'),controls=blocks.filter(b=>b.kind==='control');
-  assert.equal(images.length,s.frames.length);assert.equal(controls.length,images.length);
-  assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
-  assert(gif.includes(Buffer.from([0x21,0xff,11,...Buffer.from('NETSCAPE2.0'),3,1,0,0,0])));
-  assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
-  near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
+  const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
+  assert.equal(Boolean(s.frames.length),entry.animated);
+  if(entry.animated) {
+    const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
+    // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
+    const blocks=gifBlocks(gif).blocks,images=blocks.filter(b=>b.kind==='image'),controls=blocks.filter(b=>b.kind==='control');
+    assert.equal(images.length,s.frames.length);assert.equal(controls.length,images.length);
+    assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
+    assert(gif.includes(Buffer.from([0x21,0xff,11,...Buffer.from('NETSCAPE2.0'),3,1,0,0,0])));
+    assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
+    near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
+  } else {
+    assert(!fs.existsSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root)),'Static figures must not retain obsolete GIFs');
+    for(const leader of s.final.filter(e=>e.kind==='term-leader'))assert(leader.a[0]===leader.b[0]||leader.a[1]===leader.b[1],`${s.name} has an oblique callout`);
+  }
   const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));
   assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
   const source=readSvg(s.name).source;
@@ -315,8 +322,8 @@ for(const s of scenes) {
     assert.deepEqual(labels.filter(e=>e.kind==='notation-id').map(e=>e.value),['ST-1','ST-1-A']);
     assert.equal(s.final.filter(e=>e.kind==='id-box').length,8);
   }
-  for(const f of s.frames)for(const e of f.elements) {
+  for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
     for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
   }
 }
-console.log(`Illustrations valid: ${scenes.length} moving GIFs, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);
+console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} moving GIFs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

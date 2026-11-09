@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Chord length and arc length between the same slit centres</title><desc id="description">Analytic illustration of A3. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Chord length and arc length between the same slit centres</title><desc id="description">Analytic illustration of A3. Static terminology figure.</desc>
 <line class="guide" x1="180" y1="172.153903092" x2="185.481897538" y2="169.083892961" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="185.481897538" y1="169.083892961" x2="191.042280063" y2="166.158434195" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="191.042280063" y1="166.158434195" x2="196.677336766" y2="163.379531756" stroke="#C4C4C4" stroke-width="1"/>
@@ -81,13 +81,13 @@
 <line class="measured-arc" x1="403.322663234" y1="163.379531756" x2="408.957719937" y2="166.158434195" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="measured-arc" x1="408.957719937" y1="166.158434195" x2="414.518102462" y2="169.083892961" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="measured-arc" x1="414.518102462" y1="169.083892961" x2="420" y2="172.153903092" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
-<line class="term-leader" x1="300" y1="83" x2="300" y2="137" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="term-leader" x1="300" y1="105" x2="300" y2="137" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="term-label" x="300" y="75" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Arc length</text>
-<text class="measurement" x="350" y="119" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.14</text>
+<text class="measurement" x="300" y="95" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.14</text>
 <line class="chord" x1="180" y1="172.153903092" x2="420" y2="172.153903092" stroke="#252525" stroke-width="1"/>
-<line class="term-leader" x1="300" y1="211" x2="300" y2="176" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="term-label" x="300" y="227" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Chord length</text>
-<text class="measurement" x="350" y="197" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
+<line class="term-leader" x1="300" y1="226" x2="300" y2="176" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="term-label" x="300" y="242" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Chord length</text>
+<text class="measurement" x="300" y="262" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
 <text class="notation-start" x="161.107695155" y="163.431471227" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="195.588457268" y1="163.153903092" x2="205.980762114" y2="157.153903092" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="205.980762114" y1="157.153903092" x2="199.034609691" y2="157.122814178" stroke="#8B8B8B" stroke-width="1.1"/>

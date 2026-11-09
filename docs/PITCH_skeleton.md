@@ -26,7 +26,7 @@ Research note: Anthony to find stitching examples from:
 
 - [Glossary](GLOSSARY.md): guide, slit, gap, landmark, junction and arm
 
-![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.gif)
+![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.png)
 
 # The spacing problem
 

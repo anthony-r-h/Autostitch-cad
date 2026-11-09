@@ -9007,7 +9007,7 @@
         "A5",
         "A7"
       ],
-      "animated": true,
+      "animated": false,
       "status": "Annotated geometric definitions.",
       "assets": [
         {
@@ -9042,7 +9042,7 @@
       "axioms": [
         "A2"
       ],
-      "animated": true,
+      "animated": false,
       "status": "Annotated geometric definitions.",
       "assets": [
         {
@@ -9073,7 +9073,7 @@
       "axioms": [
         "A9"
       ],
-      "animated": true,
+      "animated": false,
       "status": "Annotated geometric definitions.",
       "assets": [
         {
@@ -9105,7 +9105,7 @@
         "A2",
         "A3"
       ],
-      "animated": true,
+      "animated": false,
       "status": "Annotated chord and arc distances between the same centres.",
       "assets": [
         {

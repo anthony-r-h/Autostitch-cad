@@ -57,6 +57,13 @@ function Draw-Frame($elements) {
  finally {$g.Dispose();$large.Dispose()}
 }
 foreach($scene in $scenes) {
+ $still=Draw-Frame $scene.final
+ try {$still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)}
+ finally {$still.Dispose()}
+ if($scene.frames.Count -eq 0) {
+  Write-Output ($scene.name+': static SVG/PNG.')
+  continue
+ }
  $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
  foreach($frame in $scene.frames) {
   $bitmap=Draw-Frame $frame.elements
@@ -75,9 +82,6 @@ foreach($scene in $scenes) {
  }
  $file=[IO.File]::Create((Join-Path $temporary ($scene.name+'.gif')))
  try {$encoder.Save($file)} finally {$file.Dispose()}
- $still=Draw-Frame $scene.final
- try {$still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)}
- finally {$still.Dispose()}
  Write-Output ($scene.name+': '+$scene.frames.Count+' frames; SVG/PNG final state.')
  $encoder=$null
  [GC]::Collect()

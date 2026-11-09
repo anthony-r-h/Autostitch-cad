@@ -66,7 +66,12 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     labels.forEach((label,i)=>near(+label.value,points[i+1]-points[i],.00501));
     if(points.length===6) {
       const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
-      near(+label.value,remaining,.00501);
+      near(+label.value.replace('Residual ',''),remaining,.00501);
+      assert.equal(label.bold,true);assert.equal(label.size,labels[0].size);
+      const indicator=f.elements.filter(e=>e.kind==='residual-dimension');assert.equal(indicator.length,1);
+      assert.equal(indicator[0].color,'#C62828');near(indicator[0].a[1],indicator[0].b[1]);
+      near(dist(indicator[0].a,indicator[0].b)/view.scale,remaining);
+      assert(!f.elements.some(e=>e.kind==='residual-extension'));
       near(points.slice(1).reduce((sum,p,i)=>sum+p-points[i],0)+remaining,15.3);
       if(f.stage==='planning-revision') {
         assert(remaining<=previousResidual+1e-9);previousResidual=remaining;
@@ -74,7 +79,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     }
   }
   const residual=s.final.find(e=>e.kind==='residual-value');
-  near(+residual.value,s.name==='pitch-problem'?.3:0);
+  near(+residual.value.replace('Residual ',''),s.name==='pitch-problem'?.3:0);
   if(s.name!=='pitch-problem')assert.equal(s.frames.filter(f=>f.stage==='planning-revision').length,30);
 }
 
@@ -333,9 +338,10 @@ for(const s of scenes) {
   assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
   const source=readSvg(s.name).source;
   const terms=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)))?.terms??[];
-  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||terms.includes(match[1]),'Uncatalogued text in figure');
+  const termMatches=(value,term)=>value===term||(value.startsWith(term+' ')&&/^\d+\.\d{2}$/.test(value.slice(term.length+1)));
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
-  for(const term of terms)assert(labels.some(e=>e.value===term),`${s.name} missing ${term}`);
+  for(const term of terms)assert(labels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
   if(s.name!=='terms-slit') {
     assert(labels.some(e=>e.kind==='notation-start'&&e.value==='s'),`${s.name} needs a start`);
     assert(s.final.filter(e=>e.kind==='direction').length>=3,`${s.name} needs a direction arrow`);

@@ -35,12 +35,13 @@ function Draw-Frame($elements) {
      finally {$brush.Dispose()}
     }
     'text' {
-     $font=[Drawing.Font]::new('Arial',[single]$element.size,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
+     $fontStyle=if($element.bold){[Drawing.FontStyle]::Bold}else{[Drawing.FontStyle]::Regular}
+     $font=[Drawing.Font]::new('Arial',[single]$element.size,$fontStyle,[Drawing.GraphicsUnit]::Pixel)
      $brush=[Drawing.SolidBrush]::new($color)
      $format=[Drawing.StringFormat]::GenericTypographic.Clone()
      try {
       $format.Alignment=[Drawing.StringAlignment]::Center
-      $ascent=$font.FontFamily.GetCellAscent([Drawing.FontStyle]::Regular)*$element.size/$font.FontFamily.GetEmHeight([Drawing.FontStyle]::Regular)
+      $ascent=$font.FontFamily.GetCellAscent($fontStyle)*$element.size/$font.FontFamily.GetEmHeight($fontStyle)
       $g.DrawString($element.value,$font,$brush,[Drawing.PointF]::new($element.p[0],($element.p[1]-$ascent)),$format)
      } finally {$format.Dispose();$brush.Dispose();$font.Dispose()}
     }

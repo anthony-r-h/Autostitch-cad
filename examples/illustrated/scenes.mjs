@@ -75,13 +75,8 @@ function pitchScenes() {
       const last=project([points.at(-1),0],view)[0],end=project([length,0],view)[0];
       const remaining=Math.max(0,length-points.at(-1));
       elements.push(
-        line([last,135],[end,135],'residual-dimension',ink,2.5),
-        line([last,128],[last,142],'residual-dimension',ink,2.5),
-        line([end,128],[end,142],'residual-dimension',ink,2.5),
-        line([last,146],[last,165.5],'residual-extension',construction,.8),
-        line([end,146],[end,165.5],'residual-extension',construction,.8),
-        {...text([end,84],'Residual'),kind:'residual-label',color:ink},
-        {...text([end,111],remaining.toFixed(2)),kind:'residual-value',color:ink,size:22});
+        line([last,135],[end,135],'residual-dimension','#C62828',2.5),
+        {...text([end,111],`Residual ${remaining.toFixed(2)}`),kind:'residual-value',color:ink,size:15,bold:true});
     }
     return elements;
   };
@@ -551,7 +546,7 @@ export function svg(scene) {
   const elements=scene.final.map(e=>{
     if(e.type==='line')return `<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
-    return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}" fill="${e.color}">${escape(e.value)}</text>`;
+    return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
   });
   return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':'Static terminology figure.'}</desc>\n${elements.join('\n')}\n</svg>\n`;
 }

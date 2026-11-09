@@ -25,7 +25,7 @@ Outputs: `examples/counter_examples/assets/`. Temporary frames: `output/counter_
 ## Geometry
 
 - Common profile: $p=3\,\mathrm{mm}$, slit length $1.5\,\mathrm{mm}$, round-hole diameter $0.5\,\mathrm{mm}$.
-- Reference corner: three nominal intervals per arm; ordinary slit axes $-40^\circ$ and $-50^\circ$ in Cartesian coordinates; shared directed axis $135^\circ$. Its undirected axis is the diagonal seen in the annotated photograph. Thread connections are reconstructed separately from the hole axes.
+- Reference corner: three nominal intervals per arm; ordinary slit axes $-40^\circ$ and $-50^\circ$ in Cartesian coordinates; shared axis $-45^\circ$. Its axis is the diagonal seen in the annotated photograph. Connect each slit's positive tip to the next slit's negative tip; the shown face is already encoded in the slit axes.
 - Autostitch wallet: signed local lean $-40^\circ$. The incoming minus-tip and outgoing plus-tip locate the shared hole. The top endpoint and H anchors are placed by integer nominal steps from the virtual centres; the bottom row uses integer steps from the left H anchor.
 - Diagonal wallet: reuse the reference corner's slit axes and thread connections. Keep the H, right-row centres and bottom-row centres fixed. Place the corner slit at the outgoing virtual centre and set the top guide from nominal steps; this slightly raises the top guide while retaining nominal gaps throughout.
 - H: two legs, three circular openings per leg, width $3\,\mathrm{mm}$, height $6\,\mathrm{mm}$, rotated $45^\circ$. Connectivity is drawn explicitly; it is not a sewing itinerary.

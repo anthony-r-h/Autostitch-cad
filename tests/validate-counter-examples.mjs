@@ -23,11 +23,13 @@ for(const [a,row] of rows.entries())for(const [i,e] of row.entries()) {
   near(distance(e.a,e.b)/cv.scale,1.5);near(angle(e),(a===0?40:50)*Math.PI/180);
 }
 const threads=corner.final.filter(e=>e.kind==='thread');assert.equal(threads.length,6);
+near(distance(threads[0].a,rows[0][0].b),0);
+near(distance(threads[0].b,rows[0][1].a),0);
 near(angle(threads[0]),angle(threads[1]));near(angle(threads[4]),angle(threads[5]));
-assert(Math.abs(angle(threads[2])-angle(threads[1]))>10*Math.PI/180);
-assert(Math.abs(angle(threads[3])-angle(threads[4]))>10*Math.PI/180);
+assert(angle(threads[2])<angle(threads[1]));
+assert(angle(threads[3])>angle(threads[4]));
 near(angle(threads[1])-angle(threads[2]),angle(threads[3])-angle(threads[4]));
-near(distance(threads[2].b,shared.b),0);near(distance(threads[3].a,shared.a),0);
+near(distance(threads[2].b,shared.a),0);near(distance(threads[3].a,shared.b),0);
 assert(threads[2].width>threads[1].width&&threads[3].width>threads[4].width);
 
 const wallet=scenes[1],wv={x:435,y:45,scale:18};
@@ -74,6 +76,16 @@ for(const [a,row] of [diagonalSlits.slice(0,5),diagonalSlits.slice(5,9).toRevers
 near(distance(midpoint(diagonalSlits[4]),midpoint(diagonalJoint))/wv.scale,3);
 near(distance(midpoint(diagonalSlits[8]),midpoint(diagonalJoint))/wv.scale,3);
 
+for(const layout of [wallet,diagonalWallet]) {
+  const openings=slits(layout),circles=layout.final.filter(e=>e.kind==='hole'),drawn=layout.final.filter(e=>e.kind==='thread');
+  const connection=(a,b)=>assert(drawn.some(e=>distance(e.a,a)<1e-6&&distance(e.b,b)<1e-6),'Wrong visible thread tips');
+  for(const indices of [[0,1,2,3,4],[8,7,6,5],[9,10,11,12]]) {
+    for(let i=1;i<indices.length;i++)connection(openings[indices[i-1]].b,openings[indices[i]].a);
+  }
+  connection(openings[5].b,circles[3].p);
+  connection(circles[0].p,openings[9].a);
+}
+
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
   return distance(p,[a[0]+t*d[0],a[1]+t*d[1]]);
@@ -108,6 +120,13 @@ for(const s of scenes) {
   } else assert(!fs.existsSync(new URL(base.href+'.gif')),'Static figure must not retain a GIF');
   const tips=s.final.filter(e=>['slit','hole'].includes(e.kind)).flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
   for(const e of s.final.filter(e=>e.kind==='thread'))for(const p of [e.a,e.b])assert(tips.some(t=>distance(p,t)<1e-6));
+  // A face-specific slit angle is not a reason to swap the thread endpoints.
+  // Check every span, including both H approaches and both corner neighbours.
+  const expected=s.threadPaths.flatMap(path=>path.slice(1).map((next,i)=>({
+    a:path[i].type==='circle'?path[i].p:path[i].b,b:next.type==='circle'?next.p:next.a
+  })));
+  const drawn=s.final.filter(e=>e.kind==='thread');assert.equal(drawn.length,expected.length);
+  expected.forEach((e,i)=>{near(distance(drawn[i].a,e.a),0);near(distance(drawn[i].b,e.b),0);});
   for(const f of [...s.frames,{elements:s.final}]) {
     for(const role of ['notation-start','notation-end','notation-junction'])assert.deepEqual(f.elements.filter(e=>e.kind===role),s.final.filter(e=>e.kind===role));
     for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);

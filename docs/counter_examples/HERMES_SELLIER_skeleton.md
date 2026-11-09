@@ -8,6 +8,7 @@
 - Ordinary stitches repeat along each arm; the final incoming stitch and first outgoing stitch change angle
 - One real slit at the vertex joins both arms; its axis bisects the right angle
 - The thread uses different tips as it turns through that slit
+- With the illustrated slit angles, the adjoining thread angles change only slightly
 - The two affected stitches are drawn heavier
 
 ![Shared diagonal slit and its two adjoining stitches](../../examples/counter_examples/assets/sellier-diagonal-corner.gif)

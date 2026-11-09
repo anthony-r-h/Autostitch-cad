@@ -20,13 +20,11 @@ function diagonalCorner() {
     const slit=opening(arm===0?[-n*p,0]:[0,-n*p],angles[arm],view)[0];
     row.push(slit);result.push(slit);frame(s,[...result],65,`arm-${arm}-stitch`);
   }
-  // The shared slit changes which tips carry the approaching and departing
-  // thread. Preserve that connection as well as its inferred diagonal axis.
   const shared=opening([0,0],spec.sharedSlitDegrees*Math.PI/180,view)[0];
   result.push(shared);frame(s,[...result],130,'diagonal-shared-slit');
-  // The photographed face connects the opposite tips to the pitch figures.
-  // Reverse only the path axes; the drawn openings keep their inferred axes.
-  s.threadPaths=[[...rows[0],shared,...rows[1].toReversed()].map(e=>({...e,a:e.b,b:e.a}))];
+  // The slit axes already encode the shown face. Connect their tips directly;
+  // reversing them again would draw the opposite thread diagonal.
+  s.threadPaths=[[...rows[0],shared,...rows[1].toReversed()]];
   const finished=slitOutlines(finishThread(finish(s,result)));
   // Weight only the two affected thread segments; all thread appears together.
   const emphasise=elements=>{
@@ -86,7 +84,6 @@ function walletScene(diagonal=false) {
     [...rows[0],joint,...rows[1].toReversed(),circles[1][0]],
     circles[1],[circles[1][1],circles[0][1]],circles[0].toReversed(),[circles[0][0],...rows[2]]
   ];
-  if(diagonal)s.threadPaths=s.threadPaths.map(path=>path.map(e=>e.type==='line'?{...e,a:e.b,b:e.a}:e));
   return slitOutlines(finishThread({...s,final:result}));
 }
 

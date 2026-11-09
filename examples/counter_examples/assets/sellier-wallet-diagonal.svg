@@ -8,25 +8,25 @@
 <line class="direction" x1="195" y1="25.980767287" x2="189" y2="29.480767287" stroke="#8B8B8B" stroke-width="1.1"/>
 <text class="notation-end" x="168.816233816" y="351.164533471" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 <text class="notation-junction" x="453" y="13.980767287" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
-<line class="thread" x1="154.658400018" y1="17.303134556" x2="229.341599982" y2="34.658400018" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="208.658400018" y1="17.303134556" x2="283.341599982" y2="34.658400018" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="262.658400018" y1="17.303134556" x2="337.341599982" y2="34.658400018" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="316.658400018" y1="17.303134556" x2="391.341599982" y2="34.658400018" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="370.658400018" y1="17.303134556" x2="425.454058454" y2="16.434825741" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="444.545941546" y1="35.526708833" x2="443.677632731" y2="90.322367269" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="426.322367269" y1="69.639167305" x2="443.677632731" y2="144.322367269" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="426.322367269" y1="123.639167305" x2="443.677632731" y2="198.322367269" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="426.322367269" y1="177.639167305" x2="443.677632731" y2="252.322367269" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="426.322367269" y1="231.639167305" x2="435" y2="295.980767287" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="175.341599982" y1="34.658400018" x2="208.658400018" y2="17.303134556" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="229.341599982" y1="34.658400018" x2="262.658400018" y2="17.303134556" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="283.341599982" y1="34.658400018" x2="316.658400018" y2="17.303134556" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="337.341599982" y1="34.658400018" x2="370.658400018" y2="17.303134556" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="391.341599982" y1="34.658400018" x2="425.454058454" y2="16.434825741" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="444.545941546" y1="35.526708833" x2="426.322367269" y2="69.639167305" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="443.677632731" y1="90.322367269" x2="426.322367269" y2="123.639167305" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="443.677632731" y1="144.322367269" x2="426.322367269" y2="177.639167305" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="443.677632731" y1="198.322367269" x2="426.322367269" y2="231.639167305" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="443.677632731" y1="252.322367269" x2="435" y2="295.980767287" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="435" y1="295.980767287" x2="396.816233816" y2="257.797001103" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="396.816233816" y1="257.797001103" x2="358.632467632" y2="219.613234919" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="396.816233816" y1="257.797001103" x2="358.632467632" y2="295.980767287" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="320.448701448" y1="257.797001103" x2="358.632467632" y2="295.980767287" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="358.632467632" y1="295.980767287" x2="396.816233816" y2="334.164533471" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="396.816233816" y1="334.164533471" x2="332.474633834" y2="325.48690074" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="353.157833798" y1="342.842166202" x2="278.474633834" y2="325.48690074" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="299.157833798" y1="342.842166202" x2="224.474633834" y2="325.48690074" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="245.157833798" y1="342.842166202" x2="170.474633834" y2="325.48690074" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="396.816233816" y1="334.164533471" x2="353.157833798" y2="342.842166202" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="332.474633834" y1="325.48690074" x2="299.157833798" y2="342.842166202" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="278.474633834" y1="325.48690074" x2="245.157833798" y2="342.842166202" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="224.474633834" y1="325.48690074" x2="191.157833798" y2="342.842166202" stroke="#252525" stroke-width="1.8"/>
 <circle class="hole" cx="396.816233816" cy="334.164533471" r="4.5" fill="#252525"/>
 <circle class="hole" cx="358.632467632" cy="295.980767287" r="4.5" fill="#252525"/>
 <circle class="hole" cx="320.448701448" cy="257.797001103" r="4.5" fill="#252525"/>
@@ -46,5 +46,5 @@
 <line class="slit" x1="299.157833798" y1="342.842166202" x2="278.474633834" y2="325.48690074" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="299.993457691,341.846308426 279.310257726,324.491042964 277.639009941,326.482758516 298.322209905,343.838023978" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="slit" x1="245.157833798" y1="342.842166202" x2="224.474633834" y2="325.48690074" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="245.993457691,341.846308426 225.310257726,324.491042964 223.639009941,326.482758516 244.322209905,343.838023978" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="slit" x1="191.157833798" y1="342.842166202" x2="170.474633834" y2="325.48690074" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="191.993457691,341.846308426 171.310257726,324.491042964 169.639009941,326.482758516 190.322209905,343.838023978" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="444.545941546" y1="35.526708833" x2="425.454058454" y2="16.434825741" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="445.465180362,34.607470018 426.37329727,15.515586926 424.534819638,17.354064557 443.62670273,36.445947649" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="425.454058454" y1="16.434825741" x2="444.545941546" y2="35.526708833" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="424.534819638,17.354064557 443.62670273,36.445947649 445.465180362,34.607470018 426.37329727,15.515586926" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
 </svg>

@@ -109,21 +109,34 @@ function landmarkScene() {
   const view={x:60,y:187.5,scale:16},left=reference-1.5,right=reference+1.5;
   const base=straightBase(length,view),p=project([reference,0],view);
   base.push(line([p[0],p[1]-55],[p[0],p[1]+55],'landmark',ink,1.4),text([p[0],p[1]-67],'L1'));
-  const s=scene('axiom-landmark','A landmark reserves a nominal pair','F02');
+  const s=scene('axiom-landmark','Fixed landmark pair; bounded adjustments within each free span','F02');
   frame(s,base,90,'reference');
-  const pair=[...opening([left,0],alpha,view),...opening([right,0],alpha,view),...measure([left,0],[right,0],'3',view,-78)];
-  frame(s,[...base,...pair],150,'protected-pair');
-  const leftFit=selectFit({D:left,p:3}),rightFit=selectFit({D:length-right,p:3});
-  const leftPoints=stations(leftFit),rightPoints=stations(rightFit).map(x=>x+right);
-  let result=[...base,...pair];
-  for(const [points,fit,skip] of [[leftPoints,leftFit,left],[rightPoints,rightFit,right]]) {
-    for(const [i,x] of points.entries()) {
-      if(Math.abs(x-skip)<1e-9)continue;
-      result.push(...opening([x,0],alpha,view,{marked:i>=fit.i&&i<=fit.i+fit.k}));
-      frame(s,[...result],27);
+  const protectedDimension=measure([left,0],[right,0],'3',view,-78);
+  const fixed=[...base,...[0,left,right,length].flatMap(x=>opening([x,0],alpha,view)),...protectedDimension];
+  frame(s,fixed,150,'protected-pair');
+  const spans=[[0,left],[right,length]].flatMap(([a,b])=>measure([a,0],[b,0],'Free span',view,83).map(e=>
+    ({...e,kind:e.type==='text'?'span-label':'span-dimension'})));
+  const leftPoints=stations(selectFit({D:left,p:3})),rightPoints=stations(selectFit({D:length-right,p:3})).map(x=>x+right);
+  const target=[...leftPoints,...rightPoints];
+  const initial=[...leftPoints.map((x,i)=>i===leftPoints.length-1?left:i*3),
+    ...rightPoints.map((x,i)=>i===rightPoints.length-1?length:right+i*3)];
+  const draw=points=>{
+    const gaps=points.slice(1).map((x,i)=>x-points[i]),changed=gaps.map(g=>Math.abs(g-3)>1e-6);
+    const result=[...base,...spans,...protectedDimension,...points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:changed[i-1]||changed[i]}))];
+    for(const [i,gap] of gaps.entries()) {
+      if(i===leftPoints.length-1)continue;
+      result.push(...measure([points[i],0],[points[i+1],0],gap.toFixed(2),view,-78).map(e=>
+        ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',color:changed[i]?ink:construction})));
     }
+    return result;
+  };
+  frame(s,[...fixed,...spans],100,'free-spans');
+  frame(s,draw(initial),180,'end-adjustments');
+  for(let i=1;i<=30;i++) {
+    const t=ease(i/30);
+    frame(s,draw(initial.map((x,j)=>lerp(x,target[j],t))),8,'distribute-within-spans');
   }
-  return finish(s,result);
+  return finish(s,draw(target));
 }
 
 function curveScene() {

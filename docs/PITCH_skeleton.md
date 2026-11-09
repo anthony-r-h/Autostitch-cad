@@ -79,12 +79,11 @@ Research note: Anthony to find stitching examples from:
 - Chosen endpoints, landmark pairs and junction neighbours stay fixed during fitting
 - A landmark sits midway between a nominally spaced pair of slits
 - The landmark gap is protected from adjustment
+- Absorb each free span's residual in its unprotected gaps, within $0.9p\leq g\leq1.1p$
+- Centre the adjustments within each span; the two sides can require different corrections
+- Here, the left span uses one $2.75\,\mathrm{mm}$ gap and the right one $3.25\,\mathrm{mm}$ gap; the landmark pair stays $3\,\mathrm{mm}$ apart
 
-![A4 and A5: reserve the landmark pair before fitting the free spans](../examples/illustrated/assets/axiom-landmark.gif)
-
-## Adjustment bounds
-
-- Protected gaps remain nominal; other slit-to-slit gaps may vary within $0.9p\leq g\leq1.1p$
+![A4, A5 and A7: keep the landmark pair fixed while distributing bounded adjustments within each free span](../examples/illustrated/assets/axiom-landmark.gif)
 
 ## Shared openings
 

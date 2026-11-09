@@ -101,8 +101,19 @@ assert(!has(landmark,[16.25,0]));near((14.75+17.75)/2,16.25);
 bounded(landmark.slice(1).map((p,i)=>dist(p,landmark[i])));
 for(const frame of scenes.find(s=>s.name==='axiom-landmark').frames.filter(f=>!['reference','reset'].includes(f.stage))) {
   const xs=frame.elements.filter(e=>e.kind==='slit').map(e=>(e.a[0]+e.b[0])/2);
-  for(const station of [14.75,17.75])assert(xs.some(x=>Math.abs(x-(60+station*16))<1e-6),'Protected pair moved during fitting');
+  for(const station of [0,14.75,17.75,30])assert(xs.some(x=>Math.abs(x-(60+station*16))<1e-6),'Fixed opening moved during fitting');
+  if(xs.length===11) {
+    const points=xs.map(x=>(x-60)/16).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
+    bounded(gaps);near(gaps[5],3);
+    const labels=frame.elements.filter(e=>e.kind==='gap-value');
+    const adjustable=gaps.filter((g,i)=>i!==5);assert.equal(labels.length,adjustable.length);
+    labels.forEach((label,i)=>near(+label.value,adjustable[i],.00501));
+    near(gaps.slice(0,5).reduce((a,b)=>a+b,0),14.75);
+    near(gaps.slice(6).reduce((a,b)=>a+b,0),12.25);
+  }
 }
+const landmarkFrames=scenes.find(s=>s.name==='axiom-landmark').frames;
+assert.equal(landmarkFrames.filter(f=>f.stage==='distribute-within-spans').length,30);
 
 const cornerView={x:370,y:105,scale:24};
 const virtuals=slits('axiom-corner',cornerView,'virtual');assert.equal(virtuals.length,2);

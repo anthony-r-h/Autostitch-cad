@@ -40,9 +40,9 @@ A slit follows the local tangent without changing length or lean. Pitch is a dir
 
 ### Reserve a landmark pair: A4, A5, A7
 
-Place a nominal gap across the reference first. Keep that pair fixed while fitting the remaining spans. There is no opening at L1. `F02`.
+Reserve the endpoints and nominal pair across L1. Distribute the adjustments into the free spans while those four openings stay fixed: $2.75\,\mathrm{mm}$ on the left, $3.25\,\mathrm{mm}$ on the right. Every gap stays within the $2.7$ to $3.3\,\mathrm{mm}$ bounds; the landmark gap remains $3\,\mathrm{mm}$. There is no opening at L1. `F02`.
 
-![A landmark protects its nominal pair while the surrounding spans are fitted](assets/axiom-landmark.gif)
+![Adjustments move into the free spans while endpoints and the landmark pair stay fixed](assets/axiom-landmark.gif)
 
 ### Construct the corner hole: A6
 

@@ -4,8 +4,6 @@
 <line class="fixed-end" x1="540" y1="165.5" x2="540" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="term-leader" x1="510" y1="74" x2="510" y2="187.5" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="term-label" x="510" y="66" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Guide</text>
-<line class="slit" x1="286.807466683" y1="195.213451316" x2="305.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="334.807466683" y1="195.213451316" x2="353.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="50.807466683" y1="195.213451316" x2="69.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="98.807466683" y1="195.213451316" x2="117.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="146.807466683" y1="195.213451316" x2="165.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
@@ -15,6 +13,8 @@
 <line class="adjustment-mark" x1="193.815712696" y1="198.79853931" x2="187.799220669" y2="191.628363322" stroke="#252525" stroke-width="2.6"/>
 <line class="adjustment-mark" x1="212.200779331" y1="183.371636678" x2="206.184287304" y2="176.20146069" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="238.807466683" y1="195.213451316" x2="257.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="286.807466683" y1="195.213451316" x2="305.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="334.807466683" y1="195.213451316" x2="353.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="382.807466683" y1="195.213451316" x2="401.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="430.807466683" y1="195.213451316" x2="449.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
 <line class="adjustment-mark" x1="433.815712696" y1="198.79853931" x2="427.799220669" y2="191.628363322" stroke="#252525" stroke-width="2.6"/>

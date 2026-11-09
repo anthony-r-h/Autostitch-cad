@@ -148,8 +148,10 @@ Research note: Anthony to find stitching examples from:
 
 ## Reject impossible fits
 
-- A $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch cannot fit within the adjustment bounds
-- Two gaps are too long; three are too short: $2(3.3)<7<3(2.7)$
+- Straight span, fixed endpoints, no protected gaps: a fit requires $0.9np\leq L\leq1.1np$ for an integer gap count $n\geq1$
+- Shortest possible fit: $0.9p$. Every length $L\geq4.5p$ fits the spacing bounds; shorter lengths have gaps between feasible ranges
+- Clearance remains a separate check
+- At $p=3\,\mathrm{mm}$, every length from $13.5\,\mathrm{mm}$ fits; $7\,\mathrm{mm}$ fails because $2(3.3)<7<3(2.7)$
 - Change the guide or its fixed features
 
 ![A5 and A7: no permitted gap count fits the fixed span](../examples/illustrated/assets/fit-rejected.gif)

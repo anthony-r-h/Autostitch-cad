@@ -262,7 +262,7 @@ function noFitScene() {
   const fixed=[...base,...opening([0,0],alpha,view),...opening([input.length,0],alpha,view)];
   const s=scene('fit-rejected','No gap count fits the permitted spacing','A5, A7');
   frame(s,base,80,'guide');frame(s,fixed,100,'fixed-ends');
-  const reject=[line([60,45],[540,330],'rejected',ink,5),line([60,330],[540,45],'rejected',ink,5)];
+  const reject=[line([240,130],[360,250],'rejected',ink,12),line([240,250],[360,130],'rejected',ink,12)];
   for(const count of [2,3]) {
     const gap=input.length/count;
     const proposed=Array.from({length:count-1},(_,i)=>opening([(i+1)*gap,0],alpha,view,{proposed:true})).flat();

@@ -8849,7 +8849,7 @@
         "direction",
         "e"
       ],
-      "rejectionNotation": "Large X across the diagram on each rejected candidate and the final hold."
+      "rejectionNotation": "Compact, thick X centred over the failed fit on each rejected candidate and the final hold."
     },
     {
       "id": "ILL-CLOSURE",

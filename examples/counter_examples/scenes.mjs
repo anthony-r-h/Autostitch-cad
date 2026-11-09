@@ -295,5 +295,22 @@ function faglianoScene(solved=false) {
   return slitOutlines(finishThread(solved?{...s,final:result}:finish(s,result)));
 }
 
+export function absoluteStitchLengthDeviation(s) {
+  const profile=catalog.illustrations.find(item=>item.id===s.source);
+  const {pitch:p,slitLength:ell,leanDegrees}=profile;
+  const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const slit=s.final.find(e=>e.kind==='slit'),scale=distance(slit.a,slit.b)/ell;
+  const baseline=Math.sqrt(p*p+ell*ell-2*p*ell*Math.cos(leanDegrees*Math.PI/180));
+  let total=0;
+  for(const path of s.threadPaths)for(let i=1;i<path.length;i++) {
+    const a=path[i-1],b=path[i];
+    // Exclude the H's internal decoration, but retain its two approaches.
+    if(a.type==='circle'&&b.type==='circle')continue;
+    const from=a.type==='circle'?a.p:a.b,to=b.type==='circle'?b.p:b.a;
+    total+=Math.abs(distance(from,to)/scale-baseline);
+  }
+  return total;
+}
+
 export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes(),faglianoScene(),faglianoScene(true)];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

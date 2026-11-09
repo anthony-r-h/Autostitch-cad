@@ -50,6 +50,10 @@ Consecutive equal adjusted gaps form an **adjustment block** within a free span.
 
 For a span with $n$ gaps, its residual is $r=L-np$ on a straight guide, or $r=R\left(\lvert\theta\rvert-2n\arcsin\left(p/(2R)\right)\right)$ on a circular guide of radius $R$ and sweep $\theta$ in radians. Absolute residual uses length along the guide; absolute adjustment uses chord lengths. They can differ on curves.
 
+**Absolute stitch-length deviation:** $\sum_i\lvert t_i-t_{0,i}\rvert$, the total difference between visible thread lengths and ordinary straight-row stitches at nominal pitch. It includes changes caused by spacing, curvature and corner treatment.
+
+For slit length $\ell$ and lean $\alpha$, the straight-row baseline is $t_0=\sqrt{p^2+\ell^2-2p\ell\cos\alpha}$. Measure $t_i$ between the thread endpoints in the diagram: slit tips or round-hole centres. This measures length variation, not thread direction or visual quality.
+
 ## Junction
 
 A meeting with two or more **arms**: portions of stitch lines extending away from it. A through-line contributes two arms, a T has three, and an X has four.

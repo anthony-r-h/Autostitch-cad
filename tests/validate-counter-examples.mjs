@@ -1,7 +1,7 @@
 // Check the reconstruction and nominal wallet layout independently of rendering.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createScenes} from '../examples/counter_examples/scenes.mjs';
+import {createScenes,absoluteStitchLengthDeviation} from '../examples/counter_examples/scenes.mjs';
 import {gifBlocks,svg} from '../examples/illustrated/scenes.mjs';
 
 const root=new URL('../',import.meta.url),scenes=createScenes();
@@ -332,4 +332,20 @@ for(const s of scenes) {
     for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
   }
 }
-console.log('Counter-examples valid: Sellier, Loewe, Speedy and Fagliano geometry; synchronized straights, equal curve compression, thread connections, handedness, closure, clearance, exports and animation timing.');
+// Keep the published thread-length totals tied to the final drawn geometry.
+const exampleText=fs.readFileSync(new URL('docs/EXAMPLES_skeleton.md',root),'utf8');
+const metricRows=exampleText.split('\n').filter(line=>/^\| (Reference|Autostitch|Shared diagonal slit) \|/.test(line));
+const documentOrder=[0,2,1,3,4,5,6,7,8];assert.equal(metricRows.length,documentOrder.length);
+for(const [i,index] of documentOrder.entries()) {
+  const layout=scenes[index],scale=distance(slits(layout)[0].a,slits(layout)[0].b)/1.5;
+  // Obtain the nominal baseline directly from the existing straight Sellier row.
+  const baseline=distance(threads[0].a,threads[0].b)/cv.scale;
+  const circles=layout.final.filter(e=>e.kind==='hole').map(e=>e.p);
+  const measured=layout.final.filter(e=>e.kind==='thread').filter(e=>
+    !(circles.some(c=>distance(c,e.a)<1e-6)&&circles.some(c=>distance(c,e.b)<1e-6)))
+    .reduce((sum,e)=>sum+Math.abs(distance(e.a,e.b)/scale-baseline),0);
+  near(absoluteStitchLengthDeviation(layout),measured);
+  const published=Number(metricRows[i].split('|').at(-2).trim().replaceAll('$',''));
+  assert.equal(published,Number(measured.toFixed(3)),layout.name);
+}
+console.log('Counter-examples valid: Sellier, Loewe, Speedy and Fagliano geometry; synchronized straights, equal curve compression, thread connections, handedness, closure, clearance, exports, animation timing and published stitch-length totals.');

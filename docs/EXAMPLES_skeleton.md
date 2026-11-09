@@ -20,9 +20,9 @@ Corner treatments found in finished work, reconstructed as stitch diagrams and c
 
 ![Shared diagonal slit joining rows with different lean relative to their guides](../examples/counter_examples/assets/sellier-diagonal-corner.gif)
 
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Shared diagonal slit | $0$ | $0.000$ | $0.000$ |
+| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Shared diagonal slit | $0$ | $0.000$ | $0.000$ | $0.123$ |
 
 ## Cases
 
@@ -47,10 +47,10 @@ Corner treatments found in finished work, reconstructed as stitch diagrams and c
 
 ![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Reference | $0$ | $0.000$ | $0.000$ |
-| Autostitch | $0$ | $0.000$ | $0.000$ |
+| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $0$ | $0.000$ | $0.000$ | $1.213$ |
+| Autostitch | $0$ | $0.000$ | $0.000$ | $1.090$ |
 
 ### Loewe Mini Feather hanger
 
@@ -74,10 +74,10 @@ Corner treatments found in finished work, reconstructed as stitch diagrams and c
 
 ![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Reference | $3$ | $0.900$ | $0.900$ |
-| Autostitch | $1$ | $0.249$ | $0.249$ |
+| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $3$ | $0.900$ | $0.900$ | $1.403$ |
+| Autostitch | $1$ | $0.249$ | $0.249$ | $0.224$ |
 
 ### Louis Vuitton Speedy handle chape
 
@@ -101,10 +101,10 @@ Corner treatments found in finished work, reconstructed as stitch diagrams and c
 
 ![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Reference | $26$ | $4.931$ | $4.931$ |
-| Autostitch | $6$ | $0.917$ | $0.917$ |
+| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $26$ | $4.931$ | $4.931$ | $6.610$ |
+| Autostitch | $6$ | $0.917$ | $0.917$ | $0.821$ |
 
 ### Jaeger-LeCoultre / Casa Fagliano strap tip
 
@@ -131,9 +131,9 @@ Corner treatments found in finished work, reconstructed as stitch diagrams and c
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Reference | $10$ | $2.509$ | $2.513$ |
-| Autostitch | $5$ | $1.337$ | $1.339$ |
+| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $10$ | $2.509$ | $2.513$ | $2.030$ |
+| Autostitch | $5$ | $1.337$ | $1.339$ | $1.169$ |
 
 [Sources, geometry and reproduction](../examples/counter_examples/README.md)

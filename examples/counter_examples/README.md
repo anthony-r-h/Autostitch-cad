@@ -61,3 +61,9 @@ Interpretation notes are collected in the examples document. These figures use a
 ## Comparison totals
 
 Use the terms in [the glossary](../../docs/GLOSSARY.md#gap-and-pitch). Sum residual magnitudes per free span before combining runs. For Autostitch corners, count virtual-to-real steps, not real-to-hole distances; these steps are nominal in the current cases. Reference totals include gaps to a fixed round hole. Exclude the H's internal decorative spacing and include its two nominal approaches. Round only after summation.
+
+Absolute stitch-length deviation uses the drawn thread endpoints, including corner-hole connections and the H approaches. Its baseline is an ordinary straight-row stitch at the catalog pitch, slit length and lean. Internal H stitches are excluded. Recalculate from the repository root:
+
+```powershell
+node --input-type=module -e "import {createScenes,absoluteStitchLengthDeviation} from './examples/counter_examples/scenes.mjs'; for(const s of createScenes()) console.log(s.name,absoluteStitchLengthDeviation(s).toFixed(3));"
+```

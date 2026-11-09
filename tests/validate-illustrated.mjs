@@ -346,11 +346,12 @@ assert.equal(measuredArc.length,40);
 const arcLength=measuredArc.reduce((sum,e)=>sum+Math.hypot(e.x2-e.x1,e.y2-e.y1)/80,0);
 near(arcLength,Math.PI,1e-4);assert(arcLength>3);
 
-const problemView={x:360,y:85,scale:25};
+const cornerInput=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
+const problemView={x:360,y:85,scale:225/cornerInput.armLength};
 for(const treatment of ['cross','gap']) {
   const name=`problem-corner-${treatment}`,openings=slits(name,problemView);
-  assert.equal(openings.length,6);
-  for(const p of [[-9,0],[-6,0],[-3,0],[0,-3],[0,-6],[0,-9]])assert(has(openings.map(s=>s.center),p));
+  assert.equal(openings.length,2*cornerInput.armLength/3);
+  for(let d=3;d<=cornerInput.armLength;d+=3)for(const p of [[-d,0],[0,-d]])assert(has(openings.map(s=>s.center),p));
   const vertexSlits=openings.filter(s=>dist(s.center,[0,0])<1e-6);
   assert.equal(vertexSlits.length,0);
   if(treatment==='cross') {
@@ -365,7 +366,49 @@ for(const treatment of ['cross','gap']) {
   if(treatment==='gap') {
     const incoming=openings.find(s=>dist(s.center,[-3,0])<1e-6),outgoing=openings.find(s=>dist(s.center,[0,-3])<1e-6);
     assert(readSvg(name).elements.filter(e=>e.class==='thread').some(e=>
-      dist([(+e.x1-360)/25,(85-e.y1)/25],incoming.b)<1e-6&&dist([(+e.x2-360)/25,(85-e.y2)/25],outgoing.a)<1e-6));
+      dist([(+e.x1-360)/problemView.scale,(85-e.y1)/problemView.scale],incoming.b)<1e-6&&dist([(+e.x2-360)/problemView.scale,(85-e.y2)/problemView.scale],outgoing.a)<1e-6));
+  }
+}
+
+const cornerSolution=scenes.find(s=>s.name==='problem-corner-autostitch');
+const crossing=scenes.find(s=>s.name==='problem-corner-cross');
+assert.deepEqual(cornerSolution.frames[0].elements,crossing.frames.find(f=>f.stage==='result').elements);
+assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
+const solvedSlits=slits(cornerSolution.name,problemView),solvedVirtuals=slits(cornerSolution.name,problemView,'virtual'),solvedHole=circle(cornerSolution.name,problemView);
+assert.equal(solvedSlits.length,10);assert.equal(solvedVirtuals.length,2);
+near(dist(solvedVirtuals[0].a,solvedHole),0);near(dist(solvedVirtuals[1].b,solvedHole),0);
+const rows=[solvedSlits.slice(0,5),solvedSlits.slice(5)];
+for(const [a,row] of rows.entries()) {
+  near(dist(row[0].center,a===0?[-15,0]:[0,-15]),0);
+  near(dist(row.at(-1).center,solvedVirtuals[a].center),3);
+  row.forEach(s=>{near(s.center[a===0?1:0],0);near(s.angle,a===0?alpha:alpha-Math.PI/2);});
+  const gaps=row.slice(1).map((s,i)=>dist(s.center,row[i].center));bounded(gaps);
+  const changed=gaps.map((gap,i)=>({gap,i})).filter(g=>Math.abs(g.gap-3)>1e-6);
+  assert.equal(changed.length,a===0?4:1);
+  if(a===1)assert.equal(changed[0].i,1,'Outgoing half-index tie must follow traversal direction');
+}
+for(const [i,a] of solvedSlits.entries()) {
+  assert(pointSegmentDistance(solvedHole,a.a,a.b)-.25-.15>=.2);
+  for(const b of solvedSlits.slice(i+1))assert(segmentDistance(a.a,a.b,b.a,b.b)-.3>=.2);
+}
+const centre=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+for(const f of cornerSolution.frames) {
+  assert.deepEqual(f.elements.filter(e=>e.kind==='guide'),crossing.final.filter(e=>e.kind==='guide'));
+  const real=f.elements.filter(e=>e.kind==='slit'),virtual=f.elements.filter(e=>e.kind==='virtual');
+  assert.equal(real.length,10);assert.equal(virtual.length,2);
+  for(const a of [0,1]) {
+    near(dist(centre(real[a*5]),a===0?[135,85]:[360,310]),0);
+    near(dist(centre(real[a*5+4]),centre(virtual[a]))/problemView.scale,3);
+  }
+  if(['shared-hole','distribute-within-arms','result','thread-reveal'].includes(f.stage)) {
+    assert.deepEqual(virtual,cornerSolution.final.filter(e=>e.kind==='virtual'));
+    assert.deepEqual(f.elements.filter(e=>e.kind==='hole'),cornerSolution.final.filter(e=>e.kind==='hole'));
+    for(const i of [4,9])near(dist(centre(real[i]),centre(cornerSolution.final.filter(e=>e.kind==='slit')[i])),0);
+  }
+  const values=f.elements.filter(e=>e.kind==='gap-value');
+  if(values.length) {
+    assert.equal(values.length,8);
+    values.forEach((e,i)=>{const k=Math.floor(i/4)*5+i%4;near(+e.value,dist(centre(real[k]),centre(real[k+1]))/problemView.scale,.00501);});
   }
 }
 

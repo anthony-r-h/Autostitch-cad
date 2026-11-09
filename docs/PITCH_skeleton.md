@@ -74,6 +74,14 @@ Research note: Anthony to find stitching examples from:
 
 ![Thread bridges the gap between arms that stop short of the vertex](../examples/illustrated/assets/problem-corner-gap.gif)
 
+## Autostitch solution
+
+- Align the selected tips of the terminal virtual slits at one shared round hole
+- Keep the outer endpoints fixed and the corner steps nominal; fit the remaining spans
+- Distribute the fewest permitted adjustments centrally within each arm
+
+![Autostitch: resolve the virtual crossing, then distribute the arm adjustments](../examples/illustrated/assets/problem-corner-autostitch.gif)
+
 # Why CAD
 
 - Exact curves, dimensions, snaps and references define where the stitching belongs

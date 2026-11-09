@@ -106,8 +106,8 @@ function pitchScenes() {
 
 function cornerProblemScenes() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
-  const view={x:360,y:85,scale:25},base=[worldLine([-input.armLength,0],[0,0],view),worldLine([0,0],[0,-input.armLength],view)];
-  return ['cross','gap'].map(treatment=>{
+  const view={x:360,y:85,scale:225/input.armLength},base=[worldLine([-input.armLength,0],[0,0],view),worldLine([0,0],[0,-input.armLength],view)];
+  const comparisons=['cross','gap'].map(treatment=>{
     const s=scene(`problem-corner-${treatment}`,`Corner problem: ${treatment}`,'ILL-CORNER-PROBLEM');
     const result=[...base];frame(s,[...result],90,'guides');
     const incoming=[],outgoing=[];
@@ -126,6 +126,42 @@ function cornerProblemScenes() {
     s.threadPaths=[[...incoming,...(treatment==='cross'?[vertex]:[]),...outgoing.toReversed()]];
     return finish(s,result);
   });
+  const s=scene('problem-corner-autostitch','Autostitch: fit the arms to a shared tip intersection','ILL-CORNER-PROBLEM');
+  // Continue the established crossing, without replaying the approaching rows.
+  frame(s,comparisons[0].final,100,'crossing');
+  const h=.75,ui=axis(alpha),uo=axis(alpha-Math.PI/2);
+  const joint=[h*uo[0],-h*ui[1]],ci=add(joint,mul(ui,h)),co=add(joint,mul(uo,-h));
+  const nominal=Array.from({length:input.armLength/3},(_,i)=>input.armLength-i*3);
+  const fits=[ci[0],co[1]].map(c=>selectFit({D:input.armLength+c-3,p:3}));
+  if(fits.some(f=>!f||f.n!==nominal.length-1))throw new Error('Corner comparison needs equal-count feasible arm fits');
+  const targets=[stations(fits[0]).map(x=>input.armLength-x),stations(fits[1]).map(x=>3-co[1]+x).toReversed()];
+  const anchored=[ci[0],co[1]].map(c=>nominal.map((x,i)=>i===nominal.length-1?3-c:x));
+  const draw=(rows,virtuals,showHole)=>{
+    const elements=[...base];
+    virtuals.forEach(c=>{if(Math.hypot(...c)>1e-9)elements.push(worldLine([0,0],c,view,'extension',guideInk,1,true));});
+    for(const [arm,points] of rows.entries()) {
+      const position=x=>arm===0?[-x,0]:[0,-x],gaps=points.slice(1).map((x,i)=>points[i]-x);
+      const changed=gaps.map(g=>Math.abs(g-3)>1e-6);
+      points.forEach((x,i)=>elements.push(...opening(position(x),arm===0?alpha:alpha-Math.PI/2,view,{marked:changed[i-1]||changed[i]})));
+      elements.push(...opening(virtuals[arm],arm===0?alpha:alpha-Math.PI/2,view,{virtual:true}));
+      gaps.forEach((gap,i)=>elements.push(...measure(position(points[i]),position(points[i+1]),gap.toFixed(2),view,arm===0?36:-38).map(e=>
+        ({...e,...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{}),kind:e.type==='text'?'gap-value':'gap-dimension',color:gap<2.7||gap>3.3?'#C62828':changed[i]?ink:construction}))));
+    }
+    if(showHole)elements.push(hole(joint,view));
+    return elements;
+  };
+  for(let i=1;i<=30;i++) {
+    const t=ease(i/30),rows=anchored.map(row=>row.map((x,j)=>lerp(nominal[j],x,t)));
+    frame(s,draw(rows,[mul(ci,t),mul(co,t)],false),8,'align-terminal-tips');
+  }
+  frame(s,draw(anchored,[ci,co],true),130,'shared-hole');
+  for(let i=1;i<=30;i++) {
+    const t=ease(i/30),rows=anchored.map((row,a)=>row.map((x,j)=>lerp(x,targets[a][j],t)));
+    frame(s,draw(rows,[ci,co],true),8,'distribute-within-arms');
+  }
+  const result=draw(targets,[ci,co],true),slits=result.filter(e=>e.kind==='slit');
+  s.threadPaths=[[...slits.slice(0,nominal.length),result.find(e=>e.kind==='hole'),...slits.slice(nominal.length).toReversed()]];
+  return [...comparisons,finish(s,result)];
 }
 
 function landmarkScene(layout) {

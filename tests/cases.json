@@ -9215,9 +9215,9 @@
         "A6"
       ],
       "animated": true,
-      "status": "Two introductory corner treatments: crossing virtual terminal slits locate the vertex hole, or thread bridges the gap. The A6 selected-tip construction is shown separately.",
+      "status": "Compare vertex crossing and gap bridging with the A6 selected-tip solution on identical fixed guides. The solution continues from the crossing, reserves nominal corner steps, then fits the free spans using the independent selector; analytic illustration, not a native solver run.",
       "inputs": {
-        "armLength": 9
+        "armLength": 15
       },
       "assets": [
         {
@@ -9227,6 +9227,10 @@
         {
           "path": "examples/illustrated/assets/problem-corner-gap",
           "treatment": "gap"
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-autostitch",
+          "treatment": "autostitch"
         }
       ],
       "notation": [

@@ -32,11 +32,17 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 ## The corner problem
 
-`ILL-CORNER-PROBLEM`: the same right-angle guides and pitch, with two introductory treatments. Crossing virtual terminal slits locate a round hole at the vertex; stopping short leaves a thread bridge. The A6 selected-tip construction appears later.
+`ILL-CORNER-PROBLEM`: the same right-angle guides, each $15\,\mathrm{mm}$ long, at $3\,\mathrm{mm}$ pitch. Crossing virtual terminal slits locate a round hole at the vertex; stopping short leaves a thread bridge.
 
 ![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-cross.gif)
 
 ![Stop short and bridge between the arms](assets/problem-corner-gap.gif)
+
+The Autostitch solution starts at the completed crossing state. Move the terminal virtuals and their nominally spaced real neighbours until the selected tips meet (A6), then fit the free spans while keeping the outer endpoints, neighbours and hole fixed. Gap values update; provisional gaps outside the bounds are red. The final incoming arm has four $3.264\,\mathrm{mm}$ adjusted gaps; the outgoing arm has one $3.092\,\mathrm{mm}$ adjusted gap. `I` marks identify them. Reveal the thread together and hold for two seconds.
+
+![Resolve the virtual crossing and fit both arms](assets/problem-corner-autostitch.gif)
+
+Motion shows planning revisions, not physical punching order; the analytic construction and fit selector do not execute the CAD plugin.
 
 ## Axioms in geometry
 

@@ -8603,12 +8603,12 @@
           "label": "End adjustment"
         },
         {
-          "path": "examples/illustrated/assets/pitch-centre",
+          "path": "examples/illustrated/assets/pitch-autostitch",
           "policy": "central",
           "changedGaps": 1,
           "firstChangedGap": 2,
           "adjustedPitch": 3.3,
-          "label": "Central adjustment (Autostitch)"
+          "label": "Autostitch"
         }
       ],
       "animated": true,
@@ -9224,14 +9224,14 @@
       },
       "assets": [
         {
-          "path": "examples/illustrated/assets/problem-corner-cross",
+          "path": "examples/illustrated/assets/problem-corner-vertex-point",
           "treatment": "cross",
-          "label": "Vertex hole"
+          "label": "Vertex point"
         },
         {
-          "path": "examples/illustrated/assets/problem-corner-gap",
+          "path": "examples/illustrated/assets/problem-corner-bridge",
           "treatment": "gap",
-          "label": "Thread bridge"
+          "label": "Bridge"
         },
         {
           "path": "examples/illustrated/assets/problem-corner-mirrored",
@@ -9241,7 +9241,7 @@
         {
           "path": "examples/illustrated/assets/problem-corner-autostitch",
           "treatment": "autostitch",
-          "label": "Shared tip hole (Autostitch)"
+          "label": "Autostitch"
         }
       ],
       "notation": [

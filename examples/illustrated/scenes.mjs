@@ -90,7 +90,7 @@ function pitchScenes() {
   const fits=[
     {name:'pitch-spread',title:'Even spacing',points:Array.from({length:openings},(_,i)=>i*length/(openings-1))},
     {name:'pitch-end',title:'End adjustment',points:[0,3,6,9,12,length]},
-    {name:'pitch-centre',title:'Central adjustment (Autostitch)',points:stations(selectFit({D:length,p:3}))}
+    {name:'pitch-autostitch',title:'Autostitch',points:stations(selectFit({D:length,p:3}))}
   ];
   const scenes=[problem];
   for(const fit of fits) {
@@ -151,8 +151,8 @@ function cornerProblemScenes() {
   const referenceFits=lengths.map(length=>selectFit({D:length-3,p:3}));
   if(referenceFits.some(f=>!f||f.n!==input.armIntervals-1))throw new Error('Vertex comparison needs equal-count feasible arm fits');
   const referenceRows=[stations(referenceFits[0]).map(x=>lengths[0]-x),stations(referenceFits[1]).map(x=>3+x).toReversed()];
-  const comparisons=['cross','gap'].map(treatment=>{
-    const s=scene(`problem-corner-${treatment}`,treatment==='cross'?'Vertex hole':'Thread bridge','ILL-CORNER-PROBLEM');
+  const comparisons=['vertex-point','bridge'].map(treatment=>{
+    const s=scene(`problem-corner-${treatment}`,treatment==='vertex-point'?'Vertex point':'Bridge','ILL-CORNER-PROBLEM');
     const result=[...base];frame(s,[...result],90,'guides');
     const incoming=[],outgoing=[];
     for(const [i,row] of [incoming,outgoing].entries()) {
@@ -161,17 +161,17 @@ function cornerProblemScenes() {
         const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view,{marked:adjusted(j-1)||adjusted(j)});
         row.push(slit[0]);result.push(...slit);frame(s,[...result],65,`arm-${i}-stitch`);
       }
-      if(treatment==='cross') {
+      if(treatment==='vertex-point') {
         const slit=opening([0,0],i===0?alpha:alpha-Math.PI/2,view,{virtual:true});
         result.push(...slit);frame(s,[...result],120,`arm-${i}-terminal`);
       }
     }
     const vertex=hole([0,0],view);
-    if(treatment==='cross'){result.push(vertex);frame(s,[...result],130,'vertex-hole');}
-    s.threadPaths=[[...incoming,...(treatment==='cross'?[vertex]:[]),...outgoing.toReversed()]];
+    if(treatment==='vertex-point'){result.push(vertex);frame(s,[...result],130,'vertex-point');}
+    s.threadPaths=[[...incoming,...(treatment==='vertex-point'?[vertex]:[]),...outgoing.toReversed()]];
     return finish(s,result);
   });
-  const s=scene('problem-corner-autostitch','Shared tip hole (Autostitch)','ILL-CORNER-PROBLEM');
+  const s=scene('problem-corner-autostitch','Autostitch','ILL-CORNER-PROBLEM');
   // Continue the established crossing, without replaying the approaching rows.
   frame(s,comparisons[0].final,100,'crossing');
   const fits=[ci[0],co[1]].map((c,arm)=>selectFit({D:lengths[arm]+c-3,p:3}));

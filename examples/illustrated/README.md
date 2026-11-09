@@ -18,11 +18,11 @@ Keep four gaps nominal and adjust the last one.
 
 ![Adjust the last gap](assets/pitch-end.gif)
 
-## Central adjustment (Autostitch)
+## Autostitch
 
 Absorb the residual in the fewest adjusted gaps, centred between the fixed endpoints.
 
-![Absorb the residual in the central gap](assets/pitch-centre.gif)
+![Absorb the residual in the central gap](assets/pitch-autostitch.gif)
 
 All four use `ILL-S02`: six slits on the same centred $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. Even spacing has five $3.06\,\mathrm{mm}$ gaps. The other two have four nominal gaps and one $3.3\,\mathrm{mm}$ gap, at the end or in the centre. Slits remain solid; `I` marks identify adjusted spacing. Every gap value updates as the residual falls from $0.30\,\mathrm{mm}$ to zero.
 
@@ -30,11 +30,11 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 ## The corner problem
 
-`ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare a vertex hole, a thread bridge, a shared diagonal slit with mirrored lean, and a shared tip hole. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
+`ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare Vertex point, Bridge, Shared diagonal slit with mirrored lean, and Autostitch. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
 
-![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-cross.gif)
+![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-vertex-point.gif)
 
-![Stop short and bridge between the arms](assets/problem-corner-gap.gif)
+![Stop short and bridge between the arms](assets/problem-corner-bridge.gif)
 
 ![Shared diagonal slit with mirrored lean](assets/problem-corner-mirrored.gif)
 

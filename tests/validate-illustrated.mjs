@@ -355,7 +355,7 @@ const count=cornerInput.armIntervals;
 const cornerShifts=[.75*(Math.cos(alpha)+Math.sin(alpha)),.75*(Math.cos(alpha)-Math.sin(alpha))];
 const armLengths=cornerShifts.map(c=>count*3-c/2);
 const problemView={x:410,y:40,scale:285/armLengths[0]};
-for(const treatment of ['cross','gap']) {
+for(const treatment of ['vertex-point','bridge']) {
   const name=`problem-corner-${treatment}`,openings=slits(name,problemView);
   assert.equal(openings.length,2*count);
   for(const arm of [0,1]) {
@@ -369,7 +369,7 @@ for(const treatment of ['cross','gap']) {
   }
   const vertexSlits=openings.filter(s=>dist(s.center,[0,0])<1e-6);
   assert.equal(vertexSlits.length,0);
-  if(treatment==='cross') {
+  if(treatment==='vertex-point') {
     const virtuals=slits(name,problemView,'virtual');assert.equal(virtuals.length,2);
     virtuals.forEach(v=>{near(dist(v.center,[0,0]),0);assert(v.element['stroke-dasharray']);});
     near(Math.abs(virtuals[0].angle-virtuals[1].angle),Math.PI/2);
@@ -378,7 +378,7 @@ for(const treatment of ['cross','gap']) {
     assert(holeFrame>0);assert.equal(frames[holeFrame-1].elements.filter(e=>e.kind==='virtual').length,2);
   }
   else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
-  if(treatment==='gap') {
+  if(treatment==='bridge') {
     const incoming=openings.find(s=>dist(s.center,[-3,0])<1e-6),outgoing=openings.find(s=>dist(s.center,[0,-3])<1e-6);
     assert(readSvg(name).elements.filter(e=>e.class==='thread').some(e=>
       dist([(+e.x1-problemView.x)/problemView.scale,(problemView.y-e.y1)/problemView.scale],incoming.b)<1e-6&&dist([(+e.x2-problemView.x)/problemView.scale,(problemView.y-e.y2)/problemView.scale],outgoing.a)<1e-6));
@@ -407,7 +407,7 @@ for(const arm of [0,1]) {
   near(dist(row.at(-1).center,[0,0]),3-cornerShifts[arm]/2);
 }
 assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
-const crossing=scenes.find(s=>s.name==='problem-corner-cross');
+const crossing=scenes.find(s=>s.name==='problem-corner-vertex-point');
 assert.deepEqual(cornerSolution.frames[0].elements,crossing.frames.find(f=>f.stage==='result').elements);
 assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
 const solvedSlits=slits(cornerSolution.name,problemView),solvedVirtuals=slits(cornerSolution.name,problemView,'virtual'),solvedHole=circle(cornerSolution.name,problemView);
@@ -450,7 +450,7 @@ for(const f of cornerSolution.frames) {
 }
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
-const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Central adjustment|Vertex hole|Thread bridge|Shared diagonal slit|Shared tip hole)/.test(line));
+const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Autostitch|Vertex point|Bridge|Shared diagonal slit)/.test(line));
 const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
 const balancedMirror=pitchComparisonMetrics(mirroredCorner),balancedAuto=pitchComparisonMetrics(cornerSolution);
 for(const key of ['absoluteAdjustment','absoluteResidual'])near(balancedMirror[key],balancedAuto[key]);

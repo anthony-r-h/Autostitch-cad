@@ -48,9 +48,9 @@ Research note: Anthony to find stitching examples from:
 - Four nominal gaps; one $3.30\,\mathrm{mm}$ gap at the end
 - One individual placement, beside the endpoint
 
-## Central adjustment (Autostitch)
+## Autostitch
 
-![Central adjustment absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-centre.gif)
+![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.gif)
 
 - Four nominal gaps; one $3.30\,\mathrm{mm}$ gap in the centre
 - One individual placement; nominal spacing near both endpoints
@@ -59,9 +59,9 @@ Research note: Anthony to find stitching examples from:
 | --- | ---: | ---: | ---: | ---: |
 | Even spacing | $5$ | $0.300$ | $0.300$ | $0.267$ |
 | End adjustment | $1$ | $0.300$ | $0.300$ | $0.270$ |
-| Central adjustment (Autostitch) | $1$ | $0.300$ | $0.300$ | $0.270$ |
+| Autostitch | $1$ | $0.300$ | $0.300$ | $0.270$ |
 
-- End and central adjustment: identical totals, different placement
+- End adjustment and Autostitch: identical totals, different placement
 
 # The corner problem
 
@@ -70,17 +70,17 @@ Research note: Anthony to find stitching examples from:
 - The same outer endpoints apply to every treatment
 - The choice of corner opening changes the adjoining thread and the spans available for fitting
 
-## Vertex hole
+## Vertex point
 
-![Terminal virtual slits cross at the vertex hole](../examples/illustrated/assets/problem-corner-cross.gif)
+![Terminal virtual slits cross at the vertex hole](../examples/illustrated/assets/problem-corner-vertex-point.gif)
 
 - Round hole at the vertex, where the terminal virtual slit centres cross
 - Retains the intended vertex
 - Changes the direction and visible length of the two adjoining stitches
 
-## Thread bridge
+## Bridge
 
-![Thread bridges between rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-gap.gif)
+![Bridge connecting rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-bridge.gif)
 
 - Thread connects the last slit on each arm across the corner
 - No corner opening; thread bypasses the vertex
@@ -96,7 +96,7 @@ Research note: Anthony to find stitching examples from:
 - Corner slit sets the direction and visible length of the two adjoining stitches
 - Final gaps: $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first falls below Autostitch's $2.7\,\mathrm{mm}$ limit
 
-## Shared tip hole (Autostitch)
+## Autostitch
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
@@ -107,10 +107,10 @@ Research note: Anthony to find stitching examples from:
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: | ---: |
-| Vertex hole | $3$ | $0.575$ | $0.575$ | $1.273$ |
-| Thread bridge | $4$ | $1.817$ | $1.817$ | $1.912$ |
+| Vertex point | $3$ | $0.575$ | $0.575$ | $1.273$ |
+| Bridge | $4$ | $1.817$ | $1.817$ | $1.912$ |
 | Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.575$ | $0.407$ |
-| Shared tip hole (Autostitch) | $3$ | $0.575$ | $0.575$ | $0.516$ |
+| Autostitch | $3$ | $0.575$ | $0.575$ | $0.516$ |
 
 - Totals include out-of-bound gaps in the comparison treatments
 

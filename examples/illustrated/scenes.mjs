@@ -529,7 +529,8 @@ function annotateScene(s) {
     const [incoming,outgoing]=model.primitives,a=model.stations[0].at(-1),b=model.stations[1].at(-1);
     marks=routeMarks(project(primitivePoint(incoming,a),view),project(primitivePoint(outgoing,b),view),screenTangent(incoming,a),screenTangent(outgoing,b));
   }
-  const annotate=elements=>[...elements,...marks,...elements.filter(e=>e.kind==='hole').map(e=>
+  const corner=s.name==='axiom-corner'||s.name.startsWith('corner-');
+  const annotate=elements=>[...elements,...marks,...(corner?s.final:elements).filter(e=>e.kind==='hole').map(e=>
     notationText(add(e.p,['axiom-junction','terms-junction'].includes(s.name)?[16,-14]:[18,18]),'j','junction'))];
   return {...s,final:annotate(s.final),frames:s.frames.map(f=>({...f,elements:annotate(f.elements)}))};
 }

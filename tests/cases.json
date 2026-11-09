@@ -8702,7 +8702,8 @@
         "First arm: real slits towards the corner, then its terminal virtual slit.",
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
-      ]
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
     },
     {
       "id": "ILL-SMOOTH",
@@ -8910,7 +8911,8 @@
         "First arm: real slits towards the corner, then its terminal virtual slit.",
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
-      ]
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
     },
     {
       "id": "ILL-ARC-ARC",
@@ -8939,7 +8941,8 @@
         "First arm: real slits towards the corner, then its terminal virtual slit.",
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
-      ]
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
     },
     {
       "id": "ILL-SHALLOW",
@@ -8968,7 +8971,8 @@
         "First arm: real slits towards the corner, then its terminal virtual slit.",
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
-      ]
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
     },
     {
       "id": "ILL-TERMS-LAYOUT",

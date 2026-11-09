@@ -166,6 +166,9 @@ for(const [caseId,name] of [['A03','corner-arc-line'],['A04','corner-arc-arc'],[
 // Corner explanations must arrive through the real row before its virtual slit.
 for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-shallow']) {
   const s=scenes.find(s=>s.name===name),virtuals=s.final.filter(e=>e.kind==='virtual');
+  const junctionLabel=s.final.filter(e=>e.kind==='notation-junction');
+  assert.equal(junctionLabel.length,1);
+  for(const f of s.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='notation-junction'),junctionLabel,`${name}: junction notation must be visible from the start`);
   const center=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
   let previousReal=[],previousVirtual=[];
   const lastDistance=[Infinity,Infinity];

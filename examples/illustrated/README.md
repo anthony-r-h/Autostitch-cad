@@ -44,7 +44,7 @@ Place a nominal gap across the reference first. Keep that pair fixed while fitti
 
 ### Construct the corner hole: A6
 
-Stitch towards the corner along one arm, ending at its dashed virtual slit. Approach from the other arm the same way. The two terminal virtual tips meet at one round hole. `J02`.
+Stitch towards the corner along one arm, ending at its dashed virtual slit. Approach from the other arm the same way. The two terminal virtual tips meet at one round hole. The `s`, `e` and `j` labels remain visible throughout. `J02`.
 
 ![Each arm approaches its terminal virtual slit before their shared corner hole is identified](assets/axiom-corner.gif)
 

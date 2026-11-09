@@ -1,6 +1,6 @@
 # Counter-examples
 
-Supporting figures for [the Sellier study](../../docs/counter_examples/HERMES_SELLIER_skeleton.md). Source photograph: `hermies_sellier.webp`, supplied by Anthony.
+Sources and reproducible figures for [stitching examples](../../docs/counter_examples/EXAMPLES_skeleton.md): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.webp`, supplied by Anthony.
 
 | Figure | Catalog ID | Construction |
 | --- | --- | --- |
@@ -8,7 +8,7 @@ Supporting figures for [the Sellier study](../../docs/counter_examples/HERMES_SE
 | `sellier-wallet-autostitch` | `ILL-SELLIER-WALLET` | Static detail: five top slits, four side slits and four bottom slits; shared corner hole and six H circles. |
 | `sellier-wallet-diagonal` | `ILL-SELLIER-WALLET-DIAGONAL` | Static comparison: the same ordinary slit counts and H, with one shared diagonal slit at the top corner. |
 
-All use a $600\times375$ canvas. The corner GIF loops with a two-second final thread hold. Both reduced wallets are static SVG/PNG at the same scale. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
+All use a $600\times375$ canvas. The corner GIF loops with a two-second final thread hold. Both case diagrams are static SVG/PNG at the same scale. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
 ## Reproduce
 
@@ -26,8 +26,8 @@ Outputs: `examples/counter_examples/assets/`. Temporary frames: `output/counter_
 
 - Common profile: $p=3\,\mathrm{mm}$, slit length $1.5\,\mathrm{mm}$, round-hole diameter $0.5\,\mathrm{mm}$.
 - Reference corner: three nominal intervals per arm; ordinary slit axes $-40^\circ$ and $-50^\circ$ in Cartesian coordinates; shared axis $-45^\circ$. Its axis is the diagonal seen in the annotated photograph. Connect each slit's positive tip to the next slit's negative tip; the shown face is already encoded in the slit axes.
-- Autostitch wallet: signed local lean $-40^\circ$. The incoming minus-tip and outgoing plus-tip locate the shared hole. The top endpoint and H anchors are placed by integer nominal steps from the virtual centres; the bottom row uses integer steps from the left H anchor.
-- Diagonal wallet: reuse the reference corner's slit axes and thread connections. Keep the H, right-row centres and bottom-row centres fixed. Place the corner slit at the outgoing virtual centre and set the top guide from nominal steps; this slightly raises the top guide while retaining nominal gaps throughout.
-- H: two legs, three circular openings per leg, width $3\,\mathrm{mm}$, height $6\,\mathrm{mm}$, rotated $45^\circ$. Connectivity is drawn explicitly; it is not a sewing itinerary.
+- Autostitch case: signed local lean $-40^\circ$ throughout. The incoming minus-tip and outgoing plus-tip locate the shared hole. Integer nominal steps determine the top and right rows.
+- Reference case: rear-style top lean $-40^\circ$ and front-style vertical lean $+40^\circ$. The shared slit replaces the outgoing virtual centre; nominal steps determine the top row.
+- H: two legs, three circular openings per leg, width and height $3\,\mathrm{mm}$, rotated $45^\circ$. Each join continues an ordinary thread line until it meets the circle of radius $p$ about the neighbouring slit centre. The H position follows the incident slit lean; both cases retain the same H dimensions and nominal spacing. The bottom row starts from the corresponding nominal join.
 
-The study's reconstruction assumptions are collected in its document. These figures use analytic geometry, not a native plugin run. The diagonal-slit alternative is deliberately distinct from A6; the H remains an external decoration.
+Interpretation notes are collected in the examples document. These figures use analytic geometry, not a native plugin run. The diagonal-slit alternative is distinct from A6; the H remains external decoration rather than evidence of support for arbitrary fixed decorative holes.

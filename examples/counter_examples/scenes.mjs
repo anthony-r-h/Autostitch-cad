@@ -34,29 +34,40 @@ function diagonalCorner() {
   return {...finished,final:emphasise(finished.final),frames:finished.frames.map(f=>({...f,elements:emphasise(f.elements)}))};
 }
 
-export function walletGeometry() {
+function threadAlignedStep(angle,tangent,p,h) {
+  const tip=mul(axis(angle),h),thread=add(mul(tangent,p),mul(tip,-2));
+  // Intersect the continuation of an ordinary thread with the pitch-radius
+  // circle about the last slit centre. This keeps angle and spacing together.
+  const dot=tip[0]*thread[0]+tip[1]*thread[1],length2=thread[0]**2+thread[1]**2;
+  const t=(-dot+Math.sqrt(dot*dot+length2*(p*p-h*h)))/length2;
+  return add(tip,mul(thread,t));
+}
+
+export function walletGeometry(diagonal=false) {
   const spec=input('ILL-SELLIER-WALLET'),p=spec.pitch,lean=-spec.leanDegrees*Math.PI/180,h=spec.slitLength/2;
   const ui=axis(lean),uo=axis(lean-Math.PI/2);
   const joint=[h*uo[0],-h*ui[1]],ci=add(joint,mul(ui,h)),co=add(joint,mul(uo,-h));
-  // Nominal counts determine the extents. The H anchors never create residuals.
-  const start=[ci[0]-spec.topSteps*p,0],rightAnchor=[0,co[1]-spec.rightSteps*p];
+  const start=[ci[0]-spec.topSteps*p,0];
+  const top=Array.from({length:spec.topSteps},(_,i)=>[start[0]+i*p,0]);
+  const right=Array.from({length:spec.rightSteps-1},(_,i)=>[0,co[1]-(i+1)*p]);
+  const rightAngle=diagonal?input('ILL-SELLIER-CORNER').armAxisDegrees[1]*Math.PI/180:lean-Math.PI/2;
+  const rightAnchor=add(right.at(-1),threadAlignedStep(rightAngle,[0,-1],p,h));
   const across=axis(Math.PI/4),up=axis(3*Math.PI/4);
   const leftAnchor=add(rightAnchor,mul(across,-spec.hWidth));
   const decoration=[leftAnchor,rightAnchor].map(base=>[base,add(base,mul(up,spec.hHeight/2)),add(base,mul(up,spec.hHeight))]);
-  const end=add(leftAnchor,[-spec.bottomSteps*p,0]);
-  const top=Array.from({length:spec.topSteps},(_,i)=>[start[0]+i*p,0]);
-  const right=Array.from({length:spec.rightSteps-1},(_,i)=>[0,co[1]-(i+1)*p]);
-  const bottom=Array.from({length:spec.bottomSteps},(_,i)=>add(leftAnchor,[-(i+1)*p,0]));
+  const firstBottom=add(leftAnchor,threadAlignedStep(lean-Math.PI,[-1,0],p,h));
+  const bottom=Array.from({length:spec.bottomSteps},(_,i)=>add(firstBottom,[-i*p,0]));
+  const end=bottom.at(-1);
   return {spec,lean,joint,ci,co,start,end,rightAnchor,leftAnchor,decoration,top,right,bottom};
 }
 
 function walletScene(diagonal=false) {
-  const g=walletGeometry(),view={x:435,y:45,scale:18};
+  const g=walletGeometry(diagonal),view={x:435,y:45,scale:18};
   let vertex=[0,0];
   const reference=input('ILL-SELLIER-CORNER');
   if(diagonal) {
-    // Keep the H and its nominal approach rows fixed. A real slit replaces the
-    // outgoing virtual centre; set the top row nominally from that vertex.
+    // A real slit replaces the outgoing virtual centre; set the top row
+    // nominally from that vertex.
     vertex=[0,g.co[1]];g.joint=vertex;
     g.top=g.top.map((p,i)=>[-(g.spec.topSteps-i)*g.spec.pitch,vertex[1]]);
     g.start=g.top[0];
@@ -65,7 +76,7 @@ function walletScene(diagonal=false) {
     diagonal?'Shared diagonal corner slit with a decorative H':'Top, right and bottom stitching with a decorative H',
     diagonal?'ILL-SELLIER-WALLET-DIAGONAL':'ILL-SELLIER-WALLET');
   const circles=g.decoration.map(column=>column.map(p=>hole(p,view)));
-  const base=[worldLine(g.start,vertex,view),worldLine(vertex,g.rightAnchor,view),worldLine(g.leftAnchor,g.end,view),
+  const base=[worldLine(g.start,vertex,view),worldLine(vertex,g.right.at(-1),view),worldLine(g.bottom[0],g.end,view),
     ...routeMarks(project(g.start,view),project(g.end,view),[1,0],[-1,0]).map(e=>diagonal&&e.kind==='notation-start'?{...e,p:add(e.p,[0,8])}:e),
     notationText(add(project(g.joint,view),[18,-12]),'j','junction'),...circles.flat()];
   const result=[...base],rows=[[],[],[]];

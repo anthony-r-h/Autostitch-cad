@@ -44,7 +44,7 @@ for(const [a,row] of [top,right,bottom].entries())for(const [i,e] of row.entries
   const c=world(midpoint(e),wv);near(distance(e.a,e.b)/wv.scale,1.5);
   near(Math.cos(angle(e)),Math.cos([40,130,220][a]*Math.PI/180));
   near(Math.sin(angle(e)),Math.sin([40,130,220][a]*Math.PI/180));
-  if(a===0)near(c[1],0);else if(a===1)near(c[0],0);else near(c[1],hLeft[1]);
+  if(a===0)near(c[1],0);else if(a===1)near(c[0],0);else near(c[1],world(midpoint(bottom[0]),wv)[1]);
   if(i)near(distance(c,world(midpoint(row[i-1]),wv)),3);
 }
 near(distance(world(midpoint(top.at(-1)),wv),ci),3);
@@ -52,16 +52,20 @@ near(distance(world(midpoint(right[0]),wv),co),3);
 near(distance(world(midpoint(right.at(-1)),wv),hRight),3);
 near(distance(world(midpoint(bottom[0]),wv),hLeft),3);
 near(distance(world(midpoint(top[0]),wv),ci),5*3);
-near(distance(hRight,co),5*3);near(distance(world(midpoint(bottom.at(-1)),wv),hLeft),4*3);
+near(distance(world(midpoint(right.at(-1)),wv),co)+distance(world(midpoint(right.at(-1)),wv),hRight),5*3);
+near(distance(world(midpoint(bottom.at(-1)),wv),world(midpoint(bottom[0]),wv))+distance(world(midpoint(bottom[0]),wv),hLeft),4*3);
 assert(!wallet.final.some(e=>e.kind==='adjustment-mark'));
-for(const i of [0,3])for(const j of [0,1])near(distance(holes[i+j].p,holes[i+j+1].p)/wv.scale,3);
+for(const i of [0,3])for(const j of [0,1])near(distance(holes[i+j].p,holes[i+j+1].p)/wv.scale,1.5);
 for(const i of [0,1,2])near(distance(holes[i].p,holes[i+3].p)/wv.scale,3);
-assert.equal(wallet.frames.length,0,'Reduced wallet must be static');
+assert.equal(wallet.frames.length,0,'Case diagram must be static');
 
 const diagonalWallet=scenes[2],diagonalSlits=slits(diagonalWallet),diagonalHoles=diagonalWallet.final.filter(e=>e.kind==='hole');
 assert.equal(diagonalWallet.frames.length,0);assert.equal(diagonalSlits.length,14);
 assert(!diagonalWallet.final.some(e=>['virtual','adjustment-mark'].includes(e.kind)));
-assert.deepEqual(diagonalHoles,holes.slice(0,6),'Comparison must retain the exact H');
+diagonalHoles.forEach((e,i)=>{
+  near(e.p[0]-diagonalHoles[0].p[0],holes[i].p[0]-holes[0].p[0]);
+  near(e.p[1]-diagonalHoles[0].p[1],holes[i].p[1]-holes[0].p[1]);
+});
 const diagonalJoint=diagonalSlits.at(-1),diagonalVertex=world(midpoint(diagonalJoint),wv);
 near(distance(diagonalVertex,co),0);
 near(Math.abs(diagonalJoint.b[0]-diagonalJoint.a[0]),Math.abs(diagonalJoint.b[1]-diagonalJoint.a[1]));
@@ -69,8 +73,9 @@ for(const [a,row] of [diagonalSlits.slice(0,5),diagonalSlits.slice(5,9).toRevers
   for(const [i,e] of row.entries()) {
     near(distance(e.a,e.b)/wv.scale,1.5);
     if(i)near(distance(midpoint(e),midpoint(row[i-1]))/wv.scale,3);
-    if(a>0)near(distance(midpoint(e),midpoint([right,bottom][a-1][i])),0);
-    else near(world(midpoint(e),wv)[1],diagonalVertex[1]);
+    if(a===1)near(distance(midpoint(e),midpoint(right[i])),0);
+    else if(a===0)near(world(midpoint(e),wv)[1],diagonalVertex[1]);
+    else near(midpoint(e)[1],midpoint(row[0])[1]);
   }
 }
 near(distance(midpoint(diagonalSlits[4]),midpoint(diagonalJoint))/wv.scale,3);
@@ -84,6 +89,11 @@ for(const layout of [wallet,diagonalWallet]) {
   }
   connection(openings[5].b,circles[3].p);
   connection(circles[0].p,openings[9].a);
+  near(distance(midpoint(openings[5]),circles[3].p)/wv.scale,3);
+  near(distance(circles[0].p,midpoint(openings[9]))/wv.scale,3);
+  // The H joins must carry the same angle as the neighbouring ordinary thread.
+  near(angle({a:openings[5].b,b:circles[3].p}),angle({a:openings[6].b,b:openings[5].a}));
+  near(angle({a:circles[0].p,b:openings[9].a}),angle({a:openings[9].b,b:openings[10].a}));
 }
 
 function pointSegment(p,a,b) {

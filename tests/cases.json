@@ -9299,7 +9299,7 @@
         "A2",
         "A6"
       ],
-      "status": "Analytic rear-face Autostitch corner with nominal top/right/bottom rows. A fixed H decoration is represented by six round holes; nominal counts determine the guide extents, with no residual fitting. The H is supplied decoration, not a newly supported plugin constraint.",
+      "status": "Static Autostitch construction with nominal rows and an external six-hole H. Place the H to preserve both nominal centre spacing and the ordinary thread angle at its two joins. All runs use rear-style signed local lean; no residual fitting or native plugin run.",
       "inputs": {
         "pitch": 3,
         "slitLength": 1.5,
@@ -9308,7 +9308,7 @@
         "rightSteps": 5,
         "bottomSteps": 4,
         "hWidth": 3,
-        "hHeight": 6
+        "hHeight": 3
       },
       "assets": [
         {
@@ -9333,7 +9333,7 @@
         "A2",
         "A6"
       ],
-      "status": "Static comparison using the inferred diagonal slit and thread connections. Same scale, ordinary slit counts and fixed H as the Autostitch wallet. Raise the top guide to the outgoing virtual station and choose its start in nominal steps from the shared slit; all gaps and H approaches remain nominal.",
+      "status": "Static case reconstruction: rear-style top and front-style vertical run, with a shared diagonal slit. Same scale, ordinary slit counts and H dimensions as the Autostitch construction. Place the H for nominal centre spacing and continuous thread angles; choose the top extent in nominal steps.",
       "inputs": {
         "walletCase": "ILL-SELLIER-WALLET",
         "cornerCase": "ILL-SELLIER-CORNER"

@@ -15,6 +15,22 @@ const slits=s=>s.final.filter(e=>e.kind==='slit');
 const corner=scenes[0],cv={x:360,y:85,scale:25},openings=slits(corner);
 assert.equal(openings.length,7);assert(!corner.final.some(e=>['virtual','hole'].includes(e.kind)));
 const rows=[openings.slice(0,3),openings.slice(3,6)],shared=openings[6];
+assert.equal(corner.frames[0].stage,'top-row');
+assert.deepEqual(corner.frames[0].elements.filter(e=>e.kind==='slit'),rows[0]);
+const beforeMirror=corner.frames.find(f=>f.stage==='vertical-rear-style').elements.filter(e=>e.kind==='slit').slice(3);
+const mirrorFrames=corner.frames.filter(f=>f.stage==='mirror-vertical');assert.equal(mirrorFrames.length,30);
+for(const [i,e] of beforeMirror.entries()) {
+  near(e.a[0]+rows[1][i].a[0],2*cv.x);near(e.b[0]+rows[1][i].b[0],2*cv.x);
+  near(e.a[1],rows[1][i].a[1]);near(e.b[1],rows[1][i].b[1]);
+}
+for(const f of corner.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='slit').slice(0,3),rows[0],'Top row must remain punched throughout');
+for(const f of mirrorFrames) {
+  const moving=f.elements.filter(e=>e.kind==='slit').slice(3);assert.equal(moving.length,3);
+  moving.forEach((e,i)=>near(distance(midpoint(e),midpoint(rows[1][i])),0));
+  assert(!f.elements.some(e=>e.kind==='thread'));
+}
+assert.deepEqual(mirrorFrames.at(-1).elements.filter(e=>e.kind==='slit').slice(3),rows[1]);
+assert(corner.frames.findIndex(f=>f.stage==='diagonal-shared-slit')>corner.frames.findIndex(f=>f.stage==='vertical-front-style'));
 near(distance(midpoint(shared),[360,85]),0);
 near(distance(shared.a,shared.b)/cv.scale,1.5);
 near(Math.abs(shared.b[0]-shared.a[0]),Math.abs(shared.b[1]-shared.a[1]));

@@ -9280,7 +9280,8 @@
         {
           "path": "examples/counter_examples/assets/sellier-diagonal-corner"
         }
-      ]
+      ],
+      "sequence": "Start with the top row already punched. Show the vertical rear-style row and mirror it about its guide to front-style, keeping centres fixed. Add the shared diagonal slit, then reveal all thread for two seconds."
     },
     {
       "source": "examples/counter_examples/scenes.mjs",

@@ -14,12 +14,23 @@ function diagonalCorner() {
   const base=[worldLine([-length,0],[0,0],view),worldLine([0,0],[0,-length],view),
     ...routeMarks(project([-length,0],view),project([0,-length],view),[1,0],[0,1]),notationText([384,67],'j','junction')];
   const s=scene('sellier-diagonal-corner','A diagonal shared slit changes the two adjoining stitches','ILL-SELLIER-CORNER');
-  frame(s,base,90,'guides');
   const result=[...base],rows=[[],[]];
   for(const [arm,row] of rows.entries())for(let n=spec.armGaps;n>=1;n--) {
     const slit=opening(arm===0?[-n*p,0]:[0,-n*p],angles[arm],view)[0];
-    row.push(slit);result.push(slit);frame(s,[...result],65,`arm-${arm}-stitch`);
+    row.push(slit);
   }
+  result.push(...rows[0]);frame(s,[...result],100,'top-row');
+  // Flip the vertical row across its guide. Horizontal foreshortening makes
+  // the reflection visible; centres and the already-punched top row stay fixed.
+  const mirrored=t=>rows[1].map(e=>({...e,
+    a:[view.x+(e.a[0]-view.x)*(2*t-1),e.a[1]],
+    b:[view.x+(e.b[0]-view.x)*(2*t-1),e.b[1]]}));
+  frame(s,[...result,...mirrored(0)],100,'vertical-rear-style');
+  for(let i=1;i<=30;i++) {
+    const t=i/30;
+    frame(s,[...result,...mirrored(t*t*(3-2*t))],8,'mirror-vertical');
+  }
+  result.push(...rows[1]);frame(s,[...result],90,'vertical-front-style');
   const shared=opening([0,0],spec.sharedSlitDegrees*Math.PI/180,view)[0];
   result.push(shared);frame(s,[...result],130,'diagonal-shared-slit');
   // The slit axes already encode the shown face. Connect their tips directly;

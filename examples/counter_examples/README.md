@@ -4,11 +4,13 @@ Sources and reproducible figures for [stitching examples](../../docs/counter_exa
 
 | Figure | Catalog ID | Construction |
 | --- | --- | --- |
-| `sellier-diagonal-corner` | `ILL-SELLIER-CORNER` | Inferred ordinary rows, shared diagonal slit, then the complete thread. The two adjacent thread segments have extra weight. |
+| `sellier-diagonal-corner` | `ILL-SELLIER-CORNER` | Top row already punched; vertical row flips from rear-style to front-style across its guide, then the shared diagonal slit and complete thread appear. The two adjacent thread segments have extra weight. |
 | `sellier-wallet-autostitch` | `ILL-SELLIER-WALLET` | Static detail: five top slits, four side slits and four bottom slits; shared corner hole and six H circles. |
 | `sellier-wallet-diagonal` | `ILL-SELLIER-WALLET-DIAGONAL` | Static comparison: the same ordinary slit counts and H, with one shared diagonal slit at the top corner. |
 
 All use a $600\times375$ canvas. The corner GIF loops with a two-second final thread hold. Both case diagrams are static SVG/PNG at the same scale. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
+
+The vertical flip illustrates reflection by horizontal foreshortening. Opening centres and the top row stay fixed; it is a change of placement convention, not movement of punched holes.
 
 ## Reproduce
 

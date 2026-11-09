@@ -1,25 +1,27 @@
 # Stitching examples
 
-For each construction: adjustments are measured from nominal pitch, $\Delta_i=g_i-p$; positive means extension, negative means compression. Totals use chord lengths in millimetres. Residual means the signed remainder before fitting, summed across the runs: $r=T-na$, where $T$ is the span and $a$ is the nominal advance. On curves, residual is arc length in millimetres; adjustment totals are chord-length changes.
+Corner treatments found in finished work, reconstructed as stitch diagrams and compared with Autostitch.
 
-Autostitch corners use virtual-to-real steps for pitch accounting, not real-to-hole distances. These corner steps are nominal in the examples. The decorative H's internal spacing is excluded; its two approaches are included. Counts include adjusted gaps to a fixed reference hole.
+- Reference diagrams interpret the photographs; slit axes are inferred from the visible thread
+- Dimensions and spacing are chosen for the diagrams, using $p=3\,\mathrm{mm}$. The totals describe these reconstructions, not the products
+- Autostitch changes corner openings and sometimes start/end positions. The comparisons include those changes, as well as the distribution of adjustments
 
-## Observed constructions
+## Corner treatments
 
-### Shared diagonal corner slit
+### Shared diagonal slit and mixed slit lean
 
-- One real diagonal slit joins the two arms at the vertex
-- Its angle can differ from the ordinary slits on either arm, changing the two adjoining stitches
-- In the illustration, the shared slit bisects the corner
+- One real diagonal slit joins the incoming and outgoing arms
+- Its orientation differs from both rows, changing the two adjoining thread segments
+- In the Sellier reconstruction, the top row uses rear-style lean and the vertical row uses front-style lean; their slit axes remain nearly parallel across the turn
+- The shared slit bisects the corner in this diagram. Front/rear style describes the lean, not which face was physically punched
 
-![Shared diagonal slit and its two adjoining stitches](../../examples/counter_examples/assets/sellier-diagonal-corner.gif)
+![Shared diagonal slit joining rows with different lean relative to their guides](../../examples/counter_examples/assets/sellier-diagonal-corner.gif)
 
-Adjusted gaps: $0$. Sum of adjustments: $0.000\,\mathrm{mm}$. Sum of absolute adjustments: $0.000\,\mathrm{mm}$. Residual before fitting: $0.000\,\mathrm{mm}$.
+| Construction | Adjusted gaps | Sum of adjustments | Sum of absolute adjustments | Residual before fitting |
+| --- | ---: | ---: | ---: | ---: |
+| Shared diagonal slit | $0$ | $0.000$ | $0.000$ | $0.000$ |
 
-### Mixed front- and rear-style runs
-
-- In the Sellier reconstruction, the top run uses rear-style slit lean; the vertical run uses front-style slit lean
-- Their ordinary slit axes remain nearly parallel across the turn, although their lean relative to each arm differs
+Lengths in $\mathrm{mm}$; [metric definitions](#metrics).
 
 ## Cases
 
@@ -27,97 +29,129 @@ Adjusted gaps: $0$. Sum of adjustments: $0.000\,\mathrm{mm}$. Sum of absolute ad
 
 <img src="../../examples/counter_examples/hermies_sellier.webp" width="300" alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
 
-- Shared diagonal slit at the upper corner; decorative H at the lower corner
-- The diagrams represent the H with six circular openings
-- The stitches joining its legs continue the ordinary thread angle, with nominal centre spacing and no residual
+- Focus: the top corner and the decorative H below the right-hand run
+- The H is represented by six round holes; its two approaches are set to nominal pitch, with no residual
 
-**Reference construction** — mixed slit lean and a shared diagonal corner slit.
+#### Reference
 
-![Sellier case with the reference corner construction](../../examples/counter_examples/assets/sellier-wallet-diagonal.png)
+- Shared diagonal corner slit; rear-style top row and front-style vertical row
+- The stitches entering the H continue the adjoining thread angles
 
-Adjusted gaps: $0$. Sum of adjustments: $0.000\,\mathrm{mm}$. Sum of absolute adjustments: $0.000\,\mathrm{mm}$. Residual before fitting: $0.000\,\mathrm{mm}$.
+![Sellier reconstruction with a shared diagonal corner slit](../../examples/counter_examples/assets/sellier-wallet-diagonal.png)
 
-**Autostitch construction** — consistent rear-style lean and a round hole where the virtual slit tips meet.
+#### Autostitch
 
-![Sellier case with the Autostitch corner construction](../../examples/counter_examples/assets/sellier-wallet-autostitch.png)
+- Consistent rear-style lean; a round corner hole at the virtual slit-tip intersection
+- The H keeps its shape and nominal approaches; its position and the bottom row move to suit the changed slit lean
 
-Adjusted gaps: $0$. Sum of adjustments: $0.000\,\mathrm{mm}$. Sum of absolute adjustments: $0.000\,\mathrm{mm}$. Residual before fitting: $0.000\,\mathrm{mm}$.
+![Sellier construction with an Autostitch corner](../../examples/counter_examples/assets/sellier-wallet-autostitch.png)
+
+| Construction | Adjusted gaps | Sum of adjustments | Sum of absolute adjustments | Residual before fitting |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $0$ | $0.000$ | $0.000$ | $0.000$ |
+| Autostitch | $0$ | $0.000$ | $0.000$ | $0.000$ |
 
 ### Loewe Mini Feather hanger
 
 <img src="../../examples/counter_examples/loewe_mini_feather.jpg" width="300" alt="Loewe Mini Feather with a rectangular stitched strap below the swivel hook">
 
-Focus: the rectangular stitched strap directly below the swivel hook.
+- Focus: the rectangular strap below the swivel hook
+- The stitch line goes up the left side, across the top and down the right side
 
-- One run goes up the left side, across the top and down the right side
-- The left corner uses a shared slit; the right corner uses a round hole
-- The middle thread across the top is horizontal
+#### Reference
 
-**Reference construction**
+- Shared slit at the left corner; round hole at the right corner
+- The two top slits have opposing lean, giving the middle thread a horizontal line
 
-![Loewe hanger with a left slit corner, flat middle thread and right round hole](../../examples/counter_examples/assets/loewe-hanger-reference.png)
+![Loewe reconstruction with a slit corner, horizontal middle thread and round corner](../../examples/counter_examples/assets/loewe-hanger-reference.png)
 
-Adjusted gaps: $3$. Sum of adjustments: $-0.900\,\mathrm{mm}$. Sum of absolute adjustments: $0.900\,\mathrm{mm}$. Residual before fitting: $-0.900\,\mathrm{mm}$.
+#### Autostitch
 
-**Autostitch construction** — round holes at both corners, consistent slit lean and a bounded top-span adjustment.
+- Same guides; round holes at both corners and consistent slit lean
+- One adjusted top gap, approximately $3.249\,\mathrm{mm}$
+- Start and end positions shift along the vertical guides to keep those rows nominal
 
-![Loewe hanger with two Autostitch corners](../../examples/counter_examples/assets/loewe-hanger-autostitch.png)
+![Loewe construction with two Autostitch corners](../../examples/counter_examples/assets/loewe-hanger-autostitch.png)
 
-Adjusted gaps: $1$. Sum of adjustments: $+0.249\,\mathrm{mm}$. Sum of absolute adjustments: $0.249\,\mathrm{mm}$. Residual before fitting: $+0.249\,\mathrm{mm}$.
+| Construction | Adjusted gaps | Sum of adjustments | Sum of absolute adjustments | Residual before fitting |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $3$ | $-0.900$ | $0.900$ | $-0.900$ |
+| Autostitch | $1$ | $+0.249$ | $0.249$ | $+0.249$ |
 
 ### Louis Vuitton Speedy handle chape
 
-The **handle chape** is the leather tab attaching the handle hardware to the bag. Louis Vuitton uses the term [chapes](https://us.louisvuitton.com/eng-us/products/nano-speedy-g81-nvprod7890132v/M29781) for these attachments.
-
 <img src="../../examples/counter_examples/lv_speedy.png" width="300" alt="Louis Vuitton Speedy with stitched leather handle chapes">
 
-Focus: the left handle chape.
+- Focus: the left [handle chape](https://us.louisvuitton.com/eng-us/products/nano-speedy-g81-nvprod7890132v/M29781), the leather tab attaching the handle hardware to the bag
+- Closed pentagonal stitch line; one handedness throughout
 
-- A closed pentagonal stitch line, with a shared slit at each corner
-- One stitch handedness around the loop; no mirrored runs
+#### Reference
 
-**Reference construction**
+- A shared slit at each corner
+- Each side uses equal spacing between its corner slits
 
-![Speedy handle chape with five shared slit corners](../../examples/counter_examples/assets/lv-speedy-chape-reference.png)
+![Speedy reconstruction with five shared slit corners](../../examples/counter_examples/assets/lv-speedy-chape-reference.png)
 
-Adjusted gaps: $26$. Sum of adjustments: $-4.931\,\mathrm{mm}$. Sum of absolute adjustments: $4.931\,\mathrm{mm}$. Residual before fitting: $-4.931\,\mathrm{mm}$.
+#### Autostitch
 
-**Autostitch construction** — five round-hole corners, fitted connecting spans and one continuous closure.
+- Same pentagonal guides; five round corner holes
+- Each span uses the fewest adjusted gaps allowed by the pitch bounds
+- The loop closes at its starting opening
 
-![Speedy handle chape with five Autostitch corners](../../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
+![Speedy construction with five Autostitch corners](../../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
-Adjusted gaps: $6$. Sum of adjustments: $+0.815\,\mathrm{mm}$. Sum of absolute adjustments: $0.917\,\mathrm{mm}$. Residual before fitting: $+0.815\,\mathrm{mm}$.
+| Construction | Adjusted gaps | Sum of adjustments | Sum of absolute adjustments | Residual before fitting |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $26$ | $-4.931$ | $4.931$ | $-4.931$ |
+| Autostitch | $6$ | $+0.815$ | $0.917$ | $+0.815$ |
+
+The Autostitch fit includes both extension and compression, so its signed total is smaller than its absolute total.
 
 ### Jaeger-LeCoultre / Casa Fagliano strap tip
 
 <img src="../../examples/counter_examples/jaeger_lecoultre_fagliano.png" width="300" alt="Jaeger-LeCoultre Casa Fagliano straps with a pointed tip on the right strap">
 
-Focus: the pointed end of the right strap.
+- Focus: the pointed end of the right strap
+- Both straight rows start at matching heights, with one handedness throughout
 
-- The two straight runs have horizontally aligned holes and the same stitch handedness
-- A round hole sits exactly at the vertex where the two curves meet
-- Assume compression is confined to the curves, distributed equally across each arm's free gaps
-- Symmetric guides and equal compression give the same curved chord on both sides: approximately $2.75\,\mathrm{mm}$ for $p=3\,\mathrm{mm}$
+#### Reference
 
-**Reference construction** — equal compression through each curve to the fixed vertex hole.
+- Symmetric curves meet at a round hole fixed at the vertex
+- Equal compression through each curve is an assumption of this reconstruction
+- Five adjusted gaps per side, approximately $2.749\,\mathrm{mm}$ each; the straight rows remain aligned
 
-![Aligned strap sides with separate compression through each curve into a shared round hole](../../examples/counter_examples/assets/fagliano-tip-compression.gif)
+![Symmetric reference curves compressed equally into a fixed vertex hole](../../examples/counter_examples/assets/fagliano-tip-compression.gif)
 
-Adjusted gaps: $10$. Sum of adjustments: $-2.509\,\mathrm{mm}$. Sum of absolute adjustments: $2.509\,\mathrm{mm}$. Residual before fitting: $-2.513\,\mathrm{mm}$.
+#### Autostitch
 
-**Autostitch construction** — the same guides and straight rows. The virtual slit tips locate the hole slightly to the right of the vertex; adjust the fewest gaps within the pitch bounds.
-
-- Left: one adjusted gap of approximately $2.75\,\mathrm{mm}$; the remaining gaps stay nominal
-- Right: four adjusted gaps of approximately $2.73\,\mathrm{mm}$
+- Same guides and aligned straight rows
+- Virtual slit tips locate the shared hole slightly right of the vertex, changing the available span on each arm
+- Left: one adjusted gap of approximately $2.747\,\mathrm{mm}$
+- Right: four adjusted gaps of approximately $2.729\,\mathrm{mm}$
+- Minimizing adjusted gaps gives different spacing patterns on the two sides
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
-Adjusted gaps: $5$. Sum of adjustments: $-1.337\,\mathrm{mm}$. Sum of absolute adjustments: $1.337\,\mathrm{mm}$. Residual before fitting: $-1.339\,\mathrm{mm}$.
+| Construction | Adjusted gaps | Sum of adjustments | Sum of absolute adjustments | Residual before fitting |
+| --- | ---: | ---: | ---: | ---: |
+| Reference | $10$ | $-2.509$ | $2.509$ | $-2.513$ |
+| Autostitch | $5$ | $-1.337$ | $1.337$ | $-1.339$ |
 
-## Interpretation
+## Metrics
 
-- Slit axes are inferred from the thread; the balanced corner angle is an assumption
-- Front/rear style describes the slit lean here, not proof of which face was punched
-- Dimensions are illustrative; the cases use $p=3\,\mathrm{mm}$
+All lengths in the tables are in $\mathrm{mm}$, rounded after summation.
 
-[Sources and reproduction](../../examples/counter_examples/README.md)
+| Metric | Meaning |
+| --- | --- |
+| Adjusted gaps | Number of counted gaps that differ from nominal pitch |
+| Sum of adjustments | $\sum_i \Delta_i$, where $\Delta_i=g_i-p$; positive for extension, negative for compression |
+| Sum of absolute adjustments | $\sum_i \lvert\Delta_i\rvert$; extension and compression both contribute positively |
+| Residual before fitting | $\sum_j r_j$: the signed remainder to distribute across the runs, using each diagram's chosen gap count |
+
+- For a straight span, $r=L-np$
+- For a circular span, $r=R\left(\lvert\theta\rvert-2n\arcsin\left(p/(2R)\right)\right)$, where $\theta$ is the sweep in radians
+- Curve residuals use arc length; adjustments use chord length. Their totals need not be identical
+- Autostitch corners count virtual-to-real steps, which are nominal here. Real-to-hole distances follow the corner construction
+- Reference totals include gaps to a fixed round hole. The H's internal decorative spacing is excluded; its two approaches are included
+
+[Sources, geometry and reproduction](../../examples/counter_examples/README.md)

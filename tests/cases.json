@@ -9434,6 +9434,47 @@
         "j",
         "direction"
       ]
+    },
+    {
+      "id": "ILL-FAGLIANO-TIP",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": true,
+      "axioms": [
+        "A2",
+        "A3",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "status": "Symmetric straight/arc guides and aligned straight stations, with one handedness and an analytic A6 round hole. Per user request, compression is shared equally among four free curved gaps on each arm, while entry and terminal steps remain nominal. This is an explanatory distribution choice, not the production minimum-adjustment-block policy; geometry is schematic, not measured or natively solved.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "radius": 24,
+        "sweepDegrees": 40,
+        "straightOpenings": 3,
+        "adjustedGaps": 4
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/fagliano-tip-compression"
+        }
+      ],
+      "sequence": "Establish aligned straight pairs, extend the left nominal row beyond its reserved tip, compress its free curved gaps equally, then repeat on the right. Keep solved left and both straight runs fixed. Compare the two chord values and reveal all thread for two seconds.",
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative tip; round-hole centre. Virtual slits are construction only."
+      }
     }
   ]
 }

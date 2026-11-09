@@ -66,6 +66,17 @@ The **handle chape** is the leather tab attaching the handle hardware to the bag
 
 ![Speedy handle chape with five Autostitch corners](../../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
+### Jaeger-LeCoultre / Casa Fagliano strap tip
+
+[Reference photograph](../../examples/counter_examples/jaeger_lecoultre_fagliano.png): the pointed end of the right strap.
+
+- The two straight runs have horizontally aligned holes and the same stitch handedness
+- A round hole joins the runs at the tip
+- Assume compression is confined to the curves, distributed equally across each arm's free gaps
+- The straight rows stay aligned; the curved rows need different chord lengths: approximately $2.94\,\mathrm{mm}$ and $2.73\,\mathrm{mm}$ for $p=3\,\mathrm{mm}$
+
+![Aligned strap sides with separate compression through each curve into a shared round hole](../../examples/counter_examples/assets/fagliano-tip-compression.gif)
+
 ## Interpretation
 
 - Slit axes are inferred from the thread; the balanced corner angle is an assumption

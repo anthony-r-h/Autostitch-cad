@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {selectFit} from '../../tests/fit-oracle.mjs';
-import {add,mul,axis,project,worldLine,opening,hole,scene,frame,finish,
+import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,finish,
   routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles} from '../illustrated/scenes.mjs';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
@@ -199,5 +199,80 @@ function speedyScenes() {
   });
 }
 
-export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes()];}
+function faglianoScene() {
+  const spec=input('ILL-FAGLIANO-TIP'),R=spec.radius,p=spec.pitch,h=spec.slitLength/2,a=spec.leanDegrees*Math.PI/180;
+  const sweep=spec.sweepDegrees*Math.PI/180,c=R*Math.cos(sweep),halfWidth=R-c,step=2*Math.asin(p/(2*R));
+  // Upper intersection of the incoming minus-tip and outgoing plus-tip circles.
+  const jx=h*Math.sin(a)/Math.cos(sweep);
+  const joint=[jx,Math.sqrt((R-h*Math.sin(a))**2+(h*Math.cos(a))**2-(jx-c)**2)];
+  const virtual=[Math.PI-Math.atan2(joint[1],jx-c)+Math.atan2(h*Math.cos(a),R-h*Math.sin(a)),
+    Math.atan2(joint[1],jx+c)+Math.atan2(h*Math.cos(a),R+h*Math.sin(a))];
+  const increments=virtual.map(v=>(v-2*step)/spec.adjustedGaps);
+  const chords=increments.map(t=>2*R*Math.sin(t/2));
+  if(chords.some(g=>g<.9*p||g>=p))throw new Error('Fagliano curves require bounded compression on both arms');
+  const view={x:300,y:265,scale:13.5},bottom=-(spec.straightOpenings-1)*p;
+  const point=(arm,t)=>[arm===0?c-R*Math.cos(t):-c+R*Math.cos(t),R*Math.sin(t)];
+  const slitAngle=(arm,t)=>arm===0?Math.PI/2-t+a:-Math.PI/2+t+a;
+  const s=scene('fagliano-tip-compression','Aligned straight runs need different curved chord lengths','ILL-FAGLIANO-TIP');
+  const base=[worldLine([-halfWidth,bottom],[-halfWidth,0],view),worldLine([halfWidth,0],[halfWidth,bottom],view),
+    ...routeMarks(project([-halfWidth,bottom],view),project([halfWidth,bottom],view),[0,-1],[0,1]),
+    notationText(add(project(joint,view),[18,-14]),'j','junction')];
+  for(const arm of [0,1])for(let i=0;i<60;i++)base.push(worldLine(point(arm,sweep*i/60),point(arm,sweep*(i+1)/60),view));
+  const straight=[0,1].map(arm=>Array.from({length:spec.straightOpenings},(_,i)=>
+    opening([arm===0?-halfWidth:halfWidth,bottom+i*p],slitAngle(arm,0),view)[0]));
+  const realCount=spec.adjustedGaps+1;
+  const nominal=Array.from({length:realCount+1},(_,i)=>(i+1)*step);
+  const targets=virtual.map((v,arm)=>[...Array.from({length:realCount},(_,i)=>step+i*increments[arm]),v]);
+  const draw=(angles,straightCount=spec.straightOpenings)=>{
+    const result=[...base];
+    for(let i=0;i<straightCount;i++) {
+      const y=bottom+i*p;
+      result.push(worldLine([-halfWidth,y],[halfWidth,y],view,'alignment','#D9D9D9',.7,true));
+    }
+    result.push(...straight.flatMap(row=>row.slice(0,straightCount)));
+    for(const [arm,values] of angles.entries()) {
+      const compressed=values.length>1&&Math.abs(values[1]-values[0]-step)>1e-8;
+      if(values.at(-1)>sweep)for(let i=0;i<12;i++)result.push(worldLine(
+        point(arm,sweep+(values.at(-1)-sweep)*i/12),point(arm,sweep+(values.at(-1)-sweep)*(i+1)/12),view,'extension','#C4C4C4',1,true));
+      for(const [i,t] of values.entries()) {
+        const terminal=i===realCount,slit=opening(point(arm,t),slitAngle(arm,t),view,{virtual:terminal,marked:compressed&&!terminal});
+        if(terminal) {
+          const tip=arm===0?slit[0].a:slit[0].b,anchor=project(joint,view);
+          if(Math.hypot(tip[0]-anchor[0],tip[1]-anchor[1])>1e-6) {
+            slit[0].color='#C62828';result.push(line(tip,anchor,'residual-dimension','#C62828',1.6));
+          }
+        }
+        result.push(...slit);
+      }
+      if(values.length>1) {
+        const gap=2*R*Math.sin((values[1]-values[0])/2);
+        result.push(...measure(point(arm,values[0]),point(arm,values[1]),gap.toFixed(2),view,arm===0?44:-44).map(e=>
+          ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(e.type==='text'?{size:15,bold:true,color:'#252525'}:{})})));
+      }
+    }
+    result.push(hole(joint,view));return result;
+  };
+  frame(s,draw([[],[]],0),60,'guides');
+  for(let n=1;n<=spec.straightOpenings;n++)frame(s,draw([[],[]],n),50,'aligned-straights');
+  const settled=[[],[]];
+  for(const arm of [0,1]) {
+    for(let n=1;n<=nominal.length;n++) {
+      const rows=settled.map(row=>row);rows[arm]=nominal.slice(0,n);
+      frame(s,draw(rows),n===nominal.length?130:35,n===nominal.length?`arm-${arm}-overrun`:`arm-${arm}-nominal`);
+    }
+    for(let n=1;n<=30;n++) {
+      const t=n/30,ease=t*t*(3-2*t),rows=settled.map(row=>row);
+      rows[arm]=nominal.map((theta,i)=>theta+(targets[arm][i]-theta)*ease);
+      frame(s,draw(rows),8,`arm-${arm}-compress`);
+    }
+    settled[arm]=targets[arm];frame(s,draw(settled),90,`arm-${arm}-settled`);
+  }
+  const result=draw(targets),real=result.filter(e=>e.kind==='slit'),centre=e=>mul(add(e.a,e.b),.5);
+  const left=real.filter(e=>centre(e)[0]<view.x).sort((a,b)=>centre(b)[1]-centre(a)[1]);
+  const right=real.filter(e=>centre(e)[0]>view.x).sort((a,b)=>centre(a)[1]-centre(b)[1]);
+  s.threadPaths=[[...left,result.find(e=>e.kind==='hole'),...right]];
+  return slitOutlines(finishThread(finish(s,result)));
+}
+
+export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes(),faglianoScene()];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

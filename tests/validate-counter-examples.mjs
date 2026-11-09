@@ -186,6 +186,67 @@ for(const layout of [speedyReference,speedySolved]) {
   }
 }
 
+const fagliano=scenes[7],fv={x:300,y:265,scale:13.5},radius=24,sweep=40*Math.PI/180;
+const circleOffset=radius*Math.cos(sweep),halfWidth=radius-circleOffset;
+const fRows=elements=>[0,1].map(arm=>elements.filter(e=>['slit','virtual'].includes(e.kind)&&
+  (e.b[1]<e.a[1]?0:1)===arm).sort((a,b)=>midpoint(b)[1]-midpoint(a)[1]));
+const finalRows=fRows(fagliano.final),fHole=fagliano.final.find(e=>e.kind==='hole');
+assert.equal(slits(fagliano).length,16);
+assert.equal(fagliano.final.filter(e=>e.kind==='virtual').length,2);
+assert.equal(fagliano.final.filter(e=>e.kind==='hole').length,1);
+for(const [arm,row] of finalRows.entries()) {
+  assert.equal(row.length,9);
+  for(const [i,e] of row.entries()) {
+    const centre=world(midpoint(e),fv),u=unit(vector(world(e.a,fv),world(e.b,fv)));
+    near(distance(e.a,e.b)/fv.scale,1.5);
+    if(i<3) {near(centre[0],arm===0?-halfWidth:halfWidth);near(centre[1],-6+3*i);}
+    else {
+      near(distance(centre,[arm===0?circleOffset:-circleOffset,0]),radius);
+      assert(centre[1]>0);
+      if(e.kind==='slit')assert(centre[1]<radius*Math.sin(sweep));
+    }
+    const t=i<3?0:Math.asin(centre[1]/radius);
+    const tangent=arm===0?[Math.sin(t),Math.cos(t)]:[Math.sin(t),-Math.cos(t)];
+    near(tangent[0]*u[0]+tangent[1]*u[1],Math.cos(sweep));
+    near(tangent[0]*u[1]-tangent[1]*u[0],Math.sin(sweep));
+  }
+  const gaps=row.slice(1).map((e,i)=>distance(midpoint(e),midpoint(row[i]))/fv.scale);
+  for(const i of [0,1,2,7])near(gaps[i],3);
+  const chord=gaps[3];assert(chord>=2.7&&chord<3);
+  for(const i of [4,5,6])near(gaps[i],chord);
+  near(chord,arm===0?2.9367570471:2.7290148486);
+  near(distance(row.at(-1)[arm===0?'a':'b'],fHole.p),0);
+}
+for(let i=0;i<3;i++)near(midpoint(finalRows[0][i])[1],midpoint(finalRows[1][i])[1]);
+const firstComplete=fagliano.frames.findIndex(f=>f.stage==='arm-0-nominal');
+for(const f of fagliano.frames.slice(firstComplete,-1)) {
+  const rows=fRows(f.elements);
+  rows.forEach((row,arm)=>assert.deepEqual(row.slice(0,3),finalRows[arm].slice(0,3),'Straight rows moved'));
+  const labels=f.elements.filter(e=>e.kind==='gap-value');
+  rows.filter(row=>row.length>=5).forEach((row,i)=>assert.equal(labels[i].value,
+    (distance(midpoint(row[3]),midpoint(row[4]))/fv.scale).toFixed(2)));
+}
+for(const arm of [0,1]) {
+  const overrun=fagliano.frames.find(f=>f.stage===`arm-${arm}-overrun`),trial=fRows(overrun.elements)[arm];
+  assert.equal(trial.length,9);
+  for(let i=1;i<trial.length;i++)near(distance(midpoint(trial[i]),midpoint(trial[i-1]))/fv.scale,3);
+  assert(world(midpoint(trial.at(-1)),fv)[1]>world(midpoint(finalRows[arm].at(-1)),fv)[1]);
+  let residual=distance(trial.at(-1)[arm===0?'a':'b'],fHole.p);
+  const moving=fagliano.frames.filter(f=>f.stage===`arm-${arm}-compress`);assert.equal(moving.length,30);
+  for(const f of moving) {
+    const rows=fRows(f.elements),row=rows[arm];
+    const next=distance(row.at(-1)[arm===0?'a':'b'],fHole.p);
+    assert(next<residual);residual=next;
+    near(distance(midpoint(row[2]),midpoint(row[3]))/fv.scale,3);
+    near(distance(midpoint(row[7]),midpoint(row[8]))/fv.scale,3);
+    const chord=distance(midpoint(row[3]),midpoint(row[4]))/fv.scale;
+    for(let i=5;i<=7;i++)near(distance(midpoint(row[i-1]),midpoint(row[i]))/fv.scale,chord);
+    if(arm===1)assert.deepEqual(rows[0],finalRows[0],'Left arm changed during right compression');
+  }
+  near(residual,0);
+}
+assert(fagliano.frames.findIndex(f=>f.stage==='arm-0-settled')<fagliano.frames.findIndex(f=>f.stage==='arm-1-nominal'));
+
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
   return distance(p,[a[0]+t*d[0],a[1]+t*d[1]]);
@@ -196,7 +257,7 @@ function segmentDistance(a,b,c,d) {
   return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
 }
 // Full-layout clearance, including the external circular decoration.
-for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv]]) {
+for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv],[fagliano,fv]]) {
 const axes=slits(layout).map(e=>[world(e.a,v),world(e.b,v)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,v));
 for(const [i,[a,b]] of axes.entries()) {
   for(const [c,d] of axes.slice(i+1))assert(segmentDistance(a,b,c,d)-.3>=.2);
@@ -232,4 +293,4 @@ for(const s of scenes) {
     for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
   }
 }
-console.log('Counter-examples valid: Sellier, Loewe and Speedy geometry; thread connections, handedness, closure, clearance, exports and animation timing.');
+console.log('Counter-examples valid: Sellier, Loewe, Speedy and Fagliano geometry; synchronized straights, equal curve compression, thread connections, handedness, closure, clearance, exports and animation timing.');

@@ -725,5 +725,5 @@ export function writeSceneFiles(scenes) {
     for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }
-export {add,mul,axis,project,line,text,worldLine,opening,hole,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines};
+export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines};
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

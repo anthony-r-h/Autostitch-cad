@@ -8,6 +8,8 @@ Loewe source photograph: `loewe_mini_feather.jpg`, supplied by Anthony. The case
 
 Louis Vuitton source photograph: `lv_speedy.png`, supplied by Anthony. The case isolates the left handle chape, the leather tab connecting the handle hardware to the bag.
 
+Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.png`, supplied by Anthony. The case isolates the pointed end of the right strap.
+
 | Figure | Catalog ID | Construction |
 | --- | --- | --- |
 | `sellier-diagonal-corner` | `ILL-SELLIER-CORNER` | Top row already punched; vertical row flips from rear-style to front-style across its guide, then the shared diagonal slit and complete thread appear. The two adjacent thread segments have extra weight. |
@@ -17,8 +19,9 @@ Louis Vuitton source photograph: `lv_speedy.png`, supplied by Anthony. The case 
 | `loewe-hanger-autostitch` | `ILL-LOEWE-HANGER` | Same three guides with two A6 corner holes and a fitted top span. |
 | `lv-speedy-chape-reference` | `ILL-LV-SPEEDY-CHAPE` | Closed pentagon, five shared corner slits, no mirrored runs. |
 | `lv-speedy-chape-autostitch` | `ILL-LV-SPEEDY-CHAPE` | Same pentagon with five A6 round holes, fitted spans and closure. |
+| `fagliano-tip-compression` | `ILL-FAGLIANO-TIP` | Aligned straight pairs; left nominal curve overruns its reserved station, then compresses equally; right follows; unequal curved chords and final thread. |
 
-All use a $600\times375$ canvas. The Sellier corner GIF loops with a two-second final thread hold. Case comparisons are static SVG/PNG, with a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
+All use a $600\times375$ canvas. The Sellier corner and Fagliano tip GIFs loop with a two-second final thread hold. Other case comparisons are static SVG/PNG, with a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
 The vertical flip illustrates reflection by horizontal foreshortening. Opening centres and the top row stay fixed; it is a change of placement convention, not movement of punched holes.
 
@@ -45,5 +48,9 @@ Outputs: `examples/counter_examples/assets/`. Temporary frames: `output/counter_
 - Loewe Autostitch: nominal corner steps fix the top neighbours; the intervening gap is approximately $3.249\,\mathrm{mm}$, within the adjustment bounds. The vertical rows use three nominal steps from each virtual centre, with start/end positions inside the same guides. A6 geometry is analytic; the top fit uses the independent selector.
 - Speedy: the five vertices in the catalog define a schematic closed pentagon. Ordinary slits use $+40^\circ$ lean throughout both diagrams. Reference corners use the midpoint orientation between the incident rows; each side has evenly spaced reference openings. The exact corner axes are illustrative.
 - Speedy Autostitch: intersect the incoming minus-tip and outgoing plus-tip loci at each vertex, reserve nominal corner steps, and fit all five intervening spans with the independent selector. Closure reuses the starting opening. The drawing contains five round holes and twenty-one real slits.
+- Fagliano: symmetric circular guides of radius $24\,\mathrm{mm}$ and sweep $40^\circ$, with three aligned straight openings per side. Local lean stays $+40^\circ$ along the complete route. The selected virtual-tip loci locate one shared round hole; handedness makes the two reserved stations asymmetric.
+- Fagliano fitting: keep the first curved gap and virtual-to-real corner step nominal. Compress four intervening gaps equally per arm, to approximately $2.9368\,\mathrm{mm}$ and $2.7290\,\mathrm{mm}$. This is the requested equal-redistribution construction, not the production solver's minimum-adjustment-block policy. The dimensions and compression sequence are illustrative, not measurements of the photograph.
+
+Fagliano timing: establish three straight pairs; reveal each nominal curved run, hold its overrun, then interpolate the four free gaps together. Finish the left arm before starting the right. Chord labels update during compression; straight centres, curve entry gaps and nominal corner steps remain fixed in length. The final frame adds all thread at once. PNG and SVG retain that final state.
 
 Interpretation notes are collected in the examples document. These figures use analytic geometry, not a native plugin run. The diagonal-slit alternative is distinct from A6; the H remains external decoration rather than evidence of support for arbitrary fixed decorative holes.

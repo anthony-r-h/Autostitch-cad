@@ -69,7 +69,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
       near(+label.value.replace('Residual ',''),remaining,.00501);
       assert.equal(label.bold,true);assert.equal(label.size,labels[0].size);
       const indicator=f.elements.filter(e=>e.kind==='residual-dimension');assert.equal(indicator.length,1);
-      assert.equal(indicator[0].color,'#C62828');near(indicator[0].a[1],indicator[0].b[1]);
+      assert.equal(indicator[0].color,'#C62828');near(indicator[0].a[1],view.y);near(indicator[0].b[1],view.y);
       near(dist(indicator[0].a,indicator[0].b)/view.scale,remaining);
       assert(!f.elements.some(e=>e.kind==='residual-extension'));
       near(points.slice(1).reduce((sum,p,i)=>sum+p-points[i],0)+remaining,15.3);

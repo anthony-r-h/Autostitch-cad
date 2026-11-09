@@ -4,46 +4,14 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {selectFit} from '../../tests/fit-oracle.mjs';
 import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,finish,
-  routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles} from '../illustrated/scenes.mjs';
+  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles} from '../illustrated/scenes.mjs';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
 function diagonalCorner() {
-  const spec=input('ILL-SELLIER-CORNER'),p=spec.pitch;
-  const angles=spec.armAxisDegrees.map(a=>a*Math.PI/180);
-  const view={x:360,y:85,scale:25},length=spec.armGaps*p;
-  const base=[worldLine([-length,0],[0,0],view),worldLine([0,0],[0,-length],view),
-    ...routeMarks(project([-length,0],view),project([0,-length],view),[1,0],[0,1]),notationText([384,67],'j','junction')];
-  const s=scene('sellier-diagonal-corner','A diagonal shared slit changes the two adjoining stitches','ILL-SELLIER-CORNER');
-  const result=[...base],rows=[[],[]];
-  for(const [arm,row] of rows.entries())for(let n=spec.armGaps;n>=1;n--) {
-    const slit=opening(arm===0?[-n*p,0]:[0,-n*p],angles[arm],view)[0];
-    row.push(slit);
-  }
-  result.push(...rows[0]);frame(s,[...result],100,'top-row');
-  // Flip the vertical row across its guide. Horizontal foreshortening makes
-  // the reflection visible; centres and the already-punched top row stay fixed.
-  const mirrored=t=>rows[1].map(e=>({...e,
-    a:[view.x+(e.a[0]-view.x)*(2*t-1),e.a[1]],
-    b:[view.x+(e.b[0]-view.x)*(2*t-1),e.b[1]]}));
-  frame(s,[...result,...mirrored(0)],100,'vertical-rear-style');
-  for(let i=1;i<=30;i++) {
-    const t=i/30;
-    frame(s,[...result,...mirrored(t*t*(3-2*t))],8,'mirror-vertical');
-  }
-  result.push(...rows[1]);frame(s,[...result],90,'vertical-front-style');
-  const shared=opening([0,0],spec.sharedSlitDegrees*Math.PI/180,view)[0];
-  result.push(shared);frame(s,[...result],130,'diagonal-shared-slit');
-  // The slit axes already encode the shown face. Connect their tips directly;
-  // reversing them again would draw the opposite thread diagonal.
-  s.threadPaths=[[...rows[0],shared,...rows[1].toReversed()]];
-  const finished=slitOutlines(finishThread(finish(s,result)));
-  // Weight only the two affected thread segments; all thread appears together.
-  const emphasise=elements=>{
-    let index=0;
-    return elements.map(e=>e.kind==='thread'?{...e,width:[spec.armGaps-1,spec.armGaps].includes(index++)?2.6:1.8}:e);
-  };
-  return {...finished,final:emphasise(finished.final),frames:finished.frames.map(f=>({...f,elements:emphasise(f.elements)}))};
+  return slitOutlines(finishThread(diagonalCornerScene(input('ILL-SELLIER-CORNER'),{
+    name:'sellier-diagonal-corner',source:'ILL-SELLIER-CORNER',view:{x:360,y:85,scale:25}
+  })));
 }
 
 function threadAlignedStep(angle,tangent,p,h) {
@@ -250,7 +218,7 @@ function faglianoScene(solved=false) {
           const centre=project(point(arm,t),view),anchor=project(joint,view);
           if(Math.hypot(centre[0]-anchor[0],centre[1]-anchor[1])>1e-6)result.push(
             {...hole(point(arm,t),view),kind:'trial-hole',color:'#C62828'},
-            line(centre,anchor,'residual-dimension','#C62828',1.6));
+            line(centre,anchor,'residual-dimension','#C62828',3));
           continue;
         }
         const adjusted=j=>j>=0&&j<values.length-1&&Math.abs(values[j+1]-values[j]-step)>1e-8;
@@ -258,7 +226,7 @@ function faglianoScene(solved=false) {
         if(terminal) {
           const tip=arm===0?slit[0].a:slit[0].b,anchor=project(joint,view);
           if(Math.hypot(tip[0]-anchor[0],tip[1]-anchor[1])>1e-6) {
-            slit[0].color='#C62828';result.push(line(tip,anchor,'residual-dimension','#C62828',1.6));
+            slit[0].color='#C62828';result.push(line(tip,anchor,'residual-dimension','#C62828',3));
           }
         }
         result.push(...slit);
@@ -295,22 +263,7 @@ function faglianoScene(solved=false) {
   return slitOutlines(finishThread(solved?{...s,final:result}:finish(s,result)));
 }
 
-export function absoluteStitchLengthDeviation(s) {
-  const profile=catalog.illustrations.find(item=>item.id===s.source);
-  const {pitch:p,slitLength:ell,leanDegrees}=profile;
-  const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
-  const slit=s.final.find(e=>e.kind==='slit'),scale=distance(slit.a,slit.b)/ell;
-  const baseline=Math.sqrt(p*p+ell*ell-2*p*ell*Math.cos(leanDegrees*Math.PI/180));
-  let total=0;
-  for(const path of s.threadPaths)for(let i=1;i<path.length;i++) {
-    const a=path[i-1],b=path[i];
-    // Exclude the H's internal decoration, but retain its two approaches.
-    if(a.type==='circle'&&b.type==='circle')continue;
-    const from=a.type==='circle'?a.p:a.b,to=b.type==='circle'?b.p:b.a;
-    total+=Math.abs(distance(from,to)/scale-baseline);
-  }
-  return total;
-}
+export {absoluteStitchLengthDeviation} from '../illustrated/scenes.mjs';
 
 export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes(),faglianoScene(),faglianoScene(true)];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

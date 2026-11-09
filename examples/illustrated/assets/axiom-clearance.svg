@@ -29,16 +29,16 @@
 <line class="slit" x1="137.927736872" y1="220.194233533" x2="179.856101149" y2="188.598944817" stroke="#C4C4C4" stroke-width="10.5" stroke-linecap="round"/>
 <line class="accepted" x1="469.343296194" y1="275" x2="473.343296194" y2="279" stroke="#252525" stroke-width="1.4"/>
 <line class="accepted" x1="473.343296194" y1="279" x2="480.343296194" y2="270" stroke="#252525" stroke-width="1.4"/>
-<text class="measurement" x="474.343296194" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">0.55</text>
+<text class="measurement" x="474.343296194" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">0.55</text>
 <line class="accepted" x1="364.487195045" y1="275" x2="368.487195045" y2="279" stroke="#252525" stroke-width="1.4"/>
 <line class="accepted" x1="368.487195045" y1="279" x2="375.487195045" y2="270" stroke="#252525" stroke-width="1.4"/>
-<text class="measurement" x="369.487195045" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">0.30</text>
+<text class="measurement" x="369.487195045" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">0.30</text>
 <line class="rejected" x1="260.631093895" y1="271" x2="268.631093895" y2="279" stroke="#252525" stroke-width="1.4"/>
 <line class="rejected" x1="260.631093895" y1="279" x2="268.631093895" y2="271" stroke="#252525" stroke-width="1.4"/>
-<text class="measurement" x="264.631093895" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">0.04</text>
+<text class="measurement" x="264.631093895" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">0.04</text>
 <line class="rejected" x1="155.774992746" y1="271" x2="163.774992746" y2="279" stroke="#252525" stroke-width="1.4"/>
 <line class="rejected" x1="155.774992746" y1="279" x2="163.774992746" y2="271" stroke="#252525" stroke-width="1.4"/>
-<text class="measurement" x="159.774992746" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">Overlap</text>
+<text class="measurement" x="159.774992746" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">Overlap</text>
 <line class="virtual" x1="36.603930665" y1="218.908583315" x2="75" y2="183.103669412" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="virtual" x1="33.071635723" y1="214.698958127" x2="75" y2="183.103669412" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
 <circle class="hole" cx="75" cy="183.103669412" r="8.75" fill="#C4C4C4"/>

@@ -98,10 +98,10 @@
 <line class="adjustment-mark" x1="361.502424255" y1="233.108166967" x2="368.780474743" y2="221.791497577" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="390.519525257" y1="251.769834884" x2="397.797575745" y2="240.453165493" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="slit" x1="378.911913733" y1="291.785733356" x2="401.088086267" y2="318.214266644" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="377.916055957,292.621357249 400.092228491,319.049890536 402.083944043,317.378642751 379.907771509,290.950109464" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="dimension" x1="165.1" y1="41.384676113" x2="233.31933377" y2="51.734676113" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="164.5" y1="45.3394201" x2="165.7" y2="37.429932127" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="232.71933377" y1="55.6894201" x2="233.91933377" y2="47.779932127" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="measurement" x="199.209666885" y="37.559676113" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<line class="dimension" x1="165.1" y1="41.384676113" x2="233.31933377" y2="51.734676113" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="164.5" y1="45.3394201" x2="165.7" y2="37.429932127" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="232.71933377" y1="55.6894201" x2="233.91933377" y2="47.779932127" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="measurement" x="199.209666885" y="37.559676113" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
 <text class="notation-start" x="148" y="58" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="178" y1="75" x2="190" y2="75" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="190" y1="75" x2="184" y2="71.5" stroke="#8B8B8B" stroke-width="1.1"/>

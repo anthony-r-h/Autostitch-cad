@@ -18,10 +18,10 @@
 <line class="slit" x1="358.429823026" y1="160.992577022" x2="381.570176974" y2="188.570176974" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="357.43396525,161.828200915 380.574319198,189.405800867 382.56603475,187.734553082 359.425680802,160.156953129" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="virtual" x1="358.429823026" y1="88.992577022" x2="381.570176974" y2="116.570176974" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
 <circle class="hole" cx="381.570176974" cy="116.570176974" r="6" fill="#C4C4C4"/>
-<line class="dimension" x1="323.35897695" y1="69" x2="395.35897695" y2="69" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="323.35897695" y1="73" x2="323.35897695" y2="65" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="395.35897695" y1="73" x2="395.35897695" y2="65" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="measurement" x="359.35897695" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<line class="dimension" x1="323.35897695" y1="69" x2="395.35897695" y2="69" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="323.35897695" y1="73" x2="323.35897695" y2="65" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="395.35897695" y1="73" x2="395.35897695" y2="65" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="measurement" x="359.35897695" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
 <text class="notation-start" x="167.35897695" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="197.35897695" y1="105" x2="209.35897695" y2="105" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="209.35897695" y1="105" x2="203.35897695" y2="101.5" stroke="#8B8B8B" stroke-width="1.1"/>

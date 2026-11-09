@@ -2,47 +2,66 @@
 
 Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
-## The problem
+## Nominal row (unfitted)
 
 Nominal spacing leaves a residual at the fixed endpoint. Every gap and the remaining distance are labelled.
 
 ![Nominal spacing leaves a remainder](assets/pitch-problem.gif)
 
-## Naive solution
+## Even spacing
 
 Distribute the openings evenly between the endpoints. It fits, but every gap departs from the tool's nominal spacing.
 
 ![Redistribute every gap](assets/pitch-spread.gif)
 
-## Good enough solution
+## End adjustment
 
 Keep four gaps nominal and adjust the last one.
 
 ![Adjust the last gap](assets/pitch-end.gif)
 
-## Autostitch solution
+## Central adjustment (Autostitch)
 
 Absorb the residual in the fewest adjusted gaps, centred between the fixed endpoints.
 
 ![Absorb the residual in the central gap](assets/pitch-centre.gif)
 
-All four use `ILL-S02`: six slits on the same centred $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. The naive solution has five $3.06\,\mathrm{mm}$ gaps. The other two have four nominal gaps and one $3.3\,\mathrm{mm}$ gap, at the end or in the centre. Slits remain solid; `I` marks identify adjusted spacing. Every gap value updates as the residual falls from $0.30\,\mathrm{mm}$ to zero.
+All four use `ILL-S02`: six slits on the same centred $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. Even spacing has five $3.06\,\mathrm{mm}$ gaps. The other two have four nominal gaps and one $3.3\,\mathrm{mm}$ gap, at the end or in the centre. Slits remain solid; `I` marks identify adjusted spacing. Every gap value updates as the residual falls from $0.30\,\mathrm{mm}$ to zero.
 
 Each solution starts at the problem's completed residual state and proceeds directly to redistribution. Motion compares layout revisions, not the movement of already-punched holes or the solver's execution order.
 
 ## The corner problem
 
-`ILL-CORNER-PROBLEM`: the same right-angle guides, each $15\,\mathrm{mm}$ long, at $3\,\mathrm{mm}$ pitch. Crossing virtual terminal slits locate a round hole at the vertex; stopping short leaves a thread bridge.
+`ILL-CORNER-PROBLEM`: the same right-angle guides, each $15\,\mathrm{mm}$ long, at $3\,\mathrm{mm}$ pitch. Compare a vertex hole, a thread bridge, a shared diagonal slit with mirrored lean, and a shared tip hole. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
 
 ![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-cross.gif)
 
 ![Stop short and bridge between the arms](assets/problem-corner-gap.gif)
+
+![Shared diagonal slit with mirrored lean](assets/problem-corner-mirrored.gif)
+
+The mirrored treatment reuses `diagonalCornerScene` with the Sellier construction parameters from `ILL-SELLIER-CORNER`, extended to the common arm length. The top row starts punched; the vertical row mirrors in place before the shared diagonal slit appears.
 
 The Autostitch solution starts at the completed crossing state. Move the terminal virtuals and their nominally spaced real neighbours until the selected tips meet (A6), then fit the free spans while keeping the outer endpoints, neighbours and hole fixed. Gap values update; provisional gaps outside the bounds are red. The final incoming arm has four $3.264\,\mathrm{mm}$ adjusted gaps; the outgoing arm has one $3.092\,\mathrm{mm}$ adjusted gap. `I` marks identify them. Reveal the thread together and hold for four seconds.
 
 ![Resolve the virtual crossing and fit both arms](assets/problem-corner-autostitch.gif)
 
 Motion shows planning revisions, not physical punching order; the analytic construction and fit selector do not execute the CAD plugin.
+
+## Comparison notation and totals
+
+- Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
+- Residuals use a thick red line on the guide, without end ticks; their text sits beside the gap values
+- Thread reveal lightens the holes and measurement annotations over $0.3\,\mathrm{s}$, then holds for four seconds. Unresolved red residuals remain visible
+- Static diagrams use the same final appearance; glossary figures without thread retain their contrast
+- The tables in the pitch are calculated by `pitchComparisonMetrics` and checked by `tests/validate-illustrated.mjs`
+- Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
+
+Recalculate totals from the repository root:
+
+```powershell
+node --input-type=module -e "import {createScenes,pitchComparisonMetrics} from './examples/illustrated/scenes.mjs'; for(const s of createScenes().filter(s=>s.name.startsWith('pitch-')||s.name.startsWith('problem-corner-'))) console.log(s.name,pitchComparisonMetrics(s));"
+```
 
 ## Axioms in geometry
 

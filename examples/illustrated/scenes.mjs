@@ -30,6 +30,7 @@ function opening(center, angle, view, {virtual = false, proposed = false, marked
 }
 const hole = (center, view) => ({type:'circle', p:project(center,view), radius:.25*view.scale, color:ink, kind:'hole'});
 function measure(a,b,value,view,offset=34) {
+  if(/^-?\d+(\.\d+)?$/.test(value))value=Number(value).toFixed(2);
   const A=project(a,view),B=project(b,view);
   const dx=B[0]-A[0],dy=B[1]-A[1],norm=Math.hypot(dx,dy);
   const normal=[dy/norm*offset,-dx/norm*offset];
@@ -75,8 +76,8 @@ function pitchScenes() {
       const last=project([points.at(-1),0],view)[0],end=project([length,0],view)[0];
       const remaining=Math.max(0,length-points.at(-1));
       elements.push(
-        line([last,view.y],[end,view.y],'residual-dimension','#C62828',2.5),
-        {...text([end,view.y-44],`Residual ${remaining.toFixed(2)}`),kind:'residual-value',color:ink,size:15,bold:true});
+        line([last,view.y],[end,view.y],'residual-dimension','#C62828',3),
+        {...text([end+25,view.y+55],`Residual ${remaining.toFixed(2)}`),kind:'residual-value',color:ink,size:15,bold:true});
     }
     return elements;
   };
@@ -84,12 +85,12 @@ function pitchScenes() {
     frame(s,base,75,'guide');
     for(let i=1;i<=openings;i++)frame(s,draw(nominal.slice(0,i)),45,'nominal-row');
   };
-  const problem=scene('pitch-problem','Nominal pitch leaves a remainder','ILL-S02');
+  const problem=scene('pitch-problem','Nominal row (unfitted)','ILL-S02');
   reveal(problem);finish(problem,draw(nominal));
   const fits=[
-    {name:'pitch-spread',title:'Naive: distribute evenly',points:Array.from({length:openings},(_,i)=>i*length/(openings-1))},
-    {name:'pitch-end',title:'Good enough: adjust near the end',points:[0,3,6,9,12,length]},
-    {name:'pitch-centre',title:'Autostitch: absorb the residual centrally',points:stations(selectFit({D:length,p:3}))}
+    {name:'pitch-spread',title:'Even spacing',points:Array.from({length:openings},(_,i)=>i*length/(openings-1))},
+    {name:'pitch-end',title:'End adjustment',points:[0,3,6,9,12,length]},
+    {name:'pitch-centre',title:'Central adjustment (Autostitch)',points:stations(selectFit({D:length,p:3}))}
   ];
   const scenes=[problem];
   for(const fit of fits) {
@@ -104,11 +105,44 @@ function pitchScenes() {
   return scenes;
 }
 
+export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
+  const p=spec.pitch;
+  const angles=spec.armAxisDegrees.map(a=>a*Math.PI/180);
+  const length=spec.armGaps*p;
+  const base=[worldLine([-length,0],[0,0],view),worldLine([0,0],[0,-length],view),
+    ...(notation?[...routeMarks(project([-length,0],view),project([0,-length],view),[1,0],[0,1]),notationText([384,67],'j','junction')]:[])];
+  const s=scene(name,'Shared diagonal slit with mirrored lean',source);
+  const result=[...base],rows=[[],[]];
+  for(const [arm,row] of rows.entries())for(let n=spec.armGaps;n>=1;n--) {
+    const slit=opening(arm===0?[-n*p,0]:[0,-n*p],angles[arm],view)[0];
+    row.push(slit);
+  }
+  result.push(...rows[0]);frame(s,[...result],100,'top-row');
+  // Flip the vertical row across its guide. Horizontal foreshortening makes
+  // the reflection visible; centres and the already-punched top row stay fixed.
+  const mirrored=t=>rows[1].map(e=>({...e,
+    a:[view.x+(e.a[0]-view.x)*(2*t-1),e.a[1]],
+    b:[view.x+(e.b[0]-view.x)*(2*t-1),e.b[1]]}));
+  frame(s,[...result,...mirrored(0)],100,'vertical-rear-style');
+  for(let i=1;i<=30;i++) {
+    const t=i/30;
+    frame(s,[...result,...mirrored(t*t*(3-2*t))],8,'mirror-vertical');
+  }
+  result.push(...rows[1]);frame(s,[...result],90,'vertical-front-style');
+  const shared=opening([0,0],spec.sharedSlitDegrees*Math.PI/180,view)[0];
+  result.push(shared);frame(s,[...result],130,'diagonal-shared-slit');
+  // The slit axes already encode the shown face. Connect their tips directly;
+  // reversing them again would draw the opposite thread diagonal.
+  s.threadPaths=[[...rows[0],shared,...rows[1].toReversed()]];
+  s.emphasisedThreads=[spec.armGaps-1,spec.armGaps];
+  return finish(s,result);
+}
+
 function cornerProblemScenes() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
   const view={x:360,y:85,scale:225/input.armLength},base=[worldLine([-input.armLength,0],[0,0],view),worldLine([0,0],[0,-input.armLength],view)];
   const comparisons=['cross','gap'].map(treatment=>{
-    const s=scene(`problem-corner-${treatment}`,`Corner problem: ${treatment}`,'ILL-CORNER-PROBLEM');
+    const s=scene(`problem-corner-${treatment}`,treatment==='cross'?'Vertex hole':'Thread bridge','ILL-CORNER-PROBLEM');
     const result=[...base];frame(s,[...result],90,'guides');
     const incoming=[],outgoing=[];
     for(const [i,row] of [incoming,outgoing].entries()) {
@@ -126,7 +160,7 @@ function cornerProblemScenes() {
     s.threadPaths=[[...incoming,...(treatment==='cross'?[vertex]:[]),...outgoing.toReversed()]];
     return finish(s,result);
   });
-  const s=scene('problem-corner-autostitch','Autostitch: fit the arms to a shared tip intersection','ILL-CORNER-PROBLEM');
+  const s=scene('problem-corner-autostitch','Shared tip hole (Autostitch)','ILL-CORNER-PROBLEM');
   // Continue the established crossing, without replaying the approaching rows.
   frame(s,comparisons[0].final,100,'crossing');
   const h=.75,ui=axis(alpha),uo=axis(alpha-Math.PI/2);
@@ -144,7 +178,7 @@ function cornerProblemScenes() {
       const changed=gaps.map(g=>Math.abs(g-3)>1e-6);
       points.forEach((x,i)=>elements.push(...opening(position(x),arm===0?alpha:alpha-Math.PI/2,view,{marked:changed[i-1]||changed[i]})));
       elements.push(...opening(virtuals[arm],arm===0?alpha:alpha-Math.PI/2,view,{virtual:true}));
-      gaps.forEach((gap,i)=>elements.push(...measure(position(points[i]),position(points[i+1]),gap.toFixed(2),view,arm===0?36:-38).map(e=>
+      gaps.forEach((gap,i)=>elements.push(...measure(position(points[i]),position(points[i+1]),gap.toFixed(2),view,arm===0?-36:-38).map(e=>
         ({...e,...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{}),kind:e.type==='text'?'gap-value':'gap-dimension',color:gap<2.7||gap>3.3?'#C62828':changed[i]?ink:construction}))));
     }
     if(showHole)elements.push(hole(joint,view));
@@ -161,7 +195,27 @@ function cornerProblemScenes() {
   }
   const result=draw(targets,[ci,co],true),slits=result.filter(e=>e.kind==='slit');
   s.threadPaths=[[...slits.slice(0,nominal.length),result.find(e=>e.kind==='hole'),...slits.slice(nominal.length).toReversed()]];
-  return [...comparisons,finish(s,result)];
+  const diagonalInput=catalog.illustrations.find(i=>i.id===input.diagonalCase).inputs;
+  const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armLength/3},
+    {name:'problem-corner-mirrored',source:'ILL-CORNER-PROBLEM',view,notation:false});
+  const labelled=layout=>{
+    const addDimensions=elements=>{
+      const dimensions=[];
+      const centres=elements.filter(e=>e.kind==='slit').map(e=>
+        [(e.a[0]+e.b[0]-2*view.x)/(2*view.scale),(2*view.y-e.a[1]-e.b[1])/(2*view.scale)]);
+      for(const arm of [0,1]) {
+        const points=centres.filter(p=>arm===0?p[0]<-1e-6:p[1]<-1e-6).sort((a,b)=>a[arm]-b[arm]);
+        for(let i=1;i<points.length;i++)dimensions.push(...measure(points[i-1],points[i],
+          Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]).toFixed(2),view,arm===0?-36:-38).map(e=>
+          ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})})));
+      }
+      return [...elements,...dimensions];
+    };
+    return {...layout,final:addDimensions(layout.final),frames:layout.frames.map(f=>({...f,elements:addDimensions(f.elements)}))};
+  };
+  const labelledComparisons=comparisons.map(labelled);
+  s.frames[0].elements=labelledComparisons[0].final;
+  return [...labelledComparisons,labelled(mirrored),finish(s,result)];
 }
 
 function landmarkScene(layout) {
@@ -641,7 +695,7 @@ function threadPaths(s) {
 function finishThread(s) {
   if(!s.frames.length&&!s.threadPaths)return s;
   const paths=threadPaths(s),threads=paths.flatMap(path=>path.slice(1).map((next,i)=>
-    line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,1.8)));
+    line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,s.emphasisedThreads?.includes(i)?2.6:1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const result=[...s.final.slice(0,index),...threads,...s.final.slice(index)];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[
@@ -653,6 +707,7 @@ function finishThread(s) {
 }
 function slitOutlines(s) {
   const style=elements=>elements.map(e=>{
+    if(e.type==='text'&&['measurement','gap-value','residual-value'].includes(e.kind))return {...e,size:13,bold:false};
     if(['slit','proposal'].includes(e.kind))return {...e,color:construction,outline:!e.round,outlineWidth:.8};
     if(e.kind==='adjustment-mark')return {...e,color:construction,width:.8};
     return e;
@@ -675,10 +730,46 @@ export function createScenes() {
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 const n=value=>Number(value.toFixed(9));
+export function absoluteStitchLengthDeviation(s) {
+  const profile=catalog.illustrations.find(item=>item.id===s.source);
+  const {pitch:p,slitLength:ell,leanDegrees}=profile;
+  const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const slit=s.final.find(e=>e.kind==='slit'),scale=distance(slit.a,slit.b)/ell;
+  const baseline=Math.sqrt(p*p+ell*ell-2*p*ell*Math.cos(leanDegrees*Math.PI/180));
+  let total=0;
+  for(const path of threadPaths(s))for(let i=1;i<path.length;i++) {
+    const a=path[i-1],b=path[i];
+    // Exclude the H's internal decoration, but retain its two approaches.
+    if(a.type==='circle'&&b.type==='circle')continue;
+    const from=a.type==='circle'?a.p:a.b,to=b.type==='circle'?b.p:b.a;
+    total+=Math.abs(distance(from,to)/scale-baseline);
+  }
+  return total;
+}
+
+export function pitchComparisonMetrics(s) {
+  if(!s.name.startsWith('pitch-')&&!s.name.startsWith('problem-corner-'))throw new Error('Not a pitch comparison');
+  const profile=catalog.illustrations.find(item=>item.id===s.source),p=profile.pitch;
+  const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const slit=s.final.find(e=>e.kind==='slit'),scale=distance(slit.a,slit.b)/profile.slitLength;
+  const changes=threadPaths(s).flatMap(path=>path.slice(1).flatMap((b,i)=>{
+    const a=path[i];
+    // A6 uses virtual-to-real corner steps (nominal in this comparison),
+    // not the drawn distances from the real slits to the round hole.
+    if(s.name==='problem-corner-autostitch'&&(a.type==='circle'||b.type==='circle'))return [];
+    const change=distance(openingCentre(a),openingCentre(b))/scale-p;
+    return Math.abs(change)>1e-6?[change]:[];
+  }));
+  const absoluteAdjustment=changes.reduce((sum,g)=>sum+Math.abs(g),0);
+  return {adjustedGaps:changes.length,absoluteAdjustment,
+    absoluteResidual:s.name.startsWith('pitch-')?profile.inputs.length-(profile.inputs.openings-1)*p:absoluteAdjustment,
+    stitchLengthDeviation:absoluteStitchLengthDeviation(s)};
+}
+
 export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0) {
   if(!amount)return elements;
   return elements.map(e=>{
-    if(!['slit','proposal','hole','virtual'].includes(e.kind))return e;
+    if(!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind))return e;
     const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(e.color.slice(i,i+2),16),196,amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
     return {...e,color};
   });

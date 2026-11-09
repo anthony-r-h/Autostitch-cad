@@ -9,16 +9,16 @@
 <line class="slit" x1="417.018666706" y1="209.283628291" x2="462.981333294" y2="170.716371709" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="417.854290599,210.279486067 463.816957186,171.712229485 462.145709401,169.720513933 416.183042814,208.287770515" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="proposal" x1="230.35200004" y1="209.283628291" x2="276.314666627" y2="170.716371709" stroke="#FFFFFF" stroke-width="2.6" stroke-dasharray="4 4"/><polygon class="slit-outline" points="231.187623932,210.279486067 277.150290519,171.712229485 275.479042734,169.720513933 229.516376147,208.287770515" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8" stroke-dasharray="4 4"/>
 <line class="proposal" x1="323.685333373" y1="209.283628291" x2="369.64799996" y2="170.716371709" stroke="#FFFFFF" stroke-width="2.6" stroke-dasharray="4 4"/><polygon class="slit-outline" points="324.520957266,210.279486067 370.483623853,171.712229485 368.812376068,169.720513933 322.849709481,208.287770515" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8" stroke-dasharray="4 4"/>
-<line class="dimension" x1="160" y1="235" x2="253.333333333" y2="235" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="239" x2="160" y2="231" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="253.333333333" y1="239" x2="253.333333333" y2="231" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="measurement" x="206.666666667" y="226" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">2.33</text>
+<line class="dimension" x1="160" y1="235" x2="253.333333333" y2="235" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="160" y1="239" x2="160" y2="231" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="253.333333333" y1="239" x2="253.333333333" y2="231" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="measurement" x="206.666666667" y="226" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">2.33</text>
 <line class="rejected" x1="240" y1="130" x2="360" y2="250" stroke="#252525" stroke-width="12"/>
 <line class="rejected" x1="240" y1="250" x2="360" y2="130" stroke="#252525" stroke-width="12"/>
-<line class="dimension" x1="160" y1="125" x2="440" y2="125" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="129" x2="160" y2="121" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="440" y1="129" x2="440" y2="121" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="measurement" x="300" y="116" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">7</text>
+<line class="dimension" x1="160" y1="125" x2="440" y2="125" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="160" y1="129" x2="160" y2="121" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="440" y1="129" x2="440" y2="121" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="measurement" x="300" y="116" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">7.00</text>
 <text class="notation-start" x="148" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="178" y1="190" x2="190" y2="190" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="190" y1="190" x2="184" y2="186.5" stroke="#8B8B8B" stroke-width="1.1"/>

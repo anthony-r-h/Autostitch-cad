@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
-import { createScenes, gifBlocks, displayElements } from '../examples/illustrated/scenes.mjs';
+import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics } from '../examples/illustrated/scenes.mjs';
 
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
@@ -72,7 +72,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     if(points.length===6) {
       const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
       near(+label.value.replace('Residual ',''),remaining,.00501);
-      assert.equal(label.bold,true);assert.equal(label.size,labels[0].size);
+      assert.equal(label.bold,false);assert.equal(label.size,labels[0].size);
       const indicator=f.elements.filter(e=>e.kind==='residual-dimension');assert.equal(indicator.length,1);
       assert.equal(indicator[0].color,'#C62828');near(indicator[0].a[1],view.y);near(indicator[0].b[1],view.y);
       near(dist(indicator[0].a,indicator[0].b)/view.scale,remaining);
@@ -374,6 +374,19 @@ for(const treatment of ['cross','gap']) {
 }
 
 const cornerSolution=scenes.find(s=>s.name==='problem-corner-autostitch');
+const mirroredCorner=scenes.find(s=>s.name==='problem-corner-mirrored');
+const mirroredSlits=slits(mirroredCorner.name,problemView);
+assert.equal(mirroredSlits.length,11);
+assert.equal(mirroredCorner.frames[0].stage,'top-row');
+assert.equal(mirroredCorner.frames[0].elements.filter(e=>e.kind==='slit').length,5);
+assert.equal(mirroredCorner.frames.filter(f=>f.stage==='mirror-vertical').length,30);
+for(const [i,e] of mirroredSlits.entries()) {
+  near(e.angle,(i<5?-40:i<10?-50:-45)*Math.PI/180);
+  if(i<10)near(dist(e.center,i<5?[-15+3*i,0]:[0,-15+3*(i-5)]),0);
+  else near(dist(e.center,[0,0]),0);
+}
+assert.equal(mirroredCorner.final.filter(e=>e.kind==='gap-value').length,8);
+assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
 const crossing=scenes.find(s=>s.name==='problem-corner-cross');
 assert.deepEqual(cornerSolution.frames[0].elements,crossing.frames.find(f=>f.stage==='result').elements);
 assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
@@ -415,6 +428,19 @@ for(const f of cornerSolution.frames) {
   }
 }
 
+const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
+const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Nominal row|Even spacing|End adjustment|Central adjustment|Vertex hole|Thread bridge|Shared diagonal slit|Shared tip hole)/.test(line));
+const comparisons=scenes.filter(s=>s.name.startsWith('pitch-')||s.name.startsWith('problem-corner-'));
+assert.equal(comparisonRows.length,comparisons.length);
+for(const [i,s] of comparisons.entries()) {
+  const values=Object.values(pitchComparisonMetrics(s)).map(v=>Number(v.toFixed(3)));
+  const published=[...comparisonRows[i].matchAll(/\$([\d.]+)/g)].map(m=>Number(m[1]));
+  assert.deepEqual(published,values,s.name);
+  for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
+    if(e.type==='text'&&['gap-value','residual-value'].includes(e.kind)){assert.equal(e.size,13);assert.equal(e.bold,false);}
+    if(e.kind==='residual-dimension'){assert.equal(e.color,'#C62828');assert.equal(e.width,3);}
+  }
+}
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
   assert.equal(Boolean(s.frames.length),entry.animated);
@@ -429,14 +455,14 @@ for(const s of scenes) {
       assert.equal(f.holeLightening,(i+1)/5);assert.deepEqual(f.elements,s.final);
       const shown=displayElements(f.elements,f.holeLightening);
       shown.forEach((e,j)=>{
-        if(['slit','hole','virtual','proposal'].includes(e.kind)) {
+        if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)) {
           const original=f.elements[j];
-          assert(parseInt(e.color.slice(1,3),16)>parseInt(original.color.slice(1,3),16));
+          assert.equal(e.color,'#'+[1,3,5].map(k=>Math.round(parseInt(original.color.slice(k,k+2),16)+(196-parseInt(original.color.slice(k,k+2),16))*f.holeLightening).toString(16).padStart(2,'0')).join('').toUpperCase());
           assert.deepEqual({...e,color:original.color},original);
         } else assert.deepEqual(e,f.elements[j]);
       });
     });
-    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
+    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
     for(const f of s.frames.filter(f=>f!==threadFrame&&f.stage!=='thread-fade'))assert(!f.elements.some(e=>e.kind==='thread'));
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
     const expected= s.name==='axiom-closure'?openings.length:openings.length-(s.name==='matched-guides'?2:1);

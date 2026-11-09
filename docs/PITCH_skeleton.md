@@ -30,57 +30,81 @@ Research note: Anthony to find stitching examples from:
 
 # The spacing problem
 
-- Seam lengths and required features rarely fall on exact multiples of the tool's pitch
-- Manual arrays leave endpoint, landmark and junction adjustments to the maker
-- Example: six slits on a $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, fixed endpoints
+- Six slits on a $15.3\,\mathrm{mm}$ guide, at $3\,\mathrm{mm}$ nominal pitch
+- Both endpoints must be met; the nominal row leaves a $0.30\,\mathrm{mm}$ residual
+- Red segments mark residuals on the guide; bracketed dimensions show gap lengths
 
-![Nominal spacing leaves a remainder at the fixed end](../examples/illustrated/assets/pitch-problem.gif)
+## Nominal row (unfitted)
 
-## Naive solution
+![Nominal row leaving a residual at the fixed endpoint](../examples/illustrated/assets/pitch-problem.gif)
 
-- Distribute six openings evenly: five $3.06\,\mathrm{mm}$ gaps
-- Every gap departs from nominal tool spacing
+Keep every gap at the tool's pitch. No spacing changes are needed, but the row misses the required endpoint.
 
-![Naive solution: redistribute every gap](../examples/illustrated/assets/pitch-spread.gif)
+## Even spacing
 
-## Good enough solution
+![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.gif)
 
-- Keep four nominal gaps; absorb the remainder in one $3.3\,\mathrm{mm}$ gap at the end
+Spread the residual across five equal $3.06\,\mathrm{mm}$ gaps. The result is uniform, but every gap departs from the chisel's nominal spacing.
 
-![Good enough solution: adjust the last gap](../examples/illustrated/assets/pitch-end.gif)
+## End adjustment
 
-## Autostitch solution
+![End adjustment absorbs the residual in the last gap](../examples/illustrated/assets/pitch-end.gif)
 
-- Fix required features, then fit the intervening spans
-- Use the fewest permitted adjustments, centred between those features
-- Mark adjusted gaps for individual placement
+Keep four nominal gaps and make the last gap $3.30\,\mathrm{mm}$. Only one gap needs individual placement; the change sits beside the endpoint.
 
-![Autostitch solution: absorb the residual in the central gap](../examples/illustrated/assets/pitch-centre.gif)
+## Central adjustment (Autostitch)
+
+![Central adjustment absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-centre.gif)
+
+Keep four nominal gaps and put the $3.30\,\mathrm{mm}$ gap in the centre. This preserves nominal spacing near both endpoints, with one individual placement in the middle of the run.
+
+| Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Nominal row (unfitted) | $0$ | $0.000$ | $0.300$ | $0.000$ |
+| Even spacing | $5$ | $0.300$ | $0.300$ | $0.267$ |
+| End adjustment | $1$ | $0.300$ | $0.300$ | $0.270$ |
+| Central adjustment (Autostitch) | $1$ | $0.300$ | $0.300$ | $0.270$ |
+
+End and central adjustment have identical totals. Placement, which these totals do not describe, distinguishes them.
 
 # The corner problem
 
-- Two approaching rows must also resolve how the stitching turns the corner
+- Two perpendicular guides, each $15\,\mathrm{mm}$ long, at $3\,\mathrm{mm}$ nominal pitch
+- The same outer endpoints apply to every treatment
+- The choice of corner opening changes the adjoining thread and the spans available for fitting
 
-## Form a hole at the intersection
+## Vertex hole
 
-- Continue each approaching row with a virtual terminal slit
-- Their crossing locates one round hole joining the two arms
+![Terminal virtual slits cross at the vertex hole](../examples/illustrated/assets/problem-corner-cross.gif)
 
-![Crossing virtual terminal slits locate the shared round hole](../examples/illustrated/assets/problem-corner-cross.gif)
+Continue the nominal rows towards their crossing and put a round hole at the vertex. The spacing stays nominal and the hole stays at the intended point, but the two adjoining threads differ from ordinary stitches. The virtual slits cross through their centres rather than meeting tip-to-tip.
 
-## Bridge the gap
+## Thread bridge
 
-- Stop both rows short; the thread bridges between them and cuts across the corner
+![Thread bridges between rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-gap.gif)
 
-![Thread bridges the gap between arms that stop short of the vertex](../examples/illustrated/assets/problem-corner-gap.gif)
+Stop both rows short and connect their last slits. This avoids a separate corner opening, but cuts across the corner. The centre gap is $4.243\,\mathrm{mm}$, outside the permitted range for this pitch.
 
-## Autostitch solution
+## Shared diagonal slit with mirrored lean
 
-- Align the selected tips of the terminal virtual slits at one shared round hole
-- Keep the outer endpoints fixed and the corner steps nominal; fit the remaining spans
-- Distribute the fewest permitted adjustments centrally within each arm
+![A shared diagonal slit joins the top row to a row with mirrored lean](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
-![Autostitch: resolve the virtual crossing, then distribute the arm adjustments](../examples/illustrated/assets/problem-corner-autostitch.gif)
+Use one diagonal slit at the vertex and mirror the lean on one arm. The opening stays at the intended point with nominal gaps; its orientation changes the direction and visible length of the two adjoining threads. A good treatment when that appearance suits the design, with separate placement of the corner slit and a relaxed consistent-lean rule.
+
+## Shared tip hole (Autostitch)
+
+![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
+
+Meet the selected virtual slit tips at one round hole, retain nominal corner steps and fit the free spans. This keeps consistent lean and an explicit construction, but moves the hole away from the vertex and requires five adjusted gaps here.
+
+| Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Vertex hole | $0$ | $0.000$ | $0.000$ | $0.772$ |
+| Thread bridge | $1$ | $1.243$ | $1.243$ | $1.410$ |
+| Shared diagonal slit with mirrored lean | $0$ | $0.000$ | $0.000$ | $0.123$ |
+| Shared tip hole (Autostitch) | $5$ | $1.149$ | $1.149$ | $1.032$ |
+
+The bridge's off-pitch gap is counted for comparison even though it exceeds the adjustment bound. Its totals use the direct bridge, which bypasses the vertex. Autostitch uses virtual-to-real corner steps for pitch accounting; visible thread-length deviation includes the actual connections to the round hole.
 
 # Why CAD
 

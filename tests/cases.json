@@ -8583,28 +8583,32 @@
       "assets": [
         {
           "path": "examples/illustrated/assets/pitch-problem",
-          "policy": "unresolved"
+          "policy": "unresolved",
+          "label": "Nominal row (unfitted)"
         },
         {
           "path": "examples/illustrated/assets/pitch-spread",
           "policy": "spread",
           "changedGaps": 5,
           "firstChangedGap": 0,
-          "adjustedPitch": 3.06
+          "adjustedPitch": 3.06,
+          "label": "Even spacing"
         },
         {
           "path": "examples/illustrated/assets/pitch-end",
           "policy": "end",
           "changedGaps": 1,
           "firstChangedGap": 4,
-          "adjustedPitch": 3.3
+          "adjustedPitch": 3.3,
+          "label": "End adjustment"
         },
         {
           "path": "examples/illustrated/assets/pitch-centre",
           "policy": "central",
           "changedGaps": 1,
           "firstChangedGap": 2,
-          "adjustedPitch": 3.3
+          "adjustedPitch": 3.3,
+          "label": "Central adjustment (Autostitch)"
         }
       ],
       "animated": true,
@@ -9215,22 +9219,31 @@
         "A6"
       ],
       "animated": true,
-      "status": "Compare vertex crossing and gap bridging with the A6 selected-tip solution on identical fixed guides. The solution continues from the crossing, reserves nominal corner steps, then fits the free spans using the independent selector; analytic illustration, not a native solver run.",
+      "status": "Compare a vertex hole, thread bridge, shared diagonal slit with mirrored lean, and the A6 selected-tip solution on the same fixed guides. The bridge bypasses the vertex and exceeds the pitch bound. Analytic illustrations, not native solver runs.",
       "inputs": {
-        "armLength": 15
+        "armLength": 15,
+        "diagonalCase": "ILL-SELLIER-CORNER"
       },
       "assets": [
         {
           "path": "examples/illustrated/assets/problem-corner-cross",
-          "treatment": "cross"
+          "treatment": "cross",
+          "label": "Vertex hole"
         },
         {
           "path": "examples/illustrated/assets/problem-corner-gap",
-          "treatment": "gap"
+          "treatment": "gap",
+          "label": "Thread bridge"
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-mirrored",
+          "treatment": "mirrored",
+          "label": "Shared diagonal slit with mirrored lean"
         },
         {
           "path": "examples/illustrated/assets/problem-corner-autostitch",
-          "treatment": "autostitch"
+          "treatment": "autostitch",
+          "label": "Shared tip hole (Autostitch)"
         }
       ],
       "notation": [

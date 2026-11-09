@@ -83,10 +83,10 @@
 <line class="slit" x1="483.922638196" y1="173.524248782" x2="507.41874303" y2="178.416391218" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="483.657647147,174.79695446 507.153751981,179.689096897 507.683734079,177.14368554 484.187629244,172.251543103" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="slit" x1="508.894415746" y1="211.880772713" x2="529.882158046" y2="223.521849687" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="508.26385741,213.017608754 529.25159971,224.658685729 530.512716383,222.385013646 509.524974082,210.743936671" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="slit" x1="521.365695879" y1="255.918027099" x2="537.956178839" y2="273.260341685" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="520.426320506,256.81667826 537.016803465,274.158992845 538.895554212,272.361690524 522.305071253,255.019375939" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="dimension" x1="375.25" y1="80.395990117" x2="422.70692784" y2="87.595990117" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="374.65" y1="84.350734103" x2="375.85" y2="76.44124613" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="422.10692784" y1="91.550734103" x2="423.30692784" y2="83.64124613" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="measurement" x="398.97846392" y="74.995990117" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<line class="dimension" x1="375.25" y1="80.395990117" x2="422.70692784" y2="87.595990117" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="374.65" y1="84.350734103" x2="375.85" y2="76.44124613" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="dimension" x1="422.10692784" y1="91.550734103" x2="423.30692784" y2="83.64124613" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="measurement" x="398.97846392" y="74.995990117" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
 <text class="notation-start" x="70" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="100" y1="115" x2="112" y2="115" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="112" y1="115" x2="106" y2="111.5" stroke="#8B8B8B" stroke-width="1.1"/>

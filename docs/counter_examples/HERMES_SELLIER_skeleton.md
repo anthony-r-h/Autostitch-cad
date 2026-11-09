@@ -20,7 +20,7 @@
 - Choose guide extents in nominal steps; the approaches to the H have zero residual
 - Every slit-to-slit gap and each H approach is $p=3\,\mathrm{mm}$; no redistribution
 
-![Autostitch corner with nominal rows meeting the circular H openings](../../examples/counter_examples/assets/sellier-wallet-autostitch.gif)
+![Autostitch corner with nominal rows meeting the circular H openings](../../examples/counter_examples/assets/sellier-wallet-autostitch.png)
 
 ## Reconstruction assumptions
 

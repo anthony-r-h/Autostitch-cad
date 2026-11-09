@@ -9287,17 +9287,13 @@
       "pitch": 3,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "animated": true,
+      "animated": false,
       "notation": [
         "s",
         "e",
         "j",
         "direction"
       ],
-      "threadReveal": {
-        "holdCentiseconds": 200,
-        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
-      },
       "id": "ILL-SELLIER-WALLET",
       "axioms": [
         "A2",
@@ -9308,9 +9304,9 @@
         "pitch": 3,
         "slitLength": 1.5,
         "leanDegrees": 40,
-        "topSteps": 16,
-        "rightSteps": 12,
-        "bottomSteps": 15,
+        "topSteps": 5,
+        "rightSteps": 5,
+        "bottomSteps": 4,
         "hWidth": 3,
         "hHeight": 6
       },

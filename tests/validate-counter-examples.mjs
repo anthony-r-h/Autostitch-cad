@@ -30,13 +30,13 @@ near(angle(threads[1])-angle(threads[2]),angle(threads[3])-angle(threads[4]));
 near(distance(threads[2].b,shared.b),0);near(distance(threads[3].a,shared.a),0);
 assert(threads[2].width>threads[1].width&&threads[3].width>threads[4].width);
 
-const wallet=scenes[1],wv={x:470,y:48,scale:7.2};
+const wallet=scenes[1],wv={x:435,y:45,scale:18};
 const real=slits(wallet),virtual=wallet.final.filter(e=>e.kind==='virtual'),holes=wallet.final.filter(e=>e.kind==='hole');
-assert.equal(real.length,42);assert.equal(virtual.length,2);assert.equal(holes.length,7);
+assert.equal(real.length,13);assert.equal(virtual.length,2);assert.equal(holes.length,7);
 const [ci,co]=virtual.map(e=>world(midpoint(e),wv)),joint=world(holes.at(-1).p,wv);
 near(distance(world(virtual[0].a,wv),joint),0);near(distance(world(virtual[1].b,wv),joint),0);
 near(ci[1],0);near(co[0],0);
-const top=real.slice(0,16),right=real.slice(16,27).toReversed(),bottom=real.slice(27);
+const top=real.slice(0,5),right=real.slice(5,9).toReversed(),bottom=real.slice(9);
 const hLeft=world(holes[0].p,wv),hRight=world(holes[3].p,wv);
 for(const [a,row] of [top,right,bottom].entries())for(const [i,e] of row.entries()) {
   const c=world(midpoint(e),wv);near(distance(e.a,e.b)/wv.scale,1.5);
@@ -49,12 +49,12 @@ near(distance(world(midpoint(top.at(-1)),wv),ci),3);
 near(distance(world(midpoint(right[0]),wv),co),3);
 near(distance(world(midpoint(right.at(-1)),wv),hRight),3);
 near(distance(world(midpoint(bottom[0]),wv),hLeft),3);
-near(distance(world(midpoint(top[0]),wv),ci),16*3);
-near(distance(hRight,co),12*3);near(distance(world(midpoint(bottom.at(-1)),wv),hLeft),15*3);
+near(distance(world(midpoint(top[0]),wv),ci),5*3);
+near(distance(hRight,co),5*3);near(distance(world(midpoint(bottom.at(-1)),wv),hLeft),4*3);
 assert(!wallet.final.some(e=>e.kind==='adjustment-mark'));
 for(const i of [0,3])for(const j of [0,1])near(distance(holes[i+j].p,holes[i+j+1].p)/wv.scale,3);
 for(const i of [0,1,2])near(distance(holes[i].p,holes[i+3].p)/wv.scale,3);
-for(const f of wallet.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='hole').slice(0,6),holes.slice(0,6),'H anchors must stay fixed');
+assert.equal(wallet.frames.length,0,'Reduced wallet must be static');
 
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
@@ -76,17 +76,19 @@ for(const [i,c] of centres.entries())for(const d of centres.slice(i+1))assert(di
 for(const s of scenes) {
   const base=new URL(`examples/counter_examples/assets/${s.name}`,root);
   assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(s),'Stale SVG');
-  const gif=fs.readFileSync(new URL(base.href+'.gif')),blocks=gifBlocks(gif).blocks;
-  near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
-  assert.equal(blocks.filter(b=>b.kind==='image').length,s.frames.length);
-  assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
-  assert(gif.includes(Buffer.from('NETSCAPE2.0')));
   const png=fs.readFileSync(new URL(base.href+'.png'));assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
-  const reveal=s.frames.at(-2);assert.equal(reveal.stage,'thread-reveal');assert.equal(reveal.delay,200);assert.deepEqual(reveal.elements,s.final);
-  for(const f of s.frames.filter(f=>f!==reveal))assert(!f.elements.some(e=>e.kind==='thread'));
+  if(s.frames.length) {
+    const gif=fs.readFileSync(new URL(base.href+'.gif')),blocks=gifBlocks(gif).blocks;
+    near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
+    assert.equal(blocks.filter(b=>b.kind==='image').length,s.frames.length);
+    assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
+    assert(gif.includes(Buffer.from('NETSCAPE2.0')));
+    const reveal=s.frames.at(-2);assert.equal(reveal.stage,'thread-reveal');assert.equal(reveal.delay,200);assert.deepEqual(reveal.elements,s.final);
+    for(const f of s.frames.filter(f=>f!==reveal))assert(!f.elements.some(e=>e.kind==='thread'));
+  } else assert(!fs.existsSync(new URL(base.href+'.gif')),'Static figure must not retain a GIF');
   const tips=s.final.filter(e=>['slit','hole'].includes(e.kind)).flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
   for(const e of s.final.filter(e=>e.kind==='thread'))for(const p of [e.a,e.b])assert(tips.some(t=>distance(p,t)<1e-6));
-  for(const f of s.frames) {
+  for(const f of [...s.frames,{elements:s.final}]) {
     for(const role of ['notation-start','notation-end','notation-junction'])assert.deepEqual(f.elements.filter(e=>e.kind===role),s.final.filter(e=>e.kind===role));
     for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
   }

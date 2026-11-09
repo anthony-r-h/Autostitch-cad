@@ -639,7 +639,7 @@ function threadPaths(s) {
   throw new Error(`Thread path missing for ${s.name}`);
 }
 function finishThread(s) {
-  if(!s.frames.length)return s;
+  if(!s.frames.length&&!s.threadPaths)return s;
   const paths=threadPaths(s),threads=paths.flatMap(path=>path.slice(1).map((next,i)=>
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
@@ -681,7 +681,7 @@ export function svg(scene) {
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
     return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
   });
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':'Static terminology figure.'}</desc>\n${elements.join('\n')}\n</svg>\n`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':scene.threadPaths?'Static stitch diagram.':'Static terminology figure.'}</desc>\n${elements.join('\n')}\n</svg>\n`;
 }
 
 // GIF89a blocks: https://www.w3.org/Graphics/GIF/spec-gif89a.txt

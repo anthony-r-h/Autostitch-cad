@@ -5,9 +5,9 @@ Supporting figures for [the Sellier study](../../docs/counter_examples/HERMES_SE
 | Figure | Catalog ID | Construction |
 | --- | --- | --- |
 | `sellier-diagonal-corner` | `ILL-SELLIER-CORNER` | Inferred ordinary rows, shared diagonal slit, then the complete thread. The two adjacent thread segments have extra weight. |
-| `sellier-wallet-autostitch` | `ILL-SELLIER-WALLET` | Fixed H circles, nominal rows approaching the terminal virtual slits, shared corner hole, then the complete thread. |
+| `sellier-wallet-autostitch` | `ILL-SELLIER-WALLET` | Static detail: five top slits, four side slits and four bottom slits; shared corner hole and six H circles. |
 
-Both use a $600\times375$ canvas and a two-second final thread hold. SVG and PNG files are final-state stills; GIF files loop. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
+Both use a $600\times375$ canvas. The corner GIF loops with a two-second final thread hold. The reduced wallet is static SVG/PNG, enlarged to show the corner and H. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
 ## Reproduce
 

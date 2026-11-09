@@ -53,32 +53,29 @@ export function walletGeometry() {
 }
 
 function walletScene() {
-  const g=walletGeometry(),view={x:470,y:48,scale:7.2};
+  const g=walletGeometry(),view={x:435,y:45,scale:18};
   const s=scene('sellier-wallet-autostitch','Top, right and bottom stitching with a decorative H','ILL-SELLIER-WALLET');
   const circles=g.decoration.map(column=>column.map(p=>hole(p,view)));
   const base=[worldLine(g.start,[0,0],view),worldLine([0,0],g.rightAnchor,view),worldLine(g.leftAnchor,g.end,view),
     ...routeMarks(project(g.start,view),project(g.end,view),[1,0],[-1,0]),
     notationText(add(project(g.joint,view),[18,-12]),'j','junction'),...circles.flat()];
-  frame(s,base,100,'guides-and-decoration');
   const result=[...base],rows=[[],[],[]];
   for(const [a,points] of [g.top,g.right.toReversed(),g.bottom].entries()) {
     const angle=[g.lean,g.lean-Math.PI/2,g.lean-Math.PI][a];
     for(const p of points) {
       const slit=opening(p,angle,view)[0];rows[a].push(slit);result.push(slit);
-      frame(s,[...result],18,`arm-${a}-stitch`);
     }
     if(a<2) {
       const center=a===0?g.ci:g.co;
       result.push(worldLine([0,0],center,view,'extension','#C4C4C4',1,true),...opening(center,angle,view,{virtual:true}));
-      frame(s,[...result],100,`arm-${a}-terminal`);
     }
   }
-  const joint=hole(g.joint,view);result.push(joint);frame(s,[...result],130,'shared-hole');
+  const joint=hole(g.joint,view);result.push(joint);
   s.threadPaths=[
     [...rows[0],joint,...rows[1].toReversed(),circles[1][0]],
     circles[1],[circles[1][1],circles[0][1]],circles[0].toReversed(),[circles[0][0],...rows[2]]
   ];
-  return slitOutlines(finishThread(finish(s,result)));
+  return slitOutlines(finishThread({...s,final:result}));
 }
 
 export function createScenes(){return [diagonalCorner(),walletScene()];}

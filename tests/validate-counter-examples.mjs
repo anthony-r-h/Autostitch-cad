@@ -48,13 +48,13 @@ near(angle(threads[1])-angle(threads[2]),angle(threads[3])-angle(threads[4]));
 near(distance(threads[2].b,shared.a),0);near(distance(threads[3].a,shared.b),0);
 assert(threads[2].width>threads[1].width&&threads[3].width>threads[4].width);
 
-const wallet=scenes[1],wv={x:435,y:45,scale:18};
+const wallet=scenes[1],wv={x:435,y:72,scale:18};
 const real=slits(wallet),virtual=wallet.final.filter(e=>e.kind==='virtual'),holes=wallet.final.filter(e=>e.kind==='hole');
-assert.equal(real.length,13);assert.equal(virtual.length,2);assert.equal(holes.length,7);
+assert.equal(real.length,12);assert.equal(virtual.length,2);assert.equal(holes.length,7);
 const [ci,co]=virtual.map(e=>world(midpoint(e),wv)),joint=world(holes.at(-1).p,wv);
 near(distance(world(virtual[0].a,wv),joint),0);near(distance(world(virtual[1].b,wv),joint),0);
 near(ci[1],0);near(co[0],0);
-const top=real.slice(0,5),right=real.slice(5,9).toReversed(),bottom=real.slice(9);
+const top=real.slice(0,5),right=real.slice(5,8).toReversed(),bottom=real.slice(8);
 const hLeft=world(holes[0].p,wv),hRight=world(holes[3].p,wv);
 for(const [a,row] of [top,right,bottom].entries())for(const [i,e] of row.entries()) {
   const c=world(midpoint(e),wv);near(distance(e.a,e.b)/wv.scale,1.5);
@@ -68,7 +68,7 @@ near(distance(world(midpoint(right[0]),wv),co),3);
 near(distance(world(midpoint(right.at(-1)),wv),hRight),3);
 near(distance(world(midpoint(bottom[0]),wv),hLeft),3);
 near(distance(world(midpoint(top[0]),wv),ci),5*3);
-near(distance(world(midpoint(right.at(-1)),wv),co)+distance(world(midpoint(right.at(-1)),wv),hRight),5*3);
+near(distance(world(midpoint(right.at(-1)),wv),co)+distance(world(midpoint(right.at(-1)),wv),hRight),4*3);
 near(distance(world(midpoint(bottom.at(-1)),wv),world(midpoint(bottom[0]),wv))+distance(world(midpoint(bottom[0]),wv),hLeft),4*3);
 assert(!wallet.final.some(e=>e.kind==='adjustment-mark'));
 for(const i of [0,3])for(const j of [0,1])near(distance(holes[i+j].p,holes[i+j+1].p)/wv.scale,1.5);
@@ -76,7 +76,7 @@ for(const i of [0,1,2])near(distance(holes[i].p,holes[i+3].p)/wv.scale,3);
 assert.equal(wallet.frames.length,0,'Case diagram must be static');
 
 const diagonalWallet=scenes[2],diagonalSlits=slits(diagonalWallet),diagonalHoles=diagonalWallet.final.filter(e=>e.kind==='hole');
-assert.equal(diagonalWallet.frames.length,0);assert.equal(diagonalSlits.length,14);
+assert.equal(diagonalWallet.frames.length,0);assert.equal(diagonalSlits.length,13);
 assert(!diagonalWallet.final.some(e=>['virtual','adjustment-mark'].includes(e.kind)));
 diagonalHoles.forEach((e,i)=>{
   near(e.p[0]-diagonalHoles[0].p[0],holes[i].p[0]-holes[0].p[0]);
@@ -85,7 +85,7 @@ diagonalHoles.forEach((e,i)=>{
 const diagonalJoint=diagonalSlits.at(-1),diagonalVertex=world(midpoint(diagonalJoint),wv);
 near(distance(diagonalVertex,co),0);
 near(Math.abs(diagonalJoint.b[0]-diagonalJoint.a[0]),Math.abs(diagonalJoint.b[1]-diagonalJoint.a[1]));
-for(const [a,row] of [diagonalSlits.slice(0,5),diagonalSlits.slice(5,9).toReversed(),diagonalSlits.slice(9,13)].entries()) {
+for(const [a,row] of [diagonalSlits.slice(0,5),diagonalSlits.slice(5,8).toReversed(),diagonalSlits.slice(8,12)].entries()) {
   for(const [i,e] of row.entries()) {
     near(distance(e.a,e.b)/wv.scale,1.5);
     if(i)near(distance(midpoint(e),midpoint(row[i-1]))/wv.scale,3);
@@ -95,21 +95,21 @@ for(const [a,row] of [diagonalSlits.slice(0,5),diagonalSlits.slice(5,9).toRevers
   }
 }
 near(distance(midpoint(diagonalSlits[4]),midpoint(diagonalJoint))/wv.scale,3);
-near(distance(midpoint(diagonalSlits[8]),midpoint(diagonalJoint))/wv.scale,3);
+near(distance(midpoint(diagonalSlits[7]),midpoint(diagonalJoint))/wv.scale,3);
 
 for(const layout of [wallet,diagonalWallet]) {
   const openings=slits(layout),circles=layout.final.filter(e=>e.kind==='hole'),drawn=layout.final.filter(e=>e.kind==='thread');
   const connection=(a,b)=>assert(drawn.some(e=>distance(e.a,a)<1e-6&&distance(e.b,b)<1e-6),'Wrong visible thread tips');
-  for(const indices of [[0,1,2,3,4],[8,7,6,5],[9,10,11,12]]) {
+  for(const indices of [[0,1,2,3,4],[7,6,5],[8,9,10,11]]) {
     for(let i=1;i<indices.length;i++)connection(openings[indices[i-1]].b,openings[indices[i]].a);
   }
   connection(openings[5].b,circles[3].p);
-  connection(circles[0].p,openings[9].a);
+  connection(circles[0].p,openings[8].a);
   near(distance(midpoint(openings[5]),circles[3].p)/wv.scale,3);
-  near(distance(circles[0].p,midpoint(openings[9]))/wv.scale,3);
+  near(distance(circles[0].p,midpoint(openings[8]))/wv.scale,3);
   // The H joins must carry the same angle as the neighbouring ordinary thread.
   near(angle({a:openings[5].b,b:circles[3].p}),angle({a:openings[6].b,b:openings[5].a}));
-  near(angle({a:circles[0].p,b:openings[9].a}),angle({a:openings[9].b,b:openings[10].a}));
+  near(angle({a:circles[0].p,b:openings[8].a}),angle({a:openings[8].b,b:openings[9].a}));
 }
 
 const loeweReference=scenes[3],loeweSolved=scenes[4],lv={x:(600-8.1*25)/2,y:80,scale:25};

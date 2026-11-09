@@ -9326,11 +9326,11 @@
         "slitLength": 1.5,
         "leanDegrees": 40,
         "topSteps": 5,
-        "rightSteps": 5,
+        "rightSteps": 4,
         "bottomSteps": 4,
         "hWidth": 3,
         "hHeight": 3,
-        "leatherEdge": [[-21, 2.2], [2.2, 2.2], [2.2, -17.8], [-21, -17.8]]
+        "leatherEdge": [[-21, 2.2], [2.2, 2.2], [2.2, -14.8], [-21, -14.8]]
       },
       "assets": [
         {

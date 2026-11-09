@@ -8789,25 +8789,38 @@
         "A10"
       ],
       "animated": true,
-      "status": "Deliberately rejected overlapping layout with specified slit width and margin.",
+      "status": "Deliberately rejected acute-corner layout; outer pairs pass while inner pairs fail clearance.",
       "assets": [
         {
           "path": "examples/illustrated/assets/axiom-clearance"
         }
       ],
       "inputs": {
-        "stations": [
-          0,
+        "includedDegrees": 6,
+        "steps": [
           3,
           6,
-          9
+          9,
+          12
         ],
         "width": 0.3,
         "margin": 0.2,
-        "startSeparation": 2.4,
-        "endSeparation": 0.3
+        "edgeClearances": [
+          -0.20600857625410282,
+          0.04477554239327519,
+          0.29555966104065107,
+          0.5463437796880297
+        ]
       },
-      "notation": []
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "terms": [
+        "Overlap"
+      ]
     },
     {
       "id": "ILL-NOFIT",

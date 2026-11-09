@@ -130,9 +130,10 @@ Research note: Anthony to find stitching examples from:
 
 - Distinct openings must remain disjoint and retain the required edge-to-edge margin
 - Check all openings together, including separate guides and closure
-- Example: slit width $w=0.3\,\mathrm{mm}$, margin $m=0.2\,\mathrm{mm}$; the overlapping rows fail
+- Acute junction: the nearest pair overlaps; the next pair misses the required margin; farther pairs pass
+- Example: included angle $6^\circ$, slit width $w=0.3\,\mathrm{mm}$, margin $m=0.2\,\mathrm{mm}$
 
-![A10: locally valid rows collide when placed together](../examples/illustrated/assets/axiom-clearance.gif)
+![A10: clearance fails near the acute junction and passes farther along its arms](../examples/illustrated/assets/axiom-clearance.gif)
 
 # Model and solution
 

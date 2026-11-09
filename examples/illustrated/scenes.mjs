@@ -227,37 +227,33 @@ function smoothScene() {
 
 function clearanceScene() {
   const input=catalog.illustrations.find(item=>item.id==='ILL-CLEARANCE').inputs;
-  const view={x:120,y:220,scale:40},s=scene('axiom-clearance','Nominal rows still need clearance','A10');
-  const row=(y,halo=false)=>{
-    const result=[worldLine([0,y],[9,y],view)];
-    for(const x of input.stations) {
-      const half=mul(axis(alpha),.75),a=add([x,y],mul(half,-1)),b=add([x,y],half);
-      if(halo)result.push({...worldLine(a,b,view,'clearance-envelope','#E3E3E3',(input.width+input.margin)*view.scale),round:true});
-      result.push({...worldLine(a,b,view,'slit',ink,input.width*view.scale),round:true});
+  const view={x:75,y:200,scale:35},half=input.includedDegrees*Math.PI/360,h=.75;
+  const directions=[axis(half),axis(-half)];
+  const virtualStations=[-h*Math.cos(alpha)+h*Math.sin(alpha)*Math.tan(half),-h*Math.cos(alpha)-h*Math.sin(alpha)*Math.tan(half)];
+  const joint=[0,h*Math.sin(alpha)/Math.cos(half)];
+  const centre=(arm,step)=>mul(directions[arm],virtualStations[arm]+step);
+  const base=directions.flatMap((d,i)=>[worldLine([0,0],centre(i,12),view),worldLine([0,0],centre(i,0),view,'extension',guideInk,1,true)]);
+  const s=scene('axiom-clearance','Clearance fails near an acute junction and passes farther away','A10');
+  frame(s,base,90,'guides');
+  const envelopes=[],profiles=[],checks=[];
+  const drawing=()=>[...envelopes,...base,...profiles,...checks];
+  for(let n=input.steps.length-1;n>=0;n--) {
+    for(let arm=0;arm<2;arm++) {
+      const point=centre(arm,input.steps[n]),u=mul(axis(alpha+(arm===0?half:-half)),h);
+      const a=add(point,mul(u,-1)),b=add(point,u);
+      envelopes.push({...worldLine(a,b,view,'clearance-envelope','#E3E3E3',(input.width+input.margin)*view.scale),round:true});
+      profiles.push({...worldLine(a,b,view,'slit',ink,input.width*view.scale),round:true});
     }
-    return result;
-  };
-  // Draw all clearance envelopes behind all physical profiles. A later halo
-  // must not erase an earlier slit and make an overlap look separated.
-  const pair=separation=>{
-    const all=[...row(0,true),...row(separation,true)];
-    return [...all.filter(e=>e.kind==='clearance-envelope'),...all.filter(e=>e.kind==='guide'),...all.filter(e=>e.kind==='slit')];
-  };
-  frame(s,[worldLine([0,0],[9,0],view)],70,'guide');
-  frame(s,row(0),100,'nominal-row');
-  frame(s,pair(input.startSeparation),130,'separate-rows');
-  let result;
-  for(let i=1;i<=30;i++) {
-    result=pair(lerp(input.startSeparation,input.endSeparation,ease(i/30)));
-    frame(s,result,6,'clearance-check');
+    frame(s,drawing(),90,'approach-junction');
+    const x=(project(centre(0,input.steps[n]),view)[0]+project(centre(1,input.steps[n]),view)[0])/2;
+    const p=[x,275],gap=input.edgeClearances[n],valid=gap>=input.margin;
+    if(valid)checks.push(line(add(p,[-5,0]),add(p,[-1,4]),'accepted',ink,1.4),line(add(p,[-1,4]),add(p,[6,-5]),'accepted',ink,1.4));
+    else checks.push(line(add(p,[-4,-4]),add(p,[4,4]),'rejected',ink,1.4),line(add(p,[-4,4]),add(p,[4,-4]),'rejected',ink,1.4));
+    checks.push(text([x,303],gap<0?'Overlap':gap.toFixed(2)));
+    frame(s,drawing(),150,valid?'clearance-pass':'clearance-fail');
   }
-  // Cross marks denote rejection; the final overlapping positions are not output.
-  for(const x of input.stations) {
-    const p=project([x,-1.4],view);
-    result.push(line(add(p,[-4,-4]),add(p,[4,4]),'rejected',construction,1.3),line(add(p,[-4,4]),add(p,[4,-4]),'rejected',construction,1.3));
-  }
-  result.push(...measure([0,0],[3,0],'3',view,-80));
-  return finish(s,result);
+  const virtuals=directions.flatMap((d,i)=>opening(centre(i,0),alpha+(i===0?half:-half),view,{virtual:true}));
+  return finish(s,[...drawing(),...virtuals,hole(joint,view)]);
 }
 
 function noFitScene() {
@@ -505,6 +501,11 @@ function annotateScene(s) {
   }
   else if(['axiom-landmark','terms-layout'].includes(s.name))marks=routeMarks([60,187.5],[540,187.5]);
   else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
+  else if(s.name==='axiom-clearance') {
+    const ends=s.final.filter(e=>e.kind==='slit').slice(0,2).map(e=>mul(add(e.a,e.b),.5));
+    const half=catalog.illustrations.find(i=>i.id==='ILL-CLEARANCE').inputs.includedDegrees*Math.PI/360;
+    marks=[notationText(add(ends[0],[25,-28]),'s','start'),notationText(add(ends[1],[16,25]),'e','end'),...directionMark(ends[0],[-Math.cos(half),Math.sin(half)])];
+  }
   else if(s.name==='axiom-curve')marks=routeMarks([160,75],[390,305],[1,0],[0,1]);
   else if(s.name==='terms-chord') {
     const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-CHORD').inputs;
@@ -530,7 +531,7 @@ function annotateScene(s) {
     const [incoming,outgoing]=model.primitives,a=model.stations[0].at(-1),b=model.stations[1].at(-1);
     marks=routeMarks(project(primitivePoint(incoming,a),view),project(primitivePoint(outgoing,b),view),screenTangent(incoming,a),screenTangent(outgoing,b));
   }
-  const persistentJunction=['axiom-corner','axiom-junction'].includes(s.name)||s.name.startsWith('corner-');
+  const persistentJunction=['axiom-corner','axiom-junction','axiom-clearance'].includes(s.name)||s.name.startsWith('corner-');
   const annotate=elements=>[...elements,...marks,...(persistentJunction?s.final:elements).filter(e=>e.kind==='hole').map(e=>
     notationText(add(e.p,['axiom-junction','terms-junction'].includes(s.name)?[16,-14]:[18,18]),'j','junction'))];
   return {...s,final:annotate(s.final),frames:s.frames.map(f=>({...f,elements:annotate(f.elements)}))};

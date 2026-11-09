@@ -56,15 +56,15 @@ The straight and curved portions use one slit at their common tangent. Revealing
 
 ### Share the branching junction: A9
 
-Stitch inward along each of the three arms, then identify their shared round hole. The `j` label is visible from the first frame. Each arm's nearest slit is one nominal pitch from the hole. `ILL-JUNCTION`.
+Reserve one round hole and its nominal neighbours before filling the arms. `ILL-JUNCTION`.
 
-![Three rows approach the T junction and share one round hole](assets/axiom-junction.gif)
+![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
 
 ### Check the whole layout: A10
 
-Both rows retain nominal pitch as their guides approach. The final arrangement is rejected because the slit profiles overlap. Light envelopes show the clearance allowance. This example specifies $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$; it is deliberately invalid. `ILL-CLEARANCE`.
+Two fixed arms meet at $6^\circ$. Stitching approaches the junction from the wide end: two pairs pass, the next leaves only $0.04\,\mathrm{mm}$ clearance, and the nearest pair overlaps. Checks and crosses identify the result; numbers are edge-to-edge clearance in millimetres. Light envelopes show the required allowance. With $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$, the complete layout is invalid. `ILL-CLEARANCE`.
 
-![Individually valid rows collide when placed together](assets/axiom-clearance.gif)
+![Pairs farther from the junction pass clearance; pairs near it fail](assets/axiom-clearance.gif)
 
 ## Further model examples
 

@@ -120,16 +120,46 @@ for(const f of branchScene.frames) {
 assert.deepEqual(branchCounts,[3,3,2]);
 branchDistances.forEach(d=>near(d/junctionView.scale,3));
 
-const clearance=slits('axiom-clearance',{x:120,y:220,scale:40});assert.equal(clearance.length,8);
-for(const s of clearance){near(+s.element['stroke-width']/40,.3);assert.equal(s.element['stroke-linecap'],'round');}
-const zero=clearance.filter(s=>Math.abs(s.center[0])<1e-6);assert.equal(zero.length,2);
-const perpendicular=dist(zero[0].center,zero[1].center)*Math.cos(alpha);
-assert(perpendicular<.3,'The claimed overlap is absent');
-assert.equal(readSvg('axiom-clearance').elements.filter(e=>e.class==='rejected').length,8);
-for(const frame of scenes.find(s=>s.name==='axiom-clearance').frames) {
+const clearanceView={x:75,y:200,scale:35};
+const clearance=slits('axiom-clearance',clearanceView);assert.equal(clearance.length,8);
+const clearanceInput=catalog.illustrations.find(i=>i.id==='ILL-CLEARANCE').inputs;
+for(const s of clearance){near(+s.element['stroke-width']/35,.3);assert.equal(s.element['stroke-linecap'],'round');}
+// Independently measure finite axes from the exported SVG, including intersections.
+function pointSegmentDistance(p,a,b) {
+  const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]**2+d[1]**2)));
+  return dist(p,[a[0]+t*d[0],a[1]+t*d[1]]);
+}
+function segmentDistance(a,b,c,d) {
+  const cross=(p,q,r)=>(q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]);
+  if(cross(a,b,c)*cross(a,b,d)<0&&cross(c,d,a)*cross(c,d,b)<0)return 0;
+  return Math.min(pointSegmentDistance(a,c,d),pointSegmentDistance(b,c,d),pointSegmentDistance(c,a,b),pointSegmentDistance(d,a,b));
+}
+const clearanceRows=[clearance.filter(s=>s.center[1]>0),clearance.filter(s=>s.center[1]<0)].map(row=>row.sort((a,b)=>a.center[0]-b.center[0]));
+const halfAngle=clearanceInput.includedDegrees*Math.PI/360;
+for(const [i,row] of clearanceRows.entries())for(const [n,s] of row.entries()) {
+  near(s.center[1]/s.center[0],Math.tan(i===0?halfAngle:-halfAngle));
+  near(s.angle,alpha+(i===0?halfAngle:-halfAngle));
+  if(n)near(dist(s.center,row[n-1].center),3);
+}
+const edgeClearances=clearanceRows[0].map(a=>Math.min(...clearanceRows[1].map(b=>segmentDistance(a.a,a.b,b.a,b.b)))-clearanceInput.width);
+edgeClearances.forEach((gap,i)=>near(gap,clearanceInput.edgeClearances[i]));
+assert(edgeClearances[0]<0);assert(edgeClearances[1]>0&&edgeClearances[1]<clearanceInput.margin);
+assert(edgeClearances.slice(2).every(g=>g>clearanceInput.margin));
+const clearanceSvg=readSvg('axiom-clearance');
+assert.equal(clearanceSvg.elements.filter(e=>e.class==='rejected').length,4);
+assert.equal(clearanceSvg.elements.filter(e=>e.class==='accepted').length,4);
+const clearanceVirtuals=slits('axiom-clearance',clearanceView,'virtual'),clearanceJoint=circle('axiom-clearance',clearanceView);
+clearanceVirtuals.forEach((v,i)=>{near(dist(v.b,clearanceJoint),0);near(dist(v.center,clearanceRows[i][0].center),3);});
+const clearanceScene=scenes.find(s=>s.name==='axiom-clearance');
+let fixedSlits=[];
+for(const frame of clearanceScene.frames) {
+  assert.deepEqual(frame.elements.filter(e=>e.kind==='notation-junction'),clearanceScene.final.filter(e=>e.kind==='notation-junction'));
   const firstSlit=frame.elements.findIndex(e=>e.kind==='slit');
   if(firstSlit>=0)assert(frame.elements.slice(firstSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
+  if(frame.stage==='reset')continue;
+  const current=frame.elements.filter(e=>e.kind==='slit');assert.deepEqual(current.slice(0,fixedSlits.length),fixedSlits);fixedSlits=current;
 }
+assert.deepEqual(clearanceScene.frames.filter(f=>['clearance-pass','clearance-fail'].includes(f.stage)).map(f=>f.stage),['clearance-pass','clearance-pass','clearance-fail','clearance-fail']);
 
 assert.equal(selectFit({D:7,p:3}),null);
 const rejected=slits('fit-rejected',{x:160,y:190,scale:40});
@@ -273,7 +303,7 @@ for(const s of scenes) {
   for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||terms.includes(match[1]),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
   for(const term of terms)assert(labels.some(e=>e.value===term),`${s.name} missing ${term}`);
-  if(!['axiom-clearance','terms-slit'].includes(s.name)) {
+  if(s.name!=='terms-slit') {
     assert(labels.some(e=>e.kind==='notation-start'&&e.value==='s'),`${s.name} needs a start`);
     assert(s.final.filter(e=>e.kind==='direction').length>=3,`${s.name} needs a direction arrow`);
     if(s.name!=='axiom-closure')assert(labels.some(e=>e.kind==='notation-end'&&e.value==='e'),`${s.name} needs an end`);
@@ -289,4 +319,4 @@ for(const s of scenes) {
     for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
   }
 }
-console.log(`Illustrations valid: ${scenes.length} moving GIFs, geometry, fixed constraints, corner construction, shared openings, explicit collision, loop timing and still exports.`);
+console.log(`Illustrations valid: ${scenes.length} moving GIFs, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

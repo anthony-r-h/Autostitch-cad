@@ -56,6 +56,7 @@ Motion shows planning revisions, not physical punching order; the analytic const
 - Static diagrams use the same final appearance; glossary figures without thread retain their contrast
 - The tables in the pitch exclude the setup fixture and are calculated by `pitchComparisonMetrics` and checked by `tests/validate-illustrated.mjs`
 - Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
+- Comparison totals include out-of-bound bridge and diagonal-corner gaps. Visible thread-length deviation includes the actual connections to the Autostitch round hole
 
 Recalculate totals from the repository root:
 

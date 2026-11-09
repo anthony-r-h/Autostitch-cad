@@ -54,7 +54,7 @@ function frame(scene,elements,delay=30,stage='reveal') { scene.frames.push({elem
 function finish(scene,elements) {
   scene.final=elements;
   frame(scene,elements,240,'result');
-  // A brief empty guide makes the loop's reset distinct from a planning revision.
+  // Return to the opening state so each loop repeats only this scene's explanation.
   frame(scene,scene.frames[0].elements,70,'reset');
   return scene;
 }
@@ -93,8 +93,8 @@ function pitchScenes() {
   ];
   const scenes=[problem];
   for(const fit of fits) {
-    const s=scene(fit.name,fit.title,'ILL-S02');reveal(s);
-    frame(s,draw(nominal),150,'mismatch');
+    const s=scene(fit.name,fit.title,'ILL-S02');
+    frame(s,draw(nominal),100,'mismatch');
     for(let i=1;i<=30;i++) {
       const t=ease(i/30),moving=nominal.map((x,j)=>lerp(x,fit.points[j],t));
       frame(s,draw(moving),8,'planning-revision');

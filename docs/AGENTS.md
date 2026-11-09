@@ -19,6 +19,7 @@
 - Use a 600 × 375 px landscape canvas (16:10) for illustrated examples, including every animation frame. Compose and check label readability at 600 px wide.
 - Compose examples from independent diagram elements. Use automatically looping GIF/silent WebM animations with SVG masters and PNG still fallbacks, with no playback controls or interactive UI. Generate frames from the elements rather than recording CAD or the screen.
 - Use small, direct examples, each showing one geometric problem or decision. Keep comparison inputs identical and make their different placement policies explicit.
+- Solution animations continue from the established problem state. Do not repeat its setup; for spacing, start with the nominal row and identified residual already visible.
 - Glossary figures are static SVG/PNG diagrams. Align labels and use horizontal or vertical leaders; keep dimension lines aligned with the measured feature.
 - Stitching animations finish by revealing all thread segments together, followed by a two-second hold. Use light slit outlines and heavier thread. Rejected layouts retain their rejection marks; these remain explanatory candidates.
 - Record setup, progressive reveal, conflict, response, final state, captions and source case/rule references. Animation is the primary example; keep a final-state still fallback. Keep titles, counters and prose outside the figure.

@@ -53,6 +53,11 @@ for(const asset of catalog.illustrations.find(i=>i.id==='ILL-S02').assets) {
 }
 
 for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
+  if(s.name!=='pitch-problem') {
+    assert.deepEqual(s.frames[0].elements,scenes.find(s=>s.name==='pitch-problem').frames.find(f=>f.stage==='result').elements,'Solutions must continue from the identified residual');
+    assert.equal(s.frames[1].stage,'planning-revision');
+    assert.deepEqual(s.frames.at(-1).elements,s.frames[0].elements);
+  }
   const guide=s.final.filter(e=>e.kind==='guide');
   assert.equal(guide.length,1);near((guide[0].a[0]+guide[0].b[0])/2,300);
   let previousResidual=.3;

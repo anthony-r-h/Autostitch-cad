@@ -8626,10 +8626,10 @@
         "Residual"
       ],
       "reveal": [
-        "Build the same solid nominal row on a horizontally centred guide.",
-        "Label every centre-to-centre gap and emphasize the endpoint residual.",
+        "Problem: build the solid nominal row, label every gap and identify the residual.",
+        "Solutions: begin at that complete residual state, without rebuilding the row.",
         "Redistribute positions for each policy while gap values and residual update together.",
-        "Hold the result with zero residual; retain the guide alignment."
+        "Reveal thread, hold two seconds, then return to the residual state."
       ],
       "threadReveal": {
         "holdCentiseconds": 200,

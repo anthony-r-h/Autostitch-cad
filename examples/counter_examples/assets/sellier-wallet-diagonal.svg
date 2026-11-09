@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Shared diagonal corner slit with a decorative H</title><desc id="description">Analytic illustration of ILL-SELLIER-WALLET-DIAGONAL. Static stitch diagram.</desc>
+<line class="leather-edge" x1="57" y1="5.4" x2="474.6" y2="5.4" stroke="#909090" stroke-width="1.2"/>
+<line class="leather-edge" x1="474.6" y1="5.4" x2="474.6" y2="365.4" stroke="#909090" stroke-width="1.2"/>
+<line class="leather-edge" x1="474.6" y1="365.4" x2="57" y2="365.4" stroke="#909090" stroke-width="1.2"/>
 <line class="guide" x1="165" y1="25.980767287" x2="435" y2="25.980767287" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="435" y1="25.980767287" x2="435" y2="241.980767287" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="331.246890211" y1="345.733877076" x2="169.246890211" y2="345.733877076" stroke="#C4C4C4" stroke-width="1"/>

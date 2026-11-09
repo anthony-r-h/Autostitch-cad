@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Autostitch construction of the Loewe hanger</title><desc id="description">Analytic illustration of ILL-LOEWE-HANGER. Static stitch diagram.</desc>
+<line class="leather-edge" x1="161.25" y1="367.5" x2="161.25" y2="20" stroke="#909090" stroke-width="1.2"/>
+<line class="leather-edge" x1="161.25" y1="20" x2="438.75" y2="20" stroke="#909090" stroke-width="1.2"/>
+<line class="leather-edge" x1="438.75" y1="20" x2="438.75" y2="367.5" stroke="#909090" stroke-width="1.2"/>
 <line class="guide" x1="198.75" y1="305" x2="198.75" y2="80" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="198.75" y1="80" x2="401.25" y2="80" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="401.25" y1="80" x2="401.25" y2="305" stroke="#C4C4C4" stroke-width="1"/>

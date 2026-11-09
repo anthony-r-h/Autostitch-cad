@@ -305,6 +305,21 @@ for(const [i,[a,b]] of axes.entries()) {
 for(const [i,c] of centres.entries())for(const d of centres.slice(i+1))assert(distance(c,d)-.5>=.2);
 }
 
+// Piece edges remain identical across each comparison and every animation phase.
+for(const [reference,solution] of [[2,1],[3,4],[5,6],[7,8]]) {
+  const edge=scenes[reference].final.filter(e=>e.kind==='leather-edge');
+  assert(edge.length>0);
+  assert.deepEqual(edge,scenes[solution].final.filter(e=>e.kind==='leather-edge'));
+  for(const index of [reference,solution]) {
+    const layout=scenes[index];
+    for(const f of layout.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='leather-edge'),edge);
+    for(const segment of edge) {
+      for(const slit of slits(layout))assert(segmentDistance(segment.a,segment.b,slit.a,slit.b)>2);
+      for(const circle of layout.final.filter(e=>e.kind==='hole'))assert(pointSegment(circle.p,segment.a,segment.b)>circle.radius);
+    }
+  }
+}
+
 for(const s of scenes) {
   const base=new URL(`examples/counter_examples/assets/${s.name}`,root);
   assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(s),'Stale SVG');
@@ -337,8 +352,9 @@ for(const s of scenes) {
 }
 // Keep the published thread-length totals tied to the final drawn geometry.
 const exampleText=fs.readFileSync(new URL('docs/EXAMPLES_skeleton.md',root),'utf8');
-const metricRows=exampleText.split('\n').filter(line=>/^\| (Reference|Autostitch|Shared diagonal slit) \|/.test(line));
-const documentOrder=[0,2,1,3,4,5,6,7,8];assert.equal(metricRows.length,documentOrder.length);
+assert(!exampleText.includes('## Corner treatments'));
+const metricRows=exampleText.split('\n').filter(line=>/^\| (Reference|Autostitch) \|/.test(line));
+const documentOrder=[2,1,3,4,5,6,7,8];assert.equal(metricRows.length,documentOrder.length);
 for(const [i,index] of documentOrder.entries()) {
   const layout=scenes[index],scale=distance(slits(layout)[0].a,slits(layout)[0].b)/1.5;
   // Obtain the nominal baseline directly from the existing straight Sellier row.

@@ -8,6 +8,9 @@ import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,fin
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
+function leatherEdge(points,view) {
+  return points.slice(1).map((point,i)=>worldLine(points[i],point,view,'leather-edge','#909090',1.2));
+}
 function diagonalCorner() {
   return slitOutlines(finishThread(diagonalCornerScene(input('ILL-SELLIER-CORNER'),{
     name:'sellier-diagonal-corner',source:'ILL-SELLIER-CORNER',view:{x:360,y:85,scale:25}
@@ -56,7 +59,8 @@ function walletScene(diagonal=false) {
     diagonal?'Shared diagonal corner slit with a decorative H':'Top, right and bottom stitching with a decorative H',
     diagonal?'ILL-SELLIER-WALLET-DIAGONAL':'ILL-SELLIER-WALLET');
   const circles=g.decoration.map(column=>column.map(p=>hole(p,view)));
-  const base=[worldLine(g.start,vertex,view),worldLine(vertex,g.right.at(-1),view),worldLine(g.bottom[0],g.end,view),
+  const base=[...leatherEdge(g.spec.leatherEdge,view),
+    worldLine(g.start,vertex,view),worldLine(vertex,g.right.at(-1),view),worldLine(g.bottom[0],g.end,view),
     ...routeMarks(project(g.start,view),project(g.end,view),[1,0],[-1,0]).map(e=>diagonal&&e.kind==='notation-start'?{...e,p:add(e.p,[0,8])}:e),
     notationText(add(project(g.joint,view),[18,-12]),'j','junction'),...circles.flat()];
   const result=[...base],rows=[[],[],[]];
@@ -93,7 +97,8 @@ function loeweScenes() {
     const left=Array.from({length:spec.sideSteps},(_,i)=>[0,(solved?virtuals[0][1]:0)-(spec.sideSteps-i)*p]);
     const right=Array.from({length:spec.sideSteps},(_,i)=>[w,(solved?virtuals[3][1]:0)-(i+1)*p]);
     const top=solved?[topStart,topEnd]:[[w/3,0],[2*w/3,0]];
-    const result=[worldLine([0,-length],[0,0],view),worldLine([0,0],[w,0],view),worldLine([w,0],[w,-length],view),
+    const result=[...leatherEdge(spec.leatherEdge,view),
+      worldLine([0,-length],[0,0],view),worldLine([0,0],[w,0],view),worldLine([w,0],[w,-length],view),
       ...routeMarks(project(left[0],view),project(right.at(-1),view),[0,-1],[0,1]),
       notationText(add(project(solved?leftJoint:[0,0],view),[-20,-15]),'j','junction'),
       notationText(add(project(solved?rightJoint:[w,0],view),[20,-15]),'j','junction')];
@@ -131,7 +136,7 @@ function speedyScenes() {
   return [false,true].map(solved=>{
     const s=scene(solved?'lv-speedy-chape-autostitch':'lv-speedy-chape-reference',
       solved?'Autostitch construction of the Speedy handle chape':'Speedy handle chape: five slit corners without mirrored runs','ILL-LV-SPEEDY-CHAPE');
-    const result=vertices.map((v,i)=>worldLine(v,vertices[(i+1)%count],view)),path=[],topRow=[];
+    const result=[...leatherEdge(spec.leatherEdge,view),...vertices.map((v,i)=>worldLine(v,vertices[(i+1)%count],view))],path=[],topRow=[];
     for(const [i,edge] of edges.entries()) {
       const next=(i+1)%count,corner=corners[i];
       const joint=solved?hole(corner.joint,view):opening(vertices[i],corner.referenceAngle,view)[0];
@@ -157,7 +162,9 @@ function speedyScenes() {
         }
       }
       const point=project(solved?corner.joint:vertices[i],view),outward=add(point,[-300,-180]);
-      result.push(notationText(add(point,mul(outward,20/Math.hypot(...outward))),'j','junction'));
+      const labelOffset=mul(outward,34/Math.hypot(...outward));
+      if(i<2)labelOffset[0]+=i===0?-12:12;
+      result.push(notationText(add(point,labelOffset),'j','junction'));
     }
     const start=topRow[Math.floor(topRow.length/2)],index=path.indexOf(start),ordered=[...path.slice(index),...path.slice(0,index)];
     const point=mul(add(start.a,start.b),.5);
@@ -184,9 +191,18 @@ function faglianoScene(solved=false) {
   const s=scene(solved?'fagliano-tip-autostitch':'fagliano-tip-compression',
     solved?'Autostitch: minimum adjusted gaps on the same strap guides':'Aligned straight runs compress equally into a vertex hole',
     solved?'ILL-FAGLIANO-AUTOSTITCH':'ILL-FAGLIANO-TIP');
-  const base=[worldLine([-halfWidth,bottom],[-halfWidth,0],view),worldLine([halfWidth,0],[halfWidth,bottom],view),
+  // Offset the symmetric guides, then extend both arcs to their common tip.
+  // Both constructions retain this same piece even though their holes differ.
+  const edgeSpec=input('ILL-FAGLIANO-TIP'),edgeRadius=R+edgeSpec.leatherEdgeOffset,edgeSweep=Math.acos(c/edgeRadius);
+  const edgePoint=(arm,t)=>[arm===0?c-edgeRadius*Math.cos(t):-c+edgeRadius*Math.cos(t),edgeRadius*Math.sin(t)];
+  const edgePoints=[[c-edgeRadius,edgeSpec.leatherEdgeBottom],
+    ...Array.from({length:61},(_,i)=>edgePoint(0,edgeSweep*i/60)),
+    ...Array.from({length:60},(_,i)=>edgePoint(1,edgeSweep*(59-i)/60)),
+    [edgeRadius-c,edgeSpec.leatherEdgeBottom]];
+  const base=[...leatherEdge(edgePoints,view),
+    worldLine([-halfWidth,bottom],[-halfWidth,0],view),worldLine([halfWidth,0],[halfWidth,bottom],view),
     ...routeMarks(project([-halfWidth,bottom],view),project([halfWidth,bottom],view),[0,-1],[0,1]),
-    notationText(add(project(joint,view),[18,-14]),'j','junction')];
+    notationText(add(project(joint,view),[40,-14]),'j','junction')];
   for(const arm of [0,1])for(let i=0;i<60;i++)base.push(worldLine(point(arm,sweep*i/60),point(arm,sweep*(i+1)/60),view));
   const straight=[0,1].map(arm=>Array.from({length:spec.straightOpenings},(_,i)=>
     opening([arm===0?-halfWidth:halfWidth,bottom+i*p],slitAngle(arm,0),view)[0]));

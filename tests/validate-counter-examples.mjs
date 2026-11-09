@@ -136,6 +136,56 @@ const topGap=distance(midpoint(ls[3]),midpoint(ls[4]))/lv.scale;
 near(topGap,8.1-6+1.5*Math.cos(40*Math.PI/180));assert(topGap>=2.7&&topGap<=3.3);
 assert.equal(loeweSolved.final.filter(e=>e.kind==='adjustment-mark').length,4);
 
+const speedyReference=scenes[5],speedySolved=scenes[6],sv={x:300,y:48,scale:11.2};
+const vertices=[[-5.4,0],[5.4,0],[10.8,-16.2],[0,-25.2],[-10.8,-16.2]];
+const spVirtual=speedySolved.final.filter(e=>e.kind==='virtual'),spHoles=speedySolved.final.filter(e=>e.kind==='hole');
+assert.equal(slits(speedyReference).length,26);assert.equal(slits(speedySolved).length,21);
+assert.equal(speedyReference.final.filter(e=>e.kind==='hole').length,0);
+assert.equal(spHoles.length,5);assert.equal(spVirtual.length,10);
+assert.deepEqual(speedyReference.final.filter(e=>e.kind==='guide'),speedySolved.final.filter(e=>e.kind==='guide'));
+const vector=(a,b)=>[b[0]-a[0],b[1]-a[1]],unit=v=>v.map(x=>x/Math.hypot(...v));
+const tangents=vertices.map((v,i)=>unit(vector(v,vertices[(i+1)%5])));
+function sameLean(slit,t) {
+  const u=unit(vector(world(slit.a,sv),world(slit.b,sv)));
+  near(t[0]*u[0]+t[1]*u[1],Math.cos(40*Math.PI/180));
+  near(t[0]*u[1]-t[1]*u[0],Math.sin(40*Math.PI/180));
+}
+for(const [i,v] of vertices.entries()) {
+  const next=(i+1)%5,previous=(i+4)%5;
+  const corner=slits(speedyReference).filter(e=>distance(world(midpoint(e),sv),v)<1e-6);assert.equal(corner.length,1);
+  sameLean(corner[0],unit([tangents[previous][0]+tangents[i][0],tangents[previous][1]+tangents[i][1]]));
+  near(distance(spVirtual[2*i].a,spHoles[i].p),0);near(distance(spVirtual[2*i+1].b,spHoles[i].p),0);
+  sameLean(spVirtual[2*i],tangents[previous]);sameLean(spVirtual[2*i+1],tangents[i]);
+  for(const layout of [speedyReference,speedySolved]) {
+    const row=slits(layout).filter(e=>{
+      const c=world(midpoint(e),sv);
+      return pointSegment(c,v,vertices[next])<1e-6&&distance(c,v)>1e-6&&distance(c,vertices[next])>1e-6;
+    }).sort((a,b)=>distance(world(midpoint(a),sv),v)-distance(world(midpoint(b),sv),v));
+    row.forEach(e=>{sameLean(e,tangents[i]);near(distance(e.a,e.b)/sv.scale,1.5);});
+    if(layout===speedySolved) {
+      assert.equal(row.length,[3,5,4,4,5][i]);
+      near(distance(midpoint(row[0]),midpoint(spVirtual[2*i+1]))/sv.scale,3);
+      near(distance(midpoint(row.at(-1)),midpoint(spVirtual[2*next]))/sv.scale,3);
+      const gaps=row.slice(1).map((e,j)=>distance(midpoint(e),midpoint(row[j]))/sv.scale);
+      assert(gaps.every(g=>g>=2.7-1e-6&&g<=3.3+1e-6));
+      assert.equal(gaps.filter(g=>Math.abs(g-3)>1e-6).length,[1,1,1,2,1][i]);
+    }
+  }
+}
+for(const layout of [speedyReference,speedySolved]) {
+  assert.equal(layout.frames.length,0);
+  const points=layout.final.filter(e=>['slit','hole'].includes(e.kind)),threads=layout.final.filter(e=>e.kind==='thread');
+  assert.equal(threads.length,points.length);
+  assert.equal(layout.final.filter(e=>e.kind==='notation-junction').length,5);
+  assert.equal(layout.final.filter(e=>e.kind==='notation-start').length,1);
+  assert(!layout.final.some(e=>e.kind==='notation-end'));
+  for(const p of points) {
+    const incoming=p.type==='circle'?p.p:p.a,outgoing=p.type==='circle'?p.p:p.b;
+    assert.equal(threads.filter(e=>distance(e.b,incoming)<1e-6).length,1);
+    assert.equal(threads.filter(e=>distance(e.a,outgoing)<1e-6).length,1);
+  }
+}
+
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
   return distance(p,[a[0]+t*d[0],a[1]+t*d[1]]);
@@ -146,7 +196,7 @@ function segmentDistance(a,b,c,d) {
   return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
 }
 // Full-layout clearance, including the external circular decoration.
-for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv]]) {
+for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv]]) {
 const axes=slits(layout).map(e=>[world(e.a,v),world(e.b,v)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,v));
 for(const [i,[a,b]] of axes.entries()) {
   for(const [c,d] of axes.slice(i+1))assert(segmentDistance(a,b,c,d)-.3>=.2);
@@ -182,4 +232,4 @@ for(const s of scenes) {
     for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
   }
 }
-console.log('Counter-examples valid: inferred corner connections and angle changes; nominal wallet rows, fixed H, clearance, exported geometry and animation timing.');
+console.log('Counter-examples valid: Sellier, Loewe and Speedy geometry; thread connections, handedness, closure, clearance, exports and animation timing.');

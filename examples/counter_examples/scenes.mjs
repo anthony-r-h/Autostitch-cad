@@ -145,5 +145,59 @@ function loeweScenes() {
   });
 }
 
-export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes()];}
+function speedyScenes() {
+  const spec=input('ILL-LV-SPEEDY-CHAPE'),vertices=spec.vertices,p=spec.pitch,h=spec.slitLength/2,a=spec.leanDegrees*Math.PI/180;
+  const view={x:300,y:48,scale:11.2},count=vertices.length;
+  const cross=(u,v)=>u[0]*v[1]-u[1]*v[0],dot=(u,v)=>u[0]*v[0]+u[1]*v[1];
+  const edges=vertices.map((v,i)=>{
+    const d=add(vertices[(i+1)%count],mul(v,-1)),length=Math.hypot(...d),t=mul(d,1/length),angle=Math.atan2(t[1],t[0])+a;
+    return {length,t,angle,u:axis(angle)};
+  });
+  const corners=vertices.map((v,i)=>{
+    const incoming=edges[(i+count-1)%count],outgoing=edges[i],den=cross(incoming.t,outgoing.t);
+    const offset=mul(add(incoming.u,outgoing.u),h);
+    const ci=add(v,mul(incoming.t,cross(offset,outgoing.t)/den)),co=add(v,mul(outgoing.t,cross(offset,incoming.t)/den));
+    const turn=Math.atan2(den,dot(incoming.t,outgoing.t));
+    return {ci,co,joint:add(ci,mul(incoming.u,-h)),referenceAngle:incoming.angle+turn/2};
+  });
+  return [false,true].map(solved=>{
+    const s=scene(solved?'lv-speedy-chape-autostitch':'lv-speedy-chape-reference',
+      solved?'Autostitch construction of the Speedy handle chape':'Speedy handle chape: five slit corners without mirrored runs','ILL-LV-SPEEDY-CHAPE');
+    const result=vertices.map((v,i)=>worldLine(v,vertices[(i+1)%count],view)),path=[],topRow=[];
+    for(const [i,edge] of edges.entries()) {
+      const next=(i+1)%count,corner=corners[i];
+      const joint=solved?hole(corner.joint,view):opening(vertices[i],corner.referenceAngle,view)[0];
+      result.push(joint);path.push(joint);
+      if(solved) {
+        for(const [point,angle] of [[corner.ci,edges[(i+count-1)%count].angle],[corner.co,edge.angle]])result.push(
+          worldLine(vertices[i],point,view,'extension','#C4C4C4',1,true),...opening(point,angle,view,{virtual:true}));
+        const first=add(corner.co,mul(edge.t,p)),last=add(corners[next].ci,mul(edge.t,-p));
+        const D=dot(add(last,mul(first,-1)),edge.t),fit=selectFit({D,p});
+        if(!fit)throw new Error(`Speedy edge ${i} cannot fit`);
+        let station=0;
+        for(let j=0;j<=fit.n;j++) {
+          const marked=fit.k>0&&j>=fit.i&&j<=fit.i+fit.k;
+          const slit=opening(add(first,mul(edge.t,station)),edge.angle,view,{marked});
+          result.push(...slit);path.push(slit[0]);if(i===0)topRow.push(slit[0]);
+          station+=j>=fit.i&&j<fit.i+fit.k?fit.correctedPitch:p;
+        }
+      } else {
+        const gaps=Math.round(edge.length/p);
+        for(let j=1;j<gaps;j++) {
+          const slit=opening(add(vertices[i],mul(edge.t,j*edge.length/gaps)),edge.angle,view)[0];
+          result.push(slit);path.push(slit);if(i===0)topRow.push(slit);
+        }
+      }
+      const point=project(solved?corner.joint:vertices[i],view),outward=add(point,[-300,-180]);
+      result.push(notationText(add(point,mul(outward,20/Math.hypot(...outward))),'j','junction'));
+    }
+    const start=topRow[Math.floor(topRow.length/2)],index=path.indexOf(start),ordered=[...path.slice(index),...path.slice(0,index)];
+    const point=mul(add(start.a,start.b),.5);
+    result.push(...routeMarks(point,point).filter(e=>e.kind!=='notation-end'));
+    s.threadPaths=[[...ordered,ordered[0]]];
+    return slitOutlines(finishThread({...s,final:result}));
+  });
+}
+
+export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes()];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

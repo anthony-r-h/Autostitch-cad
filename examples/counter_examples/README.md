@@ -6,6 +6,8 @@ Keep these cases in `docs/counter_examples/` and their source material here. Add
 
 Loewe source photograph: `loewe_mini_feather.jpg`, supplied by Anthony. The case isolates the rectangular strap below the swivel hook.
 
+Louis Vuitton source photograph: `lv_speedy.png`, supplied by Anthony. The case isolates the left handle chape, the leather tab connecting the handle hardware to the bag.
+
 | Figure | Catalog ID | Construction |
 | --- | --- | --- |
 | `sellier-diagonal-corner` | `ILL-SELLIER-CORNER` | Top row already punched; vertical row flips from rear-style to front-style across its guide, then the shared diagonal slit and complete thread appear. The two adjacent thread segments have extra weight. |
@@ -13,6 +15,8 @@ Loewe source photograph: `loewe_mini_feather.jpg`, supplied by Anthony. The case
 | `sellier-wallet-diagonal` | `ILL-SELLIER-WALLET-DIAGONAL` | Static comparison: the same ordinary slit counts and H, with one shared diagonal slit at the top corner. |
 | `loewe-hanger-reference` | `ILL-LOEWE-HANGER` | Static reference: left shared slit, right round hole, and a horizontal middle thread. |
 | `loewe-hanger-autostitch` | `ILL-LOEWE-HANGER` | Same three guides with two A6 corner holes and a fitted top span. |
+| `lv-speedy-chape-reference` | `ILL-LV-SPEEDY-CHAPE` | Closed pentagon, five shared corner slits, no mirrored runs. |
+| `lv-speedy-chape-autostitch` | `ILL-LV-SPEEDY-CHAPE` | Same pentagon with five A6 round holes, fitted spans and closure. |
 
 All use a $600\times375$ canvas. The Sellier corner GIF loops with a two-second final thread hold. Case comparisons are static SVG/PNG, with a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
@@ -39,5 +43,7 @@ Outputs: `examples/counter_examples/assets/`. Temporary frames: `output/counter_
 - H: two legs, three circular openings per leg, width and height $3\,\mathrm{mm}$, rotated $45^\circ$. Each join continues an ordinary thread line until it meets the circle of radius $p$ about the neighbouring slit centre. The H position follows the incident slit lean; both cases retain the same H dimensions and nominal spacing. The bottom row starts from the corresponding nominal join.
 - Loewe: guides $8.1\,\mathrm{mm}$ across and $9\,\mathrm{mm}$ down each side. Reference top slit axes $+40^\circ$ and $-40^\circ$ put the connected tips at the same height, producing the observed flat thread. This is an inferred reconstruction, not a measurement of the holes.
 - Loewe Autostitch: nominal corner steps fix the top neighbours; the intervening gap is approximately $3.249\,\mathrm{mm}$, within the adjustment bounds. The vertical rows use three nominal steps from each virtual centre, with start/end positions inside the same guides. A6 geometry is analytic; the top fit uses the independent selector.
+- Speedy: the five vertices in the catalog define a schematic closed pentagon. Ordinary slits use $+40^\circ$ lean throughout both diagrams. Reference corners use the midpoint orientation between the incident rows; each side has evenly spaced reference openings. The exact corner axes are illustrative.
+- Speedy Autostitch: intersect the incoming minus-tip and outgoing plus-tip loci at each vertex, reserve nominal corner steps, and fit all five intervening spans with the independent selector. Closure reuses the starting opening. The drawing contains five round holes and twenty-one real slits.
 
 Interpretation notes are collected in the examples document. These figures use analytic geometry, not a native plugin run. The diagonal-slit alternative is distinct from A6; the H remains external decoration rather than evidence of support for arbitrary fixed decorative holes.

@@ -9379,6 +9379,61 @@
         "j",
         "direction"
       ]
+    },
+    {
+      "id": "ILL-LV-SPEEDY-CHAPE",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": [
+        "A2",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "status": "Closed five-sided handle-chape comparison. Reference has one shared slit per vertex, interpolated corner orientation, and one ordinary handedness throughout. Autostitch uses five analytic A6 holes and independent per-edge pitch fits, including closure. Guide proportions are schematic, not measured from the photo; no native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "vertices": [
+          [
+            -5.4,
+            0
+          ],
+          [
+            5.4,
+            0
+          ],
+          [
+            10.8,
+            -16.2
+          ],
+          [
+            0,
+            -25.2
+          ],
+          [
+            -10.8,
+            -16.2
+          ]
+        ]
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/lv-speedy-chape-reference"
+        },
+        {
+          "path": "examples/counter_examples/assets/lv-speedy-chape-autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "j",
+        "direction"
+      ]
     }
   ]
 }

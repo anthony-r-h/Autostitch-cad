@@ -49,6 +49,23 @@
 
 ![Loewe hanger with two Autostitch corners](../../examples/counter_examples/assets/loewe-hanger-autostitch.png)
 
+### Louis Vuitton Speedy handle chape
+
+The **handle chape** is the leather tab attaching the handle hardware to the bag. Louis Vuitton uses the term [chapes](https://us.louisvuitton.com/eng-us/products/nano-speedy-g81-nvprod7890132v/M29781) for these attachments.
+
+[Reference photograph](../../examples/counter_examples/lv_speedy.png): the left handle chape.
+
+- A closed pentagonal stitch line, with a shared slit at each corner
+- One stitch handedness around the loop; no mirrored runs
+
+**Reference construction**
+
+![Speedy handle chape with five shared slit corners](../../examples/counter_examples/assets/lv-speedy-chape-reference.png)
+
+**Autostitch construction** — five round-hole corners, fitted connecting spans and one continuous closure.
+
+![Speedy handle chape with five Autostitch corners](../../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
+
 ## Interpretation
 
 - Slit axes are inferred from the thread; the balanced corner angle is an assumption

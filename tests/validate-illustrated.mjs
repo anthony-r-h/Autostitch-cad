@@ -394,10 +394,18 @@ assert.equal(mirroredCorner.frames[0].elements.filter(e=>e.kind==='slit').length
 assert.equal(mirroredCorner.frames.filter(f=>f.stage==='mirror-vertical').length,30);
 for(const [i,e] of mirroredSlits.entries()) {
   near(e.angle,(i<count?-40:i<2*count?-50:-45)*Math.PI/180);
-  if(i<2*count)near(dist(e.center,slits('problem-corner-cross',problemView)[i].center),0);
+  if(i<2*count) {
+    const arm=Math.floor(i/count),station=armLengths[arm]-3*(i%count);
+    near(dist(e.center,arm===0?[-station,0]:[0,-station]),0);
+  }
   else near(dist(e.center,[0,0]),0);
 }
-assert.equal(mirroredCorner.final.filter(e=>e.kind==='gap-value').length,2*(count-1));
+assert.equal(mirroredCorner.final.filter(e=>e.kind==='gap-value').length,2*count);
+for(const arm of [0,1]) {
+  const row=mirroredSlits.slice(arm*count,(arm+1)*count);
+  row.slice(1).forEach((e,i)=>near(dist(row[i].center,e.center),3));
+  near(dist(row.at(-1).center,[0,0]),3-cornerShifts[arm]/2);
+}
 assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
 const crossing=scenes.find(s=>s.name==='problem-corner-cross');
 assert.deepEqual(cornerSolution.frames[0].elements,crossing.frames.find(f=>f.stage==='result').elements);
@@ -445,7 +453,8 @@ const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Central adjustment|Vertex hole|Thread bridge|Shared diagonal slit|Shared tip hole)/.test(line));
 const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
 const balancedMirror=pitchComparisonMetrics(mirroredCorner),balancedAuto=pitchComparisonMetrics(cornerSolution);
-for(const key of ['adjustedGaps','absoluteAdjustment','absoluteResidual'])near(balancedMirror[key],balancedAuto[key]);
+for(const key of ['absoluteAdjustment','absoluteResidual'])near(balancedMirror[key],balancedAuto[key]);
+assert.equal(balancedMirror.adjustedGaps,2);
 assert.equal(balancedAuto.adjustedGaps,3);
 near(balancedAuto.absoluteResidual,cornerShifts.reduce((sum,c)=>sum+c/2,0));
 assert.equal(comparisonRows.length,comparisons.length);

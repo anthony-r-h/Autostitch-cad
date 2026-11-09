@@ -83,22 +83,24 @@ Stop both rows short and connect their last slits. This avoids a separate corner
 
 ![A shared diagonal slit joins the top row to a row with mirrored lean](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
-Use one diagonal slit at the vertex and mirror the lean on one arm. The opening stays at the intended point, with three adjusted gaps across the arms; its orientation changes the direction and visible length of the two adjoining threads. A good treatment when that appearance suits the design, with separate placement of the corner slit and a relaxed consistent-lean rule.
+Use one diagonal slit at the vertex and mirror the lean on one arm. Keep each arm at nominal pitch; absorb its residual only in the final gap into the shared slit. The opening stays at the intended point; its orientation changes the direction and visible length of the two adjoining threads. A good treatment when that appearance suits the design, with separate placement of the corner slit and a relaxed consistent-lean rule.
 
 ## Shared tip hole (Autostitch)
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
-Meet the selected virtual slit tips at one round hole, retain nominal corner steps and fit the free spans. This keeps consistent lean and an explicit construction, but moves the hole away from the vertex. Here it needs the same three adjusted gaps as the diagonal-slit treatment.
+Meet the selected virtual slit tips at one round hole, retain nominal corner steps and fit the free spans. This keeps consistent lean and bounded adjustments, but moves the hole away from the vertex. Here it spreads the same absolute adjustment across three gaps; the diagonal-slit treatment concentrates it in two corner gaps.
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: | ---: |
 | Vertex hole | $3$ | $0.575$ | $0.575$ | $1.273$ |
 | Thread bridge | $4$ | $1.817$ | $1.817$ | $1.912$ |
-| Shared diagonal slit with mirrored lean | $3$ | $0.575$ | $0.575$ | $0.625$ |
+| Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.575$ | $0.407$ |
 | Shared tip hole (Autostitch) | $3$ | $0.575$ | $0.575$ | $0.516$ |
 
 The bridge's off-pitch gap is counted for comparison even though it exceeds the adjustment bound. Its totals use the direct bridge, which bypasses the vertex. Autostitch uses virtual-to-real corner steps for pitch accounting; visible thread-length deviation includes the actual connections to the round hole.
+
+The diagonal-slit treatment's final gaps are $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$. The first is below Autostitch's $2.7\,\mathrm{mm}$ minimum for this pitch.
 
 # Why CAD
 

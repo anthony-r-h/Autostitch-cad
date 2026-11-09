@@ -9217,7 +9217,7 @@
         "A6"
       ],
       "animated": true,
-      "status": "Controlled comparison on identical guides: eight intervals per arm, endpoint lengths halfway between vertex and A6 nominal phases. Vertex and A6 fits use the same minimum-adjustment selector, giving equal and opposite residuals. Analytic illustration; the thread bridge exceeds the pitch bound. This chosen phase balance is not a general performance claim.",
+      "status": "Controlled comparison on identical guides: eight intervals per arm, endpoint lengths halfway between vertex and A6 nominal phases. Vertex-hole and A6 fits use the same minimum-adjustment selector. The shared diagonal slit keeps each arm nominal and absorbs its residual only in the final gap into the vertex. Absolute adjustment ties A6; gap counts differ. Analytic illustration; the thread bridge and one diagonal corner gap exceed the pitch bound. This chosen phase balance is not a general performance claim.",
       "inputs": {
         "diagonalCase": "ILL-SELLIER-CORNER",
         "armIntervals": 8

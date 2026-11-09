@@ -115,7 +115,7 @@ export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
   const s=scene(name,'Shared diagonal slit with mirrored lean',source);
   const result=[...base],rows=[[],[]];
   for(const [arm,row] of rows.entries())for(const [i,station] of positions[arm].entries()) {
-    const adjusted=j=>j>=0&&j<positions[arm].length-1&&Math.abs(positions[arm][j]-positions[arm][j+1]-p)>1e-6;
+    const adjusted=j=>j>=0&&j<positions[arm].length&&Math.abs(positions[arm][j]-(positions[arm][j+1]??0)-p)>1e-6;
     row.push(...opening(arm===0?[-station,0]:[0,-station],angles[arm],view,{marked:adjusted(i-1)||adjusted(i)}));
   }
   result.push(...rows[0]);frame(s,[...result],100,'top-row');
@@ -130,8 +130,9 @@ export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
     frame(s,[...result,...mirrored(t*t*(3-2*t))],8,'mirror-vertical');
   }
   result.push(...rows[1]);frame(s,[...result],90,'vertical-front-style');
-  const shared=opening([0,0],spec.sharedSlitDegrees*Math.PI/180,view)[0];
-  result.push(shared);frame(s,[...result],130,'diagonal-shared-slit');
+  const sharedElements=opening([0,0],spec.sharedSlitDegrees*Math.PI/180,view,{marked:positions.some(row=>Math.abs(row.at(-1)-p)>1e-6)});
+  const shared=sharedElements[0];
+  result.push(...sharedElements);frame(s,[...result],130,'diagonal-shared-slit');
   // The slit axes already encode the shown face. Connect their tips directly;
   // reversing them again would draw the opposite thread diagonal.
   s.threadPaths=[[...rows[0].filter(e=>e.kind==='slit'),shared,...rows[1].filter(e=>e.kind==='slit').toReversed()]];
@@ -203,7 +204,9 @@ function cornerProblemScenes() {
   const result=draw(targets,[ci,co],true),slits=result.filter(e=>e.kind==='slit');
   s.threadPaths=[[...slits.slice(0,input.armIntervals),result.find(e=>e.kind==='hole'),...slits.slice(input.armIntervals).toReversed()]];
   const diagonalInput=catalog.illustrations.find(i=>i.id===input.diagonalCase).inputs;
-  const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armIntervals,armLengths:lengths,rowStations:referenceRows},
+  // The diagonal treatment keeps ordinary rows nominal; only the final
+  // gap from each row into the fixed vertex slit absorbs its residual.
+  const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armIntervals,armLengths:lengths},
     {name:'problem-corner-mirrored',source:'ILL-CORNER-PROBLEM',view,notation:false});
   const labelled=layout=>{
     const addDimensions=elements=>{
@@ -212,6 +215,7 @@ function cornerProblemScenes() {
         [(e.a[0]+e.b[0]-2*view.x)/(2*view.scale),(2*view.y-e.a[1]-e.b[1])/(2*view.scale)]);
       for(const arm of [0,1]) {
         const points=centres.filter(p=>arm===0?p[0]<-1e-6:p[1]<-1e-6).sort((a,b)=>a[arm]-b[arm]);
+        if(centres.some(p=>Math.hypot(...p)<1e-6))points.push([0,0]);
         for(let i=1;i<points.length;i++)dimensions.push(...measure(points[i-1],points[i],
           Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]).toFixed(2),view,arm===0?-36:-38).map(e=>
           ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})})));

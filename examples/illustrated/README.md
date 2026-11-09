@@ -50,7 +50,7 @@ Motion shows planning revisions, not physical punching order; the analytic const
 
 ## Comparison notation and totals
 
-- Corner thread angles use short arcs and leaders, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
+- Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values
 - Thread reveal lightens the holes and measurement annotations over $0.3\,\mathrm{s}$, then holds for four seconds. Unresolved red residuals remain visible
@@ -96,6 +96,18 @@ The straight and curved portions use one slit at their common tangent. Revealing
 Reserve one round hole and its nominal neighbours before filling the arms. `ILL-JUNCTION`.
 
 ![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
+
+`ILL-JUNCTION-COMPARISON` adds an X with one circular arm. One animation cycles through Even, Vertex point, Slit and flip, Bridge and Autostitch; labels identify each treatment and its consequence. Each result holds for four seconds with the thread visible.
+
+- Same endpoints, $3\,\mathrm{mm}$ pitch, four intervals per arm; curved arm radius $20\,\mathrm{mm}$. The lengths and treatment labels are in the catalog
+- Even divides each arm into four equal chord gaps; gaps can differ between arms
+- Vertex point is placed first. Nominal rows approach from the outer endpoints; only the last slit moves to reserve a nominal junction gap. Three preceding gaps then violate the adjustment bound
+- Slit and flip keeps nominal rows, shares a vertical slit at the vertex and mirrors two arms. It relaxes consistent lean; it is not presented as an impossible construction
+- Bridge pairs opposite arms. Both bridging threads cross, with no common opening; the crossing is not a connected four-arm junction
+- Autostitch fixes the round hole and nominal chord neighbours, then uses the existing fit selector on each free span. The curved arm uses angular advances derived from chord lengths
+- Final Autostitch geometry is checked for gap bounds and opening clearance; all phases retain the same guides and endpoints. This is an analytic illustration, not a native solver run
+
+![Five treatments of the same curved X junction](assets/junction-comparison.gif)
 
 ### Check the whole layout: A10
 

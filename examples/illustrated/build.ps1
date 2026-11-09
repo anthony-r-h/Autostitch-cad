@@ -50,6 +50,12 @@ function Draw-Frame($elements) {
       $g.DrawLine($pen,[single]$element.a[0],[single]$element.a[1],[single]$element.b[0],[single]$element.b[1])
      } finally {$pen.Dispose()}
     }
+    'polygon' {
+     $points=[Drawing.PointF[]]@($element.points | ForEach-Object {[Drawing.PointF]::new($_[0],$_[1])})
+     $opacity=if($null -ne $element.opacity){$element.opacity}else{1}
+     $brush=[Drawing.SolidBrush]::new([Drawing.Color]::FromArgb([int](255*$opacity),$color))
+     try {$g.FillPolygon($brush,$points)} finally {$brush.Dispose()}
+    }
     'circle' {
      $brush=[Drawing.SolidBrush]::new($color)
      try {$g.FillEllipse($brush,[single]($element.p[0]-$element.radius),[single]($element.p[1]-$element.radius),[single](2*$element.radius),[single](2*$element.radius))}

@@ -471,8 +471,11 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
   });
   const labels=s.final.filter(e=>e.kind==='thread-angle-value');
   assert.deepEqual(labels.map(e=>e.value),expected);
-  for(const e of labels){assert.equal(e.size,13);assert.equal(e.color,'#252525');}
-  assert(displayElements(s.final).filter(e=>e.kind==='thread-angle-value').every(e=>e.color==='#252525'));
+  for(const e of labels){assert.equal(e.size,13);assert.equal(e.color,'#C62828');}
+  assert(displayElements(s.final).filter(e=>e.kind==='thread-angle-value').every(e=>e.color==='#C62828'));
+  const wedges=s.final.filter(e=>e.kind==='angle-wedge');
+  assert.equal(wedges.length,2);
+  wedges.forEach(e=>{assert.equal(e.type,'polygon');assert.equal(e.color,'#C62828');assert(e.opacity>0&&e.opacity<1);});
   for(const f of s.frames) {
     const annotated=f.elements.some(e=>e.kind==='thread-angle-value');
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
@@ -493,18 +496,91 @@ for(const [i,s] of comparisons.entries()) {
     if(e.kind==='residual-dimension'){assert.equal(e.color,'#C62828');assert.equal(e.width,3);}
   }
 }
+const junctionComparison=scenes.find(s=>s.name==='junction-comparison');
+const junctionSpec=catalog.illustrations.find(i=>i.id===junctionComparison.source);
+const {view:xView,radius:xRadius,nominalIntervals:xIntervals}=junctionSpec.inputs;
+const xCentre=e=>e.type==='circle'?[(e.p[0]-xView.x)/xView.scale,(xView.y-e.p[1])/xView.scale]:
+  [(e.a[0]+e.b[0]-2*xView.x)/(2*xView.scale),(2*xView.y-e.a[1]-e.b[1])/(2*xView.scale)];
+const xPoint=(arm,t)=>{
+  const theta=junctionSpec.inputs.directionsDegrees[arm]*Math.PI/180;
+  return arm===0?[xRadius*(Math.sin(t)*Math.cos(theta)-(1-Math.cos(t))*Math.sin(theta)),
+    xRadius*(Math.sin(t)*Math.sin(theta)+(1-Math.cos(t))*Math.cos(theta))]:[t*Math.cos(theta),t*Math.sin(theta)];
+};
+assert.deepEqual(junctionComparison.solutions.map(s=>s.solution),['even','vertex','slit','bridge','autostitch']);
+for(const part of junctionComparison.solutions) {
+  const treatment=junctionSpec.treatments.find(t=>t.id===part.solution);
+  assert.equal(part.final.find(e=>e.kind==='solution-label').value,treatment.title);
+  assert.equal(part.final.find(e=>e.kind==='solution-note').value,treatment.note);
+  const real=part.final.filter(e=>e.kind==='slit'),holes=part.final.filter(e=>e.kind==='hole');
+  assert.equal(real.length,part.solution==='slit'?17:16);
+  assert.equal(holes.length,['slit','bridge'].includes(part.solution)?0:1);
+  if(holes.length)near(dist(xCentre(holes[0]),[0,0]),0);
+  for(const f of part.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='guide'),junctionComparison.final.filter(e=>e.kind==='guide'));
+  for(let arm=0;arm<4;arm++) {
+    const step=arm===0?2*Math.asin(3/(2*xRadius)):3,length=xIntervals[arm]*step;
+    const row=real.slice(arm*4,arm*4+4),points=row.map(xCentre);
+    near(dist(points[0],xPoint(arm,length)),0);
+    const gaps=points.map((point,i)=>dist(point,points[i+1]??[0,0]));
+    if(part.solution==='even') {
+      gaps.forEach(g=>near(g,gaps[0]));bounded(gaps);
+      assert(gaps.every(g=>Math.abs(g-3)>1e-6));
+    }
+    if(['vertex','slit','bridge'].includes(part.solution)) {
+      points.slice(0,part.solution==='vertex'?3:4).forEach((point,i)=>near(dist(point,xPoint(arm,length-i*step)),0));
+    }
+    if(['vertex','autostitch'].includes(part.solution))near(gaps.at(-1),3);
+    if(part.solution==='autostitch')bounded(gaps);
+    if(part.solution==='vertex') {
+      for(const f of part.frames.filter(f=>f.stage==='fit-arms')) {
+        const moving=f.elements.filter(e=>e.kind==='slit').slice(arm*4,arm*4+3);
+        moving.forEach((e,i)=>near(dist(xCentre(e),xPoint(arm,length-i*step)),0));
+      }
+    }
+    if(part.solution==='slit')for(const [i,e] of row.entries()) {
+      const t=length-i*step,angle=junctionSpec.inputs.directionsDegrees[arm]*Math.PI/180+(arm===0?t:0)+(arm<2?Math.PI:0)+(arm%2===1?-alpha:alpha);
+      near(Math.atan2(-(e.b[1]-e.a[1]),e.b[0]-e.a[0]),Math.atan2(Math.sin(angle),Math.cos(angle)));
+    }
+  }
+  if(part.solution==='vertex') {
+    assert.equal(part.frames[0].stage,'point-first');
+    assert.equal(part.frames[0].elements.filter(e=>e.kind==='slit').length,0);
+    assert.equal(part.final.filter(e=>e.kind==='gap-conflict').length,3);
+  }
+  if(part.solution==='bridge') {
+    const crossingThreads=part.final.filter(e=>e.kind==='thread'&&e.color==='#C62828');
+    assert.equal(crossingThreads.length,2);
+    near(segmentDistance(crossingThreads[0].a,crossingThreads[0].b,crossingThreads[1].a,crossingThreads[1].b),0);
+  }
+  {
+    const world=real.map(e=>({a:[(e.a[0]-xView.x)/xView.scale,(xView.y-e.a[1])/xView.scale],b:[(e.b[0]-xView.x)/xView.scale,(xView.y-e.b[1])/xView.scale]}));
+    for(const [i,e] of world.entries()) {
+      if(holes.length)assert(pointSegmentDistance([0,0],e.a,e.b)-.25-.15>=.2);
+      for(const other of world.slice(i+1))assert(segmentDistance(e.a,e.b,other.a,other.b)-.3>=.2);
+    }
+    const tips=part.final.filter(e=>['slit','hole'].includes(e.kind)).flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
+    for(const thread of part.final.filter(e=>e.kind==='thread'))for(const point of [thread.a,thread.b])assert(tips.some(t=>dist(point,t)<1e-6));
+  }
+  for(const f of part.frames)for(const e of f.elements.filter(e=>e.kind==='slit')) {
+    const point=xCentre(e),arm=Math.floor(f.elements.filter(v=>v.kind==='slit').indexOf(e)/4);
+    if(arm!==0)continue;
+    const theta=Math.PI/4,centre=[-xRadius*Math.sin(theta),xRadius*Math.cos(theta)];
+    near(dist(point,centre),xRadius);
+  }
+}
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
   assert.equal(Boolean(s.frames.length),entry.animated);
   if(entry.animated) {
-    const threadFrame=s.frames.find(f=>f.stage==='thread-reveal');
+    const threadFrames=s.frames.filter(f=>f.stage==='thread-reveal'),threadFrame=threadFrames.at(-1);
+    assert.equal(threadFrames.length,s.solutions?.length??1);
+    threadFrames.forEach(f=>assert.equal(f.delay,400));
     assert(threadFrame,`${s.name} missing final thread reveal`);assert.equal(threadFrame.delay,400);
     assert.equal(s.frames.at(-2),threadFrame);assert.equal(s.frames.at(-1).stage,'reset');
     assert.deepEqual(threadFrame.elements,s.final);
-    const fade=s.frames.filter(f=>f.stage==='thread-fade');assert.equal(fade.length,5);
-    assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30);
+    const fade=s.frames.filter(f=>f.stage==='thread-fade');assert.equal(fade.length,5*threadFrames.length);
+    assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30*threadFrames.length);
     fade.forEach((f,i)=>{
-      assert.equal(f.holeLightening,(i+1)/5);assert.deepEqual(f.elements,s.final);
+      assert.equal(f.holeLightening,(i%5+1)/5);assert.deepEqual(f.elements,s.solutions?s.solutions.find(part=>part.solution===f.solution).final:s.final);
       const shown=displayElements(f.elements,f.holeLightening);
       shown.forEach((e,j)=>{
         if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)) {
@@ -515,7 +591,7 @@ for(const s of scenes) {
       });
     });
     assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
-    for(const f of s.frames.filter(f=>f!==threadFrame&&f.stage!=='thread-fade'))assert(!f.elements.some(e=>e.kind==='thread'));
+    for(const f of s.frames.filter(f=>!['thread-reveal','thread-fade'].includes(f.stage)))assert(!f.elements.some(e=>e.kind==='thread'));
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
     const expected= s.name==='axiom-closure'?openings.length:openings.length-(s.name==='matched-guides'?2:1);
     assert.equal(threads.length,expected,`${s.name} incorrect thread count`);
@@ -551,7 +627,7 @@ for(const s of scenes) {
   for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||
     (s.name.startsWith('problem-corner-')&&/^\d+\.\d\u00b0$/.test(match[1]))||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
-  for(const term of terms)assert(labels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
+  for(const term of terms)assert((s.solutions?s.frames.flatMap(f=>f.elements).filter(e=>e.type==='text'):labels).some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
   if(s.name!=='terms-slit') {
     assert(labels.some(e=>e.kind==='notation-start'&&e.value==='s'),`${s.name} needs a start`);
     assert(s.final.filter(e=>e.kind==='direction').length>=3,`${s.name} needs a direction arrow`);
@@ -565,7 +641,7 @@ for(const s of scenes) {
     assert.equal(s.final.filter(e=>e.kind==='id-box').length,8);
   }
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
-    for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
+    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
   }
 }
 console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} moving GIFs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

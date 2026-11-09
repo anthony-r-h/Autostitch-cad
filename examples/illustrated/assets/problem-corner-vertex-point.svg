@@ -110,42 +110,44 @@
 <line class="direction" x1="155" y1="40" x2="149" y2="43.5" stroke="#8B8B8B" stroke-width="1.1"/>
 <text class="notation-end" x="427" y="342.853684306" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 <text class="notation-junction" x="434" y="22" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
-<line class="angle-reference" x1="386.964201505" y1="34.146315694" x2="414.964201505" y2="34.146315694" stroke="#8B8B8B" stroke-width="0.8" stroke-dasharray="4 4"/>
-<line class="thread-angle" x1="404.964201505" y1="34.146315694" x2="404.962024531" y2="34.426255582" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.962024531" y1="34.426255582" x2="404.955494134" y2="34.706127758" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.955494134" y1="34.706127758" x2="404.944611895" y2="34.985864522" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.944611895" y1="34.985864522" x2="404.929380445" y2="35.265398211" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.929380445" y1="35.265398211" x2="404.909803468" y2="35.54466121" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.909803468" y1="35.54466121" x2="404.885885702" y2="35.823585969" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.885885702" y1="35.823585969" x2="404.857632929" y2="36.102105019" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.857632929" y1="36.102105019" x2="404.825051985" y2="36.380150991" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.825051985" y1="36.380150991" x2="404.788150751" y2="36.65765663" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.788150751" y1="36.65765663" x2="404.746938152" y2="36.93455481" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.746938152" y1="36.93455481" x2="404.701424157" y2="37.210778554" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.701424157" y1="37.210778554" x2="404.651619775" y2="37.486261047" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.651619775" y1="37.486261047" x2="404.597537053" y2="37.760935654" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.597537053" y1="37.760935654" x2="404.539189074" y2="38.034735935" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.539189074" y1="38.034735935" x2="404.47658995" y2="38.307595661" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="404.47658995" y1="38.307595661" x2="404.409754824" y2="38.579448832" stroke="#252525" stroke-width="1"/>
-<line class="angle-leader" x1="380" y1="20" x2="404.825051985" y2="36.380150991" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="thread-angle-value" x="380" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">14.3°</text>
-<line class="angle-reference" x1="410" y1="40" x2="410" y2="68" stroke="#8B8B8B" stroke-width="0.8" stroke-dasharray="4 4"/>
-<line class="thread-angle" x1="410" y1="58" x2="409.775099506" y2="57.998594939" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="409.775099506" y1="57.998594939" x2="409.550234123" y2="57.994379974" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="409.550234123" y1="57.994379974" x2="409.325438957" y2="57.987355765" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="409.325438957" y1="57.987355765" x2="409.100749102" y2="57.977523406" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="409.100749102" y1="57.977523406" x2="408.876199636" y2="57.964884434" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="408.876199636" y1="57.964884434" x2="408.651825615" y2="57.949440822" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="408.651825615" y1="57.949440822" x2="408.427662069" y2="57.931194981" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="408.427662069" y1="57.931194981" x2="408.203743992" y2="57.910149758" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="408.203743992" y1="57.910149758" x2="407.980106344" y2="57.88630844" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="407.980106344" y1="57.88630844" x2="407.756784037" y2="57.859674749" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="407.756784037" y1="57.859674749" x2="407.533811936" y2="57.830252843" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="407.533811936" y1="57.830252843" x2="407.311224851" y2="57.798047314" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="407.311224851" y1="57.798047314" x2="407.089057532" y2="57.763063192" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="407.089057532" y1="57.763063192" x2="406.867344664" y2="57.725305937" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="406.867344664" y1="57.725305937" x2="406.646120859" y2="57.684781444" stroke="#252525" stroke-width="1"/>
-<line class="thread-angle" x1="406.646120859" y1="57.684781444" x2="406.425420655" y2="57.641496039" stroke="#252525" stroke-width="1"/>
-<line class="angle-leader" x1="497" y1="66" x2="408.203743992" y2="57.910149758" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="thread-angle-value" x="525" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">11.5°</text>
+<polygon class="angle-wedge" points="386.964201505,34.146315694 404.964201505,34.146315694 404.962024531,34.426255582 404.955494134,34.706127758 404.944611895,34.985864522 404.929380445,35.265398211 404.909803468,35.54466121 404.885885702,35.823585969 404.857632929,36.102105019 404.825051985,36.380150991 404.788150751,36.65765663 404.746938152,36.93455481 404.701424157,37.210778554 404.651619775,37.486261047 404.597537053,37.760935654 404.539189074,38.034735935 404.47658995,38.307595661 404.409754824,38.579448832" fill="#C62828" fill-opacity="0.22"/>
+<line class="angle-reference" x1="386.964201505" y1="34.146315694" x2="414.964201505" y2="34.146315694" stroke="#C62828" stroke-width="0.8" stroke-dasharray="4 4"/>
+<line class="thread-angle" x1="404.964201505" y1="34.146315694" x2="404.962024531" y2="34.426255582" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.962024531" y1="34.426255582" x2="404.955494134" y2="34.706127758" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.955494134" y1="34.706127758" x2="404.944611895" y2="34.985864522" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.944611895" y1="34.985864522" x2="404.929380445" y2="35.265398211" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.929380445" y1="35.265398211" x2="404.909803468" y2="35.54466121" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.909803468" y1="35.54466121" x2="404.885885702" y2="35.823585969" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.885885702" y1="35.823585969" x2="404.857632929" y2="36.102105019" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.857632929" y1="36.102105019" x2="404.825051985" y2="36.380150991" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.825051985" y1="36.380150991" x2="404.788150751" y2="36.65765663" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.788150751" y1="36.65765663" x2="404.746938152" y2="36.93455481" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.746938152" y1="36.93455481" x2="404.701424157" y2="37.210778554" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.701424157" y1="37.210778554" x2="404.651619775" y2="37.486261047" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.651619775" y1="37.486261047" x2="404.597537053" y2="37.760935654" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.597537053" y1="37.760935654" x2="404.539189074" y2="38.034735935" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.539189074" y1="38.034735935" x2="404.47658995" y2="38.307595661" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="404.47658995" y1="38.307595661" x2="404.409754824" y2="38.579448832" stroke="#C62828" stroke-width="1"/>
+<line class="angle-leader" x1="380" y1="20" x2="404.825051985" y2="36.380150991" stroke="#C62828" stroke-width="0.8"/>
+<text class="thread-angle-value" x="380" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C62828">14.3°</text>
+<polygon class="angle-wedge" points="410,40 410,58 409.775099506,57.998594939 409.550234123,57.994379974 409.325438957,57.987355765 409.100749102,57.977523406 408.876199636,57.964884434 408.651825615,57.949440822 408.427662069,57.931194981 408.203743992,57.910149758 407.980106344,57.88630844 407.756784037,57.859674749 407.533811936,57.830252843 407.311224851,57.798047314 407.089057532,57.763063192 406.867344664,57.725305937 406.646120859,57.684781444 406.425420655,57.641496039" fill="#C62828" fill-opacity="0.22"/>
+<line class="angle-reference" x1="410" y1="40" x2="410" y2="68" stroke="#C62828" stroke-width="0.8" stroke-dasharray="4 4"/>
+<line class="thread-angle" x1="410" y1="58" x2="409.775099506" y2="57.998594939" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="409.775099506" y1="57.998594939" x2="409.550234123" y2="57.994379974" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="409.550234123" y1="57.994379974" x2="409.325438957" y2="57.987355765" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="409.325438957" y1="57.987355765" x2="409.100749102" y2="57.977523406" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="409.100749102" y1="57.977523406" x2="408.876199636" y2="57.964884434" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="408.876199636" y1="57.964884434" x2="408.651825615" y2="57.949440822" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="408.651825615" y1="57.949440822" x2="408.427662069" y2="57.931194981" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="408.427662069" y1="57.931194981" x2="408.203743992" y2="57.910149758" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="408.203743992" y1="57.910149758" x2="407.980106344" y2="57.88630844" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="407.980106344" y1="57.88630844" x2="407.756784037" y2="57.859674749" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="407.756784037" y1="57.859674749" x2="407.533811936" y2="57.830252843" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="407.533811936" y1="57.830252843" x2="407.311224851" y2="57.798047314" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="407.311224851" y1="57.798047314" x2="407.089057532" y2="57.763063192" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="407.089057532" y1="57.763063192" x2="406.867344664" y2="57.725305937" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="406.867344664" y1="57.725305937" x2="406.646120859" y2="57.684781444" stroke="#C62828" stroke-width="1"/>
+<line class="thread-angle" x1="406.646120859" y1="57.684781444" x2="406.425420655" y2="57.641496039" stroke="#C62828" stroke-width="1"/>
+<line class="angle-leader" x1="497" y1="66" x2="408.203743992" y2="57.910149758" stroke="#C62828" stroke-width="0.8"/>
+<text class="thread-angle-value" x="525" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C62828">11.5°</text>
 </svg>

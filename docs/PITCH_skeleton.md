@@ -184,6 +184,17 @@ Research note: Anthony to find stitching examples from:
 
 ![A9: a T junction reserves one hole and its nominal neighbours](../examples/illustrated/assets/axiom-junction.gif)
 
+### X junction with a curved arm
+
+- Same four guides and endpoints; one circular arm
+- Even: equal gaps within each arm; every gap changes
+- Vertex point: point first; only the last slit on each arm moves
+- Slit and flip: one shared slit; mirrored lean on two arms
+- Bridge: opposite arms connect; threads cross without a shared opening
+- Autostitch: nominal junction gaps; bounded corrections within each arm
+
+![Five treatments of an X junction with one curved arm](../examples/illustrated/assets/junction-comparison.gif)
+
 ## Clearance
 
 - Distinct openings must remain disjoint and retain the required edge-to-edge margin

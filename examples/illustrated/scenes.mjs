@@ -347,6 +347,91 @@ function junctionScene() {
   return finish(s,result);
 }
 
+function junctionComparisonScene() {
+  const spec=catalog.illustrations.find(i=>i.id==='ILL-JUNCTION-COMPARISON');
+  const {radius:R,intervals,view}=spec.inputs,p=spec.pitch;
+  const arms=spec.inputs.directionsDegrees.map((degrees,i)=>{
+    const theta=degrees*Math.PI/180,curved=i===0;
+    const advance=q=>curved?2*Math.asin(q/(2*R)):q;
+    const step=advance(p),length=spec.inputs.nominalIntervals[i]*step;
+    const point=t=>curved?add(mul(axis(theta),R*Math.sin(t)),mul(axis(theta+Math.PI/2),R*(1-Math.cos(t)))):mul(axis(theta),t);
+    return {theta,curved,advance,step,length,point,tangent:t=>theta+(curved?t:0)};
+  });
+  const nominal=arms.map(a=>Array.from({length:intervals},(_,j)=>a.length-j*a.step));
+  const guides=arms.flatMap(a=>Array.from({length:a.curved?40:1},(_,j)=>
+    worldLine(a.point(a.length*j/(a.curved?40:1)),a.point(a.length*(j+1)/(a.curved?40:1)),view)));
+  const marks=[notationText([view.x+20,view.y-4],'j','junction')];
+  for(const i of [0,1]) {
+    const start=project(arms[i].point(arms[i].length),view),end=project(arms[i+2].point(arms[i+2].length),view);
+    const from=axis(arms[i].tangent(arms[i].length)+Math.PI),to=axis(arms[i+2].tangent(arms[i+2].length));
+    marks.push(...routeMarks(start,end,[from[0],-from[1]],[to[0],-to[1]]));
+  }
+  const auto=arms.map(a=>{
+    const fit=selectFit(a.curved?{p,R,sweep:a.length-a.step}:{p,D:a.length-a.step});
+    if(!fit||fit.n!==intervals-1)throw new Error('X-junction fixture needs four intervals per arm');
+    const row=[a.step];
+    for(let j=0;j<fit.n;j++)row.push(row.at(-1)+a.advance(j>=fit.i&&j<fit.i+fit.k?fit.correctedPitch:p));
+    return row.toReversed();
+  });
+  const solutions=spec.treatments.map(treatment=>{
+    const {id,title,note}=treatment;
+    const target=id==='even'?arms.map(a=>Array.from({length:intervals},(_,j)=>a.length*(intervals-j)/intervals)):
+      id==='vertex'?nominal.map((row,i)=>row.map((t,j)=>j===intervals-1?arms[i].step:t)):
+      id==='autostitch'?auto:nominal;
+    const header={...text([300,25],title),kind:'solution-label',color:ink,size:16};
+    const base=[...guides,...marks,header];
+    const draw=(rows,flip=0,shared=true)=>{
+      const elements=[...base],openings=[];
+      for(const [i,a] of arms.entries()) {
+        const points=rows[i].map(a.point),all=[...points,[0,0]];
+        const changed=points.map((point,j)=>Math.abs(Math.hypot(...add(point,mul(all[j+1],-1)))-p)>1e-6);
+        const row=[];
+        for(const [j,t] of rows[i].entries()) {
+          const lean=(id==='slit'&&i%2===1)?lerp(alpha,-alpha,flip):alpha;
+          const angle=a.tangent(t)+(i<2?Math.PI:0)+lean;
+          const slit=opening(points[j],angle,view,{marked:changed[j-1]||(j<intervals-1||id!=='bridge')&&changed[j]});
+          elements.push(...slit);row.push(slit[0]);
+        }
+        openings.push(row);
+      }
+      const joint=id==='bridge'||!shared?null:id==='slit'?opening([0,0],-Math.PI/2,view)[0]:hole([0,0],view);
+      if(joint)elements.push(joint);
+      const paths=[0,1].map(i=>[...openings[i],...(joint?[joint]:[]),...openings[i+2].toReversed()]);
+      return {elements,paths};
+    };
+    const s=scene('junction-comparison',title,spec.id);
+    if(['even','vertex','autostitch'].includes(id))frame(s,[...base,hole([0,0],view)],50,'point-first');
+    frame(s,draw(nominal,0,id!=='slit').elements,65,'nominal-arms');
+    if(id!=='bridge')for(let j=1;j<=16;j++) {
+      const t=ease(j/16),rows=target.map((row,i)=>row.map((x,k)=>lerp(nominal[i][k],x,t)));
+      frame(s,draw(rows,t,id!=='slit'||j===16).elements,6,id==='slit'?'flip-arms':'fit-arms');
+    }
+    const final=draw(target,1),result=[...final.elements];
+    if(id==='vertex')for(const [i,a] of arms.entries()) {
+      const last=target[i].at(-1),previous=target[i].at(-2),A=a.point(previous),B=a.point(last);
+      const gap=Math.hypot(...add(A,mul(B,-1)));
+      if(gap>=.9*p-1e-6&&gap<=1.1*p+1e-6)continue;
+      result.push(worldLine(A,B,view,'gap-conflict','#C62828',3),
+        {...text(add(project(mul(add(A,B),.5),view),mul([Math.sin(a.tangent(last)),Math.cos(a.tangent(last))],20)),gap.toFixed(2)),kind:'conflict-value',color:'#C62828'});
+    }
+    result.push({...text([300,350],note),kind:'solution-note',color:['vertex','bridge'].includes(id)?'#C62828':ink,size:14});
+    s.threadPaths=final.paths;
+    const finished=slitOutlines(finishThread(finish(s,result)));
+    if(id==='bridge') {
+      const bridges=finished.final.filter(e=>e.kind==='thread').filter((e,i)=>i===intervals-1||i===3*intervals-2);
+      const highlight=elements=>elements.map(e=>bridges.includes(e)?{...e,color:'#C62828',width:2}:e);
+      finished.final=highlight(finished.final);
+      finished.frames=finished.frames.map(f=>({...f,elements:highlight(f.elements)}));
+    }
+    return {...finished,solution:id};
+  });
+  const frames=solutions.flatMap(s=>s.frames.filter(f=>f.stage!=='reset').map(f=>({...f,solution:s.solution})));
+  const first=frames[0];
+  frames.push({elements:first.elements,delay:70,stage:'reset',solution:solutions[0].solution});
+  return {name:'junction-comparison',title:'Five treatments of an X junction',source:spec.id,
+    frames,final:solutions.at(-1).final,solutions};
+}
+
 function smoothScene() {
   const v=variant('A05'),arc=v.route.primitives[1],view={x:370,y:115,scale:16};
   const sweep=-(v.settings.end-18)/arc.radius,theta=arc['start-angle'];
@@ -733,10 +818,11 @@ function cornerThreadAngles(s,threads) {
     const label=arm===0?[380,16]:[525,70];
     const anchor=add(origin,mul(axis(start+turn/2),radius));
     return [
-      line(origin,add(origin,mul(tangent,28)),'angle-reference',construction,.8,true),
-      ...points.slice(1).map((p,i)=>line(points[i],p,'thread-angle',ink,1)),
-      line(arm===0?add(label,[0,4]):add(label,[-28,-4]),anchor,'angle-leader',construction,.8),
-      {...text(label,`${degrees.toFixed(1)}\u00b0`),kind:'thread-angle-value',color:ink,size:13}
+      {type:'polygon',points:[origin,...points],p:origin,kind:'angle-wedge',color:'#C62828',opacity:.22},
+      line(origin,add(origin,mul(tangent,28)),'angle-reference','#C62828',.8,true),
+      ...points.slice(1).map((p,i)=>line(points[i],p,'thread-angle','#C62828',1)),
+      line(arm===0?add(label,[0,4]):add(label,[-28,-4]),anchor,'angle-leader','#C62828',.8),
+      {...text(label,`${degrees.toFixed(1)}\u00b0`),kind:'thread-angle-value',color:'#C62828',size:13}
     ];
   });
 }
@@ -760,7 +846,7 @@ export function createScenes() {
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
     curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step'),
-    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines);
+    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines).concat(junctionComparisonScene());
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
@@ -817,6 +903,7 @@ export function svg(scene) {
       return axisLine+`<polygon class="slit-outline" points="${rectanglePoints(e).map(p=>p.map(n).join(',')).join(' ')}" fill="#FFFFFF" stroke="${e.color}" stroke-width="${e.outlineWidth}"${e.dash?' stroke-dasharray="4 4"':''}/>`;
     }
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
+    if(e.type==='polygon')return `<polygon class="${e.kind}" points="${e.points.map(p=>p.map(n).join(',')).join(' ')}" fill="${e.color}" fill-opacity="${e.opacity??1}"/>`;
     return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
   });
   return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':scene.threadPaths?'Static stitch diagram.':'Static terminology figure.'}</desc>\n${elements.join('\n')}\n</svg>\n`;

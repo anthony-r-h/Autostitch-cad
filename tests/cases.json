@@ -9243,6 +9243,82 @@
         "holdCentiseconds": 200,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
+    },
+    {
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": true,
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Reference-specific thread tips inferred from the photograph; opposite-tip connections and a reversed directed axis at the shared slit. All segments appear together."
+      },
+      "id": "ILL-SELLIER-CORNER",
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "status": "Inferred alternative: nearly parallel ordinary slit axes from the annotated photo, and a diagonal shared slit with the reconstructed entry/exit tip connections. Arm signed leans differ; this is not an A2/A6-compliant Autostitch result or measured hole geometry.",
+      "inputs": {
+        "pitch": 3,
+        "leanDegrees": 40,
+        "armGaps": 3,
+        "sharedSlitDegrees": 135,
+        "armAxisDegrees": [
+          -40,
+          -50
+        ]
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/sellier-diagonal-corner"
+        }
+      ]
+    },
+    {
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": true,
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      },
+      "id": "ILL-SELLIER-WALLET",
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "status": "Analytic rear-face Autostitch corner with nominal top/right/bottom rows. A fixed H decoration is represented by six round holes; nominal counts determine the guide extents, with no residual fitting. The H is supplied decoration, not a newly supported plugin constraint.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "topSteps": 16,
+        "rightSteps": 12,
+        "bottomSteps": 15,
+        "hWidth": 3,
+        "hHeight": 6
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/sellier-wallet-autostitch"
+        }
+      ]
     }
   ]
 }

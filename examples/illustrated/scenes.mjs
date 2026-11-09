@@ -715,9 +715,9 @@ function finalizeGif(raw,scene) {
   if(index!==scene.frames.length)throw new Error('Missing GIF frames');
   return Buffer.concat(output);
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
+export function writeSceneFiles(scenes) {
   const mode=process.argv[2],output=path.resolve(process.argv[3]),temporary=path.resolve(process.argv[4]);
-  const scenes=createScenes();fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
+  fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
   if(mode==='prepare') {
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(scenes));
     for(const scene of scenes)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
@@ -725,3 +725,5 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }
+export {add,mul,axis,project,line,text,worldLine,opening,hole,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines};
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

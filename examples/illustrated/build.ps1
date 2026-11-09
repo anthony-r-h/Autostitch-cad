@@ -1,11 +1,15 @@
 # Generate embedded diagrams and looping animations. No CAD session or packages.
 [CmdletBinding()]
-param([string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'))
+param(
+ [string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'),
+ [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs')
+)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing,PresentationCore,WindowsBase
 $OutputDirectory = [IO.Path]::GetFullPath($OutputDirectory)
-$temporary = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../output/illustrated'))
-& node (Join-Path $PSScriptRoot 'scenes.mjs') prepare $OutputDirectory $temporary
+$SceneScript = [IO.Path]::GetFullPath($SceneScript)
+$temporary = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ('../../output/'+(Split-Path (Split-Path $SceneScript -Parent) -Leaf))))
+& node $SceneScript prepare $OutputDirectory $temporary
 if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
 $scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw | ConvertFrom-Json
 
@@ -104,6 +108,6 @@ foreach($scene in $scenes) {
  $encoder=$null
  [GC]::Collect()
 }
-& node (Join-Path $PSScriptRoot 'scenes.mjs') finish $OutputDirectory $temporary
+& node $SceneScript finish $OutputDirectory $temporary
 if ($LASTEXITCODE -ne 0) { throw 'Animation timing export failed.' }
 Write-Output 'Looping GIFs written with explicit reveal timing and result holds.'

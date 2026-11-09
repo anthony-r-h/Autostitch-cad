@@ -86,7 +86,17 @@ function Draw-Frame($elements) {
 }
 foreach($scene in $scenes) {
  $still=Draw-Frame $scene.final
- try {$still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)}
+ try {
+  $still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
+  # Preserve existing embed paths when an animation becomes a static figure.
+  if($scene.staticGif){
+   $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
+   $uri=[Uri]::new((Join-Path $OutputDirectory ($scene.name+'.png')))
+   $encoder.Frames.Add([Windows.Media.Imaging.BitmapFrame]::Create($uri,[Windows.Media.Imaging.BitmapCreateOptions]::PreservePixelFormat,[Windows.Media.Imaging.BitmapCacheOption]::OnLoad))
+   $file=[IO.File]::Create((Join-Path $OutputDirectory ($scene.name+'.gif')))
+   try {$encoder.Save($file)} finally {$file.Dispose()}
+  }
+ }
  finally {$still.Dispose()}
  if($scene.frames.Count -eq 0) {
   Write-Output ($scene.name+': static SVG/PNG.')

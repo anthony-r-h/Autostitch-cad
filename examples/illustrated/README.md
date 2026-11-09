@@ -15,6 +15,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
 - Static stitched figures are the final Stitch state, including the same lightened measurements
+- Keep existing image paths working when changing animation to static. Vertex point and Bridge export single-frame GIFs alongside their PNG/SVG stills; the GIFs contain no animation or loop
 - Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
 
 ## Spacing setup

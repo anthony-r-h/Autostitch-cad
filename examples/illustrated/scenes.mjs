@@ -776,7 +776,7 @@ function finishThread(s) {
     ...Array.from({length:5},(_,i)=>({elements:result,delay:6,stage:'thread-fade',holeLightening:(i+1)/5})),
     {elements:result,delay:400,stage:'thread-reveal'}
   ]:[f]);
-  return {...s,final:result,frames:staticResult?[]:frames};
+  return {...s,final:result,frames:staticResult?[]:frames,staticGif:staticResult};
 }
 function cornerThreadLengths(s,threads) {
   const spec=catalog.illustrations.find(i=>i.id===s.source),count=spec.inputs.armIntervals;

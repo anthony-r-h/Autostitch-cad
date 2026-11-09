@@ -9232,13 +9232,15 @@
           "path": "examples/illustrated/assets/problem-corner-vertex-point",
           "treatment": "cross",
           "label": "Vertex point",
-          "animated": false
+          "animated": false,
+          "staticGif": true
         },
         {
           "path": "examples/illustrated/assets/problem-corner-bridge",
           "treatment": "gap",
           "label": "Bridge",
-          "animated": false
+          "animated": false,
+          "staticGif": true
         },
         {
           "path": "examples/illustrated/assets/problem-corner-mirrored",

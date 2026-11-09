@@ -481,6 +481,7 @@ for(const f of cornerSolution.frames) {
 }
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
+for(const [,link] of pitchDoc.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g))assert(fs.existsSync(new URL(link,new URL('docs/PITCH_skeleton.md',root))),`Missing pitch figure: ${link}`);
 const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Autostitch|Vertex point|Bridge|Shared diagonal slit)/.test(line));
 const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
 for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
@@ -620,7 +621,14 @@ for(const s of scenes) {
     assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
     near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
   } else {
-    assert(!fs.existsSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root)),'Static figures must not retain obsolete GIFs');
+    const gifPath=new URL(`examples/illustrated/assets/${s.name}.gif`,root);
+    if(asset.staticGif) {
+      assert(s.staticGif);
+      const gif=fs.readFileSync(gifPath);
+      assert.equal(gifBlocks(gif).blocks.filter(b=>b.kind==='image').length,1,'Static GIF must contain exactly the final still');
+      assert(!gif.includes(Buffer.from('NETSCAPE2.0')),'Static GIF must not loop');
+      assert.equal(gif.readUInt16LE(6),600);assert.equal(gif.readUInt16LE(8),375);
+    } else assert(!fs.existsSync(gifPath),'Static figures must not retain obsolete GIFs');
     for(const leader of s.final.filter(e=>e.kind==='term-leader'))assert(leader.a[0]===leader.b[0]||leader.a[1]===leader.b[1],`${s.name} has an oblique callout`);
   }
   const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));

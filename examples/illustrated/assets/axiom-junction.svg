@@ -2,15 +2,15 @@
 <line class="guide" x1="300" y1="145" x2="93" y2="145" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="300" y1="145" x2="507" y2="145" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="300" y1="145" x2="300" y2="283" stroke="#C4C4C4" stroke-width="1"/>
-<circle class="hole" cx="300" cy="145" r="5.75" fill="#252525"/>
-<line class="slit" x1="217.785733356" y1="156.088086267" x2="244.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="355.785733356" y1="156.088086267" x2="382.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="288.911913733" y1="200.785733356" x2="311.088086267" y2="227.214266644" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="148.785733356" y1="156.088086267" x2="175.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="424.785733356" y1="156.088086267" x2="451.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="288.911913733" y1="269.785733356" x2="311.088086267" y2="296.214266644" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="79.785733356" y1="156.088086267" x2="106.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="148.785733356" y1="156.088086267" x2="175.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="217.785733356" y1="156.088086267" x2="244.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
 <line class="slit" x1="493.785733356" y1="156.088086267" x2="520.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="424.785733356" y1="156.088086267" x2="451.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="355.785733356" y1="156.088086267" x2="382.214266644" y2="133.911913733" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="288.911913733" y1="269.785733356" x2="311.088086267" y2="296.214266644" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="288.911913733" y1="200.785733356" x2="311.088086267" y2="227.214266644" stroke="#252525" stroke-width="2.6"/>
+<circle class="hole" cx="300" cy="145" r="5.75" fill="#252525"/>
 <line class="dimension" x1="300" y1="105" x2="369" y2="105" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="300" y1="109" x2="300" y2="101" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="369" y1="109" x2="369" y2="101" stroke="#8B8B8B" stroke-width="0.8"/>

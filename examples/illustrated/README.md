@@ -56,9 +56,9 @@ The straight and curved portions use one slit at their common tangent. Revealing
 
 ### Share the branching junction: A9
 
-Reserve one round hole and its nominal neighbours before filling the arms. `ILL-JUNCTION`.
+Stitch inward along each of the three arms, then identify their shared round hole. The `j` label is visible from the first frame. Each arm's nearest slit is one nominal pitch from the hole. `ILL-JUNCTION`.
 
-![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
+![Three rows approach the T junction and share one round hole](assets/axiom-junction.gif)
 
 ### Check the whole layout: A10
 

@@ -8771,7 +8771,13 @@
         "direction",
         "e",
         "j"
-      ]
+      ],
+      "reveal": [
+        "Show guides and s/e/j notation.",
+        "Stitch inward along the first, second and third arms in turn.",
+        "Identify the shared round hole after all three arms arrive."
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive."
     },
     {
       "id": "ILL-CLEARANCE",

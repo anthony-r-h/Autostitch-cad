@@ -192,14 +192,15 @@ function junctionScene() {
   const base=arms.map(arm=>worldLine(center,arm.end,view));
   const s=scene('axiom-junction','Three arms share one round hole','A9');
   frame(s,base,100,'arms');
-  let result=[...base,hole(center,view)];frame(s,result,110,'shared-hole');
-  for(let i=1;i<=3;i++) {
-    for(const arm of arms) {
-      const distance=Math.hypot(...arm.end);if(i*3>distance)continue;
+  const result=[...base];
+  for(const [index,arm] of arms.entries()) {
+    const distance=Math.hypot(...arm.end);
+    for(let i=Math.floor(distance/3);i>=1;i--) {
       result.push(...opening(mul(arm.end,i*3/distance),arm.angle,view));
+      frame(s,[...result],i===1?140:70,`arm-${index}-stitch`);
     }
-    frame(s,[...result],i===1?140:50,'nominal-neighbours');
   }
+  result.push(hole(center,view));frame(s,[...result],170,'shared-hole');
   result.push(...measure(center,[3,0],'3',view,40));
   return finish(s,result);
 }
@@ -529,8 +530,8 @@ function annotateScene(s) {
     const [incoming,outgoing]=model.primitives,a=model.stations[0].at(-1),b=model.stations[1].at(-1);
     marks=routeMarks(project(primitivePoint(incoming,a),view),project(primitivePoint(outgoing,b),view),screenTangent(incoming,a),screenTangent(outgoing,b));
   }
-  const corner=s.name==='axiom-corner'||s.name.startsWith('corner-');
-  const annotate=elements=>[...elements,...marks,...(corner?s.final:elements).filter(e=>e.kind==='hole').map(e=>
+  const persistentJunction=['axiom-corner','axiom-junction'].includes(s.name)||s.name.startsWith('corner-');
+  const annotate=elements=>[...elements,...marks,...(persistentJunction?s.final:elements).filter(e=>e.kind==='hole').map(e=>
     notationText(add(e.p,['axiom-junction','terms-junction'].includes(s.name)?[16,-14]:[18,18]),'j','junction'))];
   return {...s,final:annotate(s.final),frames:s.frames.map(f=>({...f,elements:annotate(f.elements)}))};
 }

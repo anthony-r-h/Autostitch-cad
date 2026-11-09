@@ -97,6 +97,28 @@ near(dist(junction,[0,0]),0);
 const arms=slits('axiom-junction',junctionView).map(s=>s.center);assert.equal(arms.length,8);
 for(const p of [[-3,0],[3,0],[0,-3]])assert(has(arms,p));
 assert(!has(arms,junction));
+const branchScene=scenes.find(s=>s.name==='axiom-junction');
+const branchLabel=branchScene.final.filter(e=>e.kind==='notation-junction');
+assert.equal(branchLabel.length,1);
+let branchReal=[];
+const branchDistances=[Infinity,Infinity,Infinity],branchCounts=[0,0,0];
+for(const f of branchScene.frames) {
+  assert.deepEqual(f.elements.filter(e=>e.kind==='notation-junction'),branchLabel);
+  if(f.stage==='reset')continue;
+  const real=f.elements.filter(e=>e.kind==='slit'),arm=f.stage.match(/^arm-(\d)-stitch$/);
+  assert.deepEqual(real.slice(0,branchReal.length),branchReal);
+  if(arm) {
+    const index=+arm[1];assert.equal(real.length,branchReal.length+1);
+    const slit=real.at(-1),center=[(slit.a[0]+slit.b[0])/2,(slit.a[1]+slit.b[1])/2];
+    const distance=dist(center,[junctionView.x,junctionView.y]);
+    assert(distance<branchDistances[index],'Branch stitching must approach the junction');
+    branchDistances[index]=distance;branchCounts[index]++;
+  }
+  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','result'].includes(f.stage)?1:0);
+  branchReal=real;
+}
+assert.deepEqual(branchCounts,[3,3,2]);
+branchDistances.forEach(d=>near(d/junctionView.scale,3));
 
 const clearance=slits('axiom-clearance',{x:120,y:220,scale:40});assert.equal(clearance.length,8);
 for(const s of clearance){near(+s.element['stroke-width']/40,.3);assert.equal(s.element['stroke-linecap'],'round');}

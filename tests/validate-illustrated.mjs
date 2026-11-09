@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
-import { createScenes, gifBlocks } from '../examples/illustrated/scenes.mjs';
+import { createScenes, gifBlocks, displayElements } from '../examples/illustrated/scenes.mjs';
 
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
@@ -171,7 +171,7 @@ for(const f of branchScene.frames) {
     assert(distance<branchDistances[index],'Branch stitching must approach the junction');
     branchDistances[index]=distance;branchCounts[index]++;
   }
-  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','result','thread-reveal'].includes(f.stage)?1:0);
+  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','result','thread-fade','thread-reveal'].includes(f.stage)?1:0);
   branchReal=real;
 }
 assert.deepEqual(branchCounts,[3,3,2]);
@@ -299,7 +299,7 @@ for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-sha
       assert.equal(virtual.length,i+1);assert.deepEqual(real,previousReal);
       assert.deepEqual(virtual.at(-1),virtuals[i]);
     }
-    if(!['shared-hole','result','thread-reveal'].includes(f.stage))assert(!f.elements.some(e=>e.kind==='hole'),'The shared hole appears only after both arms arrive');
+    if(!['shared-hole','result','thread-fade','thread-reveal'].includes(f.stage))assert(!f.elements.some(e=>e.kind==='hole'),'The shared hole appears only after both arms arrive');
     previousReal=real;previousVirtual=virtual;
   }
 }
@@ -307,7 +307,10 @@ for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-sha
 // Glossary labels must describe the existing constructions without changing them.
 for(const [name,original,kinds] of [
   ['terms-junction','axiom-junction',['slit','hole']]
-])for(const kind of kinds)assert.deepEqual(readSvg(name).elements.filter(e=>e.class===kind),readSvg(original).elements.filter(e=>e.class===kind));
+])for(const kind of kinds) {
+  const geometry=e=>Object.fromEntries(Object.entries(e).filter(([key])=>!['fill','stroke'].includes(key)));
+  assert.deepEqual(readSvg(name).elements.filter(e=>e.class===kind).map(geometry),readSvg(original).elements.filter(e=>e.class===kind).map(geometry));
+}
 const glossaryLayout=slits('terms-layout',{x:60,y:187.5,scale:16}).map(s=>s.center[0]).sort((a,b)=>a-b);
 const originalF02=[0,3,6,8.75,11.75,14.75,17.75,20.75,23.75,27,30];
 assert.equal(glossaryLayout.length,originalF02.length);glossaryLayout.forEach((x,i)=>near(x,originalF02[i]));
@@ -400,7 +403,7 @@ for(const f of cornerSolution.frames) {
     near(dist(centre(real[a*5]),a===0?[135,85]:[360,310]),0);
     near(dist(centre(real[a*5+4]),centre(virtual[a]))/problemView.scale,3);
   }
-  if(['shared-hole','distribute-within-arms','result','thread-reveal'].includes(f.stage)) {
+  if(['shared-hole','distribute-within-arms','result','thread-fade','thread-reveal'].includes(f.stage)) {
     assert.deepEqual(virtual,cornerSolution.final.filter(e=>e.kind==='virtual'));
     assert.deepEqual(f.elements.filter(e=>e.kind==='hole'),cornerSolution.final.filter(e=>e.kind==='hole'));
     for(const i of [4,9])near(dist(centre(real[i]),centre(cornerSolution.final.filter(e=>e.kind==='slit')[i])),0);
@@ -417,10 +420,24 @@ for(const s of scenes) {
   assert.equal(Boolean(s.frames.length),entry.animated);
   if(entry.animated) {
     const threadFrame=s.frames.find(f=>f.stage==='thread-reveal');
-    assert(threadFrame,`${s.name} missing final thread reveal`);assert.equal(threadFrame.delay,200);
+    assert(threadFrame,`${s.name} missing final thread reveal`);assert.equal(threadFrame.delay,400);
     assert.equal(s.frames.at(-2),threadFrame);assert.equal(s.frames.at(-1).stage,'reset');
     assert.deepEqual(threadFrame.elements,s.final);
-    for(const f of s.frames.filter(f=>f!==threadFrame))assert(!f.elements.some(e=>e.kind==='thread'));
+    const fade=s.frames.filter(f=>f.stage==='thread-fade');assert.equal(fade.length,5);
+    assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30);
+    fade.forEach((f,i)=>{
+      assert.equal(f.holeLightening,(i+1)/5);assert.deepEqual(f.elements,s.final);
+      const shown=displayElements(f.elements,f.holeLightening);
+      shown.forEach((e,j)=>{
+        if(['slit','hole','virtual','proposal'].includes(e.kind)) {
+          const original=f.elements[j];
+          assert(parseInt(e.color.slice(1,3),16)>parseInt(original.color.slice(1,3),16));
+          assert.deepEqual({...e,color:original.color},original);
+        } else assert.deepEqual(e,f.elements[j]);
+      });
+    });
+    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
+    for(const f of s.frames.filter(f=>f!==threadFrame&&f.stage!=='thread-fade'))assert(!f.elements.some(e=>e.kind==='thread'));
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
     const expected= s.name==='axiom-closure'?openings.length:openings.length-(s.name==='matched-guides'?2:1);
     assert.equal(threads.length,expected,`${s.name} incorrect thread count`);

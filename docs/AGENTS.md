@@ -21,7 +21,7 @@
 - Use small, direct examples, each showing one geometric problem or decision. Keep comparison inputs identical and make their different placement policies explicit.
 - Solution animations continue from the established problem state. Do not repeat its setup; for spacing, start with the nominal row and identified residual already visible.
 - Glossary figures are static SVG/PNG diagrams. Align labels and use horizontal or vertical leaders; keep dimension lines aligned with the measured feature.
-- Stitching animations finish by revealing all thread segments together, followed by a two-second hold. Use light slit outlines and heavier thread. Rejected layouts retain their rejection marks; these remain explanatory candidates.
+- Stitching animations finish by revealing all thread segments together, lightening the holes over 0.3 seconds, then holding for four seconds. Static stitched figures use the same light holes and heavier thread. Rejected layouts retain their rejection marks; these remain explanatory candidates.
 - Record setup, progressive reveal, conflict, response, final state, captions and source case/rule references. Animation is the primary example; keep a final-state still fallback. Keep titles, counters and prose outside the figure.
 - Distinguish explanatory reveal order from solver order and physical execution. Show changing positions as planning revisions; keep deliberate failures distinct from valid Autostitch output.
 - Follow the glossary, axioms, model and junction construction. Reuse catalog IDs where possible; identify unresolved geometry or native verification explicitly rather than inventing evidence.

@@ -315,8 +315,11 @@ for(const s of scenes) {
     assert.equal(blocks.filter(b=>b.kind==='image').length,s.frames.length);
     assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
     assert(gif.includes(Buffer.from('NETSCAPE2.0')));
-    const reveal=s.frames.at(-2);assert.equal(reveal.stage,'thread-reveal');assert.equal(reveal.delay,200);assert.deepEqual(reveal.elements,s.final);
-    for(const f of s.frames.filter(f=>f!==reveal))assert(!f.elements.some(e=>e.kind==='thread'));
+    const reveal=s.frames.at(-2);assert.equal(reveal.stage,'thread-reveal');assert.equal(reveal.delay,400);assert.deepEqual(reveal.elements,s.final);
+    const fade=s.frames.filter(f=>f.stage==='thread-fade');assert.equal(fade.length,5);
+    assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30);
+    fade.forEach((f,i)=>{assert.equal(f.holeLightening,(i+1)/5);assert.deepEqual(f.elements,s.final);});
+    for(const f of s.frames.filter(f=>f!==reveal&&f.stage!=='thread-fade'))assert(!f.elements.some(e=>e.kind==='thread'));
   } else assert(!fs.existsSync(new URL(base.href+'.gif')),'Static figure must not retain a GIF');
   const tips=s.final.filter(e=>['slit','hole'].includes(e.kind)).flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
   for(const e of s.final.filter(e=>e.kind==='thread'))for(const p of [e.a,e.b])assert(tips.some(t=>distance(p,t)<1e-6));

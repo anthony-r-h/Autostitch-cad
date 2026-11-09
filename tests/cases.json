@@ -8629,10 +8629,10 @@
         "Problem: build the solid nominal row, label every gap and identify the residual.",
         "Solutions: begin at that complete residual state, without rebuilding the row.",
         "Redistribute positions for each policy while gap values and residual update together.",
-        "Reveal thread, hold two seconds, then return to the residual state."
+        "Reveal thread, hold four seconds, then return to the residual state."
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8662,7 +8662,7 @@
         "e"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8709,7 +8709,7 @@
         ]
       },
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8743,7 +8743,7 @@
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8771,7 +8771,7 @@
         "j"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8825,7 +8825,7 @@
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive.",
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8872,7 +8872,7 @@
         "Overlap"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8905,7 +8905,7 @@
       ],
       "rejectionNotation": "Compact, thick X centred over the failed fit on each rejected candidate and the final hold.",
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8935,7 +8935,7 @@
         "direction"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -8966,7 +8966,7 @@
         "ST-1-A"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -9000,7 +9000,7 @@
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -9034,7 +9034,7 @@
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -9068,7 +9068,7 @@
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -9240,7 +9240,7 @@
         "direction"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
@@ -9257,7 +9257,7 @@
         "direction"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip. The shown face is encoded in the slit axes; do not reverse the thread endpoints again. All segments appear together."
       },
       "id": "ILL-SELLIER-CORNER",
@@ -9281,7 +9281,7 @@
           "path": "examples/counter_examples/assets/sellier-diagonal-corner"
         }
       ],
-      "sequence": "Start with the top row already punched. Show the vertical rear-style row and mirror it about its guide to front-style, keeping centres fixed. Add the shared diagonal slit, then reveal all thread for two seconds."
+      "sequence": "Start with the top row already punched. Show the vertical rear-style row and mirror it about its guide to front-style, keeping centres fixed. Add the shared diagonal slit, then reveal all thread for four seconds."
     },
     {
       "source": "examples/counter_examples/scenes.mjs",
@@ -9462,7 +9462,7 @@
           "path": "examples/counter_examples/assets/fagliano-tip-compression"
         }
       ],
-      "sequence": "Establish aligned straight pairs; extend each nominal row to a trial hole beyond the fixed vertex; compress five curved gaps equally, left then right. Straight runs remain fixed; reveal all thread for two seconds.",
+      "sequence": "Establish aligned straight pairs; extend each nominal row to a trial hole beyond the fixed vertex; compress five curved gaps equally, left then right. Straight runs remain fixed; reveal all thread for four seconds.",
       "notation": [
         "s",
         "e",
@@ -9470,7 +9470,7 @@
         "direction"
       ],
       "threadReveal": {
-        "holdCentiseconds": 200,
+        "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative tip; round-hole centre. Virtual slits are construction only."
       }
     },

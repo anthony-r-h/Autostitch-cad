@@ -644,7 +644,11 @@ function finishThread(s) {
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const result=[...s.final.slice(0,index),...threads,...s.final.slice(index)];
-  const frames=s.frames.flatMap(f=>f.stage==='result'?[{...f,delay:80},{elements:result,delay:200,stage:'thread-reveal'}]:[f]);
+  const frames=s.frames.flatMap(f=>f.stage==='result'?[
+    {...f,delay:80},
+    ...Array.from({length:5},(_,i)=>({elements:result,delay:6,stage:'thread-fade',holeLightening:(i+1)/5})),
+    {elements:result,delay:400,stage:'thread-reveal'}
+  ]:[f]);
   return {...s,final:result,frames};
 }
 function slitOutlines(s) {
@@ -671,8 +675,16 @@ export function createScenes() {
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 const n=value=>Number(value.toFixed(9));
+export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0) {
+  if(!amount)return elements;
+  return elements.map(e=>{
+    if(!['slit','proposal','hole','virtual'].includes(e.kind))return e;
+    const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(e.color.slice(i,i+2),16),196,amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
+    return {...e,color};
+  });
+}
 export function svg(scene) {
-  const elements=scene.final.map(e=>{
+  const elements=displayElements(scene.final).map(e=>{
     if(e.type==='line') {
       const axisLine=`<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.outline?'#FFFFFF':e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
       if(!e.outline)return axisLine;
@@ -719,7 +731,9 @@ export function writeSceneFiles(scenes) {
   const mode=process.argv[2],output=path.resolve(process.argv[3]),temporary=path.resolve(process.argv[4]);
   fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
   if(mode==='prepare') {
-    fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(scenes));
+    const displayed=scenes.map(s=>({...s,final:displayElements(s.final),frames:s.frames.map(f=>
+      ({...f,elements:displayElements(f.elements,f.holeLightening)}))}));
+    fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(displayed));
     for(const scene of scenes)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {
     for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));

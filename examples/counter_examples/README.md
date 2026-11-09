@@ -22,7 +22,7 @@ Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.p
 | `fagliano-tip-compression` | `ILL-FAGLIANO-TIP` | Aligned straight pairs; left nominal curve overruns its reserved station, then compresses equally; right follows; equal curved chords into a fixed vertex hole and final thread. |
 | `fagliano-tip-autostitch` | `ILL-FAGLIANO-AUTOSTITCH` | Static comparison on identical guides: minimum adjusted gaps, one on the left and four on the right. |
 
-All use a $600\times375$ canvas. The Sellier corner and Fagliano tip GIFs loop with a two-second final thread hold. Other case comparisons are static SVG/PNG, with a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
+All use a $600\times375$ canvas. In the Sellier corner and Fagliano tip GIFs, the holes fade to light grey over $0.3\,\mathrm{s}$ when the thread appears, followed by a four-second hold. Static comparisons use the same final colours and a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
 The vertical flip illustrates reflection by horizontal foreshortening. Opening centres and the top row stay fixed; it is a change of placement convention, not movement of punched holes.
 

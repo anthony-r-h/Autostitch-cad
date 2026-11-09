@@ -11,9 +11,12 @@ Corner treatments found in finished work, reconstructed as stitch diagrams and c
 ### Shared diagonal slit and mixed slit lean
 
 - One real diagonal slit joins the incoming and outgoing arms
-- Its orientation differs from both rows, changing the two adjoining thread segments
+- Its orientation differs from both rows, changing the direction and visible length of the thread entering and leaving the corner slit
 - In the Sellier reconstruction, the top row uses rear-style lean and the vertical row uses front-style lean; their slit axes remain nearly parallel across the turn
 - The shared slit bisects the corner in this diagram. Front/rear style describes the lean, not which face was physically punched
+- The shared opening stays at the intended vertex
+- This treatment relaxes the consistent-lean rule: one arm uses mirrored lean and the corner slit has its own orientation
+- A good corner solution when those changes in lean and thread appearance suit the design
 
 ![Shared diagonal slit joining rows with different lean relative to their guides](../examples/counter_examples/assets/sellier-diagonal-corner.gif)
 

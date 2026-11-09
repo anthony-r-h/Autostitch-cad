@@ -247,6 +247,33 @@ for(const arm of [0,1]) {
 }
 assert(fagliano.frames.findIndex(f=>f.stage==='arm-0-settled')<fagliano.frames.findIndex(f=>f.stage==='arm-1-nominal'));
 
+const faglianoSolved=scenes[8],solvedRows=fRows(faglianoSolved.final);
+assert.equal(faglianoSolved.frames.length,0);
+for(const kind of ['guide','hole','virtual','alignment'])assert.deepEqual(
+  faglianoSolved.final.filter(e=>e.kind===kind),fagliano.final.filter(e=>e.kind===kind));
+for(const [arm,row] of solvedRows.entries()) {
+  assert.equal(row.length,finalRows[arm].length);
+  assert.deepEqual(row.slice(0,4),finalRows[arm].slice(0,4));
+  const gaps=row.slice(1).map((e,i)=>distance(midpoint(e),midpoint(row[i]))/fv.scale);
+  for(const i of [0,1,2,7])near(gaps[i],3);
+  const free=gaps.slice(3,7),adjusted=free.filter(g=>Math.abs(g-3)>1e-6);
+  assert.equal(adjusted.length,arm===0?1:4);
+  adjusted.forEach(g=>{assert(g>=2.7&&g<=3.3);near(g,arm===0?2.7469979232:2.7290148486);});
+  // The free span's angular residual requires this many gaps at the 10% limit.
+  const residual=Math.abs(free.reduce((sum,g)=>sum+2*Math.asin(g/(2*radius)),0)-4*2*Math.asin(3/(2*radius)));
+  assert.equal(Math.ceil(residual/(2*Math.asin(3/(2*radius))-2*Math.asin(2.7/(2*radius)))-1e-9),adjusted.length);
+  if(arm===0){near(free[0],3);near(free[1],3);near(free[3],3);}
+  for(const e of row.slice(3)) {
+    const centre=world(midpoint(e),fv),u=unit(vector(world(e.a,fv),world(e.b,fv)));
+    near(distance(centre,[arm===0?circleOffset:-circleOffset,0]),radius);
+    if(e.kind==='slit')assert(centre[1]<radius*Math.sin(sweep));
+    const t=Math.asin(centre[1]/radius),tangent=arm===0?[Math.sin(t),Math.cos(t)]:[Math.sin(t),-Math.cos(t)];
+    near(tangent[0]*u[1]-tangent[1]*u[0],Math.sin(sweep));
+    near(tangent[0]*u[0]+tangent[1]*u[1],Math.cos(sweep));
+  }
+}
+assert.deepEqual(faglianoSolved.final.filter(e=>e.kind==='gap-value').map(e=>e.value),['2.75','2.73']);
+
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
   return distance(p,[a[0]+t*d[0],a[1]+t*d[1]]);
@@ -257,7 +284,7 @@ function segmentDistance(a,b,c,d) {
   return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
 }
 // Full-layout clearance, including the external circular decoration.
-for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv],[fagliano,fv]]) {
+for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv],[fagliano,fv],[faglianoSolved,fv]]) {
 const axes=slits(layout).map(e=>[world(e.a,v),world(e.b,v)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,v));
 for(const [i,[a,b]] of axes.entries()) {
   for(const [c,d] of axes.slice(i+1))assert(segmentDistance(a,b,c,d)-.3>=.2);

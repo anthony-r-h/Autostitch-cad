@@ -20,6 +20,7 @@ Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.p
 | `lv-speedy-chape-reference` | `ILL-LV-SPEEDY-CHAPE` | Closed pentagon, five shared corner slits, no mirrored runs. |
 | `lv-speedy-chape-autostitch` | `ILL-LV-SPEEDY-CHAPE` | Same pentagon with five A6 round holes, fitted spans and closure. |
 | `fagliano-tip-compression` | `ILL-FAGLIANO-TIP` | Aligned straight pairs; left nominal curve overruns its reserved station, then compresses equally; right follows; unequal curved chords and final thread. |
+| `fagliano-tip-autostitch` | `ILL-FAGLIANO-AUTOSTITCH` | Static comparison on identical guides: minimum adjusted gaps, one on the left and four on the right. |
 
 All use a $600\times375$ canvas. The Sellier corner and Fagliano tip GIFs loop with a two-second final thread hold. Other case comparisons are static SVG/PNG, with a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
@@ -52,5 +53,7 @@ Outputs: `examples/counter_examples/assets/`. Temporary frames: `output/counter_
 - Fagliano fitting: keep the first curved gap and virtual-to-real corner step nominal. Compress four intervening gaps equally per arm, to approximately $2.9368\,\mathrm{mm}$ and $2.7290\,\mathrm{mm}$. This is the requested equal-redistribution construction, not the production solver's minimum-adjustment-block policy. The dimensions and compression sequence are illustrative, not measurements of the photograph.
 
 Fagliano timing: establish three straight pairs; reveal each nominal curved run, hold its overrun, then interpolate the four free gaps together. Finish the left arm before starting the right. Chord labels update during compression; straight centres, curve entry gaps and nominal corner steps remain fixed in length. The final frame adds all thread at once. PNG and SVG retain that final state.
+
+Fagliano Autostitch comparison: apply the independent circular fit selector between the protected entry and corner neighbours. The left free span needs one adjusted gap of approximately $2.7470\,\mathrm{mm}$, placed centrally with the half-index tie toward the route end. The right needs four adjusted gaps of approximately $2.7290\,\mathrm{mm}$. Both retain the reference guides, straight stations, opening counts and shared hole. This checks the documented fitting policy analytically; it is not native CAD evidence.
 
 Interpretation notes are collected in the examples document. These figures use analytic geometry, not a native plugin run. The diagonal-slit alternative is distinct from A6; the H remains external decoration rather than evidence of support for arbitrary fixed decorative holes.

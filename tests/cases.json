@@ -9475,6 +9475,42 @@
         "holdCentiseconds": 200,
         "connection": "Positive slit tip to next negative tip; round-hole centre. Virtual slits are construction only."
       }
+    },
+    {
+      "id": "ILL-FAGLIANO-AUTOSTITCH",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": [
+        "A2",
+        "A3",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "status": "Same guides, aligned straight rows and A6 hole as ILL-FAGLIANO-TIP. Independent circular fit selector applies the documented minimum-adjustment-block policy: one left adjusted gap and four right adjusted gaps. Analytic illustration, not a native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "radius": 24,
+        "sweepDegrees": 40,
+        "straightOpenings": 3,
+        "adjustedGaps": 4
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/fagliano-tip-autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ]
     }
   ]
 }

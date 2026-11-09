@@ -75,7 +75,16 @@ The **handle chape** is the leather tab attaching the handle hardware to the bag
 - Assume compression is confined to the curves, distributed equally across each arm's free gaps
 - The straight rows stay aligned; the curved rows need different chord lengths: approximately $2.94\,\mathrm{mm}$ and $2.73\,\mathrm{mm}$ for $p=3\,\mathrm{mm}$
 
+**Reference construction** — equal compression across each curve's free gaps.
+
 ![Aligned strap sides with separate compression through each curve into a shared round hole](../../examples/counter_examples/assets/fagliano-tip-compression.gif)
+
+**Autostitch construction** — the same guides, straight rows and round hole; adjust the fewest gaps within the pitch bounds.
+
+- Left: one adjusted gap of approximately $2.75\,\mathrm{mm}$; the remaining gaps stay nominal
+- Right: four adjusted gaps of approximately $2.73\,\mathrm{mm}$
+
+![Autostitch strap tip with one adjusted gap on the left and four on the right](../../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
 ## Interpretation
 

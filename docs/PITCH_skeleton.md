@@ -154,22 +154,12 @@ Research note: Anthony to find stitching examples from:
 
 ![A5 and A7: no permitted gap count fits the fixed span](../examples/illustrated/assets/fit-rejected.gif)
 
-## Match pattern pieces
-
-- Solve one source stitch line; transfer the complete layout by translation, rotation or reflection
-- Matching guides retain every opening and spacing adjustment
-- Reflection gives the opposite-face view; travel direction is independent
-- Start correspondence fixes registration; closed guides also need a chosen phase
-
-![One source layout copied onto a reflected guide with matching hole correspondence](../examples/illustrated/assets/matched-guides.gif)
-
 # Pattern workflow
 
 - Draw the guides; connect those belonging to one stitch line
 - Set pitch, extent, direction and landmarks
 - Generate contained stitch blocks with opening geometry and placement notation
 - Edit the source guides and regenerate
-- Link matching guides to reuse the source layout on other pieces
 
 # Can you really?
 
@@ -184,7 +174,7 @@ Research note: Anthony to find stitching examples from:
 
 - Makers: explicit hole positions and spacing adjustments
 - Pattern designers: reusable layouts that remain editable
-- Small-batch production: matching pieces and repeatable placement instructions
+- Small-batch production: repeatable placement instructions
 
 # Reference
 

@@ -61,17 +61,12 @@ Research note: Anthony to find stitching examples from:
 
 - Two approaching rows must also resolve how the stitching turns the corner
 
-## Cross the terminal slits
+## Form a hole at the intersection
 
-- Continue both rows to the vertex: the terminal slits cross in an X
+- Continue each approaching row with a virtual terminal slit
+- Their crossing locates one round hole joining the two arms
 
-![Terminal slits cross at the corner](../examples/illustrated/assets/problem-corner-cross.gif)
-
-## Put a hole at the vertex
-
-- Omit the terminal slits and connect both rows through one round hole at the guide vertex
-
-![A round hole at the vertex connects the approaching rows](../examples/illustrated/assets/problem-corner-point.gif)
+![Crossing virtual terminal slits locate the shared round hole](../examples/illustrated/assets/problem-corner-cross.gif)
 
 ## Bridge the gap
 

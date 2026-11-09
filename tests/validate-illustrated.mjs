@@ -347,14 +347,20 @@ const arcLength=measuredArc.reduce((sum,e)=>sum+Math.hypot(e.x2-e.x1,e.y2-e.y1)/
 near(arcLength,Math.PI,1e-4);assert(arcLength>3);
 
 const problemView={x:360,y:85,scale:25};
-for(const treatment of ['cross','point','gap']) {
+for(const treatment of ['cross','gap']) {
   const name=`problem-corner-${treatment}`,openings=slits(name,problemView);
-  assert.equal(openings.length,treatment==='cross'?8:6);
+  assert.equal(openings.length,6);
   for(const p of [[-9,0],[-6,0],[-3,0],[0,-3],[0,-6],[0,-9]])assert(has(openings.map(s=>s.center),p));
   const vertexSlits=openings.filter(s=>dist(s.center,[0,0])<1e-6);
-  assert.equal(vertexSlits.length,treatment==='cross'?2:0);
-  if(treatment==='cross')near(Math.abs(vertexSlits[0].angle-vertexSlits[1].angle),Math.PI/2);
-  if(treatment==='point')near(dist(circle(name,problemView),[0,0]),0);
+  assert.equal(vertexSlits.length,0);
+  if(treatment==='cross') {
+    const virtuals=slits(name,problemView,'virtual');assert.equal(virtuals.length,2);
+    virtuals.forEach(v=>{near(dist(v.center,[0,0]),0);assert(v.element['stroke-dasharray']);});
+    near(Math.abs(virtuals[0].angle-virtuals[1].angle),Math.PI/2);
+    near(dist(circle(name,problemView),[0,0]),0);
+    const frames=scenes.find(s=>s.name===name).frames,holeFrame=frames.findIndex(f=>f.elements.some(e=>e.kind==='hole'));
+    assert(holeFrame>0);assert.equal(frames[holeFrame-1].elements.filter(e=>e.kind==='virtual').length,2);
+  }
   else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
   if(treatment==='gap') {
     const incoming=openings.find(s=>dist(s.center,[-3,0])<1e-6),outgoing=openings.find(s=>dist(s.center,[0,-3])<1e-6);

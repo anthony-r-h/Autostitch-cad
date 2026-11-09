@@ -9215,7 +9215,7 @@
         "A6"
       ],
       "animated": true,
-      "status": "Three illustrative corner treatments, not claims of valid A6 output.",
+      "status": "Two introductory corner treatments: crossing virtual terminal slits locate the vertex hole, or thread bridges the gap. The A6 selected-tip construction is shown separately.",
       "inputs": {
         "armLength": 9
       },
@@ -9223,10 +9223,6 @@
         {
           "path": "examples/illustrated/assets/problem-corner-cross",
           "treatment": "cross"
-        },
-        {
-          "path": "examples/illustrated/assets/problem-corner-point",
-          "treatment": "point"
         },
         {
           "path": "examples/illustrated/assets/problem-corner-gap",

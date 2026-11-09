@@ -107,7 +107,7 @@ function pitchScenes() {
 function cornerProblemScenes() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
   const view={x:360,y:85,scale:25},base=[worldLine([-input.armLength,0],[0,0],view),worldLine([0,0],[0,-input.armLength],view)];
-  return ['cross','point','gap'].map(treatment=>{
+  return ['cross','gap'].map(treatment=>{
     const s=scene(`problem-corner-${treatment}`,`Corner problem: ${treatment}`,'ILL-CORNER-PROBLEM');
     const result=[...base];frame(s,[...result],90,'guides');
     const incoming=[],outgoing=[];
@@ -117,13 +117,13 @@ function cornerProblemScenes() {
         row.push(slit[0]);result.push(...slit);frame(s,[...result],65,`arm-${i}-stitch`);
       }
       if(treatment==='cross') {
-        const slit=opening([0,0],i===0?alpha:alpha-Math.PI/2,view);
-        row.push(slit[0]);result.push(...slit);frame(s,[...result],120,`arm-${i}-terminal`);
+        const slit=opening([0,0],i===0?alpha:alpha-Math.PI/2,view,{virtual:true});
+        result.push(...slit);frame(s,[...result],120,`arm-${i}-terminal`);
       }
     }
     const vertex=hole([0,0],view);
-    if(treatment==='point'){result.push(vertex);frame(s,[...result],130,'vertex-hole');}
-    s.threadPaths=[[...incoming,...(treatment==='point'?[vertex]:[]),...outgoing.toReversed()]];
+    if(treatment==='cross'){result.push(vertex);frame(s,[...result],130,'vertex-hole');}
+    s.threadPaths=[[...incoming,...(treatment==='cross'?[vertex]:[]),...outgoing.toReversed()]];
     return finish(s,result);
   });
 }

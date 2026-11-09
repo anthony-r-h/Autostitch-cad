@@ -32,11 +32,9 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 ## The corner problem
 
-`ILL-CORNER-PROBLEM`: the same right-angle guides and pitch, with three terminal treatments. These illustrate the corner problem rather than claim valid A6 solutions.
+`ILL-CORNER-PROBLEM`: the same right-angle guides and pitch, with two introductory treatments. Crossing virtual terminal slits locate a round hole at the vertex; stopping short leaves a thread bridge. The A6 selected-tip construction appears later.
 
-![Terminal slits cross in an X](assets/problem-corner-cross.gif)
-
-![Omit terminal slits and use a round hole at the vertex](assets/problem-corner-point.gif)
+![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-cross.gif)
 
 ![Stop short and bridge between the arms](assets/problem-corner-gap.gif)
 

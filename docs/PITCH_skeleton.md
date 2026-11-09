@@ -70,6 +70,7 @@ Research note: Anthony to find stitching examples from:
 - The same outer endpoints apply to every treatment
 - The choice of corner opening changes the adjoining thread and the spans available for fitting
 - Degree labels: entering and leaving thread angles relative to their respective arms
+- Vertex point and Bridge: length brackets measure visible thread at the corner
 
 ## Vertex point
 

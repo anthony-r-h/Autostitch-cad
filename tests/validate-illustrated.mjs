@@ -379,7 +379,7 @@ for(const treatment of ['vertex-point','bridge']) {
     near(Math.abs(virtuals[0].angle-virtuals[1].angle),Math.PI/2);
     near(dist(circle(name,problemView),[0,0]),0);
     const frames=scenes.find(s=>s.name===name).frames,holeFrame=frames.findIndex(f=>f.elements.some(e=>e.kind==='hole'));
-    assert(holeFrame>0);assert.equal(frames[holeFrame-1].elements.filter(e=>e.kind==='virtual').length,2);
+    assert.equal(holeFrame,0);assert.equal(frames[0].elements.filter(e=>e.kind==='virtual').length,2);
   }
   else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
   if(treatment==='bridge') {
@@ -479,6 +479,15 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
   for(const f of s.frames) {
     const annotated=f.elements.some(e=>e.kind==='thread-angle-value');
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
+  }
+  if(['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name)) {
+    assert.deepEqual(s.frames.map(f=>f.stage),['result',...Array(5).fill('thread-fade'),'thread-reveal','reset']);
+    const expectedThreads=s.name==='problem-corner-bridge'?adjacent.slice(0,1):adjacent;
+    const lengths=s.final.filter(e=>e.kind==='thread-length-value');
+    assert.deepEqual(lengths.map(e=>e.value),expectedThreads.map(e=>(dist(e.a,e.b)/problemView.scale).toFixed(2)));
+    assert(!s.final.some(e=>e.kind==='gap-value'));
+    assert(!s.frames[0].elements.some(e=>e.kind==='thread-length-value'));
+    assert.deepEqual(displayElements(s.final).filter(e=>e.kind==='thread-length-value'),lengths);
   }
 }
 const balancedMirror=pitchComparisonMetrics(mirroredCorner),balancedAuto=pitchComparisonMetrics(cornerSolution);

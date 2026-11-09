@@ -152,21 +152,21 @@ function cornerProblemScenes() {
   const referenceVirtuals=lengths.map((length,arm)=>arm===0?[input.armIntervals*3-length,0]:[0,input.armIntervals*3-length]);
   const comparisons=['vertex-point','bridge'].map(treatment=>{
     const s=scene(`problem-corner-${treatment}`,treatment==='vertex-point'?'Vertex point':'Bridge','ILL-CORNER-PROBLEM');
-    const result=[...base];frame(s,[...result],90,'guides');
+    const result=[...base];
     const incoming=[],outgoing=[];
     for(const [i,row] of [incoming,outgoing].entries()) {
       for(const [j,station] of referenceRows[i].entries()) {
         const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view,
           {marked:treatment==='vertex-point'&&j===input.armIntervals-1});
-        row.push(slit[0]);result.push(...slit);frame(s,[...result],65,`arm-${i}-stitch`);
+        row.push(slit[0]);result.push(...slit);
       }
       if(treatment==='vertex-point') {
         const slit=opening(referenceVirtuals[i],i===0?alpha:alpha-Math.PI/2,view,{virtual:true});
-        result.push(...slit);frame(s,[...result],120,`arm-${i}-terminal`);
+        result.push(...slit);
       }
     }
     const vertex=hole([0,0],view);
-    if(treatment==='vertex-point'){result.push(vertex);frame(s,[...result],130,'vertex-point');}
+    if(treatment==='vertex-point')result.push(vertex);
     s.threadPaths=[[...incoming,...(treatment==='vertex-point'?[vertex]:[]),...outgoing.toReversed()]];
     return finish(s,result);
   });
@@ -224,9 +224,7 @@ function cornerProblemScenes() {
     };
     return {...layout,final:addDimensions(layout.final),frames:layout.frames.map(f=>({...f,elements:addDimensions(f.elements)}))};
   };
-  const labelledComparisons=comparisons.map(labelled);
-  s.frames[0].elements=labelledComparisons[0].final;
-  return [...labelledComparisons,labelled(mirrored),finish(s,result)];
+  return [...comparisons,labelled(mirrored),finish(s,result)];
 }
 
 function landmarkScene(layout) {
@@ -768,13 +766,25 @@ function finishThread(s) {
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,s.emphasisedThreads?.includes(i)?2.6:1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const angles=s.name.startsWith('problem-corner-')?cornerThreadAngles(s,threads):[];
-  const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles];
+  const lengths=['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name)?cornerThreadLengths(s,threads):[];
+  const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles,...lengths];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[
     {...f,delay:80},
     ...Array.from({length:5},(_,i)=>({elements:result,delay:6,stage:'thread-fade',holeLightening:(i+1)/5})),
     {elements:result,delay:400,stage:'thread-reveal'}
   ]:[f]);
   return {...s,final:result,frames};
+}
+function cornerThreadLengths(s,threads) {
+  const spec=catalog.illustrations.find(i=>i.id===s.source),count=spec.inputs.armIntervals;
+  const slit=s.final.find(e=>e.kind==='slit'),scale=Math.hypot(slit.b[0]-slit.a[0],slit.b[1]-slit.a[1])/spec.slitLength;
+  const adjacent=s.name==='problem-corner-bridge'?[threads[count-1]]:[threads[count-1],threads[count]];
+  return adjacent.flatMap((thread,arm)=>{
+    const value=(Math.hypot(thread.b[0]-thread.a[0],thread.b[1]-thread.a[1])/scale).toFixed(2);
+    return measure([thread.a[0],-thread.a[1]],[thread.b[0],-thread.b[1]],value,{x:0,y:0,scale:1},arm===0?-36:38).map(e=>
+      ({...e,kind:e.type==='text'?'thread-length-value':'thread-length-dimension',color:ink,
+        ...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})}));
+  });
 }
 function cornerThreadAngles(s,threads) {
   const count=catalog.illustrations.find(i=>i.id===s.source).inputs.armIntervals;

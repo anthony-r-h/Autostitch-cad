@@ -50,6 +50,7 @@ Motion shows planning revisions, not physical punching order; the analytic const
 
 ## Comparison notation and totals
 
+- Vertex point and Bridge start with their complete slit layout, then reveal the thread and lighten the holes. Only the corner thread lengths and angles are annotated; length brackets measure the visible thread between slit tips or the round-hole centre, in millimetres. The final state holds for four seconds
 - Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values

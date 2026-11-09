@@ -159,14 +159,14 @@
 <line class="extension" x1="364.989747005" y1="87.895436191" x2="364.988505304" y2="87.77164259" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
 <line class="extension" x1="364.988505304" y1="87.77164259" x2="364.987192651" y2="87.647849721" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
 <line class="extension" x1="364.987192651" y1="87.647849721" x2="364.985809046" y2="87.524057625" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
+<line class="slit" x1="171.209182501" y1="190.511655146" x2="174.476356442" y2="150.143653283" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="230.200995235" y1="140.659150402" x2="245.294529795" y2="103.07677136" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="301.324718398" y1="110.547322121" x2="326.886195467" y2="79.132980014" stroke="#252525" stroke-width="2.6"/>
 <line class="virtual" x1="378.179216904" y1="102.88623485" x2="411.908103546" y2="80.467220467" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
+<line class="slit" x1="308.979504209" y1="215.894855826" x2="307.162842647" y2="256.35409137" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="344.104218029" y1="148.114547214" x2="357.318418582" y2="186.398158639" stroke="#252525" stroke-width="2.6"/>
 <line class="virtual" x1="351.792401188" y1="72.1618804" x2="378.179216904" y2="102.88623485" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
 <circle class="hole" cx="378.179216904" cy="102.88623485" r="6.75" fill="#252525"/>
-<line class="slit" x1="301.324718398" y1="110.547322121" x2="326.886195467" y2="79.132980014" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="344.104218029" y1="148.114547214" x2="357.318418582" y2="186.398158639" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="230.200995235" y1="140.659150402" x2="245.294529795" y2="103.07677136" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="308.979504209" y1="215.894855826" x2="307.162842647" y2="256.35409137" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="171.209182501" y1="190.511655146" x2="174.476356442" y2="150.143653283" stroke="#252525" stroke-width="2.6"/>
 <line class="dimension" x1="396.410571575" y1="126.650025377" x2="315.472368282" y2="129.813448787" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="396.254353135" y1="122.653077067" x2="396.566790015" y2="130.646973688" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="dimension" x1="315.316149842" y1="125.816500476" x2="315.628586722" y2="133.810397098" stroke="#8B8B8B" stroke-width="0.8"/>

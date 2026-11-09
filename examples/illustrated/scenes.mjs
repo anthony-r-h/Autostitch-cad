@@ -152,6 +152,23 @@ function curveScene() {
   return finish(s,result);
 }
 
+function approachCorner(s,base,arms,joint,view) {
+  frame(s,base,90,'arms');
+  const result=[...base];
+  // Each arm arrives at its terminal virtual slit through its real row.
+  // Reveal the other arm the same way before identifying their shared hole.
+  for(const [i,arm] of arms.entries()) {
+    for(const slit of arm.real) {
+      result.push(...opening(slit.center,slit.angle,view,{marked:slit.marked}));
+      frame(s,[...result],70,`arm-${i}-stitch`);
+    }
+    result.push(...opening(arm.virtual.center,arm.virtual.angle,view,{virtual:true}));
+    frame(s,[...result],150,`arm-${i}-terminal`);
+  }
+  frame(s,[...result],100,'tips-meet');
+  result.push(hole(joint,view));frame(s,[...result],170,'shared-hole');
+  return result;
+}
 function cornerScene() {
   const v=variant('J02'),view={x:370,y:105,scale:24},h=.75;
   const ui=axis(alpha),uo=axis(alpha-Math.PI/2);
@@ -159,18 +176,11 @@ function cornerScene() {
   const start=[-10+v.settings.start,0],end=[0,-(v.settings.end-10)];
   const base=[worldLine(start,[0,0],view),worldLine([0,0],end,view),worldLine([0,0],ci,view,'extension',guideInk,1,true),worldLine([0,0],co,view,'extension',guideInk,1,true)];
   const s=scene('axiom-corner','Virtual slit tips locate one corner hole','J02');
-  frame(s,base,90,'arms');
-  for(let i=0;i<=24;i++) {
-    const t=ease(i/24);
-    frame(s,[...base,...opening([ci[0]-2*(1-t),0],alpha,view,{virtual:true}),...opening([0,co[1]-2*(1-t)],alpha-Math.PI/2,view,{virtual:true})],5,'tip-construction');
-  }
-  const virtuals=[...opening(ci,alpha,view,{virtual:true}),...opening(co,alpha-Math.PI/2,view,{virtual:true})];
-  let result=[...base,...virtuals];frame(s,result,100,'tips-meet');
-  result=[...result,hole(J,view)];frame(s,result,100,'shared-hole');
-  for(let i=1;i<=3;i++) {
-    result.push(...opening([ci[0]-i*3,0],alpha,view),...opening([0,co[1]-i*3],alpha-Math.PI/2,view));
-    frame(s,[...result],40,'real-neighbours');
-  }
+  const arms=[
+    {real:[3,2,1].map(i=>({center:[ci[0]-i*3,0],angle:alpha})),virtual:{center:ci,angle:alpha}},
+    {real:[3,2,1].map(i=>({center:[0,co[1]-i*3],angle:alpha-Math.PI/2})),virtual:{center:co,angle:alpha-Math.PI/2}}
+  ];
+  const result=approachCorner(s,base,arms,J,view);
   result.push(...measure([ci[0]-3,0],ci,'3',view,36));
   return finish(s,result);
 }
@@ -373,23 +383,12 @@ function curvedCornerScene(caseId,name,title) {
     if(virtual[i]<0||virtual[i]>primitiveLength(g))for(let n=0;n<20;n++)
       base.push(worldLine(primitivePoint(g,lerp(endpoint,virtual[i],n/20)),primitivePoint(g,lerp(endpoint,virtual[i],(n+1)/20)),view,'extension',guideInk,1,true));
   }
-  const s=scene(name,title,caseId);frame(s,base,90,'arms');
-  for(let n=0;n<=24;n++) {
-    const elements=primitives.flatMap((g,i)=>{
-      const station=virtual[i]+(i===0?-1:1)*1.5*(1-ease(n/24));
-      return opening(primitivePoint(g,station),primitiveAxis(g,station),view,{virtual:true});
-    });
-    frame(s,[...base,...elements],5,'tip-construction');
-  }
-  let result=[...base,...primitives.flatMap((g,i)=>opening(primitivePoint(g,virtual[i]),primitiveAxis(g,virtual[i]),view,{virtual:true}))];
-  frame(s,result,120,'tips-meet');result=[...result,hole(joint,view)];frame(s,result,100,'shared-hole');
-  for(let n=0;n<3;n++) {
-    for(const [i,g] of primitives.entries())if(stations[i][n]!==undefined) {
-      const station=stations[i][n];
-      result.push(...opening(primitivePoint(g,station),primitiveAxis(g,station),view,{marked:n===0&&Math.abs(steps[i]-advance(g,3))>1e-8}));
-    }
-    frame(s,[...result],45,'real-neighbours');
-  }
+  const s=scene(name,title,caseId);
+  const arms=primitives.map((g,i)=>({
+    real:stations[i].map((station,n)=>({center:primitivePoint(g,station),angle:primitiveAxis(g,station),marked:n===0&&Math.abs(steps[i]-advance(g,3))>1e-8})).reverse(),
+    virtual:{center:primitivePoint(g,virtual[i]),angle:primitiveAxis(g,virtual[i])}
+  }));
+  const result=approachCorner(s,base,arms,joint,view);
   const selected=caseId==='J08'?1:0,g=primitives[selected],a=primitivePoint(g,virtual[selected]),b=primitivePoint(g,stations[selected][0]);
   const gap=Math.hypot(a[0]-b[0],a[1]-b[1]);
   result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:35));

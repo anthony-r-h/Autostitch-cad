@@ -99,11 +99,13 @@ Research note: Anthony to find stitching examples from:
 
 ## Two-arm corners
 
-- Selected tips of two virtual slits locate one shared round hole
+- Stitch along each arm towards the corner; the virtual slit is the terminal slit of that row
+- Its position and orientation continue the approaching row
+- The two terminal virtual slits meet tip-to-tip at one shared round hole
 - Real neighbours lie on their arms, one corner step from the virtual centres
 - Corner steps satisfy $0.9p\leq q\leq1.1p$; real neighbours stay on their finite guides
 
-![A6: virtual tips locate the shared hole at a straight corner](../examples/illustrated/assets/axiom-corner.gif)
+![A6: stitching approaches the corner along each arm, ending at virtual slits whose tips share one hole](../examples/illustrated/assets/axiom-corner.gif)
 
 - The same construction applies to straight and circular arms
 

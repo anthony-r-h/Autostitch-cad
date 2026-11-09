@@ -44,9 +44,9 @@ Place a nominal gap across the reference first. Keep that pair fixed while fitti
 
 ### Construct the corner hole: A6
 
-The selected tips of two virtual slits meet at one round hole. Place the real neighbours one corner step away; the virtual slits remain dashed construction. `J02`.
+Stitch towards the corner along one arm, ending at its dashed virtual slit. Approach from the other arm the same way. The two terminal virtual tips meet at one round hole. `J02`.
 
-![Virtual slit tips locate a shared corner hole](assets/axiom-corner.gif)
+![Each arm approaches its terminal virtual slit before their shared corner hole is identified](assets/axiom-corner.gif)
 
 ### Share the smooth join: A8
 
@@ -88,7 +88,7 @@ Solve one source, then reveal corresponding openings on its reflected copy. The 
 
 ### Curved corners
 
-The same selected-tip construction applies to an arc/line pair and an arc/arc pair. `A03`, `A04`.
+The same approach along each arm applies to an arc/line pair and an arc/arc pair. Each virtual slit continues the position and orientation of its row. `A03`, `A04`.
 
 ![Curved and straight arms share a corner hole](assets/corner-arc-line.gif)
 

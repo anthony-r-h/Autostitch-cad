@@ -163,6 +163,35 @@ for(const [caseId,name] of [['A03','corner-arc-line'],['A04','corner-arc-arc'],[
   if(caseId==='J08'){near(dist(J,v.expected.hole),0);assert.equal(readSvg(name).elements.filter(e=>e.class==='adjustment-mark').length,2);}
 }
 
+// Corner explanations must arrive through the real row before its virtual slit.
+for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-shallow']) {
+  const s=scenes.find(s=>s.name===name),virtuals=s.final.filter(e=>e.kind==='virtual');
+  const center=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+  let previousReal=[],previousVirtual=[];
+  const lastDistance=[Infinity,Infinity];
+  for(const f of s.frames.filter(f=>f.stage!=='reset')) {
+    const real=f.elements.filter(e=>e.kind==='slit'),virtual=f.elements.filter(e=>e.kind==='virtual');
+    assert.deepEqual(real.slice(0,previousReal.length),previousReal,`${name}: an established slit moved`);
+    assert.deepEqual(virtual.slice(0,previousVirtual.length),previousVirtual,`${name}: a virtual slit slid into place`);
+    const arm=f.stage.match(/^arm-(\d)-stitch$/);
+    if(arm) {
+      const i=+arm[1];assert.equal(real.length,previousReal.length+1);
+      assert.equal(virtual.length,i,'The arm must precede its terminal virtual slit');
+      const distance=dist(center(real.at(-1)),center(virtuals[i]));
+      assert(distance<lastDistance[i],`${name}: stitching must approach the virtual slit`);
+      lastDistance[i]=distance;
+    }
+    const terminal=f.stage.match(/^arm-(\d)-terminal$/);
+    if(terminal) {
+      const i=+terminal[1];assert(Number.isFinite(lastDistance[i]));
+      assert.equal(virtual.length,i+1);assert.deepEqual(real,previousReal);
+      assert.deepEqual(virtual.at(-1),virtuals[i]);
+    }
+    if(!['shared-hole','result'].includes(f.stage))assert(!f.elements.some(e=>e.kind==='hole'),'The shared hole appears only after both arms arrive');
+    previousReal=real;previousVirtual=virtual;
+  }
+}
+
 // Glossary labels must describe the existing constructions without changing them.
 for(const [name,original,kinds] of [
   ['terms-layout','axiom-landmark',['slit','adjustment-mark','landmark']],

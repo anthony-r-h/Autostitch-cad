@@ -56,6 +56,24 @@ for(const i of [0,3])for(const j of [0,1])near(distance(holes[i+j].p,holes[i+j+1
 for(const i of [0,1,2])near(distance(holes[i].p,holes[i+3].p)/wv.scale,3);
 assert.equal(wallet.frames.length,0,'Reduced wallet must be static');
 
+const diagonalWallet=scenes[2],diagonalSlits=slits(diagonalWallet),diagonalHoles=diagonalWallet.final.filter(e=>e.kind==='hole');
+assert.equal(diagonalWallet.frames.length,0);assert.equal(diagonalSlits.length,14);
+assert(!diagonalWallet.final.some(e=>['virtual','adjustment-mark'].includes(e.kind)));
+assert.deepEqual(diagonalHoles,holes.slice(0,6),'Comparison must retain the exact H');
+const diagonalJoint=diagonalSlits.at(-1),diagonalVertex=world(midpoint(diagonalJoint),wv);
+near(distance(diagonalVertex,co),0);
+near(Math.abs(diagonalJoint.b[0]-diagonalJoint.a[0]),Math.abs(diagonalJoint.b[1]-diagonalJoint.a[1]));
+for(const [a,row] of [diagonalSlits.slice(0,5),diagonalSlits.slice(5,9).toReversed(),diagonalSlits.slice(9,13)].entries()) {
+  for(const [i,e] of row.entries()) {
+    near(distance(e.a,e.b)/wv.scale,1.5);
+    if(i)near(distance(midpoint(e),midpoint(row[i-1]))/wv.scale,3);
+    if(a>0)near(distance(midpoint(e),midpoint([right,bottom][a-1][i])),0);
+    else near(world(midpoint(e),wv)[1],diagonalVertex[1]);
+  }
+}
+near(distance(midpoint(diagonalSlits[4]),midpoint(diagonalJoint))/wv.scale,3);
+near(distance(midpoint(diagonalSlits[8]),midpoint(diagonalJoint))/wv.scale,3);
+
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
   return distance(p,[a[0]+t*d[0],a[1]+t*d[1]]);
@@ -66,12 +84,14 @@ function segmentDistance(a,b,c,d) {
   return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
 }
 // Full-layout clearance, including the external circular decoration.
-const axes=real.map(e=>[world(e.a,wv),world(e.b,wv)]),centres=holes.map(e=>world(e.p,wv));
+for(const layout of [wallet,diagonalWallet]) {
+const axes=slits(layout).map(e=>[world(e.a,wv),world(e.b,wv)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,wv));
 for(const [i,[a,b]] of axes.entries()) {
   for(const [c,d] of axes.slice(i+1))assert(segmentDistance(a,b,c,d)-.3>=.2);
   for(const c of centres)assert(pointSegment(c,a,b)-.15-.25>=.2);
 }
 for(const [i,c] of centres.entries())for(const d of centres.slice(i+1))assert(distance(c,d)-.5>=.2);
+}
 
 for(const s of scenes) {
   const base=new URL(`examples/counter_examples/assets/${s.name}`,root);

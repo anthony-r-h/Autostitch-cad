@@ -52,31 +52,43 @@ export function walletGeometry() {
   return {spec,lean,joint,ci,co,start,end,rightAnchor,leftAnchor,decoration,top,right,bottom};
 }
 
-function walletScene() {
+function walletScene(diagonal=false) {
   const g=walletGeometry(),view={x:435,y:45,scale:18};
-  const s=scene('sellier-wallet-autostitch','Top, right and bottom stitching with a decorative H','ILL-SELLIER-WALLET');
+  let vertex=[0,0];
+  const reference=input('ILL-SELLIER-CORNER');
+  if(diagonal) {
+    // Keep the H and its nominal approach rows fixed. A real slit replaces the
+    // outgoing virtual centre; set the top row nominally from that vertex.
+    vertex=[0,g.co[1]];g.joint=vertex;
+    g.top=g.top.map((p,i)=>[-(g.spec.topSteps-i)*g.spec.pitch,vertex[1]]);
+    g.start=g.top[0];
+  }
+  const s=scene(diagonal?'sellier-wallet-diagonal':'sellier-wallet-autostitch',
+    diagonal?'Shared diagonal corner slit with a decorative H':'Top, right and bottom stitching with a decorative H',
+    diagonal?'ILL-SELLIER-WALLET-DIAGONAL':'ILL-SELLIER-WALLET');
   const circles=g.decoration.map(column=>column.map(p=>hole(p,view)));
-  const base=[worldLine(g.start,[0,0],view),worldLine([0,0],g.rightAnchor,view),worldLine(g.leftAnchor,g.end,view),
-    ...routeMarks(project(g.start,view),project(g.end,view),[1,0],[-1,0]),
+  const base=[worldLine(g.start,vertex,view),worldLine(vertex,g.rightAnchor,view),worldLine(g.leftAnchor,g.end,view),
+    ...routeMarks(project(g.start,view),project(g.end,view),[1,0],[-1,0]).map(e=>diagonal&&e.kind==='notation-start'?{...e,p:add(e.p,[0,8])}:e),
     notationText(add(project(g.joint,view),[18,-12]),'j','junction'),...circles.flat()];
   const result=[...base],rows=[[],[],[]];
   for(const [a,points] of [g.top,g.right.toReversed(),g.bottom].entries()) {
-    const angle=[g.lean,g.lean-Math.PI/2,g.lean-Math.PI][a];
+    const angle=diagonal?[...reference.armAxisDegrees.map(x=>x*Math.PI/180),g.lean-Math.PI][a]:[g.lean,g.lean-Math.PI/2,g.lean-Math.PI][a];
     for(const p of points) {
       const slit=opening(p,angle,view)[0];rows[a].push(slit);result.push(slit);
     }
-    if(a<2) {
+    if(a<2&&!diagonal) {
       const center=a===0?g.ci:g.co;
       result.push(worldLine([0,0],center,view,'extension','#C4C4C4',1,true),...opening(center,angle,view,{virtual:true}));
     }
   }
-  const joint=hole(g.joint,view);result.push(joint);
+  const joint=diagonal?opening(g.joint,reference.sharedSlitDegrees*Math.PI/180,view)[0]:hole(g.joint,view);result.push(joint);
   s.threadPaths=[
     [...rows[0],joint,...rows[1].toReversed(),circles[1][0]],
     circles[1],[circles[1][1],circles[0][1]],circles[0].toReversed(),[circles[0][0],...rows[2]]
   ];
+  if(diagonal)s.threadPaths=s.threadPaths.map(path=>path.map(e=>e.type==='line'?{...e,a:e.b,b:e.a}:e));
   return slitOutlines(finishThread({...s,final:result}));
 }
 
-export function createScenes(){return [diagonalCorner(),walletScene()];}
+export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true)];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

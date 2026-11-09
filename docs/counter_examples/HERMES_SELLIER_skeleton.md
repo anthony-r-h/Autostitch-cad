@@ -22,6 +22,14 @@
 
 ![Autostitch corner with nominal rows meeting the circular H openings](../../examples/counter_examples/assets/sellier-wallet-autostitch.png)
 
+## Reduced wallet: shared diagonal slit
+
+- Same scale, stitch counts and fixed H; use the reconstructed slit orientations and thread connections
+- A real diagonal slit joins the arms at the vertex; set the top guide's extent to keep every gap nominal
+- Both approaches to the H retain zero residual
+
+![Reduced wallet with a shared diagonal corner slit](../../examples/counter_examples/assets/sellier-wallet-diagonal.png)
+
 ## Reconstruction assumptions
 
 - Hole axes and thread connections are inferred from the photograph and annotated crop; the corner bisector is an educated choice

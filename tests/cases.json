@@ -9315,6 +9315,34 @@
           "path": "examples/counter_examples/assets/sellier-wallet-autostitch"
         }
       ]
+    },
+    {
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "id": "ILL-SELLIER-WALLET-DIAGONAL",
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "status": "Static comparison using the inferred diagonal slit and thread connections. Same scale, ordinary slit counts and fixed H as the Autostitch wallet. Raise the top guide to the outgoing virtual station and choose its start in nominal steps from the shared slit; all gaps and H approaches remain nominal.",
+      "inputs": {
+        "walletCase": "ILL-SELLIER-WALLET",
+        "cornerCase": "ILL-SELLIER-CORNER"
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/sellier-wallet-diagonal"
+        }
+      ]
     }
   ]
 }

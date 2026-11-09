@@ -2,6 +2,21 @@
 
 Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
+## Animation phases
+
+Use **Build → Adjustment → Stitch**, in that order.
+
+| Phase | Geometry and motion | Display |
+| --- | --- | --- |
+| Build | Establish the guides, features and slit layout | No thread. Slits and relevant dimensions at normal contrast; virtual slits dashed. Start, end and junction notation visible from the outset |
+| Adjustment | Slide, redistribute, mirror or otherwise revise the layout | No thread and no fading. Keep fixed features stationary; update affected dimensions with the geometry |
+| Stitch | Reveal all thread segments together; freeze the geometry | Fade holes, virtual slits and length dimensions to light grey over $0.3\,\mathrm{s}$. Keep thread dark, angle annotations red and unresolved conflicts visible. Hold for four seconds, then reset |
+
+- Continue from the previous example's established layout; do not replay Build unnecessarily
+- Skip Adjustment when nothing changes; do not invent corrections to fill a phase
+- Static stitched figures are the final Stitch state, including the same lightened measurements
+- Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
+
 ## Spacing setup
 
 Each solution begins with the same nominal row and residual. `pitch-problem` is the shared setup fixture; the pitch compares only the three completed solutions.
@@ -54,7 +69,6 @@ Motion shows planning revisions, not physical punching order; the analytic const
 - Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values
-- Thread reveal lightens the holes and measurement annotations over $0.3\,\mathrm{s}$, then holds for four seconds. Unresolved red residuals remain visible
 - Static diagrams use the same final appearance; glossary figures without thread retain their contrast
 - The tables in the pitch exclude the setup fixture and are calculated by `pitchComparisonMetrics` and checked by `tests/validate-illustrated.mjs`
 - Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
@@ -199,9 +213,8 @@ The builder reads catalog inputs and analytic JavaScript scene recipes. It does 
 - Fixed $600\times375$ px canvas and framing throughout each loop.
 - Geometry on a plain background. No headings, scorecards, counters, banners or duplicate prose inside the image.
 - Only local dimensions and feature labels needed to follow the current step.
-- Show guide, constraint, attempted placement, consequence and response. Hold the result, then visibly reset.
+- Follow the [animation phases](#animation-phases); show only the construction and adjustment needed for the example.
 - Keep comparison geometry and tool profile identical. Do not exaggerate small pitch changes.
 - Use movement to explain construction and decisions; do not merely fade in a finished infographic.
 - Animation is the primary example. Keep a still fallback and editable vector elements.
-- Reveal all thread segments together after the slit layout. Fade real and virtual holes to light grey over $0.3\,\mathrm{s}$, then hold for four seconds. Static stitched diagrams use the same final colours. Rejected candidates keep their rejection marks.
 - Use light rectangular slit outlines and heavier thread. Clearance examples retain the specified physical slit width.

@@ -797,7 +797,9 @@ function cornerThreadAngles(s,threads) {
     const vector=[thread.b[0]-thread.a[0],thread.b[1]-thread.a[1]];
     const turn=Math.atan2(tangent[0]*vector[1]-tangent[1]*vector[0],tangent[0]*vector[0]+tangent[1]*vector[1]);
     const degrees=Math.abs(turn)*180/Math.PI;
-    const origin=thread.a,start=arm*Math.PI/2,radius=18;
+    // Bridge measures one thread against both arms; stagger the radii so
+    // the adjacent sectors do not read as one right-angle wedge.
+    const origin=thread.a,start=arm*Math.PI/2,radius=s.name==='problem-corner-bridge'?(arm===0?24:12):18;
     const points=Array.from({length:17},(_,i)=>add(origin,mul(axis(start+turn*i/16),radius)));
     const label=arm===0?[380,16]:[525,70];
     const anchor=add(origin,mul(axis(start+turn/2),radius));

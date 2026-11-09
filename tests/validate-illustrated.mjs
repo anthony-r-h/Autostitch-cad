@@ -497,6 +497,10 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
   const wedges=s.final.filter(e=>e.kind==='angle-wedge');
   assert.equal(wedges.length,2);
   wedges.forEach(e=>{assert.equal(e.type,'polygon');assert.equal(e.color,'#C62828');assert(e.opacity>0&&e.opacity<1);});
+  if(s.name==='problem-corner-bridge') {
+    const radii=wedges.map(e=>dist(e.points[0],e.points[1]));
+    near(radii[0],24);near(radii[1],12);
+  }
   for(const f of s.frames) {
     const annotated=f.elements.some(e=>e.kind==='thread-angle-value');
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));

@@ -22,6 +22,23 @@ function Draw-Frame($elements) {
    $color=[Drawing.ColorTranslator]::FromHtml($element.color)
    switch($element.type) {
     'line' {
+     if($element.outline) {
+      $dx=$element.b[0]-$element.a[0];$dy=$element.b[1]-$element.a[1]
+      $length=[Math]::Sqrt($dx*$dx+$dy*$dy)
+      $nx=-$dy/$length*$element.width/2;$ny=$dx/$length*$element.width/2
+      $points=[Drawing.PointF[]]@(
+       [Drawing.PointF]::new($element.a[0]+$nx,$element.a[1]+$ny),
+       [Drawing.PointF]::new($element.b[0]+$nx,$element.b[1]+$ny),
+       [Drawing.PointF]::new($element.b[0]-$nx,$element.b[1]-$ny),
+       [Drawing.PointF]::new($element.a[0]-$nx,$element.a[1]-$ny))
+      $border=[Drawing.Pen]::new($color,[single]$element.outlineWidth)
+      try {
+       if($element.dash){$border.DashPattern=@([single](4/$element.outlineWidth),[single](4/$element.outlineWidth))}
+       $g.FillPolygon([Drawing.Brushes]::White,$points)
+       $g.DrawPolygon($border,$points)
+      } finally {$border.Dispose()}
+      break
+     }
      $pen=[Drawing.Pen]::new($color,[single]$element.width)
      try {
       if($element.dash){$pen.DashPattern=@([single](4/$element.width),[single](4/$element.width))}

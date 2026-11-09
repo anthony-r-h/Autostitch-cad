@@ -8630,7 +8630,11 @@
         "Label every centre-to-centre gap and emphasize the endpoint residual.",
         "Redistribute positions for each policy while gap values and residual update together.",
         "Hold the result with zero residual; retain the guide alignment."
-      ]
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-CURVE",
@@ -8656,7 +8660,11 @@
         "s",
         "direction",
         "e"
-      ]
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-LANDMARK",
@@ -8676,7 +8684,6 @@
           "path": "examples/illustrated/assets/axiom-landmark"
         }
       ],
-      "case": "F02",
       "notation": [
         "s",
         "direction",
@@ -8692,7 +8699,18 @@
         "Move bounded corrections from span ends into their central adjustment blocks while all fixed openings remain stationary."
       ],
       "inputs": {
-        "endTrim": 3
+        "length": 28,
+        "landmark": 14,
+        "initialGaps": [
+          3,
+          3,
+          3.25,
+          3.25
+        ]
+      },
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     },
     {
@@ -8723,7 +8741,11 @@
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
       ],
-      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-SMOOTH",
@@ -8747,7 +8769,11 @@
         "direction",
         "e",
         "j"
-      ]
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-JUNCTION",
@@ -8797,7 +8823,11 @@
         "Stitch inward along the first, second and third arms in turn.",
         "Identify the shared round hole after all three arms arrive."
       ],
-      "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive."
+      "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-CLEARANCE",
@@ -8840,7 +8870,11 @@
       ],
       "terms": [
         "Overlap"
-      ]
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-NOFIT",
@@ -8869,7 +8903,11 @@
         "direction",
         "e"
       ],
-      "rejectionNotation": "Compact, thick X centred over the failed fit on each rejected candidate and the final hold."
+      "rejectionNotation": "Compact, thick X centred over the failed fit on each rejected candidate and the final hold.",
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-CLOSURE",
@@ -8895,7 +8933,11 @@
       "notation": [
         "s",
         "direction"
-      ]
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-MATCHED",
@@ -8922,7 +8964,11 @@
         "e",
         "ST-1",
         "ST-1-A"
-      ]
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-ARC-LINE",
@@ -8952,7 +8998,11 @@
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
       ],
-      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-ARC-ARC",
@@ -8982,7 +9032,11 @@
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
       ],
-      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-SHALLOW",
@@ -9012,7 +9066,11 @@
         "Second arm: real slits towards the corner, then its terminal virtual slit.",
         "Identify the shared hole where the terminal tips meet."
       ],
-      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive."
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
     },
     {
       "id": "ILL-TERMS-LAYOUT",
@@ -9144,6 +9202,46 @@
       "inputs": {
         "radius": 3,
         "pitch": 3
+      }
+    },
+    {
+      "id": "ILL-CORNER-PROBLEM",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "animated": true,
+      "status": "Three illustrative corner treatments, not claims of valid A6 output.",
+      "inputs": {
+        "armLength": 9
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/problem-corner-cross",
+          "treatment": "cross"
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-point",
+          "treatment": "point"
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-gap",
+          "treatment": "gap"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 200,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       }
     }
   ]

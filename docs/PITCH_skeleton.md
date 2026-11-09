@@ -57,6 +57,28 @@ Research note: Anthony to find stitching examples from:
 
 ![Autostitch solution: absorb the residual in the central gap](../examples/illustrated/assets/pitch-centre.gif)
 
+# The corner problem
+
+- Two approaching rows must also resolve how the stitching turns the corner
+
+## Cross the terminal slits
+
+- Continue both rows to the vertex: the terminal slits cross in an X
+
+![Terminal slits cross at the corner](../examples/illustrated/assets/problem-corner-cross.gif)
+
+## Put a hole at the vertex
+
+- Omit the terminal slits and connect both rows through one round hole at the guide vertex
+
+![A round hole at the vertex connects the approaching rows](../examples/illustrated/assets/problem-corner-point.gif)
+
+## Bridge the gap
+
+- Stop both rows short; the thread bridges between them and cuts across the corner
+
+![Thread bridges the gap between arms that stop short of the vertex](../examples/illustrated/assets/problem-corner-gap.gif)
+
 # Why CAD
 
 - Exact curves, dimensions, snaps and references define where the stitching belongs
@@ -81,7 +103,7 @@ Research note: Anthony to find stitching examples from:
 - The landmark gap is protected from adjustment
 - Absorb each free span's residual in its unprotected gaps, within $0.9p\leq g\leq1.1p$
 - Centre the adjustments within each span; the two sides can require different corrections
-- Here, the left span uses one $2.75\,\mathrm{mm}$ gap and the right one $3.25\,\mathrm{mm}$ gap; the landmark pair stays $3\,\mathrm{mm}$ apart
+- Example: five slits on each side, with two central $3.25\,\mathrm{mm}$ gaps per span; the landmark pair stays $3\,\mathrm{mm}$ apart
 
 ![A4, A5 and A7: keep the landmark pair fixed while distributing bounded adjustments within each free span](../examples/illustrated/assets/axiom-landmark.gif)
 

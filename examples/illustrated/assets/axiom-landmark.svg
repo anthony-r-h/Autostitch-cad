@@ -1,74 +1,87 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Fixed landmark pair; bounded adjustments within each free span</title><desc id="description">Analytic illustration of ILL-LANDMARK. Final state of the accompanying animation.</desc>
-<line class="guide" x1="84" y1="187.5" x2="516" y2="187.5" stroke="#C4C4C4" stroke-width="1"/>
-<line class="fixed-end" x1="84" y1="165.5" x2="84" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="fixed-end" x1="516" y1="165.5" x2="516" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="landmark" x1="344" y1="132.5" x2="344" y2="242.5" stroke="#252525" stroke-width="1.4"/>
-<text class="measurement" x="344" y="120.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">L1</text>
-<line class="span-dimension" x1="84" y1="104.5" x2="320" y2="104.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="span-dimension" x1="84" y1="108.5" x2="84" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="span-dimension" x1="320" y1="108.5" x2="320" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="span-label" x="202" y="95.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">Free span</text>
-<line class="span-dimension" x1="368" y1="104.5" x2="516" y2="104.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="span-dimension" x1="368" y1="108.5" x2="368" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="span-dimension" x1="516" y1="108.5" x2="516" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="span-label" x="442" y="95.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">Free span</text>
-<line class="dimension" x1="320" y1="265.5" x2="368" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="320" y1="269.5" x2="320" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="dimension" x1="368" y1="269.5" x2="368" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="measurement" x="344" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
-<line class="slit" x1="74.807466683" y1="195.213451316" x2="93.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="122.807466683" y1="195.213451316" x2="141.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="170.807466683" y1="195.213451316" x2="189.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="173.815712696" y1="198.79853931" x2="167.799220669" y2="191.628363322" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="192.200779331" y1="183.371636678" x2="186.184287304" y2="176.20146069" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="214.807466683" y1="195.213451316" x2="233.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="217.815712696" y1="198.79853931" x2="211.799220669" y2="191.628363322" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="236.200779331" y1="183.371636678" x2="230.184287304" y2="176.20146069" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="262.807466683" y1="195.213451316" x2="281.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="310.807466683" y1="195.213451316" x2="329.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="358.807466683" y1="195.213451316" x2="377.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="406.807466683" y1="195.213451316" x2="425.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="409.815712696" y1="198.79853931" x2="403.799220669" y2="191.628363322" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="428.200779331" y1="183.371636678" x2="422.184287304" y2="176.20146069" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="458.807466683" y1="195.213451316" x2="477.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="461.815712696" y1="198.79853931" x2="455.799220669" y2="191.628363322" stroke="#252525" stroke-width="2.6"/>
-<line class="adjustment-mark" x1="480.200779331" y1="183.371636678" x2="474.184287304" y2="176.20146069" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="506.807466683" y1="195.213451316" x2="525.192533317" y2="179.786548684" stroke="#252525" stroke-width="2.6"/>
-<line class="gap-dimension" x1="84" y1="265.5" x2="132" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="84" y1="269.5" x2="84" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="132" y1="269.5" x2="132" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="gap-value" x="108" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
-<line class="gap-dimension" x1="132" y1="265.5" x2="180" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="132" y1="269.5" x2="132" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="180" y1="269.5" x2="180" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="gap-value" x="156" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
-<line class="gap-dimension" x1="180" y1="265.5" x2="224" y2="265.5" stroke="#252525" stroke-width="0.8"/>
-<line class="gap-dimension" x1="180" y1="269.5" x2="180" y2="261.5" stroke="#252525" stroke-width="0.8"/>
-<line class="gap-dimension" x1="224" y1="269.5" x2="224" y2="261.5" stroke="#252525" stroke-width="0.8"/>
-<text class="gap-value" x="202" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">2.75</text>
-<line class="gap-dimension" x1="224" y1="265.5" x2="272" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="224" y1="269.5" x2="224" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="272" y1="269.5" x2="272" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="gap-value" x="248" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
-<line class="gap-dimension" x1="272" y1="265.5" x2="320" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="272" y1="269.5" x2="272" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="320" y1="269.5" x2="320" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="gap-value" x="296" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
-<line class="gap-dimension" x1="368" y1="265.5" x2="416" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="368" y1="269.5" x2="368" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="416" y1="269.5" x2="416" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="gap-value" x="392" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
-<line class="gap-dimension" x1="416" y1="265.5" x2="468" y2="265.5" stroke="#252525" stroke-width="0.8"/>
-<line class="gap-dimension" x1="416" y1="269.5" x2="416" y2="261.5" stroke="#252525" stroke-width="0.8"/>
-<line class="gap-dimension" x1="468" y1="269.5" x2="468" y2="261.5" stroke="#252525" stroke-width="0.8"/>
-<text class="gap-value" x="442" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">3.25</text>
-<line class="gap-dimension" x1="468" y1="265.5" x2="516" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="468" y1="269.5" x2="468" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="gap-dimension" x1="516" y1="269.5" x2="516" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
-<text class="gap-value" x="492" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
-<text class="notation-start" x="72" y="170.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
-<line class="direction" x1="102" y1="187.5" x2="114" y2="187.5" stroke="#8B8B8B" stroke-width="1.1"/>
-<line class="direction" x1="114" y1="187.5" x2="108" y2="184" stroke="#8B8B8B" stroke-width="1.1"/>
-<line class="direction" x1="114" y1="187.5" x2="108" y2="191" stroke="#8B8B8B" stroke-width="1.1"/>
-<text class="notation-end" x="528" y="170.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<line class="guide" x1="76" y1="187.5" x2="524" y2="187.5" stroke="#C4C4C4" stroke-width="1"/>
+<line class="fixed-end" x1="76" y1="165.5" x2="76" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="fixed-end" x1="524" y1="165.5" x2="524" y2="209.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="landmark" x1="300" y1="132.5" x2="300" y2="242.5" stroke="#252525" stroke-width="1.4"/>
+<text class="measurement" x="300" y="120.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">L1</text>
+<line class="span-dimension" x1="76" y1="104.5" x2="276" y2="104.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="span-dimension" x1="76" y1="108.5" x2="76" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="span-dimension" x1="276" y1="108.5" x2="276" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="span-label" x="176" y="95.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">Free span</text>
+<line class="span-dimension" x1="324" y1="104.5" x2="524" y2="104.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="span-dimension" x1="324" y1="108.5" x2="324" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="span-dimension" x1="524" y1="108.5" x2="524" y2="100.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="span-label" x="424" y="95.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">Free span</text>
+<line class="dimension" x1="276" y1="265.5" x2="324" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="276" y1="269.5" x2="276" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="dimension" x1="324" y1="269.5" x2="324" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="measurement" x="300" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3</text>
+<line class="thread" x1="85.192533317" y1="179.786548684" x2="114.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="133.192533317" y1="179.786548684" x2="166.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="185.192533317" y1="179.786548684" x2="218.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="237.192533317" y1="179.786548684" x2="266.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="285.192533317" y1="179.786548684" x2="314.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="333.192533317" y1="179.786548684" x2="362.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="381.192533317" y1="179.786548684" x2="414.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="433.192533317" y1="179.786548684" x2="466.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="485.192533317" y1="179.786548684" x2="514.807466683" y2="195.213451316" stroke="#252525" stroke-width="1.8"/>
+<line class="slit" x1="66.807466683" y1="195.213451316" x2="85.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="67.643090575,196.209309092 86.02815721,180.78240646 84.356909425,178.790690908 65.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="114.807466683" y1="195.213451316" x2="133.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="115.643090575,196.209309092 134.02815721,180.78240646 132.356909425,178.790690908 113.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="117.815712696" y1="198.79853931" x2="111.799220669" y2="191.628363322" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="136.200779331" y1="183.371636678" x2="130.184287304" y2="176.20146069" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="166.807466683" y1="195.213451316" x2="185.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="167.643090575,196.209309092 186.02815721,180.78240646 184.356909425,178.790690908 165.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="169.815712696" y1="198.79853931" x2="163.799220669" y2="191.628363322" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="188.200779331" y1="183.371636678" x2="182.184287304" y2="176.20146069" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="218.807466683" y1="195.213451316" x2="237.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="219.643090575,196.209309092 238.02815721,180.78240646 236.356909425,178.790690908 217.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="221.815712696" y1="198.79853931" x2="215.799220669" y2="191.628363322" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="240.200779331" y1="183.371636678" x2="234.184287304" y2="176.20146069" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="266.807466683" y1="195.213451316" x2="285.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="267.643090575,196.209309092 286.02815721,180.78240646 284.356909425,178.790690908 265.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="314.807466683" y1="195.213451316" x2="333.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="315.643090575,196.209309092 334.02815721,180.78240646 332.356909425,178.790690908 313.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="362.807466683" y1="195.213451316" x2="381.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="363.643090575,196.209309092 382.02815721,180.78240646 380.356909425,178.790690908 361.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="365.815712696" y1="198.79853931" x2="359.799220669" y2="191.628363322" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="384.200779331" y1="183.371636678" x2="378.184287304" y2="176.20146069" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="414.807466683" y1="195.213451316" x2="433.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="415.643090575,196.209309092 434.02815721,180.78240646 432.356909425,178.790690908 413.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="417.815712696" y1="198.79853931" x2="411.799220669" y2="191.628363322" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="436.200779331" y1="183.371636678" x2="430.184287304" y2="176.20146069" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="466.807466683" y1="195.213451316" x2="485.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="467.643090575,196.209309092 486.02815721,180.78240646 484.356909425,178.790690908 465.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="469.815712696" y1="198.79853931" x2="463.799220669" y2="191.628363322" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="488.200779331" y1="183.371636678" x2="482.184287304" y2="176.20146069" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="514.807466683" y1="195.213451316" x2="533.192533317" y2="179.786548684" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="515.643090575,196.209309092 534.02815721,180.78240646 532.356909425,178.790690908 513.97184279,194.21759354" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="76" y1="265.5" x2="124" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="76" y1="269.5" x2="76" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="124" y1="269.5" x2="124" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="gap-value" x="100" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
+<line class="gap-dimension" x1="124" y1="265.5" x2="176" y2="265.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="124" y1="269.5" x2="124" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="176" y1="269.5" x2="176" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<text class="gap-value" x="150" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">3.25</text>
+<line class="gap-dimension" x1="176" y1="265.5" x2="228" y2="265.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="176" y1="269.5" x2="176" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="228" y1="269.5" x2="228" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<text class="gap-value" x="202" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">3.25</text>
+<line class="gap-dimension" x1="228" y1="265.5" x2="276" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="228" y1="269.5" x2="228" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="276" y1="269.5" x2="276" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="gap-value" x="252" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
+<line class="gap-dimension" x1="324" y1="265.5" x2="372" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="324" y1="269.5" x2="324" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="372" y1="269.5" x2="372" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="gap-value" x="348" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
+<line class="gap-dimension" x1="372" y1="265.5" x2="424" y2="265.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="372" y1="269.5" x2="372" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="424" y1="269.5" x2="424" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<text class="gap-value" x="398" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">3.25</text>
+<line class="gap-dimension" x1="424" y1="265.5" x2="476" y2="265.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="424" y1="269.5" x2="424" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<line class="gap-dimension" x1="476" y1="269.5" x2="476" y2="261.5" stroke="#252525" stroke-width="0.8"/>
+<text class="gap-value" x="450" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">3.25</text>
+<line class="gap-dimension" x1="476" y1="265.5" x2="524" y2="265.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="476" y1="269.5" x2="476" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="gap-dimension" x1="524" y1="269.5" x2="524" y2="261.5" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="gap-value" x="500" y="256.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#8B8B8B">3.00</text>
+<text class="notation-start" x="64" y="170.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="94" y1="187.5" x2="106" y2="187.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="106" y1="187.5" x2="100" y2="184" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="106" y1="187.5" x2="100" y2="191" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="536" y="170.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 </svg>

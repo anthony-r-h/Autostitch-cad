@@ -95,29 +95,34 @@ const chords=curve.slice(1).map((s,i)=>dist(s.center,curve[i].center));bounded(c
 assert.equal(chords.filter(g=>Math.abs(g-3)>1e-6).length,3);
 near(curve[0].center[0],0);near(curve.at(-1).center[1],-10);
 
-const landmark=slits('axiom-landmark',{x:84,y:187.5,scale:16}).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
-assert.equal(landmark.length,10);assert(has(landmark,[14.75,0])&&has(landmark,[17.75,0]));
-assert(!has(landmark,[16.25,0]));near((14.75+17.75)/2,16.25);
+const landmarkInput=catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs;
+const landmarkView={x:(600-landmarkInput.length*16)/2,y:187.5,scale:16};
+const leftFixed=landmarkInput.landmark-1.5,rightFixed=landmarkInput.landmark+1.5;
+const landmark=slits('axiom-landmark',landmarkView).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
+assert.equal(landmark.length,10);assert(has(landmark,[leftFixed,0])&&has(landmark,[rightFixed,0]));
+assert(!has(landmark,[landmarkInput.landmark,0]));near((leftFixed+rightFixed)/2,landmarkInput.landmark);
 bounded(landmark.slice(1).map((p,i)=>dist(p,landmark[i])));
 for(const frame of scenes.find(s=>s.name==='axiom-landmark').frames.filter(f=>!['reference','reset'].includes(f.stage))) {
   const xs=frame.elements.filter(e=>e.kind==='slit').map(e=>(e.a[0]+e.b[0])/2);
-  for(const station of [0,14.75,17.75,27])assert(xs.some(x=>Math.abs(x-(84+station*16))<1e-6),'Fixed opening moved during fitting');
+  for(const station of [0,leftFixed,rightFixed,landmarkInput.length])assert(xs.some(x=>Math.abs(x-(landmarkView.x+station*16))<1e-6),'Fixed opening moved during fitting');
   if(xs.length===10) {
-    const points=xs.map(x=>(x-84)/16).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
-    bounded(gaps);near(gaps[5],3);
+    const points=xs.map(x=>(x-landmarkView.x)/16).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
+    bounded(gaps);near(gaps[4],3);
     const labels=frame.elements.filter(e=>e.kind==='gap-value');
-    const adjustable=gaps.filter((g,i)=>i!==5);assert.equal(labels.length,adjustable.length);
+    const adjustable=gaps.filter((g,i)=>i!==4);assert.equal(labels.length,adjustable.length);
     labels.forEach((label,i)=>near(+label.value,adjustable[i],.00501));
-    near(gaps.slice(0,5).reduce((a,b)=>a+b,0),14.75);
-    near(gaps.slice(6).reduce((a,b)=>a+b,0),9.25);
+    near(gaps.slice(0,4).reduce((a,b)=>a+b,0),leftFixed);
+    near(gaps.slice(5).reduce((a,b)=>a+b,0),landmarkInput.length-rightFixed);
+    points.forEach((x,i)=>near(x+points.at(-1-i),landmarkInput.length));
   }
 }
 const landmarkFrames=scenes.find(s=>s.name==='axiom-landmark').frames;
 assert.equal(landmarkFrames.filter(f=>f.stage==='distribute-within-spans').length,30);
-for(const [start,end] of [[0,14.75],[17.75,27]]) {
+for(const [start,end] of [[0,leftFixed],[rightFixed,landmarkInput.length]]) {
   const points=landmark.map(p=>p[0]).filter(x=>x>=start-1e-6&&x<=end+1e-6);
   const adjusted=points.slice(1).map((x,i)=>({a:points[i],b:x})).filter(g=>Math.abs(g.b-g.a-3)>1e-6);
-  assert.equal(adjusted.length,1);near((adjusted[0].a+adjusted[0].b)/2,(start+end)/2);
+  assert.equal(adjusted.length,2);adjusted.forEach(g=>near(g.b-g.a,3.25));
+  near((adjusted[0].a+adjusted.at(-1).b)/2,(start+end)/2);
 }
 
 const cornerView={x:370,y:105,scale:24};
@@ -161,7 +166,7 @@ for(const f of branchScene.frames) {
     assert(distance<branchDistances[index],'Branch stitching must approach the junction');
     branchDistances[index]=distance;branchCounts[index]++;
   }
-  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','result'].includes(f.stage)?1:0);
+  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','result','thread-reveal'].includes(f.stage)?1:0);
   branchReal=real;
 }
 assert.deepEqual(branchCounts,[3,3,2]);
@@ -289,7 +294,7 @@ for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-sha
       assert.equal(virtual.length,i+1);assert.deepEqual(real,previousReal);
       assert.deepEqual(virtual.at(-1),virtuals[i]);
     }
-    if(!['shared-hole','result'].includes(f.stage))assert(!f.elements.some(e=>e.kind==='hole'),'The shared hole appears only after both arms arrive');
+    if(!['shared-hole','result','thread-reveal'].includes(f.stage))assert(!f.elements.some(e=>e.kind==='hole'),'The shared hole appears only after both arms arrive');
     previousReal=real;previousVirtual=virtual;
   }
 }
@@ -336,10 +341,47 @@ assert.equal(measuredArc.length,40);
 const arcLength=measuredArc.reduce((sum,e)=>sum+Math.hypot(e.x2-e.x1,e.y2-e.y1)/80,0);
 near(arcLength,Math.PI,1e-4);assert(arcLength>3);
 
+const problemView={x:360,y:85,scale:25};
+for(const treatment of ['cross','point','gap']) {
+  const name=`problem-corner-${treatment}`,openings=slits(name,problemView);
+  assert.equal(openings.length,treatment==='cross'?8:6);
+  for(const p of [[-9,0],[-6,0],[-3,0],[0,-3],[0,-6],[0,-9]])assert(has(openings.map(s=>s.center),p));
+  const vertexSlits=openings.filter(s=>dist(s.center,[0,0])<1e-6);
+  assert.equal(vertexSlits.length,treatment==='cross'?2:0);
+  if(treatment==='cross')near(Math.abs(vertexSlits[0].angle-vertexSlits[1].angle),Math.PI/2);
+  if(treatment==='point')near(dist(circle(name,problemView),[0,0]),0);
+  else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
+  if(treatment==='gap') {
+    const incoming=openings.find(s=>dist(s.center,[-3,0])<1e-6),outgoing=openings.find(s=>dist(s.center,[0,-3])<1e-6);
+    assert(readSvg(name).elements.filter(e=>e.class==='thread').some(e=>
+      dist([(+e.x1-360)/25,(85-e.y1)/25],incoming.b)<1e-6&&dist([(+e.x2-360)/25,(85-e.y2)/25],outgoing.a)<1e-6));
+  }
+}
+
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
   assert.equal(Boolean(s.frames.length),entry.animated);
   if(entry.animated) {
+    const threadFrame=s.frames.find(f=>f.stage==='thread-reveal');
+    assert(threadFrame,`${s.name} missing final thread reveal`);assert.equal(threadFrame.delay,200);
+    assert.equal(s.frames.at(-2),threadFrame);assert.equal(s.frames.at(-1).stage,'reset');
+    assert.deepEqual(threadFrame.elements,s.final);
+    for(const f of s.frames.filter(f=>f!==threadFrame))assert(!f.elements.some(e=>e.kind==='thread'));
+    const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
+    const expected= s.name==='axiom-closure'?openings.length:openings.length-(s.name==='matched-guides'?2:1);
+    assert.equal(threads.length,expected,`${s.name} incorrect thread count`);
+    const tips=openings.flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
+    for(const t of threads)for(const p of [t.a,t.b])assert(tips.some(q=>dist(p,q)<1e-6),`${s.name} thread misses a real opening`);
+    const rectangular=s.final.filter(e=>e.outline);
+    assert(rectangular.every(e=>e.outlineWidth<threads[0].width));
+    const polygons=[...readSvg(s.name).source.matchAll(/<polygon class="slit-outline" points="([^"]+)"/g)].map(m=>m[1].split(' ').map(p=>p.split(',').map(Number)));
+    assert.equal(polygons.length,rectangular.length);
+    polygons.forEach((points,i)=>{
+      const slit=rectangular[i];assert.equal(points.length,4);
+      near(dist(points[0],points[1]),dist(slit.a,slit.b));near(dist(points[1],points[2]),slit.width);
+      near(dist([(points[0][0]+points[3][0])/2,(points[0][1]+points[3][1])/2],slit.a),0);
+      near(dist([(points[1][0]+points[2][0])/2,(points[1][1]+points[2][1])/2],slit.b),0);
+    });
     const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
     // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
     const blocks=gifBlocks(gif).blocks,images=blocks.filter(b=>b.kind==='image'),controls=blocks.filter(b=>b.kind==='control');

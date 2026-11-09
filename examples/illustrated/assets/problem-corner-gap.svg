@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Corner problem: gap</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<line class="guide" x1="135" y1="85" x2="360" y2="85" stroke="#C4C4C4" stroke-width="1"/>
+<line class="guide" x1="360" y1="85" x2="360" y2="310" stroke="#C4C4C4" stroke-width="1"/>
+<line class="thread" x1="149.363333308" y1="72.947732318" x2="195.636666692" y2="97.052267682" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="224.363333308" y1="72.947732318" x2="270.636666692" y2="97.052267682" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="299.363333308" y1="72.947732318" x2="347.947732318" y2="145.636666692" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="372.052267682" y1="174.363333308" x2="347.947732318" y2="220.636666692" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="372.052267682" y1="249.363333308" x2="347.947732318" y2="295.636666692" stroke="#252525" stroke-width="1.8"/>
+<line class="slit" x1="120.636666692" y1="97.052267682" x2="149.363333308" y2="72.947732318" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="121.472290584,98.048125458 150.198957201,73.943590094 148.527709416,71.951874542 119.801042799,96.056409906" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="195.636666692" y1="97.052267682" x2="224.363333308" y2="72.947732318" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="196.472290584,98.048125458 225.198957201,73.943590094 223.527709416,71.951874542 194.801042799,96.056409906" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="270.636666692" y1="97.052267682" x2="299.363333308" y2="72.947732318" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="271.472290584,98.048125458 300.198957201,73.943590094 298.527709416,71.951874542 269.801042799,96.056409906" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="347.947732318" y1="295.636666692" x2="372.052267682" y2="324.363333308" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="346.951874542,296.472290584 371.056409906,325.198957201 373.048125458,323.527709416 348.943590094,294.801042799" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="347.947732318" y1="220.636666692" x2="372.052267682" y2="249.363333308" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="346.951874542,221.472290584 371.056409906,250.198957201 373.048125458,248.527709416 348.943590094,219.801042799" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="347.947732318" y1="145.636666692" x2="372.052267682" y2="174.363333308" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="346.951874542,146.472290584 371.056409906,175.198957201 373.048125458,173.527709416 348.943590094,144.801042799" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<text class="notation-start" x="123" y="68" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="153" y1="85" x2="165" y2="85" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="165" y1="85" x2="159" y2="81.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="165" y1="85" x2="159" y2="88.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="377" y="322" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<text class="notation-junction" x="384" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
+</svg>

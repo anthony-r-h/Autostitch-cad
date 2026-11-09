@@ -30,6 +30,16 @@ All four use `ILL-S02`: six slits on the same centred $15.3\,\mathrm{mm}$ guide,
 
 Motion compares layout revisions, not the movement of already-punched holes or the solver's execution order.
 
+## The corner problem
+
+`ILL-CORNER-PROBLEM`: the same right-angle guides and pitch, with three terminal treatments. These illustrate the corner problem rather than claim valid A6 solutions.
+
+![Terminal slits cross in an X](assets/problem-corner-cross.gif)
+
+![Omit terminal slits and use a round hole at the vertex](assets/problem-corner-point.gif)
+
+![Stop short and bridge between the arms](assets/problem-corner-gap.gif)
+
 ## Axioms in geometry
 
 ### Follow the guide; keep the slit profile: A1-A3
@@ -40,7 +50,7 @@ A slit follows the local tangent without changing length or lean. Pitch is a dir
 
 ### Reserve a landmark pair: A4, A5, A7
 
-Reserve the endpoints and nominal pair across L1. Distribute the adjustments into the free spans while those four openings stay fixed: $2.75\,\mathrm{mm}$ on the left, $3.25\,\mathrm{mm}$ on the right. Each adjusted gap sits exactly at its span's centre. Every gap stays within the $2.7$ to $3.3\,\mathrm{mm}$ bounds; the landmark gap remains $3\,\mathrm{mm}$. There is no opening at L1. `ILL-LANDMARK` uses `F02` shortened by one pitch at the right end, to $27\,\mathrm{mm}$.
+Five slits on each side of the central landmark. Each free span has two central $3.25\,\mathrm{mm}$ gaps, with nominal gaps at its ends; the protected landmark gap remains $3\,\mathrm{mm}$. The animation moves the adjustments away from the feature while maintaining mirrored positions and fixed openings. `ILL-LANDMARK`: $28\,\mathrm{mm}$ guide, L1 at $14\,\mathrm{mm}$.
 
 ![Adjustments move into the free spans while endpoints and the landmark pair stay fixed](assets/axiom-landmark.gif)
 
@@ -150,7 +160,7 @@ node tests/validate-cases.mjs
 2. Align `scenes.mjs` constructions and the independent `tests/fit-oracle.mjs` selector with the changed rules. Keep comparison inputs identical.
 3. Run the build and validation commands above; inspect the rebuilt GIFs and commit the sources and assets together.
 
-The builder reads catalog inputs and analytic scene recipes. It does not load the production LISP solver. Native artwork regeneration uses [the demo commands](../demo.md).
+The builder reads catalog inputs and analytic JavaScript scene recipes. It does not load the production LISP solver. Its thread connections follow `ast:cad-write-thread`: positive slit tip to the next negative tip, or the centre of a round hole. Native artwork regeneration uses [the demo commands](../demo.md).
 
 ## Figure rules
 
@@ -161,3 +171,5 @@ The builder reads catalog inputs and analytic scene recipes. It does not load th
 - Keep comparison geometry and tool profile identical. Do not exaggerate small pitch changes.
 - Use movement to explain construction and decisions; do not merely fade in a finished infographic.
 - Animation is the primary example. Keep a still fallback and editable vector elements.
+- Reveal all thread segments together after the slit layout, then hold for two seconds. Rejected candidates keep their rejection marks.
+- Use light rectangular slit outlines and heavier thread. Clearance examples retain the specified physical slit width.

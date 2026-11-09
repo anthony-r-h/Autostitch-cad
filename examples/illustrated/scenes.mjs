@@ -104,12 +104,36 @@ function pitchScenes() {
   return scenes;
 }
 
-function landmarkScene(endTrim=0) {
-  const v=variant('F02'),length=v.route.primitives[0].b[0]-endTrim,reference=v.landmarks[0].station;
+function cornerProblemScenes() {
+  const input=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
+  const view={x:360,y:85,scale:25},base=[worldLine([-input.armLength,0],[0,0],view),worldLine([0,0],[0,-input.armLength],view)];
+  return ['cross','point','gap'].map(treatment=>{
+    const s=scene(`problem-corner-${treatment}`,`Corner problem: ${treatment}`,'ILL-CORNER-PROBLEM');
+    const result=[...base];frame(s,[...result],90,'guides');
+    const incoming=[],outgoing=[];
+    for(const [i,row] of [incoming,outgoing].entries()) {
+      for(let station=input.armLength;station>=3;station-=3) {
+        const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view);
+        row.push(slit[0]);result.push(...slit);frame(s,[...result],65,`arm-${i}-stitch`);
+      }
+      if(treatment==='cross') {
+        const slit=opening([0,0],i===0?alpha:alpha-Math.PI/2,view);
+        row.push(slit[0]);result.push(...slit);frame(s,[...result],120,`arm-${i}-terminal`);
+      }
+    }
+    const vertex=hole([0,0],view);
+    if(treatment==='point'){result.push(vertex);frame(s,[...result],130,'vertex-hole');}
+    s.threadPaths=[[...incoming,...(treatment==='point'?[vertex]:[]),...outgoing.toReversed()]];
+    return finish(s,result);
+  });
+}
+
+function landmarkScene(layout) {
+  const v=variant('F02'),length=layout?.length??v.route.primitives[0].b[0],reference=layout?.landmark??v.landmarks[0].station;
   const view={x:(600-length*16)/2,y:187.5,scale:16},left=reference-1.5,right=reference+1.5;
   const base=straightBase(length,view),p=project([reference,0],view);
   base.push(line([p[0],p[1]-55],[p[0],p[1]+55],'landmark',ink,1.4),text([p[0],p[1]-67],'L1'));
-  const s=scene('axiom-landmark','Fixed landmark pair; bounded adjustments within each free span',endTrim?'ILL-LANDMARK':'F02');
+  const s=scene('axiom-landmark','Fixed landmark pair; bounded adjustments within each free span',layout?'ILL-LANDMARK':'F02');
   frame(s,base,90,'reference');
   const protectedDimension=measure([left,0],[right,0],'3',view,-78);
   const fixed=[...base,...[0,left,right,length].flatMap(x=>opening([x,0],alpha,view)),...protectedDimension];
@@ -118,7 +142,9 @@ function landmarkScene(endTrim=0) {
     ({...e,kind:e.type==='text'?'span-label':'span-dimension'})));
   const leftPoints=stations(selectFit({D:left,p:3})),rightPoints=stations(selectFit({D:length-right,p:3})).map(x=>x+right);
   const target=[...leftPoints,...rightPoints];
-  const initial=[...leftPoints.map((x,i)=>i===leftPoints.length-1?left:i*3),
+  const initialLeft=layout?layout.initialGaps.reduce((points,gap)=>[...points,points.at(-1)+gap],[0]):null;
+  const initial=layout?[...initialLeft,...initialLeft.toReversed().map(x=>length-x)]:[
+    ...leftPoints.map((x,i)=>i===leftPoints.length-1?left:i*3),
     ...rightPoints.map((x,i)=>i===rightPoints.length-1?length:right+i*3)];
   const draw=points=>{
     const gaps=points.slice(1).map((x,i)=>x-points[i]),changed=gaps.map(g=>Math.abs(g-3)>1e-6);
@@ -278,14 +304,16 @@ function noFitScene() {
   const s=scene('fit-rejected','No gap count fits the permitted spacing','A5, A7');
   frame(s,base,80,'guide');frame(s,fixed,100,'fixed-ends');
   const reject=[line([240,130],[360,250],'rejected',ink,12),line([240,250],[360,130],'rejected',ink,12)];
+  let lastCandidate;
   for(const count of [2,3]) {
     const gap=input.length/count;
     const proposed=Array.from({length:count-1},(_,i)=>opening([(i+1)*gap,0],alpha,view,{proposed:true})).flat();
     const candidate=[...fixed,...proposed,...measure([0,0],[gap,0],gap.toFixed(2),view,-45)];
+    lastCandidate=candidate;
     frame(s,candidate,160,'candidate');frame(s,[...candidate,...reject],90,'outside-bounds');
     frame(s,fixed,50,'withdraw-proposal');
   }
-  return finish(s,[...fixed,...reject,...measure([0,0],[input.length,0],'7',view,65)]);
+  return finish(s,[...lastCandidate,...reject,...measure([0,0],[input.length,0],'7',view,65)]);
 }
 
 function closureScene() {
@@ -506,6 +534,7 @@ function annotateScene(s) {
     marks=routeMarks([300-halfLength,187.5],[300+halfLength,187.5]);
     marks=marks.map(e=>e.kind==='notation-end'?{...e,p:add(e.p,[0,-10])}:e);
   }
+  else if(s.name.startsWith('problem-corner-'))marks=[...routeMarks([135,85],[360,310],[1,0],[0,1]),notationText([384,67],'j','junction')];
   else if(['axiom-landmark','terms-layout'].includes(s.name)) {
     const guide=s.final.find(e=>e.kind==='guide');marks=routeMarks(guide.a,guide.b);
   }
@@ -541,25 +570,78 @@ function annotateScene(s) {
     marks=routeMarks(project(primitivePoint(incoming,a),view),project(primitivePoint(outgoing,b),view),screenTangent(incoming,a),screenTangent(outgoing,b));
   }
   const persistentJunction=['axiom-corner','axiom-junction','axiom-clearance'].includes(s.name)||s.name.startsWith('corner-');
-  const annotate=elements=>[...elements,...marks,...(persistentJunction?s.final:elements).filter(e=>e.kind==='hole').map(e=>
+  const annotate=elements=>[...elements,...marks,...(persistentJunction?s.final:elements).filter(e=>e.kind==='hole'&&!s.name.startsWith('problem-corner-')).map(e=>
     notationText(add(e.p,['axiom-junction','terms-junction'].includes(s.name)?[16,-14]:[18,18]),'j','junction'))];
   return {...s,final:annotate(s.final),frames:s.frames.map(f=>({...f,elements:annotate(f.elements)}))};
 }
 
+const openingCentre=e=>e.type==='circle'?e.p:mul(add(e.a,e.b),.5);
+// Match ast:cad-write-thread: outgoing (+) slit tip to incoming (-) tip;
+// round holes use their centre. Paths are explicit, never nearest-neighbour guesses.
+function threadPaths(s) {
+  if(s.threadPaths)return s.threadPaths;
+  const slits=s.final.filter(e=>e.kind==='slit'),joint=s.final.find(e=>e.kind==='hole');
+  const x=e=>openingCentre(e)[0],y=e=>openingCentre(e)[1];
+  if(s.name.startsWith('pitch-')||s.name==='axiom-landmark')return [[...slits].sort((a,b)=>x(a)-x(b))];
+  if(s.name==='axiom-curve')return [slits];
+  if(s.name==='axiom-closure')return [[...slits,slits[0]]];
+  if(s.name==='matched-guides')return [slits.slice(0,slits.length/2),slits.slice(slits.length/2)];
+  if(s.name==='axiom-smooth')return [[...slits.filter(e=>Math.abs(y(e)-115)<1e-6).sort((a,b)=>x(a)-x(b)),...slits.filter(e=>Math.abs(y(e)-115)>=1e-6)]];
+  if(s.name==='axiom-corner'||s.name.startsWith('corner-')) {
+    const firstCount=s.frames.find(f=>f.stage==='arm-0-terminal').elements.filter(e=>e.kind==='slit').length;
+    return [[...slits.slice(0,firstCount),joint,...slits.slice(firstCount).toReversed()]];
+  }
+  if(s.name==='axiom-junction')return [
+    [...slits.filter(e=>x(e)<300-1e-6).sort((a,b)=>x(a)-x(b)),joint,...slits.filter(e=>x(e)>300+1e-6).sort((a,b)=>x(a)-x(b))],
+    [joint,...slits.filter(e=>Math.abs(x(e)-300)<1e-6).sort((a,b)=>y(a)-y(b))]
+  ];
+  if(s.name==='axiom-clearance')return [[
+    ...slits.filter(e=>y(e)<200).sort((a,b)=>x(b)-x(a)).map(e=>({...e,a:e.b,b:e.a})),joint,
+    ...slits.filter(e=>y(e)>200).sort((a,b)=>x(a)-x(b))
+  ]];
+  if(s.name==='fit-rejected')return [s.final.filter(e=>['slit','proposal'].includes(e.kind)).sort((a,b)=>x(a)-x(b))];
+  throw new Error(`Thread path missing for ${s.name}`);
+}
+function finishThread(s) {
+  if(!s.frames.length)return s;
+  const paths=threadPaths(s),threads=paths.flatMap(path=>path.slice(1).map((next,i)=>
+    line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,1.8)));
+  const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
+  const result=[...s.final.slice(0,index),...threads,...s.final.slice(index)];
+  const frames=s.frames.flatMap(f=>f.stage==='result'?[{...f,delay:80},{elements:result,delay:200,stage:'thread-reveal'}]:[f]);
+  return {...s,final:result,frames};
+}
+function slitOutlines(s) {
+  const style=elements=>elements.map(e=>{
+    if(['slit','proposal'].includes(e.kind))return {...e,color:construction,outline:!e.round,outlineWidth:.8};
+    if(e.kind==='adjustment-mark')return {...e,color:construction,width:.8};
+    return e;
+  });
+  return {...s,final:style(s.final),frames:s.frames.map(f=>({...f,elements:style(f.elements)}))};
+}
+function rectanglePoints(e) {
+  const d=[e.b[0]-e.a[0],e.b[1]-e.a[1]],length=Math.hypot(...d),normal=[-d[1]/length*e.width/2,d[0]/length*e.width/2];
+  return [add(e.a,normal),add(e.b,normal),add(e.b,mul(normal,-1)),add(e.a,mul(normal,-1))];
+}
+
 export function createScenes() {
-  return [...pitchScenes(),curveScene(),landmarkScene(catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs.endTrim),cornerScene(),smoothScene(),junctionScene(),clearanceScene(),
+  return [...pitchScenes(),...cornerProblemScenes(),curveScene(),landmarkScene(catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs),cornerScene(),smoothScene(),junctionScene(),clearanceScene(),
     noFitScene(),closureScene(),matchedScene(),
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
     curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step'),
-    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene);
+    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines);
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 const n=value=>Number(value.toFixed(9));
 export function svg(scene) {
   const elements=scene.final.map(e=>{
-    if(e.type==='line')return `<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
+    if(e.type==='line') {
+      const axisLine=`<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.outline?'#FFFFFF':e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
+      if(!e.outline)return axisLine;
+      return axisLine+`<polygon class="slit-outline" points="${rectanglePoints(e).map(p=>p.map(n).join(',')).join(' ')}" fill="#FFFFFF" stroke="${e.color}" stroke-width="${e.outlineWidth}"${e.dash?' stroke-dasharray="4 4"':''}/>`;
+    }
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
     return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
   });

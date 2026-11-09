@@ -39,8 +39,8 @@
 <line class="guide" x1="403.322663234" y1="163.379531756" x2="408.957719937" y2="166.158434195" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="408.957719937" y1="166.158434195" x2="414.518102462" y2="169.083892961" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="414.518102462" y1="169.083892961" x2="420" y2="172.153903092" stroke="#C4C4C4" stroke-width="1"/>
-<line class="slit" x1="159.4787914" y1="228.535460339" x2="200.5212086" y2="115.772345845" stroke="#252525" stroke-width="2.6"/>
-<line class="slit" x1="360.911534819" y1="182.572793752" x2="479.088465181" y2="161.735012432" stroke="#252525" stroke-width="2.6"/>
+<line class="slit" x1="159.4787914" y1="228.535460339" x2="200.5212086" y2="115.772345845" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="160.700391807,228.980086525 201.742809007,116.216972031 199.299608193,115.327719658 158.257190993,228.090834153" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="360.911534819" y1="182.572793752" x2="479.088465181" y2="161.735012432" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="361.13727745,183.853043831 479.314207812,163.015262511 478.86272255,160.454762353 360.685792188,181.292543673" fill="#FFFFFF" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="measured-arc" x1="180" y1="172.153903092" x2="185.481897538" y2="169.083892961" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="measured-arc" x1="185.481897538" y1="169.083892961" x2="191.042280063" y2="166.158434195" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="measured-arc" x1="191.042280063" y1="166.158434195" x2="196.677336766" y2="163.379531756" stroke="#8B8B8B" stroke-width="1.5" stroke-dasharray="4 4"/>

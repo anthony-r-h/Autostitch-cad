@@ -16,9 +16,9 @@ Distribute the openings evenly between the endpoints. It fits, but every gap dep
 
 ## Good enough solution
 
-Keep most gaps nominal and adjust the last two.
+Keep four gaps nominal and adjust the last one.
 
-![Adjust the last two gaps](assets/pitch-end.gif)
+![Adjust the last gap](assets/pitch-end.gif)
 
 ## Autostitch solution
 
@@ -26,7 +26,7 @@ Reserve the endpoints and plan the fewest adjusted gaps centrally, then fill the
 
 ![Plan the central adjustment before filling the line](assets/pitch-centre.gif)
 
-All four use `S02`: the same $30.5\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. The naive solution has ten $3.05\,\mathrm{mm}$ gaps. The other two have eight nominal gaps and two $3.25\,\mathrm{mm}$ gaps. Dashed slits are proposals; `I` marks identify adjusted spacing.
+All four use `ILL-S02`: six slits on the same $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. The naive solution has five $3.06\,\mathrm{mm}$ gaps. The other two have four nominal gaps and one $3.3\,\mathrm{mm}$ gap, at the end or in the centre. Dashed slits are proposals; `I` marks identify adjusted spacing.
 
 ## Axioms in geometry
 

@@ -60,35 +60,35 @@ function finish(scene,elements) {
 }
 
 function pitchScenes() {
-  const length=variant('S02').route.primitives[0].b[0];
-  const view={x:60,y:187.5,scale:14.5};
+  const {length}=catalog.illustrations.find(i=>i.id==='ILL-S02').inputs;
+  const view={x:60,y:187.5,scale:28};
   const base=straightBase(length,view);
-  const nominal=Array.from({length:11},(_,i)=>i*3);
-  const nominalDrawing=(count=11)=>nominal.slice(0,count).flatMap(x=>opening([x,0],alpha,view,{proposed:true}));
-  const remainder=[...base,...nominalDrawing(),...opening([33,0],alpha,view,{proposed:true}),...measure([30,0],[30.5,0],'0.5',view,-45)];
-  const problem=scene('pitch-problem','Nominal pitch leaves a remainder','S02');
+  const nominal=Array.from({length:6},(_,i)=>i*3);
+  const nominalDrawing=(count=6)=>nominal.slice(0,count).flatMap(x=>opening([x,0],alpha,view,{proposed:true}));
+  const remainder=[...base,...nominalDrawing(),...opening([18,0],alpha,view,{proposed:true}),...measure([15,0],[length,0],'0.3',view,-45)];
+  const problem=scene('pitch-problem','Nominal pitch leaves a remainder','ILL-S02');
   frame(problem,base,75,'guide');
-  for(let i=1;i<=11;i++) frame(problem,[...base,...nominalDrawing(i),...(i>1?measure([0,0],[3,0],'3',view):[])],i<4?35:20);
+  for(let i=1;i<=6;i++) frame(problem,[...base,...nominalDrawing(i),...(i>1?measure([0,0],[3,0],'3',view):[])],45);
   finish(problem,remainder);
   const fits=[
-    {name:'pitch-spread',title:'Naive: distribute evenly',points:Array.from({length:11},(_,i)=>i*length/10),start:0,count:10,gap:length/10},
-    {name:'pitch-end',title:'Good enough: adjust near the end',points:[0,3,6,9,12,15,18,21,24,27.25,30.5],start:8,count:2,gap:3.25},
-    {name:'pitch-centre',title:'Autostitch: plan a central adjustment',points:stations(selectFit({D:length,p:3})),start:4,count:2,gap:3.25}
+    {name:'pitch-spread',title:'Naive: distribute evenly',points:Array.from({length:6},(_,i)=>i*length/5),start:0,count:5,gap:length/5},
+    {name:'pitch-end',title:'Good enough: adjust near the end',points:[0,3,6,9,12,length],start:4,count:1,gap:3.3},
+    {name:'pitch-centre',title:'Autostitch: plan a central adjustment',points:stations(selectFit({D:length,p:3})),start:2,count:1,gap:3.3}
   ];
   const scenes=[problem];
   for(const fit of fits) {
-    const s=scene(fit.name,fit.title,'S02');
+    const s=scene(fit.name,fit.title,'ILL-S02');
     frame(s,base,75,'guide');
     const draw=(points,proposed=false)=>points.flatMap((x,i)=>opening([x,0],alpha,view,{proposed,marked:!proposed&&i>=fit.start&&i<=fit.start+fit.count}));
     if(fit.name==='pitch-centre') {
       const fixed=[...base,...opening([0,0],alpha,view),...opening([length,0],alpha,view)];
       frame(s,fixed,80,'fixed-ends');
-      const reserved=[...fixed,...fit.points.slice(4,7).flatMap(x=>opening([x,0],alpha,view,{marked:true})),...measure([fit.points[4],0],[fit.points[5],0],'3.25',view,-40)];
+      const reserved=[...fixed,...fit.points.slice(2,4).flatMap(x=>opening([x,0],alpha,view,{marked:true})),...measure([fit.points[2],0],[fit.points[3],0],'3.30',view,-40)];
       frame(s,reserved,100,'planned-adjustment');
       let accumulated=[...reserved];
-      for(const i of [1,2,3,7,8,9]){accumulated.push(...opening([fit.points[i],0],alpha,view));frame(s,[...accumulated],30);}
+      for(const i of [1,4]){accumulated.push(...opening([fit.points[i],0],alpha,view));frame(s,[...accumulated],60);}
     } else {
-      for(let i=1;i<=11;i++)frame(s,[...base,...nominalDrawing(i)],i<4?30:18);
+      for(let i=1;i<=6;i++)frame(s,[...base,...nominalDrawing(i)],45);
       frame(s,remainder,130,'mismatch');
       for(let i=1;i<=24;i++) {
         const t=ease(i/24),moving=nominal.map((x,j)=>lerp(x,fit.points[j],t));
@@ -96,7 +96,7 @@ function pitchScenes() {
       }
     }
     const end=[...base,...draw(fit.points),...measure([fit.points[fit.start],0],[fit.points[fit.start+1],0],fit.gap.toFixed(2),view,-40)];
-    if(fit.count<10)end.push(...measure([0,0],[3,0],'3',view));
+    if(fit.count<5)end.push(...measure([0,0],[3,0],'3',view));
     finish(s,end);scenes.push(s);
   }
   return scenes;
@@ -498,7 +498,10 @@ function screenTangent(g,station) {
 }
 function annotateScene(s) {
   let marks=[];
-  if(s.name.startsWith('pitch-'))marks=routeMarks([60,187.5],[502.25,187.5]);
+  if(s.name.startsWith('pitch-')) {
+    marks=routeMarks([60,187.5],[60+28*catalog.illustrations.find(i=>i.id==='ILL-S02').inputs.length,187.5]);
+    marks=marks.map(e=>e.kind==='notation-end'?{...e,p:add(e.p,[0,-10])}:e);
+  }
   else if(['axiom-landmark','terms-layout'].includes(s.name))marks=routeMarks([60,187.5],[540,187.5]);
   else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
   else if(s.name==='axiom-curve')marks=routeMarks([160,75],[390,305],[1,0],[0,1]);

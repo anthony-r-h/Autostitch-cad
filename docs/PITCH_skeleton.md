@@ -32,22 +32,22 @@ Research note: Anthony to find stitching examples from:
 
 - Seam lengths and required features rarely fall on exact multiples of the tool's pitch
 - Manual arrays leave endpoint, landmark and junction adjustments to the maker
-- Example: $30.5\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, fixed endpoints
+- Example: six slits on a $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, fixed endpoints
 
 ![Nominal spacing leaves a remainder at the fixed end](../examples/illustrated/assets/pitch-problem.gif)
 
 ## Naive solution
 
-- Distribute eleven openings evenly: ten $3.05\,\mathrm{mm}$ gaps
+- Distribute six openings evenly: five $3.06\,\mathrm{mm}$ gaps
 - Every gap departs from nominal tool spacing
 
 ![Naive solution: redistribute every gap](../examples/illustrated/assets/pitch-spread.gif)
 
 ## Good enough solution
 
-- Keep eight nominal gaps; absorb the remainder in two $3.25\,\mathrm{mm}$ gaps at the end
+- Keep four nominal gaps; absorb the remainder in one $3.3\,\mathrm{mm}$ gap at the end
 
-![Good enough solution: adjust two gaps near the end](../examples/illustrated/assets/pitch-end.gif)
+![Good enough solution: adjust the last gap](../examples/illustrated/assets/pitch-end.gif)
 
 ## Autostitch solution
 

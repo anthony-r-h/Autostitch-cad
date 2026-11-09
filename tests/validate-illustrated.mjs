@@ -34,16 +34,16 @@ function circle(name,view) {
 const has=(points,p)=>points.some(point=>dist(point,p)<1e-6);
 const bounded=gaps=>assert(gaps.every(g=>g>=2.7-1e-6&&g<=3.3+1e-6));
 
-const fit=selectFit({D:30.5,p:3}),view={x:60,y:187.5,scale:14.5};
+const fit=selectFit({D:15.3,p:3}),view={x:60,y:187.5,scale:28};
 for(const asset of catalog.illustrations.find(i=>i.id==='ILL-S02').assets) {
   const name=asset.path.split('/').at(-1);
   if(asset.policy==='unresolved') {
     const proposals=slits(name,view,'proposal').map(s=>s.center);
-    assert.equal(proposals.length,12);near(proposals.at(-1)[0],33);near(30.5-proposals.at(-2)[0],.5);continue;
+    assert.equal(proposals.length,7);near(proposals.at(-1)[0],18);near(15.3-proposals.at(-2)[0],.3);continue;
   }
-  const holes=slits(name,view);assert.equal(holes.length,11);
+  const holes=slits(name,view);assert.equal(holes.length,6);
   holes.forEach(s=>{near(s.center[1],0);near(s.angle,alpha);});
-  const points=holes.map(s=>s.center[0]);near(points[0],0);near(points.at(-1),30.5);
+  const points=holes.map(s=>s.center[0]);near(points[0],0);near(points.at(-1),15.3);
   const gaps=points.slice(1).map((p,i)=>p-points[i]);bounded(gaps);
   const changed=gaps.map((gap,i)=>({gap,i})).filter(g=>Math.abs(g.gap-3)>1e-6);
   assert.equal(changed.length,asset.changedGaps);assert.equal(changed[0].i,asset.firstChangedGap);

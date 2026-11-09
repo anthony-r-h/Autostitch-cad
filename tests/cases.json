@@ -8575,7 +8575,6 @@
   "illustrations": [
     {
       "id": "ILL-S02",
-      "case": "S02",
       "pitch": 3,
       "slitLength": 1.5,
       "leanDegrees": 40,
@@ -8589,23 +8588,23 @@
         {
           "path": "examples/illustrated/assets/pitch-spread",
           "policy": "spread",
-          "changedGaps": 10,
+          "changedGaps": 5,
           "firstChangedGap": 0,
-          "adjustedPitch": 3.05
+          "adjustedPitch": 3.06
         },
         {
           "path": "examples/illustrated/assets/pitch-end",
           "policy": "end",
-          "changedGaps": 2,
-          "firstChangedGap": 8,
-          "adjustedPitch": 3.25
+          "changedGaps": 1,
+          "firstChangedGap": 4,
+          "adjustedPitch": 3.3
         },
         {
           "path": "examples/illustrated/assets/pitch-centre",
           "policy": "central",
-          "changedGaps": 2,
-          "firstChangedGap": 4,
-          "adjustedPitch": 3.25
+          "changedGaps": 1,
+          "firstChangedGap": 2,
+          "adjustedPitch": 3.3
         }
       ],
       "animated": true,
@@ -8613,6 +8612,15 @@
         "s",
         "direction",
         "e"
+      ],
+      "inputs": {
+        "length": 15.3,
+        "openings": 6
+      },
+      "axioms": [
+        "A3",
+        "A5",
+        "A7"
       ]
     },
     {

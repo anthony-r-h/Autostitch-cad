@@ -55,7 +55,7 @@ Research note: Anthony to find stitching examples from:
 - Use the fewest permitted adjustments, centred between those features
 - Mark adjusted gaps for individual placement
 
-![Autostitch solution: plan central adjustments before filling the line](../examples/illustrated/assets/pitch-centre.gif)
+![Autostitch solution: absorb the residual in the central gap](../examples/illustrated/assets/pitch-centre.gif)
 
 # Why CAD
 

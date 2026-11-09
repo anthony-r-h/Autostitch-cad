@@ -4,7 +4,7 @@ Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
 ## The problem
 
-Nominal spacing leaves a remainder at the fixed endpoint. The next proposed slit overshoots.
+Nominal spacing leaves a residual at the fixed endpoint. Every gap and the remaining distance are labelled.
 
 ![Nominal spacing leaves a remainder](assets/pitch-problem.gif)
 
@@ -22,11 +22,13 @@ Keep four gaps nominal and adjust the last one.
 
 ## Autostitch solution
 
-Reserve the endpoints and plan the fewest adjusted gaps centrally, then fill the nominal runs.
+Absorb the residual in the fewest adjusted gaps, centred between the fixed endpoints.
 
-![Plan the central adjustment before filling the line](assets/pitch-centre.gif)
+![Absorb the residual in the central gap](assets/pitch-centre.gif)
 
-All four use `ILL-S02`: six slits on the same $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. The naive solution has five $3.06\,\mathrm{mm}$ gaps. The other two have four nominal gaps and one $3.3\,\mathrm{mm}$ gap, at the end or in the centre. Dashed slits are proposals; `I` marks identify adjusted spacing.
+All four use `ILL-S02`: six slits on the same centred $15.3\,\mathrm{mm}$ guide, $3\,\mathrm{mm}$ pitch, $1.5\,\mathrm{mm}$ slits and $40^\circ$ lean. The naive solution has five $3.06\,\mathrm{mm}$ gaps. The other two have four nominal gaps and one $3.3\,\mathrm{mm}$ gap, at the end or in the centre. Slits remain solid; `I` marks identify adjusted spacing. Every gap value updates as the residual falls from $0.30\,\mathrm{mm}$ to zero.
+
+Motion compares layout revisions, not the movement of already-punched holes or the solver's execution order.
 
 ## Axioms in geometry
 

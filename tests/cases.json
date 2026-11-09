@@ -8621,6 +8621,15 @@
         "A3",
         "A5",
         "A7"
+      ],
+      "terms": [
+        "Residual"
+      ],
+      "reveal": [
+        "Build the same solid nominal row on a horizontally centred guide.",
+        "Label every centre-to-centre gap and emphasize the endpoint residual.",
+        "Redistribute positions for each policy while gap values and residual update together.",
+        "Hold the result with zero residual; retain the guide alignment."
       ]
     },
     {

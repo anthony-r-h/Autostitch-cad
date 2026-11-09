@@ -34,12 +34,12 @@ function circle(name,view) {
 const has=(points,p)=>points.some(point=>dist(point,p)<1e-6);
 const bounded=gaps=>assert(gaps.every(g=>g>=2.7-1e-6&&g<=3.3+1e-6));
 
-const fit=selectFit({D:15.3,p:3}),view={x:60,y:187.5,scale:28};
+const fit=selectFit({D:15.3,p:3}),view={x:(600-15.3*28)/2,y:187.5,scale:28};
 for(const asset of catalog.illustrations.find(i=>i.id==='ILL-S02').assets) {
   const name=asset.path.split('/').at(-1);
   if(asset.policy==='unresolved') {
-    const proposals=slits(name,view,'proposal').map(s=>s.center);
-    assert.equal(proposals.length,7);near(proposals.at(-1)[0],18);near(15.3-proposals.at(-2)[0],.3);continue;
+    const nominal=slits(name,view).map(s=>s.center);
+    assert.equal(nominal.length,6);near(nominal.at(-1)[0],15);near(15.3-nominal.at(-1)[0],.3);continue;
   }
   const holes=slits(name,view);assert.equal(holes.length,6);
   holes.forEach(s=>{near(s.center[1],0);near(s.angle,alpha);});
@@ -50,6 +50,32 @@ for(const asset of catalog.illustrations.find(i=>i.id==='ILL-S02').assets) {
   changed.forEach(g=>near(g.gap,asset.adjustedPitch));
   assert.equal(readSvg(name).elements.filter(e=>e.class==='adjustment-mark').length,(changed.length+1)*2);
   if(asset.policy==='central'){assert.equal(changed.length,fit.k);assert.equal(changed[0].i,fit.i);near(changed[0].gap,fit.correctedPitch);}
+}
+
+for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
+  const guide=s.final.filter(e=>e.kind==='guide');
+  assert.equal(guide.length,1);near((guide[0].a[0]+guide[0].b[0])/2,300);
+  let previousResidual=.3;
+  for(const f of s.frames) {
+    assert.deepEqual(f.elements.filter(e=>e.kind==='guide'),guide);
+    assert(!f.elements.some(e=>e.kind==='proposal'));
+    const slits=f.elements.filter(e=>e.kind==='slit');assert(slits.every(e=>!e.dash));
+    const points=slits.map(e=>((e.a[0]+e.b[0])/2-view.x)/view.scale);
+    const labels=f.elements.filter(e=>e.kind==='gap-value');
+    assert.equal(labels.length,Math.max(0,points.length-1));
+    labels.forEach((label,i)=>near(+label.value,points[i+1]-points[i],.00501));
+    if(points.length===6) {
+      const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
+      near(+label.value,remaining,.00501);
+      near(points.slice(1).reduce((sum,p,i)=>sum+p-points[i],0)+remaining,15.3);
+      if(f.stage==='planning-revision') {
+        assert(remaining<=previousResidual+1e-9);previousResidual=remaining;
+      }
+    }
+  }
+  const residual=s.final.find(e=>e.kind==='residual-value');
+  near(+residual.value,s.name==='pitch-problem'?.3:0);
+  if(s.name!=='pitch-problem')assert.equal(s.frames.filter(f=>f.stage==='planning-revision').length,30);
 }
 
 const curve=slits('axiom-curve',{x:160,y:75,scale:23});

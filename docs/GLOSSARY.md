@@ -44,6 +44,12 @@ Sharp-corner gaps with a round-hole endpoint follow the corner construction. A *
 
 Consecutive equal adjusted gaps form an **adjustment block** within a free span.
 
+- **Number of adjusted gaps:** how many gaps differ from nominal pitch.
+- **Absolute adjustment:** $\sum_i\lvert g_i-p\rvert$, the total change in gap lengths. Compression and extension both add to the total.
+- **Absolute residual:** $\sum_j\lvert r_j\rvert$, the total length to distribute before fitting, summed over the free spans.
+
+For a span with $n$ gaps, its residual is $r=L-np$ on a straight guide, or $r=R\left(\lvert\theta\rvert-2n\arcsin\left(p/(2R)\right)\right)$ on a circular guide of radius $R$ and sweep $\theta$ in radians. Absolute residual uses length along the guide; absolute adjustment uses chord lengths. They can differ on curves.
+
 ## Junction
 
 A meeting with two or more **arms**: portions of stitch lines extending away from it. A through-line contributes two arms, a T has three, and an X has four.

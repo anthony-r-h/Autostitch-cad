@@ -1,8 +1,8 @@
 # Counter-examples
 
-Sources and reproducible figures for [stitching examples](../../docs/counter_examples/EXAMPLES_skeleton.md): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.webp`, supplied by Anthony.
+Sources and reproducible figures for [stitching examples](../../docs/EXAMPLES_skeleton.md): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.webp`, supplied by Anthony.
 
-Keep these cases in `docs/counter_examples/` and their source material here. Add them to the pitch only when Anthony requests it.
+Keep these cases in `docs/EXAMPLES_skeleton.md` and their source material here. Add them to the pitch only when Anthony requests it.
 
 Loewe source photograph: `loewe_mini_feather.jpg`, supplied by Anthony. The case isolates the rectangular strap below the swivel hook.
 
@@ -57,3 +57,7 @@ Fagliano timing: establish three straight pairs; reveal each nominal curved run,
 Fagliano Autostitch comparison: apply the independent circular fit selector between the protected entry and corner neighbours. The left free span needs one adjusted gap of approximately $2.7470\,\mathrm{mm}$, placed centrally with the half-index tie toward the route end. The right needs four adjusted gaps of approximately $2.7290\,\mathrm{mm}$. Both retain the reference guides, straight stations and real opening counts. Autostitch locates its hole at the selected virtual-tip intersection, slightly right of the vertex, producing asymmetric reserved stations and different fits. This checks the documented fitting policy analytically; it is not native CAD evidence.
 
 Interpretation notes are collected in the examples document. These figures use analytic geometry, not a native plugin run. The diagonal-slit alternative is distinct from A6; the H remains external decoration rather than evidence of support for arbitrary fixed decorative holes.
+
+## Comparison totals
+
+Use the terms in [the glossary](../../docs/GLOSSARY.md#gap-and-pitch). Sum residual magnitudes per free span before combining runs. For Autostitch corners, count virtual-to-real steps, not real-to-hole distances; these steps are nominal in the current cases. Reference totals include gaps to a fixed round hole. Exclude the H's internal decorative spacing and include its two nominal approaches. Round only after summation.

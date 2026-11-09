@@ -11,7 +11,7 @@ $SceneScript = [IO.Path]::GetFullPath($SceneScript)
 $temporary = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ('../../output/'+(Split-Path (Split-Path $SceneScript -Parent) -Leaf))))
 & node $SceneScript prepare $OutputDirectory $temporary
 if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
-$scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw | ConvertFrom-Json
+$scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 
 function Draw-Frame($elements) {
  $large=[Drawing.Bitmap]::new(1200,750)

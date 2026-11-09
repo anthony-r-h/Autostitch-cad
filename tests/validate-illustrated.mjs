@@ -462,6 +462,22 @@ for(const f of cornerSolution.frames) {
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Autostitch|Vertex point|Bridge|Shared diagonal slit)/.test(line));
 const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
+for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
+  const threads=s.final.filter(e=>e.kind==='thread');
+  const adjacent=[threads[count-1],threads[s.name==='problem-corner-bridge'?count-1:count]];
+  const expected=adjacent.map((e,arm)=>{
+    const dx=e.b[0]-e.a[0],dy=e.b[1]-e.a[1];
+    return (Math.acos((arm===0?dx:dy)/Math.hypot(dx,dy))*180/Math.PI).toFixed(1)+'\u00b0';
+  });
+  const labels=s.final.filter(e=>e.kind==='thread-angle-value');
+  assert.deepEqual(labels.map(e=>e.value),expected);
+  for(const e of labels){assert.equal(e.size,13);assert.equal(e.color,'#252525');}
+  assert(displayElements(s.final).filter(e=>e.kind==='thread-angle-value').every(e=>e.color==='#252525'));
+  for(const f of s.frames) {
+    const annotated=f.elements.some(e=>e.kind==='thread-angle-value');
+    assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
+  }
+}
 const balancedMirror=pitchComparisonMetrics(mirroredCorner),balancedAuto=pitchComparisonMetrics(cornerSolution);
 for(const key of ['absoluteAdjustment','absoluteResidual'])near(balancedMirror[key],balancedAuto[key]);
 assert.equal(balancedMirror.adjustedGaps,2);
@@ -532,7 +548,8 @@ for(const s of scenes) {
   const source=readSvg(s.name).source;
   const terms=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)))?.terms??[];
   const termMatches=(value,term)=>value===term||(value.startsWith(term+' ')&&/^\d+\.\d{2}$/.test(value.slice(term.length+1)));
-  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||
+    (s.name.startsWith('problem-corner-')&&/^\d+\.\d\u00b0$/.test(match[1]))||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
   for(const term of terms)assert(labels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
   if(s.name!=='terms-slit') {

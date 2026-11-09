@@ -69,6 +69,7 @@ Research note: Anthony to find stitching examples from:
 - Arm lengths: $23.472\,\mathrm{mm}$ and $23.954\,\mathrm{mm}$; chosen for equal absolute adjustment between the diagonal slit and Autostitch
 - The same outer endpoints apply to every treatment
 - The choice of corner opening changes the adjoining thread and the spans available for fitting
+- Degree labels: entering and leaving thread angles relative to their respective arms
 
 ## Vertex point
 

@@ -711,13 +711,34 @@ function finishThread(s) {
   const paths=threadPaths(s),threads=paths.flatMap(path=>path.slice(1).map((next,i)=>
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,s.emphasisedThreads?.includes(i)?2.6:1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
-  const result=[...s.final.slice(0,index),...threads,...s.final.slice(index)];
+  const angles=s.name.startsWith('problem-corner-')?cornerThreadAngles(s,threads):[];
+  const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[
     {...f,delay:80},
     ...Array.from({length:5},(_,i)=>({elements:result,delay:6,stage:'thread-fade',holeLightening:(i+1)/5})),
     {elements:result,delay:400,stage:'thread-reveal'}
   ]:[f]);
   return {...s,final:result,frames};
+}
+function cornerThreadAngles(s,threads) {
+  const count=catalog.illustrations.find(i=>i.id===s.source).inputs.armIntervals;
+  const entering=threads[count-1],leaving=threads[s.name==='problem-corner-bridge'?count-1:count];
+  return [entering,leaving].flatMap((thread,arm)=>{
+    const tangent=arm===0?[1,0]:[0,1];
+    const vector=[thread.b[0]-thread.a[0],thread.b[1]-thread.a[1]];
+    const turn=Math.atan2(tangent[0]*vector[1]-tangent[1]*vector[0],tangent[0]*vector[0]+tangent[1]*vector[1]);
+    const degrees=Math.abs(turn)*180/Math.PI;
+    const origin=thread.a,start=arm*Math.PI/2,radius=18;
+    const points=Array.from({length:17},(_,i)=>add(origin,mul(axis(start+turn*i/16),radius)));
+    const label=arm===0?[380,16]:[525,70];
+    const anchor=add(origin,mul(axis(start+turn/2),radius));
+    return [
+      line(origin,add(origin,mul(tangent,28)),'angle-reference',construction,.8,true),
+      ...points.slice(1).map((p,i)=>line(points[i],p,'thread-angle',ink,1)),
+      line(arm===0?add(label,[0,4]):add(label,[-28,-4]),anchor,'angle-leader',construction,.8),
+      {...text(label,`${degrees.toFixed(1)}\u00b0`),kind:'thread-angle-value',color:ink,size:13}
+    ];
+  });
 }
 function slitOutlines(s) {
   const style=elements=>elements.map(e=>{

@@ -33,10 +33,26 @@
 
 ![Sellier case with the Autostitch corner construction](../../examples/counter_examples/assets/sellier-wallet-autostitch.png)
 
-### Interpretation
+### Loewe Mini Feather hanger
+
+[Reference photograph](../../examples/counter_examples/loewe_mini_feather.jpg): the rectangular stitched strap directly below the swivel hook.
+
+- One run goes up the left side, across the top and down the right side
+- The left corner uses a shared slit; the right corner uses a round hole
+- The middle thread across the top is horizontal
+
+**Reference construction**
+
+![Loewe hanger with a left slit corner, flat middle thread and right round hole](../../examples/counter_examples/assets/loewe-hanger-reference.png)
+
+**Autostitch construction** — round holes at both corners, consistent slit lean and a bounded top-span adjustment.
+
+![Loewe hanger with two Autostitch corners](../../examples/counter_examples/assets/loewe-hanger-autostitch.png)
+
+## Interpretation
 
 - Slit axes are inferred from the thread; the balanced corner angle is an assumption
 - Front/rear style describes the slit lean here, not proof of which face was punched
-- Dimensions are illustrative; the case uses $p=3\,\mathrm{mm}$
+- Dimensions are illustrative; the cases use $p=3\,\mathrm{mm}$
 
 [Sources and reproduction](../../examples/counter_examples/README.md)

@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {selectFit} from '../../tests/fit-oracle.mjs';
 import {add,mul,axis,project,worldLine,opening,hole,scene,frame,finish,
   routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles} from '../illustrated/scenes.mjs';
 
@@ -109,5 +110,40 @@ function walletScene(diagonal=false) {
   return slitOutlines(finishThread({...s,final:result}));
 }
 
-export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true)];}
+function loeweScenes() {
+  const spec=input('ILL-LOEWE-HANGER'),p=spec.pitch,h=spec.slitLength/2,a=spec.leanDegrees*Math.PI/180;
+  const w=spec.width,length=spec.sideSteps*p,view={x:(600-w*25)/2,y:80,scale:25};
+  const uLeft=axis(a+Math.PI/2),uTop=axis(a),uRight=axis(a-Math.PI/2);
+  const leftJoint=[-h*uLeft[0],h*uTop[1]],rightJoint=[w+h*uRight[0],-h*uTop[1]];
+  const virtuals=[add(leftJoint,mul(uLeft,h)),add(leftJoint,mul(uTop,-h)),add(rightJoint,mul(uTop,h)),add(rightJoint,mul(uRight,-h))];
+  const topStart=add(virtuals[1],[p,0]),topEnd=add(virtuals[2],[-p,0]);
+  const fit=selectFit({D:topEnd[0]-topStart[0],p});
+  if(!fit||fit.n!==1)throw new Error('Loewe comparison requires one feasible top gap');
+  return [false,true].map(solved=>{
+    const s=scene(solved?'loewe-hanger-autostitch':'loewe-hanger-reference',
+      solved?'Autostitch construction of the Loewe hanger':'Loewe hanger: slit corner, flat middle thread and round corner','ILL-LOEWE-HANGER');
+    const left=Array.from({length:spec.sideSteps},(_,i)=>[0,(solved?virtuals[0][1]:0)-(spec.sideSteps-i)*p]);
+    const right=Array.from({length:spec.sideSteps},(_,i)=>[w,(solved?virtuals[3][1]:0)-(i+1)*p]);
+    const top=solved?[topStart,topEnd]:[[w/3,0],[2*w/3,0]];
+    const result=[worldLine([0,-length],[0,0],view),worldLine([0,0],[w,0],view),worldLine([w,0],[w,-length],view),
+      ...routeMarks(project(left[0],view),project(right.at(-1),view),[0,-1],[0,1]),
+      notationText(add(project(solved?leftJoint:[0,0],view),[-20,-15]),'j','junction'),
+      notationText(add(project(solved?rightJoint:[w,0],view),[20,-15]),'j','junction')];
+    const rows=[left,top,right].map((points,arm)=>points.map((point,i)=>{
+      // Mirrored top slits reproduce the flat visible middle thread; the
+      // Autostitch comparison retains one signed lean throughout the route.
+      const angle=arm===0?a+Math.PI/2:arm===2?a-Math.PI/2:!solved&&i===1?-a:a;
+      const slit=opening(point,angle,view,{marked:solved&&arm===1&&fit.k>0});result.push(...slit);return slit[0];
+    }));
+    const firstJoint=solved?hole(leftJoint,view):opening([0,0],Math.PI/4,view)[0];
+    const secondJoint=hole(solved?rightJoint:[w,0],view);result.push(firstJoint,secondJoint);
+    if(solved)virtuals.forEach((point,i)=>result.push(
+      worldLine(i<2?[0,0]:[w,0],point,view,'extension','#C4C4C4',1,true),
+      ...opening(point,[a+Math.PI/2,a,a,a-Math.PI/2][i],view,{virtual:true})));
+    s.threadPaths=[[...rows[0],firstJoint,...rows[1],secondJoint,...rows[2]]];
+    return slitOutlines(finishThread({...s,final:result}));
+  });
+}
+
+export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes()];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

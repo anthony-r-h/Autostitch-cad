@@ -112,6 +112,30 @@ for(const layout of [wallet,diagonalWallet]) {
   near(angle({a:circles[0].p,b:openings[9].a}),angle({a:openings[9].b,b:openings[10].a}));
 }
 
+const loeweReference=scenes[3],loeweSolved=scenes[4],lv={x:(600-8.1*25)/2,y:80,scale:25};
+assert.equal(loeweReference.frames.length,0);assert.equal(loeweSolved.frames.length,0);
+assert.deepEqual(loeweReference.final.filter(e=>e.kind==='guide'),loeweSolved.final.filter(e=>e.kind==='guide'));
+const lr=slits(loeweReference),ls=slits(loeweSolved),lh=loeweSolved.final.filter(e=>e.kind==='hole'),lvirtual=loeweSolved.final.filter(e=>e.kind==='virtual');
+assert.equal(lr.length,9);assert.equal(ls.length,8);assert.equal(lh.length,2);assert.equal(lvirtual.length,4);
+const referenceHoles=loeweReference.final.filter(e=>e.kind==='hole');assert.equal(referenceHoles.length,1);
+near(distance(world(midpoint(lr.at(-1)),lv),[0,0]),0);
+near(distance(world(referenceHoles[0].p,lv),[8.1,0]),0);
+const middle=loeweReference.final.filter(e=>e.kind==='thread').find(e=>distance(e.a,lr[3].b)<1e-6&&distance(e.b,lr[4].a)<1e-6);
+assert(middle);near(middle.a[1],middle.b[1]);assert(middle.b[0]>middle.a[0]);
+for(const [v,tip,j] of [[0,'a',0],[1,'b',0],[2,'a',1],[3,'b',1]])near(distance(lvirtual[v][tip],lh[j].p),0);
+for(const [realIndex,virtualIndex] of [[2,0],[3,1],[4,2],[5,3]])near(distance(midpoint(ls[realIndex]),midpoint(lvirtual[virtualIndex]))/lv.scale,3);
+for(const [i,e] of ls.entries()) {
+  const c=world(midpoint(e),lv),expectedAngle=(i<3?-130:i<5?-40:50)*Math.PI/180;
+  near(angle(e),expectedAngle);near(distance(e.a,e.b)/lv.scale,1.5);
+  if(i<3){near(c[0],0);assert(c[1]>=-9&&c[1]<=0);}
+  else if(i<5){near(c[1],0);assert(c[0]>=0&&c[0]<=8.1);}
+  else{near(c[0],8.1);assert(c[1]>=-9&&c[1]<=0);}
+}
+for(const [i,j] of [[0,1],[1,2],[5,6],[6,7]])near(distance(midpoint(ls[i]),midpoint(ls[j]))/lv.scale,3);
+const topGap=distance(midpoint(ls[3]),midpoint(ls[4]))/lv.scale;
+near(topGap,8.1-6+1.5*Math.cos(40*Math.PI/180));assert(topGap>=2.7&&topGap<=3.3);
+assert.equal(loeweSolved.final.filter(e=>e.kind==='adjustment-mark').length,4);
+
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));
   return distance(p,[a[0]+t*d[0],a[1]+t*d[1]]);
@@ -122,8 +146,8 @@ function segmentDistance(a,b,c,d) {
   return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
 }
 // Full-layout clearance, including the external circular decoration.
-for(const layout of [wallet,diagonalWallet]) {
-const axes=slits(layout).map(e=>[world(e.a,wv),world(e.b,wv)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,wv));
+for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv]]) {
+const axes=slits(layout).map(e=>[world(e.a,v),world(e.b,v)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,v));
 for(const [i,[a,b]] of axes.entries()) {
   for(const [c,d] of axes.slice(i+1))assert(segmentDistance(a,b,c,d)-.3>=.2);
   for(const c of centres)assert(pointSegment(c,a,b)-.15-.25>=.2);

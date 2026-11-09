@@ -9344,6 +9344,41 @@
           "path": "examples/counter_examples/assets/sellier-wallet-diagonal"
         }
       ]
+    },
+    {
+      "id": "ILL-LOEWE-HANGER",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": [
+        "A2",
+        "A6",
+        "A7"
+      ],
+      "status": "Static case pair for the rectangular strap below the swivel hook. Reference: shared left slit, round right opening and mirrored top slit axes producing a flat central thread. Autostitch: two analytic A6 round-hole corners, nominal vertical approaches with chosen start/end stations, and one bounded top gap from the independent selector. Photo dimensions and exact slit axes are not measured; no native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "width": 8.1,
+        "sideSteps": 3
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/loewe-hanger-reference"
+        },
+        {
+          "path": "examples/counter_examples/assets/loewe-hanger-autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ]
     }
   ]
 }

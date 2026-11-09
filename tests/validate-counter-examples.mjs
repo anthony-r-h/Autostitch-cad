@@ -192,10 +192,12 @@ const fRows=elements=>[0,1].map(arm=>elements.filter(e=>['slit','virtual'].inclu
   (e.b[1]<e.a[1]?0:1)===arm).sort((a,b)=>midpoint(b)[1]-midpoint(a)[1]));
 const finalRows=fRows(fagliano.final),fHole=fagliano.final.find(e=>e.kind==='hole');
 assert.equal(slits(fagliano).length,16);
-assert.equal(fagliano.final.filter(e=>e.kind==='virtual').length,2);
+assert.equal(fagliano.final.filter(e=>e.kind==='virtual').length,0);
+near(distance(world(fHole.p,fv),[0,radius*Math.sin(sweep)]),0);
+for(const f of fagliano.frames)assert.deepEqual(f.elements.find(e=>e.kind==='hole'),fHole);
 assert.equal(fagliano.final.filter(e=>e.kind==='hole').length,1);
 for(const [arm,row] of finalRows.entries()) {
-  assert.equal(row.length,9);
+  assert.equal(row.length,8);
   for(const [i,e] of row.entries()) {
     const centre=world(midpoint(e),fv),u=unit(vector(world(e.a,fv),world(e.b,fv)));
     near(distance(e.a,e.b)/fv.scale,1.5);
@@ -211,13 +213,16 @@ for(const [arm,row] of finalRows.entries()) {
     near(tangent[0]*u[1]-tangent[1]*u[0],Math.sin(sweep));
   }
   const gaps=row.slice(1).map((e,i)=>distance(midpoint(e),midpoint(row[i]))/fv.scale);
-  for(const i of [0,1,2,7])near(gaps[i],3);
+  for(const i of [0,1,2])near(gaps[i],3);
   const chord=gaps[3];assert(chord>=2.7&&chord<3);
   for(const i of [4,5,6])near(gaps[i],chord);
-  near(chord,arm===0?2.9367570471:2.7290148486);
-  near(distance(row.at(-1)[arm===0?'a':'b'],fHole.p),0);
+  near(chord,2.7491356421873347);
+  near(distance(midpoint(row.at(-1)),fHole.p)/fv.scale,chord);
 }
-for(let i=0;i<3;i++)near(midpoint(finalRows[0][i])[1],midpoint(finalRows[1][i])[1]);
+for(let i=0;i<8;i++) {
+  near(midpoint(finalRows[0][i])[1],midpoint(finalRows[1][i])[1]);
+  near(midpoint(finalRows[0][i])[0]+midpoint(finalRows[1][i])[0],2*fv.x);
+}
 const firstComplete=fagliano.frames.findIndex(f=>f.stage==='arm-0-nominal');
 for(const f of fagliano.frames.slice(firstComplete,-1)) {
   const rows=fRows(f.elements);
@@ -228,19 +233,23 @@ for(const f of fagliano.frames.slice(firstComplete,-1)) {
 }
 for(const arm of [0,1]) {
   const overrun=fagliano.frames.find(f=>f.stage===`arm-${arm}-overrun`),trial=fRows(overrun.elements)[arm];
-  assert.equal(trial.length,9);
+  assert.equal(trial.length,8);
   for(let i=1;i<trial.length;i++)near(distance(midpoint(trial[i]),midpoint(trial[i-1]))/fv.scale,3);
-  assert(world(midpoint(trial.at(-1)),fv)[1]>world(midpoint(finalRows[arm].at(-1)),fv)[1]);
-  let residual=distance(trial.at(-1)[arm===0?'a':'b'],fHole.p);
+  const trialHole=overrun.elements.find(e=>e.kind==='trial-hole');
+  assert(trialHole);
+  near(distance(midpoint(trial.at(-1)),trialHole.p)/fv.scale,3);
+  let residual=distance(trialHole.p,fHole.p);
   const moving=fagliano.frames.filter(f=>f.stage===`arm-${arm}-compress`);assert.equal(moving.length,30);
   for(const f of moving) {
     const rows=fRows(f.elements),row=rows[arm];
-    const next=distance(row.at(-1)[arm===0?'a':'b'],fHole.p);
+    const terminal=f.elements.find(e=>e.kind==='trial-hole');
+    const next=terminal?distance(terminal.p,fHole.p):0;
     assert(next<residual);residual=next;
     near(distance(midpoint(row[2]),midpoint(row[3]))/fv.scale,3);
-    near(distance(midpoint(row[7]),midpoint(row[8]))/fv.scale,3);
+
     const chord=distance(midpoint(row[3]),midpoint(row[4]))/fv.scale;
     for(let i=5;i<=7;i++)near(distance(midpoint(row[i-1]),midpoint(row[i]))/fv.scale,chord);
+    near(distance(midpoint(row[7]),terminal?terminal.p:fHole.p)/fv.scale,chord);
     if(arm===1)assert.deepEqual(rows[0],finalRows[0],'Left arm changed during right compression');
   }
   near(residual,0);
@@ -249,10 +258,13 @@ assert(fagliano.frames.findIndex(f=>f.stage==='arm-0-settled')<fagliano.frames.f
 
 const faglianoSolved=scenes[8],solvedRows=fRows(faglianoSolved.final);
 assert.equal(faglianoSolved.frames.length,0);
-for(const kind of ['guide','hole','virtual','alignment'])assert.deepEqual(
+const solvedHole=faglianoSolved.final.find(e=>e.kind==='hole');
+assert(solvedHole.p[0]>fv.x);
+for(const [arm,row] of solvedRows.entries())near(distance(row.at(-1)[arm===0?'a':'b'],solvedHole.p),0);
+for(const kind of ['guide','alignment'])assert.deepEqual(
   faglianoSolved.final.filter(e=>e.kind===kind),fagliano.final.filter(e=>e.kind===kind));
 for(const [arm,row] of solvedRows.entries()) {
-  assert.equal(row.length,finalRows[arm].length);
+  assert.equal(row.length,finalRows[arm].length+1);
   assert.deepEqual(row.slice(0,4),finalRows[arm].slice(0,4));
   const gaps=row.slice(1).map((e,i)=>distance(midpoint(e),midpoint(row[i]))/fv.scale);
   for(const i of [0,1,2,7])near(gaps[i],3);

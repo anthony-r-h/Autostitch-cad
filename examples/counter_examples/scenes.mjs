@@ -204,17 +204,17 @@ function faglianoScene(solved=false) {
   const sweep=spec.sweepDegrees*Math.PI/180,c=R*Math.cos(sweep),halfWidth=R-c,step=2*Math.asin(p/(2*R));
   // Upper intersection of the incoming minus-tip and outgoing plus-tip circles.
   const jx=h*Math.sin(a)/Math.cos(sweep);
-  const joint=[jx,Math.sqrt((R-h*Math.sin(a))**2+(h*Math.cos(a))**2-(jx-c)**2)];
-  const virtual=[Math.PI-Math.atan2(joint[1],jx-c)+Math.atan2(h*Math.cos(a),R-h*Math.sin(a)),
-    Math.atan2(joint[1],jx+c)+Math.atan2(h*Math.cos(a),R+h*Math.sin(a))];
-  const increments=virtual.map(v=>(v-2*step)/spec.adjustedGaps);
+  const joint=solved?[jx,Math.sqrt((R-h*Math.sin(a))**2+(h*Math.cos(a))**2-(jx-c)**2)]:[0,R*Math.sin(sweep)];
+  const virtual=solved?[Math.PI-Math.atan2(joint[1],jx-c)+Math.atan2(h*Math.cos(a),R-h*Math.sin(a)),
+    Math.atan2(joint[1],jx+c)+Math.atan2(h*Math.cos(a),R+h*Math.sin(a))]:[sweep,sweep];
+  const increments=virtual.map(v=>solved?(v-2*step)/(spec.curvedSlits-1):(sweep-step)/spec.curvedSlits);
   const chords=increments.map(t=>2*R*Math.sin(t/2));
   if(chords.some(g=>g<.9*p||g>=p))throw new Error('Fagliano curves require bounded compression on both arms');
   const view={x:300,y:265,scale:13.5},bottom=-(spec.straightOpenings-1)*p;
   const point=(arm,t)=>[arm===0?c-R*Math.cos(t):-c+R*Math.cos(t),R*Math.sin(t)];
   const slitAngle=(arm,t)=>arm===0?Math.PI/2-t+a:-Math.PI/2+t+a;
   const s=scene(solved?'fagliano-tip-autostitch':'fagliano-tip-compression',
-    solved?'Autostitch: minimum adjusted gaps on the same strap guides':'Aligned straight runs need different curved chord lengths',
+    solved?'Autostitch: minimum adjusted gaps on the same strap guides':'Aligned straight runs compress equally into a vertex hole',
     solved?'ILL-FAGLIANO-AUTOSTITCH':'ILL-FAGLIANO-TIP');
   const base=[worldLine([-halfWidth,bottom],[-halfWidth,0],view),worldLine([halfWidth,0],[halfWidth,bottom],view),
     ...routeMarks(project([-halfWidth,bottom],view),project([halfWidth,bottom],view),[0,-1],[0,1]),
@@ -222,12 +222,12 @@ function faglianoScene(solved=false) {
   for(const arm of [0,1])for(let i=0;i<60;i++)base.push(worldLine(point(arm,sweep*i/60),point(arm,sweep*(i+1)/60),view));
   const straight=[0,1].map(arm=>Array.from({length:spec.straightOpenings},(_,i)=>
     opening([arm===0?-halfWidth:halfWidth,bottom+i*p],slitAngle(arm,0),view)[0]));
-  const realCount=spec.adjustedGaps+1;
+  const realCount=spec.curvedSlits;
   const nominal=Array.from({length:realCount+1},(_,i)=>(i+1)*step);
-  const targets=virtual.map((v,arm)=>[...Array.from({length:realCount},(_,i)=>step+i*increments[arm]),v]);
+  const targets=virtual.map((v,arm)=>[...Array.from({length:realCount},(_,i)=>step+i*increments[arm]),solved?v:sweep]);
   const fits=solved?virtual.map(v=>selectFit({R,p,sweep:v-2*step})):null;
   if(solved)fits.forEach((fit,arm)=>{
-    if(!fit||fit.n!==spec.adjustedGaps)throw new Error('Fagliano comparison requires the same opening count');
+    if(!fit||fit.n!==(spec.curvedSlits-1))throw new Error('Fagliano comparison requires the same opening count');
     const points=[step];
     for(let i=0;i<fit.n;i++)points.push(points.at(-1)+
       (i>=fit.i&&i<fit.i+fit.k?2*Math.asin(fit.correctedPitch/(2*R)):step));
@@ -245,6 +245,14 @@ function faglianoScene(solved=false) {
         point(arm,sweep+(values.at(-1)-sweep)*i/12),point(arm,sweep+(values.at(-1)-sweep)*(i+1)/12),view,'extension','#C4C4C4',1,true));
       for(const [i,t] of values.entries()) {
         const terminal=i===realCount;
+        // The reference ends at the vertex hole, not an A6 virtual slit.
+        if(terminal&&!solved) {
+          const centre=project(point(arm,t),view),anchor=project(joint,view);
+          if(Math.hypot(centre[0]-anchor[0],centre[1]-anchor[1])>1e-6)result.push(
+            {...hole(point(arm,t),view),kind:'trial-hole',color:'#C62828'},
+            line(centre,anchor,'residual-dimension','#C62828',1.6));
+          continue;
+        }
         const adjusted=j=>j>=0&&j<values.length-1&&Math.abs(values[j+1]-values[j]-step)>1e-8;
         const slit=opening(point(arm,t),slitAngle(arm,t),view,{virtual:terminal,marked:!terminal&&(adjusted(i-1)||adjusted(i))});
         if(terminal) {

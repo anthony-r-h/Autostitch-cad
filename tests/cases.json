@@ -9445,11 +9445,9 @@
       "axioms": [
         "A2",
         "A3",
-        "A6",
-        "A7",
-        "A8"
+        "A7"
       ],
-      "status": "Symmetric straight/arc guides and aligned straight stations, with one handedness and an analytic A6 round hole. Per user request, compression is shared equally among four free curved gaps on each arm, while entry and terminal steps remain nominal. This is an explanatory distribution choice, not the production minimum-adjustment-block policy; geometry is schematic, not measured or natively solved.",
+      "status": "Reference reconstruction: symmetric curves, aligned straight rows, one handedness and a round hole exactly at the guide vertex. Keep the entry gap nominal; compress the following five gaps equally on each side, including the final gap to the hole. Equal chord lengths follow from symmetry. Schematic dimensions, not measured from the photograph.",
       "inputs": {
         "pitch": 3,
         "slitLength": 1.5,
@@ -9457,14 +9455,14 @@
         "radius": 24,
         "sweepDegrees": 40,
         "straightOpenings": 3,
-        "adjustedGaps": 4
+        "curvedSlits": 5
       },
       "assets": [
         {
           "path": "examples/counter_examples/assets/fagliano-tip-compression"
         }
       ],
-      "sequence": "Establish aligned straight pairs, extend the left nominal row beyond its reserved tip, compress its free curved gaps equally, then repeat on the right. Keep solved left and both straight runs fixed. Compare the two chord values and reveal all thread for two seconds.",
+      "sequence": "Establish aligned straight pairs; extend each nominal row to a trial hole beyond the fixed vertex; compress five curved gaps equally, left then right. Straight runs remain fixed; reveal all thread for two seconds.",
       "notation": [
         "s",
         "e",
@@ -9490,7 +9488,7 @@
         "A7",
         "A8"
       ],
-      "status": "Same guides, aligned straight rows and A6 hole as ILL-FAGLIANO-TIP. Independent circular fit selector applies the documented minimum-adjustment-block policy: one left adjusted gap and four right adjusted gaps. Analytic illustration, not a native plugin run.",
+      "status": "Same guides and aligned straight rows as ILL-FAGLIANO-TIP; an A6 virtual-tip intersection determines a different, offset hole. Independent circular fit selector minimizes adjusted gaps: one left and four right. Analytic illustration, not a native plugin run.",
       "inputs": {
         "pitch": 3,
         "slitLength": 1.5,
@@ -9498,7 +9496,7 @@
         "radius": 24,
         "sweepDegrees": 40,
         "straightOpenings": 3,
-        "adjustedGaps": 4
+        "curvedSlits": 5
       },
       "assets": [
         {

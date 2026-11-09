@@ -71,15 +71,15 @@ The **handle chape** is the leather tab attaching the handle hardware to the bag
 [Reference photograph](../../examples/counter_examples/jaeger_lecoultre_fagliano.png): the pointed end of the right strap.
 
 - The two straight runs have horizontally aligned holes and the same stitch handedness
-- A round hole joins the runs at the tip
+- A round hole sits exactly at the vertex where the two curves meet
 - Assume compression is confined to the curves, distributed equally across each arm's free gaps
-- The straight rows stay aligned; the curved rows need different chord lengths: approximately $2.94\,\mathrm{mm}$ and $2.73\,\mathrm{mm}$ for $p=3\,\mathrm{mm}$
+- Symmetric guides and equal compression give the same curved chord on both sides: approximately $2.75\,\mathrm{mm}$ for $p=3\,\mathrm{mm}$
 
-**Reference construction** — equal compression across each curve's free gaps.
+**Reference construction** — equal compression through each curve to the fixed vertex hole.
 
 ![Aligned strap sides with separate compression through each curve into a shared round hole](../../examples/counter_examples/assets/fagliano-tip-compression.gif)
 
-**Autostitch construction** — the same guides, straight rows and round hole; adjust the fewest gaps within the pitch bounds.
+**Autostitch construction** — the same guides and straight rows. The virtual slit tips locate the hole slightly to the right of the vertex; adjust the fewest gaps within the pitch bounds.
 
 - Left: one adjusted gap of approximately $2.75\,\mathrm{mm}$; the remaining gaps stay nominal
 - Right: four adjusted gaps of approximately $2.73\,\mathrm{mm}$

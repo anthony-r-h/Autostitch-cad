@@ -9535,7 +9535,7 @@
         "A10"
       ],
       "animated": true,
-      "status": "Analytic comparison on four fixed arms, one circular. Even and Autostitch use chord spacing. Vertex point moves only the last real slit on each arm to reserve a nominal junction gap. Slit and flip shares a vertical slit and mirrors two arms. Bridge pairs opposite arms without a shared opening. Deliberate gap-bound failures and unconnected crossings are labelled; not native CAD evidence.",
+      "status": "Analytic Autostitch X junction with one circular arm. Reserve the round hole and nominal chord neighbours, then fit the remaining arm spans. Fixed endpoints, gap bounds, chord spacing and opening clearance are checked; not native CAD evidence.",
       "inputs": {
         "radius": 20,
         "directionsDegrees": [
@@ -9560,51 +9560,13 @@
         "margin": 0.2,
         "holeDiameter": 0.5
       },
-      "treatments": [
-        {
-          "id": "even",
-          "title": "Even",
-          "note": "Equal spacing; every gap changes"
-        },
-        {
-          "id": "vertex",
-          "title": "Vertex point",
-          "note": "Last-gap corrections exceed the spacing limits"
-        },
-        {
-          "id": "slit",
-          "title": "Slit and flip",
-          "note": "Two arms reverse lean; four arms share one slit"
-        },
-        {
-          "id": "bridge",
-          "title": "Bridge",
-          "note": "Threads cross without a shared opening"
-        },
-        {
-          "id": "autostitch",
-          "title": "Autostitch",
-          "note": "Nominal junction gaps; corrections within the arms"
-        }
-      ],
       "assets": [
         {
-          "path": "examples/illustrated/assets/junction-comparison",
-          "label": "Five treatments of an X junction with a curved arm"
+          "path": "examples/illustrated/assets/axiom-junction-curved",
+          "label": "Autostitch X junction with a curved arm"
         }
       ],
-      "terms": [
-        "Even",
-        "Equal spacing; every gap changes",
-        "Vertex point",
-        "Last-gap corrections exceed the spacing limits",
-        "Slit and flip",
-        "Two arms reverse lean; four arms share one slit",
-        "Bridge",
-        "Threads cross without a shared opening",
-        "Autostitch",
-        "Nominal junction gaps; corrections within the arms"
-      ],
+      "terms": [],
       "notation": [
         "s",
         "e",
@@ -9613,7 +9575,7 @@
       ],
       "threadReveal": {
         "holdCentiseconds": 400,
-        "connection": "Each arm connects to the shared opening; Bridge connects opposite arms."
+        "connection": "Each arm connects to the shared round hole."
       }
     }
   ]

@@ -97,17 +97,11 @@ Reserve one round hole and its nominal neighbours before filling the arms. `ILL-
 
 ![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
 
-`ILL-JUNCTION-COMPARISON` adds an X with one circular arm. One animation cycles through Even, Vertex point, Slit and flip, Bridge and Autostitch; labels identify each treatment and its consequence. Each result holds for four seconds with the thread visible.
+The curved X example reserves one round hole and four nominal chord neighbours, then fits the free spans with fixed outer endpoints. Pitch is $3\,\mathrm{mm}$; the circular arm has radius $20\,\mathrm{mm}$. Its advances use chord lengths. Geometry and inputs are recorded in `ILL-JUNCTION-COMPARISON`.
 
-- Same endpoints, $3\,\mathrm{mm}$ pitch, four intervals per arm; curved arm radius $20\,\mathrm{mm}$. The lengths and treatment labels are in the catalog
-- Even divides each arm into four equal chord gaps; gaps can differ between arms
-- Vertex point is placed first. Nominal rows approach from the outer endpoints; only the last slit moves to reserve a nominal junction gap. Three preceding gaps then violate the adjustment bound
-- Slit and flip keeps nominal rows, shares a vertical slit at the vertex and mirrors two arms. It relaxes consistent lean; it is not presented as an impossible construction
-- Bridge pairs opposite arms. Both bridging threads cross, with no common opening; the crossing is not a connected four-arm junction
-- Autostitch fixes the round hole and nominal chord neighbours, then uses the existing fit selector on each free span. The curved arm uses angular advances derived from chord lengths
-- Final Autostitch geometry is checked for gap bounds and opening clearance; all phases retain the same guides and endpoints. This is an analytic illustration, not a native solver run
+Gap bounds, fixed neighbours, endpoint positions and opening clearance are checked. The thread appears after fitting and holds for four seconds. This is an analytic illustration, not a native solver run.
 
-![Five treatments of the same curved X junction](assets/junction-comparison.gif)
+![Autostitch X junction with a curved arm](assets/axiom-junction-curved.gif)
 
 ### Check the whole layout: A10
 

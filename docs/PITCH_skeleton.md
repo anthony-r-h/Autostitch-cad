@@ -186,14 +186,11 @@ Research note: Anthony to find stitching examples from:
 
 ### X junction with a curved arm
 
-- Same four guides and endpoints; one circular arm
-- Even: equal gaps within each arm; every gap changes
-- Vertex point: point first; only the last slit on each arm moves
-- Slit and flip: one shared slit; mirrored lean on two arms
-- Bridge: opposite arms connect; threads cross without a shared opening
-- Autostitch: nominal junction gaps; bounded corrections within each arm
+- One round hole shared by four arms, including a circular arm
+- Nominal chord gap from the hole to each neighbouring slit
+- Fixed endpoints and neighbours; bounded corrections within the remaining spans
 
-![Five treatments of an X junction with one curved arm](../examples/illustrated/assets/junction-comparison.gif)
+![Autostitch X junction with a curved arm](../examples/illustrated/assets/axiom-junction-curved.gif)
 
 ## Clearance
 

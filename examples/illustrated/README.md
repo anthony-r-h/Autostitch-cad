@@ -2,11 +2,9 @@
 
 Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
-## Nominal row (unfitted)
+## Spacing setup
 
-Nominal spacing leaves a residual at the fixed endpoint. Every gap and the remaining distance are labelled.
-
-![Nominal spacing leaves a remainder](assets/pitch-problem.gif)
+Each solution begins with the same nominal row and residual. `pitch-problem` is the shared setup fixture; the pitch compares only the three completed solutions.
 
 ## Even spacing
 
@@ -51,10 +49,10 @@ Motion shows planning revisions, not physical punching order; the analytic const
 ## Comparison notation and totals
 
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
-- Residuals use a thick red line on the guide, without end ticks; their text sits beside the gap values
+- Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values
 - Thread reveal lightens the holes and measurement annotations over $0.3\,\mathrm{s}$, then holds for four seconds. Unresolved red residuals remain visible
 - Static diagrams use the same final appearance; glossary figures without thread retain their contrast
-- The tables in the pitch are calculated by `pitchComparisonMetrics` and checked by `tests/validate-illustrated.mjs`
+- The tables in the pitch exclude the setup fixture and are calculated by `pitchComparisonMetrics` and checked by `tests/validate-illustrated.mjs`
 - Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
 
 Recalculate totals from the repository root:

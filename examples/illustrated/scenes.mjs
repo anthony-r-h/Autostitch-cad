@@ -77,7 +77,7 @@ function pitchScenes() {
       const remaining=Math.max(0,length-points.at(-1));
       elements.push(
         line([last,view.y],[end,view.y],'residual-dimension','#C62828',3),
-        {...text([end+25,view.y+55],`Residual ${remaining.toFixed(2)}`),kind:'residual-value',color:ink,size:15,bold:true});
+        {...text([(last+end)/2,view.y+55],remaining.toFixed(2)),kind:'residual-value',color:'#C62828',size:13,bold:false});
     }
     return elements;
   };

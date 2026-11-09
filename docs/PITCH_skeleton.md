@@ -32,13 +32,7 @@ Research note: Anthony to find stitching examples from:
 
 - Six slits on a $15.3\,\mathrm{mm}$ guide, at $3\,\mathrm{mm}$ nominal pitch
 - Both endpoints must be met; the nominal row leaves a $0.30\,\mathrm{mm}$ residual
-- Red segments mark residuals on the guide; bracketed dimensions show gap lengths
-
-## Nominal row (unfitted)
-
-![Nominal row leaving a residual at the fixed endpoint](../examples/illustrated/assets/pitch-problem.gif)
-
-Keep every gap at the tool's pitch. No spacing changes are needed, but the row misses the required endpoint.
+- Red segments and numbers show the residual; bracketed dimensions show gap lengths
 
 ## Even spacing
 
@@ -60,7 +54,6 @@ Keep four nominal gaps and put the $3.30\,\mathrm{mm}$ gap in the centre. This p
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: | ---: |
-| Nominal row (unfitted) | $0$ | $0.000$ | $0.300$ | $0.000$ |
 | Even spacing | $5$ | $0.300$ | $0.300$ | $0.267$ |
 | End adjustment | $1$ | $0.300$ | $0.300$ | $0.270$ |
 | Central adjustment (Autostitch) | $1$ | $0.300$ | $0.300$ | $0.270$ |

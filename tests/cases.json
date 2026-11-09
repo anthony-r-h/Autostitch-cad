@@ -8584,7 +8584,7 @@
         {
           "path": "examples/illustrated/assets/pitch-problem",
           "policy": "unresolved",
-          "label": "Nominal row (unfitted)"
+          "label": "Residual setup"
         },
         {
           "path": "examples/illustrated/assets/pitch-spread",
@@ -8626,9 +8626,7 @@
         "A5",
         "A7"
       ],
-      "terms": [
-        "Residual"
-      ],
+      "terms": [],
       "reveal": [
         "Problem: build the solid nominal row, label every gap and identify the residual.",
         "Solutions: begin at that complete residual state, without rebuilding the row.",

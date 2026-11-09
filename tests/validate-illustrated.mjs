@@ -71,8 +71,9 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     labels.forEach((label,i)=>near(+label.value,points[i+1]-points[i],.00501));
     if(points.length===6) {
       const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
-      near(+label.value.replace('Residual ',''),remaining,.00501);
+      near(+label.value,remaining,.00501);
       assert.equal(label.bold,false);assert.equal(label.size,labels[0].size);
+      assert.equal(label.color,'#C62828');assert(/^\d+\.\d{2}$/.test(label.value));
       const indicator=f.elements.filter(e=>e.kind==='residual-dimension');assert.equal(indicator.length,1);
       assert.equal(indicator[0].color,'#C62828');near(indicator[0].a[1],view.y);near(indicator[0].b[1],view.y);
       near(dist(indicator[0].a,indicator[0].b)/view.scale,remaining);
@@ -84,7 +85,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     }
   }
   const residual=s.final.find(e=>e.kind==='residual-value');
-  near(+residual.value.replace('Residual ',''),s.name==='pitch-problem'?.3:0);
+  near(+residual.value,s.name==='pitch-problem'?.3:0);
   if(s.name!=='pitch-problem')assert.equal(s.frames.filter(f=>f.stage==='planning-revision').length,30);
 }
 
@@ -429,8 +430,8 @@ for(const f of cornerSolution.frames) {
 }
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
-const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Nominal row|Even spacing|End adjustment|Central adjustment|Vertex hole|Thread bridge|Shared diagonal slit|Shared tip hole)/.test(line));
-const comparisons=scenes.filter(s=>s.name.startsWith('pitch-')||s.name.startsWith('problem-corner-'));
+const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Central adjustment|Vertex hole|Thread bridge|Shared diagonal slit|Shared tip hole)/.test(line));
+const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
 assert.equal(comparisonRows.length,comparisons.length);
 for(const [i,s] of comparisons.entries()) {
   const values=Object.values(pitchComparisonMetrics(s)).map(v=>Number(v.toFixed(3)));

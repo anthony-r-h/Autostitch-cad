@@ -361,17 +361,21 @@ for(const treatment of ['vertex-point','bridge']) {
   for(const arm of [0,1]) {
     const row=openings.slice(arm*count,(arm+1)*count);
     near(dist(row[0].center,arm===0?[-armLengths[0],0]:[0,-armLengths[1]]),0);
-    near(dist(row.at(-1).center,arm===0?[-3,0]:[0,-3]),0);
+    const last=armLengths[arm]-3*(count-1);
+    near(dist(row.at(-1).center,arm===0?[-last,0]:[0,-last]),0);
     const gaps=row.slice(1).map((e,i)=>dist(e.center,row[i].center));bounded(gaps);
     const changed=gaps.filter(g=>Math.abs(g-3)>1e-6);
-    assert.equal(changed.length,arm===0?2:1);
-    near(changed.reduce((sum,g)=>sum+3-g,0),cornerShifts[arm]/2);
+    assert.equal(changed.length,0);
   }
   const vertexSlits=openings.filter(s=>dist(s.center,[0,0])<1e-6);
   assert.equal(vertexSlits.length,0);
   if(treatment==='vertex-point') {
     const virtuals=slits(name,problemView,'virtual');assert.equal(virtuals.length,2);
-    virtuals.forEach(v=>{near(dist(v.center,[0,0]),0);assert(v.element['stroke-dasharray']);});
+    virtuals.forEach((v,arm)=>{
+      near(dist(v.center,arm===0?[cornerShifts[arm]/2,0]:[0,cornerShifts[arm]/2]),0);
+      near(dist(v.center,openings[(arm+1)*count-1].center),3);
+      assert(v.element['stroke-dasharray']);
+    });
     near(Math.abs(virtuals[0].angle-virtuals[1].angle),Math.PI/2);
     near(dist(circle(name,problemView),[0,0]),0);
     const frames=scenes.find(s=>s.name===name).frames,holeFrame=frames.findIndex(f=>f.elements.some(e=>e.kind==='hole'));
@@ -379,7 +383,7 @@ for(const treatment of ['vertex-point','bridge']) {
   }
   else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
   if(treatment==='bridge') {
-    const incoming=openings.find(s=>dist(s.center,[-3,0])<1e-6),outgoing=openings.find(s=>dist(s.center,[0,-3])<1e-6);
+    const incoming=openings[count-1],outgoing=openings[2*count-1];
     assert(readSvg(name).elements.filter(e=>e.class==='thread').some(e=>
       dist([(+e.x1-problemView.x)/problemView.scale,(problemView.y-e.y1)/problemView.scale],incoming.b)<1e-6&&dist([(+e.x2-problemView.x)/problemView.scale,(problemView.y-e.y2)/problemView.scale],outgoing.a)<1e-6));
   }
@@ -444,8 +448,14 @@ for(const f of cornerSolution.frames) {
   }
   const values=f.elements.filter(e=>e.kind==='gap-value');
   if(values.length) {
-    assert.equal(values.length,2*(count-1));
-    values.forEach((e,i)=>{const k=Math.floor(i/(count-1))*count+i%(count-1);near(+e.value,dist(centre(real[k]),centre(real[k+1]))/problemView.scale,.00501);});
+    const initial=['crossing','reset'].includes(f.stage);
+    const gapsPerArm=initial?count:count-1;
+    assert.equal(values.length,2*gapsPerArm);
+    values.forEach((e,i)=>{
+      const arm=Math.floor(i/gapsPerArm),gap=i%gapsPerArm,k=arm*count+gap;
+      const next=gap===count-1?[problemView.x,problemView.y]:centre(real[k+1]);
+      near(+e.value,dist(centre(real[k]),next)/problemView.scale,.00501);
+    });
   }
 }
 

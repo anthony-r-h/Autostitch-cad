@@ -148,21 +148,20 @@ function cornerProblemScenes() {
   // residuals on identical guides, rather than favouring either construction.
   const lengths=[ci[0],co[1]].map(c=>input.armIntervals*3-c/2);
   const view={x:410,y:40,scale:285/lengths[0]},base=[worldLine([-lengths[0],0],[0,0],view),worldLine([0,0],[0,-lengths[1]],view)];
-  const referenceFits=lengths.map(length=>selectFit({D:length-3,p:3}));
-  if(referenceFits.some(f=>!f||f.n!==input.armIntervals-1))throw new Error('Vertex comparison needs equal-count feasible arm fits');
-  const referenceRows=[stations(referenceFits[0]).map(x=>lengths[0]-x),stations(referenceFits[1]).map(x=>3+x).toReversed()];
+  const referenceRows=lengths.map(length=>Array.from({length:input.armIntervals},(_,i)=>length-i*3));
+  const referenceVirtuals=lengths.map((length,arm)=>arm===0?[input.armIntervals*3-length,0]:[0,input.armIntervals*3-length]);
   const comparisons=['vertex-point','bridge'].map(treatment=>{
     const s=scene(`problem-corner-${treatment}`,treatment==='vertex-point'?'Vertex point':'Bridge','ILL-CORNER-PROBLEM');
     const result=[...base];frame(s,[...result],90,'guides');
     const incoming=[],outgoing=[];
     for(const [i,row] of [incoming,outgoing].entries()) {
       for(const [j,station] of referenceRows[i].entries()) {
-        const adjusted=k=>k>=0&&k<referenceRows[i].length-1&&Math.abs(referenceRows[i][k]-referenceRows[i][k+1]-3)>1e-6;
-        const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view,{marked:adjusted(j-1)||adjusted(j)});
+        const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view,
+          {marked:treatment==='vertex-point'&&j===input.armIntervals-1});
         row.push(slit[0]);result.push(...slit);frame(s,[...result],65,`arm-${i}-stitch`);
       }
       if(treatment==='vertex-point') {
-        const slit=opening([0,0],i===0?alpha:alpha-Math.PI/2,view,{virtual:true});
+        const slit=opening(referenceVirtuals[i],i===0?alpha:alpha-Math.PI/2,view,{virtual:true});
         result.push(...slit);frame(s,[...result],120,`arm-${i}-terminal`);
       }
     }
@@ -194,7 +193,8 @@ function cornerProblemScenes() {
   };
   for(let i=1;i<=30;i++) {
     const t=ease(i/30),rows=anchored.map((row,arm)=>row.map((x,j)=>lerp(referenceRows[arm][j],x,t)));
-    frame(s,draw(rows,[mul(ci,t),mul(co,t)],false),8,'align-terminal-tips');
+    const virtuals=[ci,co].map((target,arm)=>target.map((x,j)=>lerp(referenceVirtuals[arm][j],x,t)));
+    frame(s,draw(rows,virtuals,false),8,'align-terminal-tips');
   }
   frame(s,draw(anchored,[ci,co],true),130,'shared-hole');
   for(let i=1;i<=30;i++) {
@@ -215,7 +215,7 @@ function cornerProblemScenes() {
         [(e.a[0]+e.b[0]-2*view.x)/(2*view.scale),(2*view.y-e.a[1]-e.b[1])/(2*view.scale)]);
       for(const arm of [0,1]) {
         const points=centres.filter(p=>arm===0?p[0]<-1e-6:p[1]<-1e-6).sort((a,b)=>a[arm]-b[arm]);
-        if(centres.some(p=>Math.hypot(...p)<1e-6))points.push([0,0]);
+        if(centres.some(p=>Math.hypot(...p)<1e-6)||elements.some(e=>e.kind==='hole'))points.push([0,0]);
         for(let i=1;i<points.length;i++)dimensions.push(...measure(points[i-1],points[i],
           Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]).toFixed(2),view,arm===0?-36:-38).map(e=>
           ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})})));

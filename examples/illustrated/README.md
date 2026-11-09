@@ -32,17 +32,17 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 `ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare Vertex point, Bridge, Shared diagonal slit with mirrored lean, and Autostitch. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
 
-![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-vertex-point.gif)
+![Nominal rows joined by a round hole at the vertex](assets/problem-corner-vertex-point.gif)
 
 ![Stop short and bridge between the arms](assets/problem-corner-bridge.gif)
 
 ![Shared diagonal slit with mirrored lean](assets/problem-corner-mirrored.gif)
 
-The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift from the guide vertex to the A6 virtual centre along each arm's incoming direction. This gives approximately $23.471688\,\mathrm{mm}$ and $23.953779\,\mathrm{mm}$. Vertex and A6 fits have equal and opposite residuals; both use the same minimum-adjustment selector and reserve a nominal step next to their corner opening or virtual slit. The controlled balance is a fixture choice, not a general result for arbitrary endpoints.
+The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift from the guide vertex to the A6 virtual centre along each arm's incoming direction. This gives approximately $23.471688\,\mathrm{mm}$ and $23.953779\,\mathrm{mm}$. Vertex point and Bridge keep the arm rows nominal from the outer endpoints. Vertex point absorbs the residual in the final connections to its fixed hole; Bridge joins the last nominal slits directly. A6 alone uses the minimum-adjustment selector and reserves a nominal step next to each virtual slit. The controlled balance is a fixture choice, not a general result for arbitrary endpoints.
 
 The mirrored treatment reuses `diagonalCornerScene` with the Sellier construction parameters from `ILL-SELLIER-CORNER`, extended to the common arm lengths. Its rows stay nominal from the outer endpoints; only the final gaps into the vertex slit absorb the residuals. These are approximately $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first is below the Autostitch gap bound. Total absolute adjustment matches A6, but the adjusted-gap count does not. The top row starts punched; the vertical row mirrors in place before the shared diagonal slit appears.
 
-The Autostitch solution starts at the completed crossing state. Move the terminal virtuals and their nominally spaced real neighbours until the selected tips meet (A6), then fit the free spans while keeping the outer endpoints, neighbours and hole fixed. Gap values update; provisional gaps outside the bounds are red. The final incoming arm has two $3.264\,\mathrm{mm}$ adjusted gaps; the outgoing arm has one $3.046\,\mathrm{mm}$ adjusted gap. `I` marks identify them. Reveal the thread together and hold for four seconds.
+The Autostitch solution starts at the completed Vertex point layout. Its virtual slits continue the nominal rows one pitch beyond their last real slits; they are not centred on the vertex. Move the terminal virtuals and their nominally spaced real neighbours until the selected tips meet (A6), then fit the free spans while keeping the outer endpoints, neighbours and hole fixed. Gap values update; provisional gaps outside the bounds are red. The final incoming arm has two $3.264\,\mathrm{mm}$ adjusted gaps; the outgoing arm has one $3.046\,\mathrm{mm}$ adjusted gap. `I` marks identify them. Reveal the thread together and hold for four seconds.
 
 ![Resolve the virtual crossing and fit both arms](assets/problem-corner-autostitch.gif)
 

@@ -72,9 +72,10 @@ Research note: Anthony to find stitching examples from:
 
 ## Vertex point
 
-![Terminal virtual slits cross at the vertex hole](../examples/illustrated/assets/problem-corner-vertex-point.gif)
+![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.gif)
 
-- Round hole at the vertex, where the terminal virtual slit centres cross
+- Nominal arm spacing, as the tool lands; round hole at the vertex
+- Residual remains in the two final gaps into the hole
 - Retains the intended vertex
 - Changes the direction and visible length of the two adjoining stitches
 
@@ -82,9 +83,9 @@ Research note: Anthony to find stitching examples from:
 
 ![Bridge connecting rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-bridge.gif)
 
-- Thread connects the last slit on each arm across the corner
+- Nominal arm spacing, as the tool lands; thread connects the last slit on each arm
 - No corner opening; thread bypasses the vertex
-- Bridging gap: $4.243\,\mathrm{mm}$, above the $3.3\,\mathrm{mm}$ adjustment limit
+- Bridging gap: $3.851\,\mathrm{mm}$, above the $3.3\,\mathrm{mm}$ adjustment limit
 
 ## Shared diagonal slit with mirrored lean
 
@@ -107,8 +108,8 @@ Research note: Anthony to find stitching examples from:
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: | ---: |
-| Vertex point | $3$ | $0.575$ | $0.575$ | $1.273$ |
-| Bridge | $4$ | $1.817$ | $1.817$ | $1.912$ |
+| Vertex point | $2$ | $0.575$ | $0.575$ | $0.470$ |
+| Bridge | $1$ | $0.851$ | $0.851$ | $1.105$ |
 | Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.575$ | $0.407$ |
 | Autostitch | $3$ | $0.575$ | $0.575$ | $0.516$ |
 

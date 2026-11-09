@@ -8647,11 +8647,10 @@
       "axioms": [
         "A1",
         "A2",
-        "A3",
-        "A7"
+        "A3"
       ],
       "animated": true,
-      "status": "Analytic rule illustration; not native CAD output.",
+      "status": "Analytic illustration with guide extent set to five nominal 3 mm chords at radius 10 mm. Local tangent is labelled during the moving slit phase. No pitch adjustments; not native CAD output.",
       "assets": [
         {
           "path": "examples/illustrated/assets/axiom-curve"
@@ -8666,7 +8665,13 @@
       "threadReveal": {
         "holdCentiseconds": 400,
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
-      }
+      },
+      "inputs": {
+        "nominalGaps": 5
+      },
+      "terms": [
+        "Local tangent"
+      ]
     },
     {
       "id": "ILL-LANDMARK",
@@ -8725,7 +8730,7 @@
         "A6"
       ],
       "animated": true,
-      "status": "Analytic rule illustration; not native CAD output.",
+      "status": "Analytic tip-intersection construction with three nominal 3 mm steps per arm. Guides end at the outermost real slits. No pitch adjustments; not native CAD output.",
       "assets": [
         {
           "path": "examples/illustrated/assets/axiom-corner"

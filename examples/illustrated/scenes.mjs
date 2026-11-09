@@ -265,14 +265,11 @@ function landmarkScene(layout) {
 }
 
 function curveScene() {
-  const g=variant('A01').route.primitives[0],view={x:160,y:75,scale:23};
-  const fit=selectFit({R:g.radius,sweep:g.sweep,p:3});
+  const input=catalog.illustrations.find(i=>i.id==='ILL-CURVE').inputs;
+  const original=variant('A01').route.primitives[0],step=2*Math.asin(3/(2*original.radius));
+  const g={...original,sweep:Math.sign(original.sweep)*input.nominalGaps*step},view={x:160,y:75,scale:23};
   const point=theta=>add(g.center,mul(axis(theta),g.radius));
-  const theta=g['start-angle'],sign=Math.sign(g.sweep),angles=[theta];
-  for(let i=0;i<fit.n;i++) {
-    const gap=i>=fit.i&&i<fit.i+fit.k?fit.correctedPitch:3;
-    angles.push(angles.at(-1)+sign*2*Math.asin(gap/(2*g.radius)));
-  }
+  const theta=g['start-angle'],sign=Math.sign(g.sweep),angles=Array.from({length:input.nominalGaps+1},(_,i)=>theta+sign*i*step);
   const base=[];
   for(let i=0;i<80;i++)base.push(worldLine(point(theta+g.sweep*i/80),point(theta+g.sweep*(i+1)/80),view));
   const s=scene('axiom-curve','Fixed slit profile; pitch measured as a chord','A01');
@@ -281,11 +278,13 @@ function curveScene() {
   for(let i=0;i<=30;i++) {
     const angle=theta+g.sweep*ease(i/30),center=point(angle),tangent=angle+sign*Math.PI/2;
     const direction=mul(axis(tangent),2.2);
-    frame(s,[...base,worldLine(add(center,mul(direction,-1)),add(center,direction),view,'tangent',construction,1,true),...opening(center,tangent+alpha,view,{proposed:true})],6,'local-tangent');
+    const label=add(project(center,view),[55*Math.cos(angle),-55*Math.sin(angle)]);
+    frame(s,[...base,worldLine(add(center,mul(direction,-1)),add(center,direction),view,'tangent',ink,1,true),
+      {...text(label,'Local tangent'),kind:'tangent-label',color:ink},...opening(center,tangent+alpha,view,{proposed:true})],6,'local-tangent');
   }
   let result=[...base];
   for(const [i,angle] of angles.entries()) {
-    result.push(...opening(point(angle),angle+sign*Math.PI/2+alpha,view,{marked:i>=fit.i&&i<=fit.i+fit.k}));
+    result.push(...opening(point(angle),angle+sign*Math.PI/2+alpha,view));
     frame(s,[...result],35);
   }
   result.push(...measure(point(angles[0]),point(angles[1]),'3',view,34));
@@ -310,10 +309,10 @@ function approachCorner(s,base,arms,joint,view) {
   return result;
 }
 function cornerScene() {
-  const v=variant('J02'),view={x:370,y:105,scale:24},h=.75;
+  const view={x:370,y:105,scale:24},h=.75;
   const ui=axis(alpha),uo=axis(alpha-Math.PI/2);
   const J=[h*uo[0],-h*ui[1]],ci=add(J,mul(ui,h)),co=add(J,mul(uo,-h));
-  const start=[-10+v.settings.start,0],end=[0,-(v.settings.end-10)];
+  const start=[ci[0]-9,0],end=[0,co[1]-9];
   const base=[worldLine(start,[0,0],view),worldLine([0,0],end,view),worldLine([0,0],ci,view,'extension',guideInk,1,true),worldLine([0,0],co,view,'extension',guideInk,1,true)];
   const s=scene('axiom-corner','Virtual slit tips locate one corner hole','J02');
   const arms=[
@@ -702,14 +701,17 @@ function annotateScene(s) {
     const half=catalog.illustrations.find(i=>i.id==='ILL-CLEARANCE').inputs.includedDegrees*Math.PI/360;
     marks=[notationText(add(ends[0],[25,-28]),'s','start'),notationText(add(ends[1],[16,25]),'e','end'),...directionMark(ends[0],[-Math.cos(half),Math.sin(half)])];
   }
-  else if(s.name==='axiom-curve')marks=routeMarks([160,75],[390,305],[1,0],[0,1]);
+  else if(s.name==='axiom-curve') {
+    const guides=s.final.filter(e=>e.kind==='guide'),last=guides.at(-1),direction=add(last.b,mul(last.a,-1));
+    marks=routeMarks(guides[0].a,last.b,[1,0],mul(direction,1/Math.hypot(...direction)));
+  }
   else if(s.name==='terms-chord') {
     const input=catalog.illustrations.find(i=>i.id==='ILL-TERMS-CHORD').inputs;
     const half=Math.asin(input.pitch/(2*input.radius)),y=380-80*input.radius*Math.cos(half);
     marks=routeMarks([300-40*input.pitch,y],[300+40*input.pitch,y],[Math.cos(half),-Math.sin(half)],[Math.cos(half),Math.sin(half)]);
   }
   else if(s.name==='axiom-corner') {
-    const v=variant('J02');marks=routeMarks([370+(-10+v.settings.start)*24,105],[370,105+(v.settings.end-10)*24],[1,0],[0,1]);
+    const guides=s.final.filter(e=>e.kind==='guide');marks=routeMarks(guides[0].a,guides[1].b,[1,0],[0,1]);
   } else if(s.name==='axiom-smooth') {
     const v=variant('A05'),g=v.route.primitives[1],station=v.settings.end-18;
     marks=[...routeMarks([82,115],project(primitivePoint(g,station),{x:370,y:115,scale:16}),[1,0],screenTangent(g,station)),notationText([384,97],'j','junction')];

@@ -172,11 +172,6 @@ Research note: Anthony to find stitching examples from:
 
 ![A6: the selected tips meet between two curved arms](../examples/illustrated/assets/corner-arc-arc.gif)
 
-- A shallow turn can require an adjusted corner step: approximately $3.21\,\mathrm{mm}$ here
-- Usable angles depend on pitch, slit geometry, hole diameter, clearance and available arm geometry
-
-![A6: bounded corner adjustment brings a shallow curved neighbour onto its finite guide](../examples/illustrated/assets/corner-shallow.gif)
-
 ## Branching junctions
 
 - A through-line contributes two arms; a T has three and an X four
@@ -212,6 +207,10 @@ Research note: Anthony to find stitching examples from:
 - Use equal spacing within one adjustment block per free span
 - Place the block as centrally as protected gaps allow; half-index ties go toward the end
 - On circles, convert chord spacing to angular advance
+- A shallow turn can require an adjusted corner step: approximately $3.21\,\mathrm{mm}$ here
+- Usable angles depend on pitch, slit geometry, hole diameter, clearance and available arm geometry
+
+![A6: bounded corner adjustment brings a shallow curved neighbour onto its finite guide](../examples/illustrated/assets/corner-shallow.gif)
 
 ## Reject impossible fits
 

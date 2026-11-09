@@ -70,7 +70,7 @@ node --input-type=module -e "import {createScenes,pitchComparisonMetrics} from '
 
 ### Follow the guide; keep the slit profile: A1-A3
 
-A slit follows the local tangent without changing length or lean. Pitch is a direct chord between centres, not distance along the curve. `A01`.
+A slit follows the labelled local tangent without changing length or lean. The guide ends after five nominal $3\,\mathrm{mm}$ chords at radius $10\,\mathrm{mm}$; no adjusted gaps. Pitch is the direct chord between centres. `ILL-CURVE`, using the arc geometry from `A01`.
 
 ![Slit orientation follows the curve; pitch is a chord](assets/axiom-curve.gif)
 
@@ -82,7 +82,7 @@ Five slits on each side of the central landmark. Each free span has two central 
 
 ### Construct the corner hole: A6
 
-Stitch towards the corner along one arm, ending at its dashed virtual slit. Approach from the other arm the same way. The two terminal virtual tips meet at one round hole. The `s`, `e` and `j` labels remain visible throughout. `J02`.
+Stitch towards the corner along one arm, ending at its dashed virtual slit. Approach from the other arm the same way. The two terminal virtual tips meet at one round hole. The `s`, `e` and `j` labels remain visible throughout. `J02`. Guide extents end at the outermost slits; all three steps on each arm are nominal.
 
 ![Each arm approaches its terminal virtual slit before their shared corner hole is identified](assets/axiom-corner.gif)
 

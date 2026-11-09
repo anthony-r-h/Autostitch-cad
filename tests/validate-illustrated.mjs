@@ -90,16 +90,31 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
 }
 
 const curve=slits('axiom-curve',{x:160,y:75,scale:23});
-const arcFit=selectFit({R:10,sweep:-Math.PI/2,p:3});
-assert.equal(curve.length,arcFit.n+1);
+const curveInput=catalog.illustrations.find(i=>i.id==='ILL-CURVE').inputs;
+assert.equal(curve.length,curveInput.nominalGaps+1);
 for(const s of curve) {
   near(Math.hypot(s.center[0],s.center[1]+10),10);
   const tangent=Math.atan2(s.center[1]+10,s.center[0])-Math.PI/2;
   near(s.angle,tangent+alpha);
 }
 const chords=curve.slice(1).map((s,i)=>dist(s.center,curve[i].center));bounded(chords);
-assert.equal(chords.filter(g=>Math.abs(g-3)>1e-6).length,3);
-near(curve[0].center[0],0);near(curve.at(-1).center[1],-10);
+chords.forEach(g=>near(g,3));
+near(curve[0].center[0],0);
+const curveScene=scenes.find(s=>s.name==='axiom-curve'),curveGuides=curveScene.final.filter(e=>e.kind==='guide');
+const curveScreen=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+const curveOpenings=curveScene.final.filter(e=>e.kind==='slit');
+near(dist(curveGuides[0].a,curveScreen(curveOpenings[0])),0);
+near(dist(curveGuides.at(-1).b,curveScreen(curveOpenings.at(-1))),0);
+assert(!curveScene.final.some(e=>e.kind==='adjustment-mark'));
+for(const f of curveScene.frames) {
+  const label=f.elements.find(e=>e.kind==='tangent-label');
+  assert.equal(Boolean(label),f.stage==='local-tangent');
+  if(!label)continue;
+  assert.equal(label.value,'Local tangent');
+  const tangent=f.elements.find(e=>e.kind==='tangent'),centre=curveScreen(f.elements.find(e=>e.kind==='proposal'));
+  const radial=[centre[0]-160,centre[1]-305],vector=[tangent.b[0]-tangent.a[0],tangent.b[1]-tangent.a[1]];
+  near(radial[0]*vector[0]+radial[1]*vector[1],0,1e-7);
+}
 
 const landmarkInput=catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs;
 const landmarkView={x:(600-landmarkInput.length*16)/2,y:187.5,scale:16};
@@ -140,6 +155,12 @@ const corner=slits('axiom-corner',cornerView).map(s=>s.center);assert.equal(corn
 for(let i=1;i<=3;i++) {
   assert(has(corner,[virtuals[0].center[0]-3*i,0]));
   assert(has(corner,[0,virtuals[1].center[1]-3*i]));
+}
+for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc']) {
+  const s=scenes.find(s=>s.name===name),guides=s.final.filter(e=>e.kind==='guide'),real=s.final.filter(e=>e.kind==='slit');
+  assert(!s.final.some(e=>e.kind==='adjustment-mark'));
+  const centres=real.map(e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2]);
+  for(const endpoint of [guides[0].a,guides.at(-1).b])assert(centres.some(c=>dist(c,endpoint)<1e-6));
 }
 
 const smooth=slits('axiom-smooth',{x:370,y:115,scale:16});
@@ -605,7 +626,8 @@ for(const s of scenes) {
   for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||
     (s.name.startsWith('problem-corner-')&&/^\d+\.\d\u00b0$/.test(match[1]))||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
-  for(const term of terms)assert(labels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
+  const allLabels=[...labels,...s.frames.flatMap(f=>f.elements.filter(e=>e.type==='text'))];
+  for(const term of terms)assert(allLabels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
   if(s.name!=='terms-slit') {
     assert(labels.some(e=>e.kind==='notation-start'&&e.value==='s'),`${s.name} needs a start`);
     assert(s.final.filter(e=>e.kind==='direction').length>=3,`${s.name} needs a direction arrow`);

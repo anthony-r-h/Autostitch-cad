@@ -35,7 +35,9 @@
 
 ### Loewe Mini Feather hanger
 
-[Reference photograph](../../examples/counter_examples/loewe_mini_feather.jpg): the rectangular stitched strap directly below the swivel hook.
+<img src="../../examples/counter_examples/loewe_mini_feather.jpg" width="300" alt="Loewe Mini Feather with a rectangular stitched strap below the swivel hook">
+
+Focus: the rectangular stitched strap directly below the swivel hook.
 
 - One run goes up the left side, across the top and down the right side
 - The left corner uses a shared slit; the right corner uses a round hole
@@ -53,7 +55,9 @@
 
 The **handle chape** is the leather tab attaching the handle hardware to the bag. Louis Vuitton uses the term [chapes](https://us.louisvuitton.com/eng-us/products/nano-speedy-g81-nvprod7890132v/M29781) for these attachments.
 
-[Reference photograph](../../examples/counter_examples/lv_speedy.png): the left handle chape.
+<img src="../../examples/counter_examples/lv_speedy.png" width="300" alt="Louis Vuitton Speedy with stitched leather handle chapes">
+
+Focus: the left handle chape.
 
 - A closed pentagonal stitch line, with a shared slit at each corner
 - One stitch handedness around the loop; no mirrored runs
@@ -68,7 +72,9 @@ The **handle chape** is the leather tab attaching the handle hardware to the bag
 
 ### Jaeger-LeCoultre / Casa Fagliano strap tip
 
-[Reference photograph](../../examples/counter_examples/jaeger_lecoultre_fagliano.png): the pointed end of the right strap.
+<img src="../../examples/counter_examples/jaeger_lecoultre_fagliano.png" width="300" alt="Jaeger-LeCoultre Casa Fagliano straps with a pointed tip on the right strap">
+
+Focus: the pointed end of the right strap.
 
 - The two straight runs have horizontally aligned holes and the same stitch handedness
 - A round hole sits exactly at the vertex where the two curves meet

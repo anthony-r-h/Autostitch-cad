@@ -62,7 +62,8 @@ End and central adjustment have identical totals. Placement, which these totals 
 
 # The corner problem
 
-- Two perpendicular guides, each $15\,\mathrm{mm}$ long, at $3\,\mathrm{mm}$ nominal pitch
+- Two perpendicular guides with eight intervals per arm, at $3\,\mathrm{mm}$ nominal pitch
+- Arm lengths are approximately $23.472\,\mathrm{mm}$ and $23.954\,\mathrm{mm}$, chosen halfway between the vertex and tip-intersection nominal layouts so both require equal pitch adjustment
 - The same outer endpoints apply to every treatment
 - The choice of corner opening changes the adjoining thread and the spans available for fitting
 
@@ -70,7 +71,7 @@ End and central adjustment have identical totals. Placement, which these totals 
 
 ![Terminal virtual slits cross at the vertex hole](../examples/illustrated/assets/problem-corner-cross.gif)
 
-Continue the nominal rows towards their crossing and put a round hole at the vertex. The spacing stays nominal and the hole stays at the intended point, but the two adjoining threads differ from ordinary stitches. The virtual slits cross through their centres rather than meeting tip-to-tip.
+Fit the rows towards their crossing and put a round hole at the vertex. The hole stays at the intended point, with three adjusted gaps across the arms, but the two adjoining threads differ from ordinary stitches. The virtual slits cross through their centres rather than meeting tip-to-tip.
 
 ## Thread bridge
 
@@ -82,20 +83,20 @@ Stop both rows short and connect their last slits. This avoids a separate corner
 
 ![A shared diagonal slit joins the top row to a row with mirrored lean](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
-Use one diagonal slit at the vertex and mirror the lean on one arm. The opening stays at the intended point with nominal gaps; its orientation changes the direction and visible length of the two adjoining threads. A good treatment when that appearance suits the design, with separate placement of the corner slit and a relaxed consistent-lean rule.
+Use one diagonal slit at the vertex and mirror the lean on one arm. The opening stays at the intended point, with three adjusted gaps across the arms; its orientation changes the direction and visible length of the two adjoining threads. A good treatment when that appearance suits the design, with separate placement of the corner slit and a relaxed consistent-lean rule.
 
 ## Shared tip hole (Autostitch)
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
-Meet the selected virtual slit tips at one round hole, retain nominal corner steps and fit the free spans. This keeps consistent lean and an explicit construction, but moves the hole away from the vertex and requires five adjusted gaps here.
+Meet the selected virtual slit tips at one round hole, retain nominal corner steps and fit the free spans. This keeps consistent lean and an explicit construction, but moves the hole away from the vertex. Here it needs the same three adjusted gaps as the diagonal-slit treatment.
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: | ---: |
-| Vertex hole | $0$ | $0.000$ | $0.000$ | $0.772$ |
-| Thread bridge | $1$ | $1.243$ | $1.243$ | $1.410$ |
-| Shared diagonal slit with mirrored lean | $0$ | $0.000$ | $0.000$ | $0.123$ |
-| Shared tip hole (Autostitch) | $5$ | $1.149$ | $1.149$ | $1.032$ |
+| Vertex hole | $3$ | $0.575$ | $0.575$ | $1.273$ |
+| Thread bridge | $4$ | $1.817$ | $1.817$ | $1.912$ |
+| Shared diagonal slit with mirrored lean | $3$ | $0.575$ | $0.575$ | $0.625$ |
+| Shared tip hole (Autostitch) | $3$ | $0.575$ | $0.575$ | $0.516$ |
 
 The bridge's off-pitch gap is counted for comparison even though it exceeds the adjustment bound. Its totals use the direct bridge, which bypasses the vertex. Autostitch uses virtual-to-real corner steps for pitch accounting; visible thread-length deviation includes the actual connections to the round hole.
 

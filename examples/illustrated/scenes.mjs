@@ -108,14 +108,15 @@ function pitchScenes() {
 export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
   const p=spec.pitch;
   const angles=spec.armAxisDegrees.map(a=>a*Math.PI/180);
-  const length=spec.armGaps*p;
-  const base=[worldLine([-length,0],[0,0],view),worldLine([0,0],[0,-length],view),
-    ...(notation?[...routeMarks(project([-length,0],view),project([0,-length],view),[1,0],[0,1]),notationText([384,67],'j','junction')]:[])];
+  const lengths=spec.armLengths??[spec.armGaps*p,spec.armGaps*p];
+  const positions=spec.rowStations??lengths.map(length=>Array.from({length:spec.armGaps},(_,i)=>length-i*p));
+  const base=[worldLine([-lengths[0],0],[0,0],view),worldLine([0,0],[0,-lengths[1]],view),
+    ...(notation?[...routeMarks(project([-lengths[0],0],view),project([0,-lengths[1]],view),[1,0],[0,1]),notationText([384,67],'j','junction')]:[])];
   const s=scene(name,'Shared diagonal slit with mirrored lean',source);
   const result=[...base],rows=[[],[]];
-  for(const [arm,row] of rows.entries())for(let n=spec.armGaps;n>=1;n--) {
-    const slit=opening(arm===0?[-n*p,0]:[0,-n*p],angles[arm],view)[0];
-    row.push(slit);
+  for(const [arm,row] of rows.entries())for(const [i,station] of positions[arm].entries()) {
+    const adjusted=j=>j>=0&&j<positions[arm].length-1&&Math.abs(positions[arm][j]-positions[arm][j+1]-p)>1e-6;
+    row.push(...opening(arm===0?[-station,0]:[0,-station],angles[arm],view,{marked:adjusted(i-1)||adjusted(i)}));
   }
   result.push(...rows[0]);frame(s,[...result],100,'top-row');
   // Flip the vertical row across its guide. Horizontal foreshortening makes
@@ -133,21 +134,30 @@ export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
   result.push(shared);frame(s,[...result],130,'diagonal-shared-slit');
   // The slit axes already encode the shown face. Connect their tips directly;
   // reversing them again would draw the opposite thread diagonal.
-  s.threadPaths=[[...rows[0],shared,...rows[1].toReversed()]];
+  s.threadPaths=[[...rows[0].filter(e=>e.kind==='slit'),shared,...rows[1].filter(e=>e.kind==='slit').toReversed()]];
   s.emphasisedThreads=[spec.armGaps-1,spec.armGaps];
   return finish(s,result);
 }
 
 function cornerProblemScenes() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
-  const view={x:360,y:85,scale:225/input.armLength},base=[worldLine([-input.armLength,0],[0,0],view),worldLine([0,0],[0,-input.armLength],view)];
+  const h=.75,ui=axis(alpha),uo=axis(alpha-Math.PI/2);
+  const joint=[h*uo[0],-h*ui[1]],ci=add(joint,mul(ui,h)),co=add(joint,mul(uo,-h));
+  // Halfway between the vertex and A6 phases gives equal and opposite
+  // residuals on identical guides, rather than favouring either construction.
+  const lengths=[ci[0],co[1]].map(c=>input.armIntervals*3-c/2);
+  const view={x:410,y:40,scale:285/lengths[0]},base=[worldLine([-lengths[0],0],[0,0],view),worldLine([0,0],[0,-lengths[1]],view)];
+  const referenceFits=lengths.map(length=>selectFit({D:length-3,p:3}));
+  if(referenceFits.some(f=>!f||f.n!==input.armIntervals-1))throw new Error('Vertex comparison needs equal-count feasible arm fits');
+  const referenceRows=[stations(referenceFits[0]).map(x=>lengths[0]-x),stations(referenceFits[1]).map(x=>3+x).toReversed()];
   const comparisons=['cross','gap'].map(treatment=>{
     const s=scene(`problem-corner-${treatment}`,treatment==='cross'?'Vertex hole':'Thread bridge','ILL-CORNER-PROBLEM');
     const result=[...base];frame(s,[...result],90,'guides');
     const incoming=[],outgoing=[];
     for(const [i,row] of [incoming,outgoing].entries()) {
-      for(let station=input.armLength;station>=3;station-=3) {
-        const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view);
+      for(const [j,station] of referenceRows[i].entries()) {
+        const adjusted=k=>k>=0&&k<referenceRows[i].length-1&&Math.abs(referenceRows[i][k]-referenceRows[i][k+1]-3)>1e-6;
+        const slit=opening(i===0?[-station,0]:[0,-station],i===0?alpha:alpha-Math.PI/2,view,{marked:adjusted(j-1)||adjusted(j)});
         row.push(slit[0]);result.push(...slit);frame(s,[...result],65,`arm-${i}-stitch`);
       }
       if(treatment==='cross') {
@@ -163,13 +173,10 @@ function cornerProblemScenes() {
   const s=scene('problem-corner-autostitch','Shared tip hole (Autostitch)','ILL-CORNER-PROBLEM');
   // Continue the established crossing, without replaying the approaching rows.
   frame(s,comparisons[0].final,100,'crossing');
-  const h=.75,ui=axis(alpha),uo=axis(alpha-Math.PI/2);
-  const joint=[h*uo[0],-h*ui[1]],ci=add(joint,mul(ui,h)),co=add(joint,mul(uo,-h));
-  const nominal=Array.from({length:input.armLength/3},(_,i)=>input.armLength-i*3);
-  const fits=[ci[0],co[1]].map(c=>selectFit({D:input.armLength+c-3,p:3}));
-  if(fits.some(f=>!f||f.n!==nominal.length-1))throw new Error('Corner comparison needs equal-count feasible arm fits');
-  const targets=[stations(fits[0]).map(x=>input.armLength-x),stations(fits[1]).map(x=>3-co[1]+x).toReversed()];
-  const anchored=[ci[0],co[1]].map(c=>nominal.map((x,i)=>i===nominal.length-1?3-c:x));
+  const fits=[ci[0],co[1]].map((c,arm)=>selectFit({D:lengths[arm]+c-3,p:3}));
+  if(fits.some(f=>!f||f.n!==input.armIntervals-1))throw new Error('Corner comparison needs equal-count feasible arm fits');
+  const targets=[stations(fits[0]).map(x=>lengths[0]-x),stations(fits[1]).map(x=>3-co[1]+x).toReversed()];
+  const anchored=[ci[0],co[1]].map((c,arm)=>referenceRows[arm].map((x,i)=>i===input.armIntervals-1?3-c:x));
   const draw=(rows,virtuals,showHole)=>{
     const elements=[...base];
     virtuals.forEach(c=>{if(Math.hypot(...c)>1e-9)elements.push(worldLine([0,0],c,view,'extension',guideInk,1,true));});
@@ -185,7 +192,7 @@ function cornerProblemScenes() {
     return elements;
   };
   for(let i=1;i<=30;i++) {
-    const t=ease(i/30),rows=anchored.map(row=>row.map((x,j)=>lerp(nominal[j],x,t)));
+    const t=ease(i/30),rows=anchored.map((row,arm)=>row.map((x,j)=>lerp(referenceRows[arm][j],x,t)));
     frame(s,draw(rows,[mul(ci,t),mul(co,t)],false),8,'align-terminal-tips');
   }
   frame(s,draw(anchored,[ci,co],true),130,'shared-hole');
@@ -194,9 +201,9 @@ function cornerProblemScenes() {
     frame(s,draw(rows,[ci,co],true),8,'distribute-within-arms');
   }
   const result=draw(targets,[ci,co],true),slits=result.filter(e=>e.kind==='slit');
-  s.threadPaths=[[...slits.slice(0,nominal.length),result.find(e=>e.kind==='hole'),...slits.slice(nominal.length).toReversed()]];
+  s.threadPaths=[[...slits.slice(0,input.armIntervals),result.find(e=>e.kind==='hole'),...slits.slice(input.armIntervals).toReversed()]];
   const diagonalInput=catalog.illustrations.find(i=>i.id===input.diagonalCase).inputs;
-  const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armLength/3},
+  const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armIntervals,armLengths:lengths,rowStations:referenceRows},
     {name:'problem-corner-mirrored',source:'ILL-CORNER-PROBLEM',view,notation:false});
   const labelled=layout=>{
     const addDimensions=elements=>{
@@ -624,7 +631,10 @@ function annotateScene(s) {
     marks=routeMarks([300-halfLength,187.5],[300+halfLength,187.5]);
     marks=marks.map(e=>e.kind==='notation-end'?{...e,p:add(e.p,[0,-10])}:e);
   }
-  else if(s.name.startsWith('problem-corner-'))marks=[...routeMarks([135,85],[360,310],[1,0],[0,1]),notationText([384,67],'j','junction')];
+  else if(s.name.startsWith('problem-corner-')) {
+    const guides=s.final.filter(e=>e.kind==='guide');
+    marks=[...routeMarks(guides[0].a,guides[1].b,[1,0],[0,1]),notationText(add(guides[0].b,[24,-18]),'j','junction')];
+  }
   else if(['axiom-landmark','terms-layout'].includes(s.name)) {
     const guide=s.final.find(e=>e.kind==='guide');marks=routeMarks(guide.a,guide.b);
   }

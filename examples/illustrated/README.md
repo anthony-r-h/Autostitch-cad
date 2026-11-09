@@ -30,7 +30,7 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 ## The corner problem
 
-`ILL-CORNER-PROBLEM`: the same right-angle guides, each $15\,\mathrm{mm}$ long, at $3\,\mathrm{mm}$ pitch. Compare a vertex hole, a thread bridge, a shared diagonal slit with mirrored lean, and a shared tip hole. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
+`ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare a vertex hole, a thread bridge, a shared diagonal slit with mirrored lean, and a shared tip hole. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
 
 ![Virtual terminal slits cross, then their intersection becomes a round hole](assets/problem-corner-cross.gif)
 
@@ -38,9 +38,11 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 ![Shared diagonal slit with mirrored lean](assets/problem-corner-mirrored.gif)
 
+The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift from the guide vertex to the A6 virtual centre along each arm's incoming direction. This gives approximately $23.471688\,\mathrm{mm}$ and $23.953779\,\mathrm{mm}$. Vertex and A6 fits have equal and opposite residuals; both use the same minimum-adjustment selector and reserve a nominal step next to their corner opening or virtual slit. The controlled balance is a fixture choice, not a general result for arbitrary endpoints.
+
 The mirrored treatment reuses `diagonalCornerScene` with the Sellier construction parameters from `ILL-SELLIER-CORNER`, extended to the common arm length. The top row starts punched; the vertical row mirrors in place before the shared diagonal slit appears.
 
-The Autostitch solution starts at the completed crossing state. Move the terminal virtuals and their nominally spaced real neighbours until the selected tips meet (A6), then fit the free spans while keeping the outer endpoints, neighbours and hole fixed. Gap values update; provisional gaps outside the bounds are red. The final incoming arm has four $3.264\,\mathrm{mm}$ adjusted gaps; the outgoing arm has one $3.092\,\mathrm{mm}$ adjusted gap. `I` marks identify them. Reveal the thread together and hold for four seconds.
+The Autostitch solution starts at the completed crossing state. Move the terminal virtuals and their nominally spaced real neighbours until the selected tips meet (A6), then fit the free spans while keeping the outer endpoints, neighbours and hole fixed. Gap values update; provisional gaps outside the bounds are red. The final incoming arm has two $3.264\,\mathrm{mm}$ adjusted gaps; the outgoing arm has one $3.046\,\mathrm{mm}$ adjusted gap. `I` marks identify them. Reveal the thread together and hold for four seconds.
 
 ![Resolve the virtual crossing and fit both arms](assets/problem-corner-autostitch.gif)
 

@@ -9217,10 +9217,10 @@
         "A6"
       ],
       "animated": true,
-      "status": "Compare a vertex hole, thread bridge, shared diagonal slit with mirrored lean, and the A6 selected-tip solution on the same fixed guides. The bridge bypasses the vertex and exceeds the pitch bound. Analytic illustrations, not native solver runs.",
+      "status": "Controlled comparison on identical guides: eight intervals per arm, endpoint lengths halfway between vertex and A6 nominal phases. Vertex and A6 fits use the same minimum-adjustment selector, giving equal and opposite residuals. Analytic illustration; the thread bridge exceeds the pitch bound. This chosen phase balance is not a general performance claim.",
       "inputs": {
-        "armLength": 15,
-        "diagonalCase": "ILL-SELLIER-CORNER"
+        "diagonalCase": "ILL-SELLIER-CORNER",
+        "armIntervals": 8
       },
       "assets": [
         {

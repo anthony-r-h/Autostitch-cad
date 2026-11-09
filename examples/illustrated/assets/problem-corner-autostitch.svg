@@ -1,81 +1,113 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Shared tip hole (Autostitch)</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
-<line class="guide" x1="135" y1="85" x2="360" y2="85" stroke="#C4C4C4" stroke-width="1"/>
-<line class="guide" x1="360" y1="85" x2="360" y2="310" stroke="#C4C4C4" stroke-width="1"/>
-<line class="extension" x1="360" y1="85" x2="375.849360594" y2="85" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
-<line class="extension" x1="360" y1="85" x2="360" y2="83.613360624" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
-<line class="thread" x1="143.617999985" y1="77.768639391" x2="175.344340163" y2="92.231360609" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="192.580340134" y1="77.768639391" x2="224.306680312" y2="92.231360609" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="241.542680282" y1="77.768639391" x2="273.26902046" y2="92.231360609" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="290.505020431" y1="77.768639391" x2="322.231360609" y2="92.231360609" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="339.467360579" y1="77.768639391" x2="367.231360609" y2="92.231360609" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="367.231360609" y1="92.231360609" x2="352.768639391" y2="119.995360639" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="367.231360609" y1="137.231360609" x2="352.768639391" y2="164.995360639" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="367.231360609" y1="182.231360609" x2="352.768639391" y2="209.995360639" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="367.231360609" y1="227.231360609" x2="352.768639391" y2="256.382000015" stroke="#252525" stroke-width="1.8"/>
-<line class="thread" x1="367.231360609" y1="273.617999985" x2="352.768639391" y2="301.382000015" stroke="#252525" stroke-width="1.8"/>
-<line class="slit" x1="126.382000015" y1="92.231360609" x2="143.617999985" y2="77.768639391" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="127.217623908,93.227218385 144.453623878,78.764497167 142.782376092,76.772781615 125.546376122,91.235502833" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="129.202230652" y1="95.592380603" x2="123.561769377" y2="88.870340615" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="146.438230623" y1="81.129659385" x2="140.797769348" y2="74.407619397" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="175.344340163" y1="92.231360609" x2="192.580340134" y2="77.768639391" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="176.179964056,93.227218385 193.415964026,78.764497167 191.744716241,76.772781615 174.508716271,91.235502833" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="178.164570801" y1="95.592380603" x2="172.524109526" y2="88.870340615" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="195.400570771" y1="81.129659385" x2="189.760109496" y2="74.407619397" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="224.306680312" y1="92.231360609" x2="241.542680282" y2="77.768639391" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="225.142304205,93.227218385 242.378304175,78.764497167 240.70705639,76.772781615 223.471056419,91.235502833" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="227.126910949" y1="95.592380603" x2="221.486449674" y2="88.870340615" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="244.36291092" y1="81.129659385" x2="238.722449645" y2="74.407619397" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="273.26902046" y1="92.231360609" x2="290.505020431" y2="77.768639391" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="274.104644353,93.227218385 291.340644323,78.764497167 289.669396538,76.772781615 272.433396568,91.235502833" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="276.089251098" y1="95.592380603" x2="270.448789823" y2="88.870340615" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="293.325251068" y1="81.129659385" x2="287.684789793" y2="74.407619397" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="322.231360609" y1="92.231360609" x2="339.467360579" y2="77.768639391" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="323.066984502,93.227218385 340.302984472,78.764497167 338.631736687,76.772781615 321.395736716,91.235502833" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="325.051591246" y1="95.592380603" x2="319.411129971" y2="88.870340615" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="342.287591217" y1="81.129659385" x2="336.647129942" y2="74.407619397" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="virtual" x1="367.231360609" y1="92.231360609" x2="384.467360579" y2="77.768639391" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
-<line class="gap-dimension" x1="135" y1="121" x2="183.962340149" y2="121" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="135" y1="125" x2="135" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="183.962340149" y1="125" x2="183.962340149" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="159.481170074" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.26</text>
-<line class="gap-dimension" x1="183.962340149" y1="121" x2="232.924680297" y2="121" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="183.962340149" y1="125" x2="183.962340149" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="232.924680297" y1="125" x2="232.924680297" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="208.443510223" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.26</text>
-<line class="gap-dimension" x1="232.924680297" y1="121" x2="281.887020446" y2="121" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="232.924680297" y1="125" x2="232.924680297" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="281.887020446" y1="125" x2="281.887020446" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="257.405850371" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.26</text>
-<line class="gap-dimension" x1="281.887020446" y1="121" x2="330.849360594" y2="121" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="281.887020446" y1="125" x2="281.887020446" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="330.849360594" y1="125" x2="330.849360594" y2="117" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="306.36819052" y="112" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.26</text>
-<line class="slit" x1="352.768639391" y1="301.382000015" x2="367.231360609" y2="318.617999985" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="351.772781615,302.217623908 366.235502833,319.453623878 368.227218385,317.782376092 353.764497167,300.546376122" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="slit" x1="352.768639391" y1="256.382000015" x2="367.231360609" y2="273.617999985" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="351.772781615,257.217623908 366.235502833,274.453623878 368.227218385,272.782376092 353.764497167,255.546376122" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="349.407619397" y1="259.202230652" x2="356.129659385" y2="253.561769377" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="363.870340615" y1="276.438230623" x2="370.592380603" y2="270.797769348" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="352.768639391" y1="209.995360639" x2="367.231360609" y2="227.231360609" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="351.772781615,210.830984531 366.235502833,228.066984502 368.227218385,226.395736716 353.764497167,209.159736746" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="349.407619397" y1="212.815591276" x2="356.129659385" y2="207.175130001" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="adjustment-mark" x1="363.870340615" y1="230.051591246" x2="370.592380603" y2="224.411129971" stroke="#8B8B8B" stroke-width="0.8"/>
-<line class="slit" x1="352.768639391" y1="164.995360639" x2="367.231360609" y2="182.231360609" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="351.772781615,165.830984531 366.235502833,183.066984502 368.227218385,181.395736716 353.764497167,164.159736746" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="slit" x1="352.768639391" y1="119.995360639" x2="367.231360609" y2="137.231360609" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="351.772781615,120.830984531 366.235502833,138.066984502 368.227218385,136.395736716 353.764497167,119.159736746" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="virtual" x1="352.768639391" y1="74.995360639" x2="367.231360609" y2="92.231360609" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
-<line class="gap-dimension" x1="398" y1="310" x2="398" y2="265" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="310" x2="394" y2="310" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="265" x2="394" y2="265" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="418" y="287.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
-<line class="gap-dimension" x1="398" y1="265" x2="398" y2="218.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="265" x2="394" y2="265" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="218.613360624" x2="394" y2="218.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="418" y="241.806680312" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.09</text>
-<line class="gap-dimension" x1="398" y1="218.613360624" x2="398" y2="173.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="218.613360624" x2="394" y2="218.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="173.613360624" x2="394" y2="173.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="418" y="196.113360624" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
-<line class="gap-dimension" x1="398" y1="173.613360624" x2="398" y2="128.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="173.613360624" x2="394" y2="173.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<line class="gap-dimension" x1="402" y1="128.613360624" x2="394" y2="128.613360624" stroke="#C4C4C4" stroke-width="0.8"/>
-<text class="gap-value" x="418" y="151.113360624" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
-<circle class="hole" cx="367.231360609" cy="92.231360609" r="3.75" fill="#C4C4C4"/>
-<text class="notation-start" x="123" y="68" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
-<line class="direction" x1="153" y1="85" x2="165" y2="85" stroke="#8B8B8B" stroke-width="1.1"/>
-<line class="direction" x1="165" y1="85" x2="159" y2="81.5" stroke="#8B8B8B" stroke-width="1.1"/>
-<line class="direction" x1="165" y1="85" x2="159" y2="88.5" stroke="#8B8B8B" stroke-width="1.1"/>
-<text class="notation-end" x="377" y="322" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
-<text class="notation-junction" x="384" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
+<line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#C4C4C4" stroke-width="1"/>
+<line class="guide" x1="410" y1="40" x2="410" y2="330.853684306" stroke="#C4C4C4" stroke-width="1"/>
+<line class="extension" x1="410" y1="40" x2="422.829833608" y2="40" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
+<line class="extension" x1="410" y1="40" x2="410" y2="38.877535004" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
+<line class="thread" x1="131.976149302" y1="34.146315694" x2="154.450715299" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="168.403013902" y1="34.146315694" x2="190.877579899" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="204.829878503" y1="34.146315694" x2="227.3044445" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="241.256743103" y1="34.146315694" x2="266.938767502" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="280.891066106" y1="34.146315694" x2="306.573090505" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="320.525389108" y1="34.146315694" x2="342.999955105" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="356.952253709" y1="34.146315694" x2="379.426819706" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="393.379118309" y1="34.146315694" x2="415.853684306" y2="45.853684306" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="45.853684306" x2="404.146315694" y2="68.328250303" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="82.280548907" x2="404.146315694" y2="104.755114904" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="118.707413507" x2="404.146315694" y2="141.181979504" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="155.134278108" x2="404.146315694" y2="177.608844105" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="191.561142708" x2="404.146315694" y2="214.596941203" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="228.549239807" x2="404.146315694" y2="251.023805803" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="264.976104407" x2="404.146315694" y2="287.450670404" stroke="#252525" stroke-width="1.8"/>
+<line class="thread" x1="415.853684306" y1="301.402969008" x2="404.146315694" y2="323.877535004" stroke="#252525" stroke-width="1.8"/>
+<line class="slit" x1="118.023850698" y1="45.853684306" x2="131.976149302" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="118.859474591,46.849542082 132.811773194,35.14217347 131.140525409,33.150457918 117.188226806,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="154.450715299" y1="45.853684306" x2="168.403013902" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="155.286339191,46.849542082 169.238637795,35.14217347 167.56739001,33.150457918 153.615091406,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="190.877579899" y1="45.853684306" x2="204.829878503" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="191.713203792,46.849542082 205.665502395,35.14217347 203.99425461,33.150457918 190.041956007,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="227.3044445" y1="45.853684306" x2="241.256743103" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="228.140068392,46.849542082 242.092366996,35.14217347 240.421119211,33.150457918 226.468820607,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="229.587381379" y1="48.574382534" x2="225.02150762" y2="43.132986079" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="243.539679983" y1="36.867013921" x2="238.973806224" y2="31.425617466" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="266.938767502" y1="45.853684306" x2="280.891066106" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="267.774391395,46.849542082 281.726689999,35.14217347 280.055442213,33.150457918 266.10314361,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="269.221704382" y1="48.574382534" x2="264.655830623" y2="43.132986079" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="283.174002985" y1="36.867013921" x2="278.608129226" y2="31.425617466" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="306.573090505" y1="45.853684306" x2="320.525389108" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="307.408714397,46.849542082 321.361013001,35.14217347 319.689765216,33.150457918 305.737466612,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="308.856027384" y1="48.574382534" x2="304.290153625" y2="43.132986079" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="322.808325988" y1="36.867013921" x2="318.242452229" y2="31.425617466" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="342.999955105" y1="45.853684306" x2="356.952253709" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="343.835578998,46.849542082 357.787877602,35.14217347 356.116629816,33.150457918 342.164331213,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="379.426819706" y1="45.853684306" x2="393.379118309" y2="34.146315694" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="380.262443598,46.849542082 394.214742202,35.14217347 392.543494417,33.150457918 378.591195813,44.85782653" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="virtual" x1="415.853684306" y1="45.853684306" x2="429.80598291" y2="34.146315694" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
+<line class="gap-dimension" x1="125" y1="76" x2="161.426864601" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="125" y1="80" x2="125" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="161.426864601" y1="80" x2="161.426864601" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="143.2134323" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="161.426864601" y1="76" x2="197.853729201" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="161.426864601" y1="80" x2="161.426864601" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="197.853729201" y1="80" x2="197.853729201" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="179.640296901" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="197.853729201" y1="76" x2="234.280593802" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="197.853729201" y1="80" x2="197.853729201" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="234.280593802" y1="80" x2="234.280593802" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="216.067161501" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="234.280593802" y1="76" x2="273.914916804" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="234.280593802" y1="80" x2="234.280593802" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="273.914916804" y1="80" x2="273.914916804" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="254.097755303" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.26</text>
+<line class="gap-dimension" x1="273.914916804" y1="76" x2="313.549239807" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="273.914916804" y1="80" x2="273.914916804" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="313.549239807" y1="80" x2="313.549239807" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="293.732078305" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.26</text>
+<line class="gap-dimension" x1="313.549239807" y1="76" x2="349.976104407" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="313.549239807" y1="80" x2="313.549239807" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="349.976104407" y1="80" x2="349.976104407" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="331.762672107" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="349.976104407" y1="76" x2="386.402969008" y2="76" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="349.976104407" y1="80" x2="349.976104407" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="386.402969008" y1="80" x2="386.402969008" y2="72" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="368.189536707" y="67" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="slit" x1="404.146315694" y1="323.877535004" x2="415.853684306" y2="337.829833608" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,324.713158897 414.85782653,338.665457501 416.849542082,336.994209716 405.14217347,323.041911112" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="287.450670404" x2="415.853684306" y2="301.402969008" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,288.286294296 414.85782653,302.2385929 416.849542082,300.567345115 405.14217347,286.615046511" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="251.023805803" x2="415.853684306" y2="264.976104407" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,251.859429696 414.85782653,265.8117283 416.849542082,264.140480514 405.14217347,250.188181911" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="214.596941203" x2="415.853684306" y2="228.549239807" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,215.432565095 414.85782653,229.384863699 416.849542082,227.713615914 405.14217347,213.76131731" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="401.425617466" y1="216.879878082" x2="406.867013921" y2="212.314004323" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="413.132986079" y1="230.832176686" x2="418.574382534" y2="226.266302927" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="177.608844105" x2="415.853684306" y2="191.561142708" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,178.444467997 414.85782653,192.396766601 416.849542082,190.725518816 405.14217347,176.773220212" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="401.425617466" y1="179.891780984" x2="406.867013921" y2="175.325907225" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="413.132986079" y1="193.844079588" x2="418.574382534" y2="189.278205829" stroke="#8B8B8B" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="141.181979504" x2="415.853684306" y2="155.134278108" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,142.017603397 414.85782653,155.969902 416.849542082,154.298654215 405.14217347,140.346355611" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="104.755114904" x2="415.853684306" y2="118.707413507" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,105.590738796 414.85782653,119.5430374 416.849542082,117.871789615 405.14217347,103.919491011" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="slit" x1="404.146315694" y1="68.328250303" x2="415.853684306" y2="82.280548907" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,69.163874196 414.85782653,83.116172799 416.849542082,81.444925014 405.14217347,67.49262641" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="virtual" x1="404.146315694" y1="31.901385703" x2="415.853684306" y2="45.853684306" stroke="#C4C4C4" stroke-width="1.5" stroke-dasharray="4 4"/>
+<line class="gap-dimension" x1="448" y1="330.853684306" x2="448" y2="294.426819706" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="330.853684306" x2="444" y2="330.853684306" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="294.426819706" x2="444" y2="294.426819706" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="312.640252006" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="448" y1="294.426819706" x2="448" y2="257.999955105" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="294.426819706" x2="444" y2="294.426819706" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="257.999955105" x2="444" y2="257.999955105" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="276.213387405" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="448" y1="257.999955105" x2="448" y2="221.573090505" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="257.999955105" x2="444" y2="257.999955105" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="221.573090505" x2="444" y2="221.573090505" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="239.786522805" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="448" y1="221.573090505" x2="448" y2="184.584993406" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="221.573090505" x2="444" y2="221.573090505" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="184.584993406" x2="444" y2="184.584993406" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="203.079041956" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.05</text>
+<line class="gap-dimension" x1="448" y1="184.584993406" x2="448" y2="148.158128806" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="184.584993406" x2="444" y2="184.584993406" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="148.158128806" x2="444" y2="148.158128806" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="166.371561106" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="448" y1="148.158128806" x2="448" y2="111.731264205" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="148.158128806" x2="444" y2="148.158128806" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="111.731264205" x2="444" y2="111.731264205" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="129.944696506" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="gap-dimension" x1="448" y1="111.731264205" x2="448" y2="75.304399605" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="111.731264205" x2="444" y2="111.731264205" stroke="#C4C4C4" stroke-width="0.8"/>
+<line class="gap-dimension" x1="452" y1="75.304399605" x2="444" y2="75.304399605" stroke="#C4C4C4" stroke-width="0.8"/>
+<text class="gap-value" x="468" y="93.517831905" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<circle class="hole" cx="415.853684306" cy="45.853684306" r="3.03557205" fill="#C4C4C4"/>
+<text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
+<line class="direction" x1="143" y1="40" x2="155" y2="40" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="155" y1="40" x2="149" y2="36.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<line class="direction" x1="155" y1="40" x2="149" y2="43.5" stroke="#8B8B8B" stroke-width="1.1"/>
+<text class="notation-end" x="427" y="342.853684306" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+<text class="notation-junction" x="434" y="22" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
 </svg>

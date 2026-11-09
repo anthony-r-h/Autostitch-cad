@@ -351,11 +351,22 @@ const arcLength=measuredArc.reduce((sum,e)=>sum+Math.hypot(e.x2-e.x1,e.y2-e.y1)/
 near(arcLength,Math.PI,1e-4);assert(arcLength>3);
 
 const cornerInput=catalog.illustrations.find(i=>i.id==='ILL-CORNER-PROBLEM').inputs;
-const problemView={x:360,y:85,scale:225/cornerInput.armLength};
+const count=cornerInput.armIntervals;
+const cornerShifts=[.75*(Math.cos(alpha)+Math.sin(alpha)),.75*(Math.cos(alpha)-Math.sin(alpha))];
+const armLengths=cornerShifts.map(c=>count*3-c/2);
+const problemView={x:410,y:40,scale:285/armLengths[0]};
 for(const treatment of ['cross','gap']) {
   const name=`problem-corner-${treatment}`,openings=slits(name,problemView);
-  assert.equal(openings.length,2*cornerInput.armLength/3);
-  for(let d=3;d<=cornerInput.armLength;d+=3)for(const p of [[-d,0],[0,-d]])assert(has(openings.map(s=>s.center),p));
+  assert.equal(openings.length,2*count);
+  for(const arm of [0,1]) {
+    const row=openings.slice(arm*count,(arm+1)*count);
+    near(dist(row[0].center,arm===0?[-armLengths[0],0]:[0,-armLengths[1]]),0);
+    near(dist(row.at(-1).center,arm===0?[-3,0]:[0,-3]),0);
+    const gaps=row.slice(1).map((e,i)=>dist(e.center,row[i].center));bounded(gaps);
+    const changed=gaps.filter(g=>Math.abs(g-3)>1e-6);
+    assert.equal(changed.length,arm===0?2:1);
+    near(changed.reduce((sum,g)=>sum+3-g,0),cornerShifts[arm]/2);
+  }
   const vertexSlits=openings.filter(s=>dist(s.center,[0,0])<1e-6);
   assert.equal(vertexSlits.length,0);
   if(treatment==='cross') {
@@ -370,39 +381,40 @@ for(const treatment of ['cross','gap']) {
   if(treatment==='gap') {
     const incoming=openings.find(s=>dist(s.center,[-3,0])<1e-6),outgoing=openings.find(s=>dist(s.center,[0,-3])<1e-6);
     assert(readSvg(name).elements.filter(e=>e.class==='thread').some(e=>
-      dist([(+e.x1-360)/problemView.scale,(85-e.y1)/problemView.scale],incoming.b)<1e-6&&dist([(+e.x2-360)/problemView.scale,(85-e.y2)/problemView.scale],outgoing.a)<1e-6));
+      dist([(+e.x1-problemView.x)/problemView.scale,(problemView.y-e.y1)/problemView.scale],incoming.b)<1e-6&&dist([(+e.x2-problemView.x)/problemView.scale,(problemView.y-e.y2)/problemView.scale],outgoing.a)<1e-6));
   }
 }
 
 const cornerSolution=scenes.find(s=>s.name==='problem-corner-autostitch');
 const mirroredCorner=scenes.find(s=>s.name==='problem-corner-mirrored');
 const mirroredSlits=slits(mirroredCorner.name,problemView);
-assert.equal(mirroredSlits.length,11);
+assert.equal(mirroredSlits.length,2*count+1);
 assert.equal(mirroredCorner.frames[0].stage,'top-row');
-assert.equal(mirroredCorner.frames[0].elements.filter(e=>e.kind==='slit').length,5);
+assert.equal(mirroredCorner.frames[0].elements.filter(e=>e.kind==='slit').length,count);
 assert.equal(mirroredCorner.frames.filter(f=>f.stage==='mirror-vertical').length,30);
 for(const [i,e] of mirroredSlits.entries()) {
-  near(e.angle,(i<5?-40:i<10?-50:-45)*Math.PI/180);
-  if(i<10)near(dist(e.center,i<5?[-15+3*i,0]:[0,-15+3*(i-5)]),0);
+  near(e.angle,(i<count?-40:i<2*count?-50:-45)*Math.PI/180);
+  if(i<2*count)near(dist(e.center,slits('problem-corner-cross',problemView)[i].center),0);
   else near(dist(e.center,[0,0]),0);
 }
-assert.equal(mirroredCorner.final.filter(e=>e.kind==='gap-value').length,8);
+assert.equal(mirroredCorner.final.filter(e=>e.kind==='gap-value').length,2*(count-1));
 assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
 const crossing=scenes.find(s=>s.name==='problem-corner-cross');
 assert.deepEqual(cornerSolution.frames[0].elements,crossing.frames.find(f=>f.stage==='result').elements);
 assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
 const solvedSlits=slits(cornerSolution.name,problemView),solvedVirtuals=slits(cornerSolution.name,problemView,'virtual'),solvedHole=circle(cornerSolution.name,problemView);
-assert.equal(solvedSlits.length,10);assert.equal(solvedVirtuals.length,2);
+assert.equal(solvedSlits.length,2*count);assert.equal(solvedVirtuals.length,2);
 near(dist(solvedVirtuals[0].a,solvedHole),0);near(dist(solvedVirtuals[1].b,solvedHole),0);
-const rows=[solvedSlits.slice(0,5),solvedSlits.slice(5)];
+const rows=[solvedSlits.slice(0,count),solvedSlits.slice(count)];
 for(const [a,row] of rows.entries()) {
-  near(dist(row[0].center,a===0?[-15,0]:[0,-15]),0);
+  near(dist(row[0].center,a===0?[-armLengths[0],0]:[0,-armLengths[1]]),0);
   near(dist(row.at(-1).center,solvedVirtuals[a].center),3);
   row.forEach(s=>{near(s.center[a===0?1:0],0);near(s.angle,a===0?alpha:alpha-Math.PI/2);});
   const gaps=row.slice(1).map((s,i)=>dist(s.center,row[i].center));bounded(gaps);
   const changed=gaps.map((gap,i)=>({gap,i})).filter(g=>Math.abs(g.gap-3)>1e-6);
-  assert.equal(changed.length,a===0?4:1);
-  if(a===1)assert.equal(changed[0].i,1,'Outgoing half-index tie must follow traversal direction');
+  assert.equal(changed.length,a===0?2:1);
+  assert.equal(changed[0].i,3);
+  near(changed.reduce((sum,g)=>sum+g.gap-3,0),cornerShifts[a]/2);
 }
 for(const [i,a] of solvedSlits.entries()) {
   assert(pointSegmentDistance(solvedHole,a.a,a.b)-.25-.15>=.2);
@@ -412,26 +424,30 @@ const centre=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
 for(const f of cornerSolution.frames) {
   assert.deepEqual(f.elements.filter(e=>e.kind==='guide'),crossing.final.filter(e=>e.kind==='guide'));
   const real=f.elements.filter(e=>e.kind==='slit'),virtual=f.elements.filter(e=>e.kind==='virtual');
-  assert.equal(real.length,10);assert.equal(virtual.length,2);
+  assert.equal(real.length,2*count);assert.equal(virtual.length,2);
   for(const a of [0,1]) {
-    near(dist(centre(real[a*5]),a===0?[135,85]:[360,310]),0);
-    near(dist(centre(real[a*5+4]),centre(virtual[a]))/problemView.scale,3);
+    near(dist(centre(real[a*count]),a===0?[125,40]:[410,40+armLengths[1]*problemView.scale]),0);
+    near(dist(centre(real[a*count+count-1]),centre(virtual[a]))/problemView.scale,3);
   }
   if(['shared-hole','distribute-within-arms','result','thread-fade','thread-reveal'].includes(f.stage)) {
     assert.deepEqual(virtual,cornerSolution.final.filter(e=>e.kind==='virtual'));
     assert.deepEqual(f.elements.filter(e=>e.kind==='hole'),cornerSolution.final.filter(e=>e.kind==='hole'));
-    for(const i of [4,9])near(dist(centre(real[i]),centre(cornerSolution.final.filter(e=>e.kind==='slit')[i])),0);
+    for(const i of [count-1,2*count-1])near(dist(centre(real[i]),centre(cornerSolution.final.filter(e=>e.kind==='slit')[i])),0);
   }
   const values=f.elements.filter(e=>e.kind==='gap-value');
   if(values.length) {
-    assert.equal(values.length,8);
-    values.forEach((e,i)=>{const k=Math.floor(i/4)*5+i%4;near(+e.value,dist(centre(real[k]),centre(real[k+1]))/problemView.scale,.00501);});
+    assert.equal(values.length,2*(count-1));
+    values.forEach((e,i)=>{const k=Math.floor(i/(count-1))*count+i%(count-1);near(+e.value,dist(centre(real[k]),centre(real[k+1]))/problemView.scale,.00501);});
   }
 }
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Central adjustment|Vertex hole|Thread bridge|Shared diagonal slit|Shared tip hole)/.test(line));
 const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
+const balancedMirror=pitchComparisonMetrics(mirroredCorner),balancedAuto=pitchComparisonMetrics(cornerSolution);
+for(const key of ['adjustedGaps','absoluteAdjustment','absoluteResidual'])near(balancedMirror[key],balancedAuto[key]);
+assert.equal(balancedAuto.adjustedGaps,3);
+near(balancedAuto.absoluteResidual,cornerShifts.reduce((sum,c)=>sum+c/2,0));
 assert.equal(comparisonRows.length,comparisons.length);
 for(const [i,s] of comparisons.entries()) {
   const values=Object.values(pitchComparisonMetrics(s)).map(v=>Number(v.toFixed(3)));

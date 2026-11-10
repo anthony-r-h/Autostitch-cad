@@ -128,34 +128,6 @@
 - Shared diagonal slit with mirrored lean gives less visible thread-length deviation here; Autostitch keeps consistent lean and bounded gaps, with an offset corner hole
 - The choice depends on which geometric and manufacturing rules the pattern must preserve
 
-# Why CAD
-
-## Keep the pattern in its design environment
-
-- Exact curves, dimensions, snaps and references define where the stitching belongs
-- Retain existing drafting tools, libraries, constraints and production drawings
-- Pattern guides and generated openings stay in the same drawing; source guides remain editable
-
-## What arrays and linetypes leave unresolved
-
-- Arrays repeat geometry; the user still resolves competing spacing and corner requirements
-- Linetypes show a repeated pattern without specifying every opening's position
-- Stitch layout needs tool geometry, protected features and fitting rules alongside the CAD geometry
-
-## Specialized leathercraft CAD
-
-- Comparison scope: Stitch Hero, Leathercraft CAD, LeatherCAD and EasyPatt
-- Compare hole generation, pitch fitting, corner treatment, closure, slit profiles and matching holes across pieces
-- Check each application's support for those features and its native CAD integration
-- Separate design environments add project files and DXF/SVG transfers; editing continuity and retained CAD relationships matter
-
-## The plugin approach
-
-- Add stitch-placement rules to the CAD tools already used for the pattern
-- Keep generated openings in manageable blocks on dedicated layers
-- BricsCAD implementation; a potential AutoCAD port requires checking API compatibility
-- Compare native drafting, stitch placement, tool profiles, file transfers and execution instructions across general CAD, specialized CAD and the plugin
-
 # Axioms
 
 ## Guide, slit and pitch
@@ -297,6 +269,8 @@ Research note: Anthony to find stitching examples from:
 
 
 # Pattern workflow
+
+- Editable guides and generated stitching stay in the same CAD drawing
 
 ## Design intent
 

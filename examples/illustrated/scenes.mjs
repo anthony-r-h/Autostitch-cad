@@ -1128,10 +1128,11 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
     if(e.type==='text') {
       const font=colorConfig.typography,landmark=e.value.match(/^L(\d+)$/);
       const math=Boolean(landmark)||['notation-start','notation-end'].includes(e.kind);
+      const numeric=/^[+-]?\d+(?:\.\d+)?\u00b0?$/.test(e.value);
       const size=e.size*font.sizeScale*(math?font.notationSizeScale:1);
       // Conservative em boxes keep labels clear in both renderers, without a font dependency.
       const width=e.value.length*size*.65+2*font.paddingX,height=size*(landmark?1.4:1.15)+2*font.paddingY;
-      shown={...shown,size,fontFamily:math?font.notationFontFamily:font.fontFamily,textBackground:font.background?theme.textBackground:null,
+      shown={...shown,size,fontFamily:math?font.notationFontFamily:numeric?font.numberFontFamily:font.fontFamily,textBackground:font.background?theme.textBackground:null,
         textBox:{x:e.p[0]-width/2,y:e.p[1]-size*.92-font.paddingY,width,height}};
       if(math)shown.fontItalic=true;
       if(landmark) {

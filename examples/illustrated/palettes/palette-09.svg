@@ -69,7 +69,7 @@
 <line class="thread-angle" x1="404.539189074" y1="38.034735935" x2="404.47658995" y2="38.307595661" stroke="#FF8D88" stroke-width="1"/>
 <line class="thread-angle" x1="404.47658995" y1="38.307595661" x2="404.409754824" y2="38.579448832" stroke="#FF8D88" stroke-width="1"/>
 <line class="angle-leader" x1="380" y1="20" x2="404.825051985" y2="36.380150991" stroke="#FF8D88" stroke-width="0.8"/>
-<rect class="label-background" x="355.875" y="2.04" width="48.25" height="18.95" fill="#1E2A3D"/><text class="thread-angle-value" x="380" y="16" text-anchor="middle" font-family="Arial" font-size="13" fill="#FF8D88">14.3°</text>
+<rect class="label-background" x="355.875" y="2.04" width="48.25" height="18.95" fill="#1E2A3D"/><text class="thread-angle-value" x="380" y="16" text-anchor="middle" font-family="Consolas" font-size="13" fill="#FF8D88">14.3°</text>
 <polygon class="angle-wedge" points="410,40 410,58 409.720060111,57.997823026 409.440187936,57.991292629 409.160451172,57.980410389 408.880917482,57.965178939 408.601654484,57.945601963 408.322729725,57.921684196 408.044210675,57.893431424 407.766164703,57.86085048 407.488659064,57.823949245 407.211760884,57.782736646 406.93553714,57.737222651 406.660054647,57.687418269 406.38538004,57.633335548 406.111579759,57.574987568 405.838720032,57.512388445 405.566866862,57.445553318" fill="#FF8D88" fill-opacity="0.22"/>
 <line class="angle-reference" x1="410" y1="40" x2="410" y2="68" stroke="#FF8D88" stroke-width="0.8" stroke-dasharray="4 4"/>
 <line class="thread-angle" x1="410" y1="58" x2="409.720060111" y2="57.997823026" stroke="#FF8D88" stroke-width="1"/>
@@ -89,14 +89,14 @@
 <line class="thread-angle" x1="406.111579759" y1="57.574987568" x2="405.838720032" y2="57.512388445" stroke="#FF8D88" stroke-width="1"/>
 <line class="thread-angle" x1="405.838720032" y1="57.512388445" x2="405.566866862" y2="57.445553318" stroke="#FF8D88" stroke-width="1"/>
 <line class="angle-leader" x1="497" y1="66" x2="407.766164703" y2="57.86085048" stroke="#FF8D88" stroke-width="0.8"/>
-<rect class="label-background" x="500.875" y="56.04" width="48.25" height="18.95" fill="#1E2A3D"/><text class="thread-angle-value" x="525" y="70" text-anchor="middle" font-family="Arial" font-size="13" fill="#FF8D88">14.3°</text>
+<rect class="label-background" x="500.875" y="56.04" width="48.25" height="18.95" fill="#1E2A3D"/><text class="thread-angle-value" x="525" y="70" text-anchor="middle" font-family="Consolas" font-size="13" fill="#FF8D88">14.3°</text>
 <line class="thread-length-dimension" x1="378.097935229" y1="69.03742233" x2="401.133733724" y2="74.891106636" stroke="#91A6C3" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="377.112794532" y1="72.914211956" x2="379.083075926" y2="65.160632704" stroke="#91A6C3" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="400.148593026" y1="78.767896263" x2="402.118874421" y2="71.01431701" stroke="#91A6C3" stroke-width="0.8"/>
-<rect class="label-background" x="369.715834476" y="49.004264483" width="39.8" height="18.95" fill="#1E2A3D"/><text class="thread-length-value" x="389.615834476" y="62.964264483" text-anchor="middle" font-family="Arial" font-size="13" fill="#91A6C3">1.96</text>
+<rect class="label-background" x="369.715834476" y="49.004264483" width="39.8" height="18.95" fill="#1E2A3D"/><text class="thread-length-value" x="389.615834476" y="62.964264483" text-anchor="middle" font-family="Consolas" font-size="13" fill="#91A6C3">1.96</text>
 <line class="thread-length-dimension" x1="446.82950145" y1="49.358836625" x2="440.975817143" y2="72.39463512" stroke="#91A6C3" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="442.952711823" y1="48.373695928" x2="450.706291076" y2="50.343977323" stroke="#91A6C3" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="437.099027517" y1="71.409494422" x2="444.85260677" y2="73.379775817" stroke="#91A6C3" stroke-width="0.8"/>
-<rect class="label-background" x="444.002659296" y="46.916735872" width="39.8" height="18.95" fill="#1E2A3D"/><text class="thread-length-value" x="463.902659296" y="60.876735872" text-anchor="middle" font-family="Arial" font-size="13" fill="#91A6C3">1.96</text>
+<rect class="label-background" x="444.002659296" y="46.916735872" width="39.8" height="18.95" fill="#1E2A3D"/><text class="thread-length-value" x="463.902659296" y="60.876735872" text-anchor="middle" font-family="Consolas" font-size="13" fill="#91A6C3">1.96</text>
 </g>
 </svg>

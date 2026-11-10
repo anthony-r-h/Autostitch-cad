@@ -95,7 +95,7 @@
 <line class="dimension" x1="165.1" y1="41.384676113" x2="233.31933377" y2="51.734676113" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="dimension" x1="164.5" y1="45.3394201" x2="165.7" y2="37.429932127" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="dimension" x1="232.71933377" y1="55.6894201" x2="233.91933377" y2="47.779932127" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="179.309666885" y="23.599676113" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="199.209666885" y="37.559676113" text-anchor="middle" font-family="Arial" font-size="13" fill="#A6A9AE">3.00</text>
+<rect class="label-background" x="179.309666885" y="23.599676113" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="199.209666885" y="37.559676113" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">3.00</text>
 <rect class="label-background" x="140.32" y="42.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="148" y="58" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="178" y1="75" x2="190" y2="75" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="190" y1="75" x2="184" y2="71.5" stroke="#CECECE" stroke-width="1.1"/>

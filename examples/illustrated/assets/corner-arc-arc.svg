@@ -179,7 +179,7 @@
 <line class="dimension" x1="393.676748876" y1="56.703429939" x2="312.738545582" y2="59.866853348" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="dimension" x1="393.520530436" y1="52.706481628" x2="393.832967316" y2="60.70037825" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="dimension" x1="312.582327143" y1="55.869905037" x2="312.894764022" y2="63.863801659" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="333.307647229" y="35.325141644" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="353.207647229" y="49.285141644" text-anchor="middle" font-family="Arial" font-size="13" fill="#A6A9AE">3.00</text>
+<rect class="label-background" x="333.307647229" y="35.325141644" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="353.207647229" y="49.285141644" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">3.00</text>
 <line class="dimension" x1="395.043660225" y1="91.676727658" x2="393.520530436" y2="52.706481628" stroke="#A6A9AE" stroke-width="0.6"/>
 <line class="dimension" x1="314.105456932" y1="94.840151067" x2="312.582327143" y2="55.869905037" stroke="#A6A9AE" stroke-width="0.6"/>
 <rect class="label-background" x="144.634098848" y="151.677642689" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="152.314098848" y="166.925642689" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>

@@ -27,7 +27,8 @@ for(const name of ['graphite','porcelain']) {
       if(e.type==='text') {
         const landmark=raw.value.match(/^L(\d+)$/),math=Boolean(landmark)||['notation-start','notation-end'].includes(raw.kind);
         assert.equal(size,rawSize*colorConfig.typography.sizeScale*(math?colorConfig.typography.notationSizeScale:1));
-        assert.equal(fontFamily,math?colorConfig.typography.notationFontFamily:colorConfig.typography.fontFamily);
+        const numeric=/^[+-]?\d+(?:\.\d+)?\u00b0?$/.test(raw.value);
+        assert.equal(fontFamily,math?colorConfig.typography.notationFontFamily:numeric?colorConfig.typography.numberFontFamily:colorConfig.typography.fontFamily);
         assert.equal(Boolean(fontItalic),math);
         if(landmark) {
           assert.deepEqual(textRuns.map(r=>r.value),['l',landmark[1]]);
@@ -65,11 +66,12 @@ for(const p of palettes)for(const role of ['ink','text','secondary','angle','adj
 // Typography switches must affect every text element without changing its anchor.
 const font=colorConfig.typography,savedFont={...font};
 try {
-  Object.assign(font,{fontFamily:'Georgia',sizeScale:1.2,background:false});
+  Object.assign(font,{fontFamily:'Georgia',numberFontFamily:'Courier New',sizeScale:1.2,background:false});
   const label={type:'text',kind:'term-label',p:[100,100],value:'Guide',size:13,color:'construction'};
   const shown=displayElements([label],0)[0];
   assert.equal(shown.fontFamily,'Georgia');assert.equal(shown.size,15.6);
   assert.equal(shown.color,theme.text);assert.equal(shown.textBackground,null);assert.deepEqual(shown.p,label.p);
+  for(const value of ['3.00','-0.30','27.5\u00b0'])assert.equal(displayElements([{...label,value}],0)[0].fontFamily,'Courier New');
 } finally {Object.assign(font,savedFont);}
 for(const s of paletteScenes()) {
   const base=new URL(`examples/illustrated/palettes/${s.name}`,root);

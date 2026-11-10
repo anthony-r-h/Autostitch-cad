@@ -10,6 +10,7 @@ Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 - Each theme defines thread, construction, faded measurements, guides, leather edges, angles/residuals and adjusted-gap colours. `text` sets normal font colour; `textBackground` sets the label box colour. Semantic red/blue text and the Stitch fade retain their roles.
 - `rejected` colours crosses red; `accepted` colours checks green. Keep their shapes distinct as well as their colours.
 - `typography` sets `fontFamily`, `sizeScale`, label-box `paddingX`/`paddingY`, and `background` (set `false` to omit boxes). Font sizes scale from the existing label hierarchy. Use an installed font and preview it at the intended display size.
+- `numberFontFamily` sets the monospace font for numeric measurements and angles: **Consolas**. Descriptive labels retain the normal font.
 - Start/end markers use math italics $s$ and $e$; landmarks use $l_n$ with upright subscript digits. `notationFontFamily` (Cambria) and `notationSizeScale` control these markers in every output format.
 - Thread, measurements and angle labels meet a minimum $4.5:1$ contrast against their background. The same theme resolves every SVG, PNG and GIF frame, including slit interiors and the fade.
 - Rebuild the documentation figures after changing the selected theme or typography:

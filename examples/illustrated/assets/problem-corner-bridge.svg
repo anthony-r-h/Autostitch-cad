@@ -59,7 +59,7 @@
 <line class="thread-angle" x1="415.469370127" y1="42.673598014" x2="415.240598746" y2="43.252727334" stroke="#FF968C" stroke-width="1"/>
 <line class="thread-angle" x1="415.240598746" y1="43.252727334" x2="414.99688018" y2="43.825726789" stroke="#FF968C" stroke-width="1"/>
 <line class="angle-leader" x1="380" y1="20" x2="416.520200617" y2="39.09218115" stroke="#FF968C" stroke-width="0.8"/>
-<rect class="label-background" x="355.875" y="2.04" width="48.25" height="18.95" fill="#2D2F31"/><text class="thread-angle-value" x="380" y="16" text-anchor="middle" font-family="Arial" font-size="13" fill="#FF968C">23.8°</text>
+<rect class="label-background" x="355.875" y="2.04" width="48.25" height="18.95" fill="#2D2F31"/><text class="thread-angle-value" x="380" y="16" text-anchor="middle" font-family="Consolas" font-size="13" fill="#FF968C">23.8°</text>
 <polygon class="angle-wedge" points="393.035345605,34.146315694 393.035345605,46.146315694 393.90134198,46.115026998 394.762822372,46.021324074 395.615294347,45.865695562 396.454312451,45.648953031 397.275501386,45.372226746 398.07457883,45.036959775 398.847377768,44.644900463 399.589868221,44.198093312 400.298178263,43.698868326 400.968614212,43.149828854 401.597679889,42.553838017 402.182094854,41.914003779 402.718811509,41.233662736 403.205030994,40.516362718 403.63821778,39.76584429 404.016112893,38.986021241" fill="#FF968C" fill-opacity="0.22"/>
 <line class="angle-reference" x1="393.035345605" y1="34.146315694" x2="393.035345605" y2="62.146315694" stroke="#FF968C" stroke-width="0.8" stroke-dasharray="4 4"/>
 <line class="thread-angle" x1="393.035345605" y1="46.146315694" x2="393.90134198" y2="46.115026998" stroke="#FF968C" stroke-width="1"/>
@@ -79,10 +79,10 @@
 <line class="thread-angle" x1="403.205030994" y1="40.516362718" x2="403.63821778" y2="39.76584429" stroke="#FF968C" stroke-width="1"/>
 <line class="thread-angle" x1="403.63821778" y1="39.76584429" x2="404.016112893" y2="38.986021241" stroke="#FF968C" stroke-width="1"/>
 <line class="angle-leader" x1="497" y1="66" x2="399.589868221" y2="44.198093312" stroke="#FF968C" stroke-width="0.8"/>
-<rect class="label-background" x="500.875" y="56.04" width="48.25" height="18.95" fill="#2D2F31"/><text class="thread-angle-value" x="525" y="70" text-anchor="middle" font-family="Arial" font-size="13" fill="#FF968C">66.2°</text>
+<rect class="label-background" x="500.875" y="56.04" width="48.25" height="18.95" fill="#2D2F31"/><text class="thread-angle-value" x="525" y="70" text-anchor="middle" font-family="Consolas" font-size="13" fill="#FF968C">66.2°</text>
 <line class="thread-length-dimension" x1="378.516228963" y1="67.088617555" x2="389.627199051" y2="71.985709185" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="376.902993781" y1="70.748873318" x2="380.129464146" y2="63.428361793" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="388.013963869" y1="75.645964948" x2="391.240434234" y2="68.325453423" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="364.171714007" y="64.57716337" width="39.8" height="18.95" fill="#2D2F31"/><text class="thread-length-value" x="384.071714007" y="78.53716337" text-anchor="middle" font-family="Arial" font-size="13" fill="#A6A9AE">1.00</text>
+<rect class="label-background" x="364.171714007" y="64.57716337" width="39.8" height="18.95" fill="#2D2F31"/><text class="thread-length-value" x="384.071714007" y="78.53716337" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">1.00</text>
 </g>
 </svg>

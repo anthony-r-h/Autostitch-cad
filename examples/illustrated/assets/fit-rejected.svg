@@ -16,15 +16,15 @@
 <line class="dimension" x1="160" y1="155" x2="300" y2="155" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="160" y1="159" x2="160" y2="151" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="300" y1="159" x2="300" y2="151" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="210.1" y="132.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="230" y="146" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">3.50</text>
+<rect class="label-background" x="210.1" y="132.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="230" y="146" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">3.50</text>
 <line class="dimension" x1="300" y1="155" x2="440" y2="155" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="300" y1="159" x2="300" y2="151" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="440" y1="159" x2="440" y2="151" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="350.1" y="132.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="370" y="146" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">3.50</text>
+<rect class="label-background" x="350.1" y="132.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="370" y="146" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">3.50</text>
 <line class="dimension" x1="160" y1="50" x2="440" y2="50" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="160" y1="54" x2="160" y2="46" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="440" y1="54" x2="440" y2="46" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="280.1" y="27.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="41" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">7.00</text>
+<rect class="label-background" x="280.1" y="27.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="41" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">7.00</text>
 <line class="rejected" x1="166" y1="182" x2="174" y2="190" stroke="#FF968C" stroke-width="1.4"/>
 <line class="rejected" x1="166" y1="190" x2="174" y2="182" stroke="#FF968C" stroke-width="1.4"/>
 <rect class="label-background" x="201.375" y="176.04" width="217.25" height="18.95" fill="#2D2F31"/><text class="term-label" x="310" y="190" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Too long: maximum 3.30 mm</text>
@@ -43,15 +43,15 @@
 <line class="dimension" x1="160" y1="315" x2="253.333333333" y2="315" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="160" y1="319" x2="160" y2="311" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="253.333333333" y1="319" x2="253.333333333" y2="311" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="186.766666667" y="292.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="206.666666667" y="306" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">2.33</text>
+<rect class="label-background" x="186.766666667" y="292.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="206.666666667" y="306" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">2.33</text>
 <line class="dimension" x1="253.333333333" y1="315" x2="346.666666667" y2="315" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="253.333333333" y1="319" x2="253.333333333" y2="311" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="346.666666667" y1="319" x2="346.666666667" y2="311" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="280.1" y="292.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="306" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">2.33</text>
+<rect class="label-background" x="280.1" y="292.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="306" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">2.33</text>
 <line class="dimension" x1="346.666666667" y1="315" x2="440" y2="315" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="346.666666667" y1="319" x2="346.666666667" y2="311" stroke="#CECECE" stroke-width="0.8"/>
 <line class="dimension" x1="440" y1="319" x2="440" y2="311" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="373.433333333" y="292.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="393.333333333" y="306" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">2.33</text>
+<rect class="label-background" x="373.433333333" y="292.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="393.333333333" y="306" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">2.33</text>
 <line class="rejected" x1="166" y1="342" x2="174" y2="350" stroke="#FF968C" stroke-width="1.4"/>
 <line class="rejected" x1="166" y1="350" x2="174" y2="342" stroke="#FF968C" stroke-width="1.4"/>
 <rect class="label-background" x="197.15" y="336.04" width="225.7" height="18.95" fill="#2D2F31"/><text class="term-label" x="310" y="350" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Too short: minimum 2.70 mm</text>

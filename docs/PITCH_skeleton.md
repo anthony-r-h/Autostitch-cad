@@ -417,51 +417,31 @@ $$
 
 [Sources, geometry and reproduction](../examples/counter_examples/README.md)
 
-# Pattern workflow
-
-- The guides and saved settings define the stitch layout; generated blocks are replaceable output
-- Draw, constrain, generate, review and revise within the same CAD drawing
-
-## Design intent
-
-- Draw the pattern and stitch guides with native lines, arcs and polylines
-- Open Autostitch and select a guide. Use **Connect guides** where separate guides meet or cross and should share an opening
-- Set pitch to match the intended iron. **Set start** and **Set end** choose the portion to stitch; a closed loop needs only a start
-- **Reverse** changes the layout direction. **Front face / Back face** chooses which side of the holes the pattern shows
-- **Add landmark** by snapping to an existing pattern reference; the solver reserves the nominal pair around it
-- The designer chooses the seam path and fixed features; the solver chooses the remaining opening positions
-
-## Geometric layout
-
-- **Generate stitches** resolves the connected guides together, fits the free spans and checks opening clearance
-- Each stitch line produces a named block containing openings, visible thread and notation
-- Review the start, end, junctions and landmark pairs first. Then check the locations and dimensions of adjusted gaps
-- If a fit fails, change the guide or its constraints and generate again
-- Revise the source guides with native CAD tools. Generate again to replace the output; guide edits do not automatically regenerate stitching
-
-### Revising the worked example
-
-- Extend the outer end of one $9.50\,\mathrm{mm}$ free span by $3\,\mathrm{mm}$, leaving its landmark or corner fixed
-- Generate again at the same $3\,\mathrm{mm}$ pitch
-- The new $12.50\,\mathrm{mm}$ span has four gaps: two nominal and two at $3.25\,\mathrm{mm}$. The adjustment block is now exactly centred
-- The other free spans retain their constraints and fits
-
-## Physical execution
-
-- Print the pattern at full scale and verify a known dimension before transferring the openings
-- Use the nominal-pitch iron along nominal runs. At an adjusted gap, use the marked positions and dimensions with an awl or single tooth
-- The `I` marks identify adjusted intervals even on a monochrome print
-- Dashed virtual slits locate the shared round hole; punch the hole, leaving the virtual slits as construction
-- Variable-pitch equipment follows the same resolved positions; the layout already specifies where spacing changes
-- Opening positions and adjustment instructions travel with the pattern, so another maker can reproduce the layout
-- Accurate punching, tool alignment and stitching technique still determine the finished seam
-
 # Can you really?
 
-- Curved lettering, clipped fills, shared junctions and controlled spacing in one pattern
-- The same rules apply throughout the artwork
+## Raise the floor
+
+- Skilled bespoke leatherworkers already exercise judgement over pitch, corners and visual balance
+- Codifying that judgement makes precise layout repeatable across a piece and through revisions
+- Precise layout becomes easier to achieve consistently, with fewer missed constraints and manual corrections
+- Design judgement, accurate punching and stitching remain the practitioner's work
+
+## Go beyond an ordinary seam
+
+- The maker draws the intended pattern; the rules resolve the opening positions and identify departures from nominal pitch
+- An array repeats a shape; each corner, junction and interrupted run still needs a placement decision
+- For an expert making a one-off piece, less repetitive layout work makes room for more ambitious detail
+
+## Deliberately ridiculous
+
+- Stitching becomes the decoration: lettering, texture and background all depend on resolved stitch placement
+- The emblem combines outlined capitals, script and concentric rings interrupted around the lettering
 
 ![Stitched emblem with interrupted concentric rings](../examples/demos/emblem.png)
+
+- The banner pushes further: script outlines, curved fill clipped inside YOU, and a diamond background kept clear of the text
+- The banner uses $2.7\,\mathrm{mm}$ pitch; its many short runs, corners and crossings apply the same placement rules
+- The excess is intentional: the same rules handle a density of detail that would demand repeated manual fitting
 
 ![Can YOU really banner with stitched lettering, flow fill and diamond background](../examples/demos/can-you-really.png)
 

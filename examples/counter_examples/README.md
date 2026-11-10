@@ -1,10 +1,10 @@
 # Counter-examples
 
-Sources and reproducible figures for [stitching examples](../../docs/EXAMPLES_skeleton.md): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.webp`, supplied by Anthony.
+Sources and reproducible figures for [stitching examples](../../docs/EXAMPLES_skeleton.md): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.png`, supplied by Anthony.
 
 Keep these cases in `docs/EXAMPLES_skeleton.md` and their source material here. Add them to the pitch only when Anthony requests it.
 
-Loewe source photograph: `loewe_mini_feather.jpg`, supplied by Anthony. The case isolates the rectangular strap below the swivel hook.
+Loewe source photograph: `loewe_mini_feather.png`, supplied by Anthony. The case isolates the rectangular strap below the swivel hook.
 
 Louis Vuitton source photograph: `lv_speedy.png`, supplied by Anthony. The case isolates the left handle chape, the leather tab connecting the handle hardware to the bag.
 

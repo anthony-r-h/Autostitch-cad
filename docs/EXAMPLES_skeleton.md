@@ -7,7 +7,7 @@
 
 ### Hermès Sellier wallet
 
-<img src="../examples/counter_examples/hermies_sellier.webp" width="300" alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
+<img src="../examples/counter_examples/hermies_sellier.png" width="300" alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
 
 - Focus: the top corner and the decorative H below the right-hand run
 - The H is represented by six round holes
@@ -33,7 +33,7 @@
 
 ### Loewe Mini Feather hanger
 
-<img src="../examples/counter_examples/loewe_mini_feather.jpg" width="300" alt="Loewe Mini Feather with a rectangular stitched strap below the swivel hook">
+<img src="../examples/counter_examples/loewe_mini_feather.png" width="300" alt="Loewe Mini Feather with a rectangular stitched strap below the swivel hook">
 
 - Focus: the rectangular strap below the swivel hook
 - The stitch line goes up the left side, across the top and down the right side

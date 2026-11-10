@@ -9250,7 +9250,8 @@
         "armIntervals": 8,
         "bridgeThreadLengths": [1, 3],
         "bridgeIncomingAdvance": 0.5,
-        "bridgeHoldCentiseconds": 50
+        "bridgeHoldCentiseconds": 50,
+        "bridgeMotionCentiseconds": 214
       },
       "assets": [
         {

@@ -981,7 +981,7 @@ function bridgeComparison(s) {
     frames.push({elements:draw(shifts[a]).elements,delay:profile.inputs.bridgeHoldCentiseconds,stage,holeLightening:1});
     // Endpoint holds belong to the next leg, including the GIF loop boundary.
     for(let i=1;i<=30;i++)frames.push({elements:draw(shiftFor(lerp(profile.inputs.bridgeThreadLengths[a],profile.inputs.bridgeThreadLengths[b],ease(i/31)))).elements,
-      delay:5,stage:'compare-bridge',holeLightening:1});
+      delay:Math.round(i*profile.inputs.bridgeMotionCentiseconds/30)-Math.round((i-1)*profile.inputs.bridgeMotionCentiseconds/30),stage:'compare-bridge',holeLightening:1});
   }
   return {...s,final:first.elements,frames,threadPaths:[first.path],bridgeShifts:shifts.map(v=>v/scale)};
 }

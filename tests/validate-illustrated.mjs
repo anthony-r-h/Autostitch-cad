@@ -913,12 +913,12 @@ for(const s of scenes) {
       const holds=s.frames.filter(f=>f.delay===50);
       const midpoint=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
       assert.deepEqual(holds[0].elements,s.final);
-      assert.equal(s.frames.reduce((sum,f)=>sum+f.delay,0),400,'Bridge loop must last four seconds');
+      assert.equal(s.frames.reduce((sum,f)=>sum+f.delay,0),528,'Bridge loop must last 5.28 seconds');
       const lengths=s.frames.map(f=>{const t=f.elements.filter(e=>e.kind==='thread')[count-1];return dist(t.a,t.b)/problemView.scale;});
       for(let i=1;i<=31;i++)assert(lengths[i]>lengths[i-1]);
       for(let i=32;i<62;i++)assert(lengths[i]<lengths[i-1]);
       assert(lengths.at(-1)-lengths[0]<.01,'Loop must return smoothly to the short hold');
-      assert(s.frames.every(f=>f.delay===50||f.delay===5));
+      assert(s.frames.every(f=>f.delay===50||f.delay===7||f.delay===8));
       for(const [i,f] of holds.entries()) {
         const t=f.elements.filter(e=>e.kind==='thread')[count-1];
         near(dist(t.a,t.b)/problemView.scale,cornerInput.bridgeThreadLengths[i]);

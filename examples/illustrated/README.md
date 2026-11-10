@@ -40,6 +40,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
 - Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with half-second holds at both positions
+- Bridge motion runs $30\%$ slower: $2.14\,\mathrm{s}$ per direction and $5.28\,\mathrm{s}$ per loop, including both holds
 - Static stitched figures are the final Stitch state, including the same lightened measurements
 - New slits, virtual slits, round holes and thread receive a brief ink-coloured glow. `revealGlow` in `colors.json` controls its enable switch, duration, opacity and width in output pixels. The default is $0.16\,\mathrm{s}$; motion alone does not retrigger it. The pulse uses existing frame time, preserving the phase timing and final holds. Still exports have no glow
 - Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks

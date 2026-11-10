@@ -493,18 +493,7 @@ $$
 - For a one-off piece, this matters before there is any benefit from repeated production: the layout work is concentrated in a single object
 - More elaborate stitching still requires more physical work. The geometric contribution is to make the placement decisions explicit and consistent at that level of detail
 
-## Stitching as ornament
-
-- In these examples, the stitches form the image itself. Thread direction and spacing affect the lettering, texture and separation between shapes
-- The emblem combines outlined capitals, script and concentric rings. The rings stop around the lettering, leaving a clear border that preserves the words' silhouettes
-- Curves and interrupted runs need independent fits, while branching strokes must agree at shared openings. Their combination tests whether the local rules produce a coherent composition
-
 ![Stitched emblem with interrupted concentric rings](../examples/demos/emblem.png)
-
-- The banner combines script outlines, curved fill inside YOU and a looser diamond background. Different stitch densities distinguish the text from its surroundings
-- The fill comes from one continuous field of curves clipped by the letters. Its alignment survives across the word, while each remaining fragment needs a complete stitch layout
-- At $2.7\,\mathrm{mm}$ pitch, the short fragments expose the relationship between drawing scale and available stitch resolution. A shape can be drawable yet leave too little room for a valid fit
-- The density of detail is deliberate. It brings many otherwise familiar placement decisions into one composition, where their consistency can be examined together
 
 ![Can YOU really banner with stitched lettering, flow fill and diamond background](../examples/demos/can-you-really.png)
 
@@ -537,12 +526,12 @@ $$
 
 | Context | Expected value |
 | --- | --- |
-| Ordinary industrial textiles | Limited where existing processes already meet placement tolerances |
-| Precision leather goods | Control of visible regularity, symmetry and consistency |
-| Small-batch luxury production | Repeatability with less manual layout effort |
-| Bespoke leathercraft | Control over irregular geometry and individual pieces |
-| Fully automated production | Explicit placement geometry for manufacturing planning, subject to equipment integration |
-| Footwear and technical textiles | Useful where visible stitching or perforation placement needs tight control |
+| Ordinary industrial textiles | Limited: existing tolerances often suffice |
+| Precision leather goods | Regularity and symmetry |
+| Small-batch luxury production | Repeatability; less manual layout |
+| Bespoke leathercraft | Precise layout on custom shapes |
+| Fully automated production (CNC) | Automatic stitch distribution |
+| Footwear and technical textiles | Precise stitch and perforation placement |
 
 # Reference
 

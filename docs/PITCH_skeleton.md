@@ -208,9 +208,9 @@
 - In the T study, near $180^\circ$, the two threads through a Vertex point read as one overlong stitch. As the arms turn apart, the bend makes them read as separate stitches
 - The choice controls that visible continuity while keeping one round hole at the guide intersection
 
-### T junction: four treatments
+### T junction: three treatments
 
-[Synchronized angle study](../examples/illustrated/t-junctions/index.html): the same arms sweep from $180^\circ$ to $120^\circ$ and back under all four treatments.
+[Synchronized angle study](../examples/illustrated/t-junctions/index.html): the same arms sweep from $180^\circ$ to $120^\circ$ and back.
 
 #### Vertex point
 
@@ -228,14 +228,9 @@
 #### Reverse corner
 
 - The shared diagonal slit favours some arm connections over others: some stitches look continuous while others break that rhythm
+- Reject Reverse corner for this branching rule; half pitch retains the same imbalance
 
 ![Reverse corner gives unequal connections around the T junction](../examples/illustrated/t-junctions/reverse.gif)
-
-#### Reverse corner, half pitch
-
-- Halving the centre spacing retains that imbalance; reject both Reverse corner variants for this branching rule
-
-![Half pitch does not balance the Reverse corner connections](../examples/illustrated/t-junctions/reverse-half.gif)
 
 ### Proposed arm-count and angle rule
 

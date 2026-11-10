@@ -117,8 +117,9 @@
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
-- Place the incoming row's pitch adjustments so its terminal virtual slit lands at the required offset past the vertical guide
-- Slit length, lean and guide directions determine that offset; the selected tips of both virtual slits meet at one round hole
+- The horizontal row's terminal virtual slit locates the vertical row through its lower tip
+- Slide that virtual slit and its preceding real slit until the vertical row lines up with its guide; the whole vertical row follows sideways
+- That movement creates the horizontal residual. Distribute it within the arm while keeping the corner construction fixed
 - The vertical guide fixes the outgoing arm's direction. With nominal corner steps, the entering and leaving thread both meet their guides at $27.5^\circ$
 - Keep slit lean consistent and absorb the residual within the arm spans; the shared hole sits off the guide vertex
 

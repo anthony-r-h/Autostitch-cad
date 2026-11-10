@@ -172,17 +172,18 @@ function cornerProblemScenes() {
     return finish(s,result);
   });
   const s=scene('problem-corner-autostitch','Autostitch','ILL-CORNER-PROBLEM');
-  // Continue the established crossing, without replaying the approaching rows.
-  frame(s,comparisons[0].final,100,'crossing');
   const fits=[ci[0],co[1]].map((c,arm)=>selectFit({D:lengths[arm]+c-3,p:3}));
   if(fits.some(f=>!f||f.n!==input.armIntervals-1))throw new Error('Corner comparison needs equal-count feasible arm fits');
   const targets=[stations(fits[0]).map(x=>lengths[0]-x),stations(fits[1]).map(x=>3-co[1]+x).toReversed()];
-  const anchored=[ci[0],co[1]].map((c,arm)=>referenceRows[arm].map((x,i)=>i===input.armIntervals-1?3-c:x));
+  const anchored=[
+    referenceRows[0].map((x,i)=>i===input.armIntervals-1?3-ci[0]:x),
+    referenceRows[1].map(x=>x-(co[1]-referenceVirtuals[1][1]))
+  ];
   const draw=(rows,virtuals,showHole)=>{
     const elements=[...base];
     virtuals.forEach(c=>{if(Math.hypot(...c)>1e-9)elements.push(worldLine([0,0],c,view,'extension',guideInk,1,true));});
     for(const [arm,points] of rows.entries()) {
-      const position=x=>arm===0?[-x,0]:[0,-x],gaps=points.slice(1).map((x,i)=>points[i]-x);
+      const position=x=>arm===0?[-x,0]:[virtuals[1][0],-x],gaps=points.slice(1).map((x,i)=>points[i]-x);
       const changed=gaps.map(g=>Math.abs(g-3)>1e-6);
       points.forEach((x,i)=>elements.push(...opening(position(x),arm===0?alpha:alpha-Math.PI/2,view,{marked:changed[i-1]||changed[i]})));
       elements.push(...opening(virtuals[arm],arm===0?alpha:alpha-Math.PI/2,view,{virtual:true}));
@@ -190,11 +191,16 @@ function cornerProblemScenes() {
     if(showHole)elements.push(hole(joint,view));
     return elements;
   };
-  for(let i=1;i<=30;i++) {
-    const t=ease(i/30),rows=anchored.map((row,arm)=>row.map((x,j)=>lerp(referenceRows[arm][j],x,t)));
-    const virtuals=[ci,co].map((target,arm)=>target.map((x,j)=>lerp(referenceVirtuals[arm][j],x,t)));
-    frame(s,draw(rows,virtuals,false),8,'align-terminal-tips');
-  }
+  const align=t=>{
+    const incoming=[lerp(referenceVirtuals[0][0],ci[0],t),0];
+    // The incoming lower tip carries the outgoing virtual slit and its row.
+    // Sliding the incoming neighbour brings the entire outgoing row onto its guide.
+    const tip=add(incoming,mul(ui,-h)),outgoing=add(tip,mul(uo,-h));
+    const rows=[anchored[0].map((x,i)=>lerp(referenceRows[0][i],x,t)),anchored[1]];
+    return draw(rows,[incoming,outgoing],false);
+  };
+  frame(s,align(0),100,'crossing');
+  for(let i=1;i<=30;i++)frame(s,align(ease(i/30)),8,'align-terminal-tips');
   frame(s,draw(anchored,[ci,co],true),130,'shared-hole');
   for(let i=1;i<=30;i++) {
     const t=ease(i/30),rows=anchored.map((row,a)=>row.map((x,j)=>lerp(x,targets[a][j],t)));

@@ -446,11 +446,10 @@ for(const arm of [0,1]) {
 }
 assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
 const crossing=scenes.find(s=>s.name==='problem-corner-vertex-point');
-// The balanced Vertex point shifts its far endpoint; Autostitch retains the
-// original endpoint and starts from the original nominal row.
+// The incoming nominal row determines the initial, off-guide outgoing row.
 const initial=cornerSolution.frames[0].elements;
 assert(!initial.some(e=>e.kind==='thread'));
-assert.deepEqual(initial.filter(e=>e.kind==='hole'),crossing.final.filter(e=>e.kind==='hole'));
+assert(!initial.some(e=>e.kind==='hole'));
 assert.deepEqual(initial.filter(e=>e.kind==='slit').slice(0,count),crossing.final.filter(e=>e.kind==='slit').slice(0,count));
 assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
 const solvedSlits=slits(cornerSolution.name,problemView),solvedVirtuals=slits(cornerSolution.name,problemView,'virtual'),solvedHole=circle(cornerSolution.name,problemView);
@@ -476,8 +475,23 @@ for(const f of cornerSolution.frames) {
   assert.deepEqual(f.elements.filter(e=>e.kind==='guide'),crossing.final.filter(e=>e.kind==='guide'));
   const real=f.elements.filter(e=>e.kind==='slit'),virtual=f.elements.filter(e=>e.kind==='virtual');
   assert.equal(real.length,2*count);assert.equal(virtual.length,2);
+  near(dist(virtual[0].a,virtual[1].b),0);
+  for(const slit of real.slice(count))near(centre(slit)[0],centre(virtual[1])[0]);
+  if(['crossing','align-terminal-tips','shared-hole','reset'].includes(f.stage)) {
+    const initialVirtual=initial.filter(e=>e.kind==='virtual'),initialReal=initial.filter(e=>e.kind==='slit');
+    const dx=centre(virtual[0])[0]-centre(initialVirtual[0])[0];
+    for(let i=count;i<2*count;i++) {
+      near(centre(real[i])[0]-centre(initialReal[i])[0],dx);
+      near(centre(real[i])[1],centre(initialReal[i])[1]);
+      if(i>count)near(dist(centre(real[i]),centre(real[i-1]))/problemView.scale,3);
+    }
+    for(let i=0;i<count-1;i++)near(dist(centre(real[i]),centre(initialReal[i])),0);
+    near(centre(real[count-1])[0]-centre(initialReal[count-1])[0],dx);
+    near(dist(centre(real[count-2]),centre(real[count-1]))/problemView.scale,3+dx/problemView.scale);
+  }
   for(const a of [0,1]) {
-    near(dist(centre(real[a*count]),a===0?[125,40]:[410,40+armLengths[1]*problemView.scale]),0);
+    if(a===0||['result','thread-fade','thread-reveal'].includes(f.stage))
+      near(dist(centre(real[a*count]),a===0?[125,40]:[410,40+armLengths[1]*problemView.scale]),0);
     near(dist(centre(real[a*count+count-1]),centre(virtual[a]))/problemView.scale,3);
   }
   if(['shared-hole','distribute-within-arms','result','thread-fade','thread-reveal'].includes(f.stage)) {
@@ -488,6 +502,15 @@ for(const f of cornerSolution.frames) {
   assert(!f.elements.some(e=>['gap-value','gap-dimension'].includes(e.kind)));
   assert.equal(f.elements.filter(e=>e.kind==='thread-length-value').length,f.elements.some(e=>e.kind==='thread')?2:0);
 }
+
+const aligning=cornerSolution.frames.filter(f=>f.stage==='align-terminal-tips');
+let previousX=centre(initial.filter(e=>e.kind==='virtual')[1])[0];
+assert(previousX<problemView.x);
+for(const f of aligning) {
+  const x=centre(f.elements.filter(e=>e.kind==='virtual')[1])[0];
+  assert(x>previousX&&x<=problemView.x+1e-6);previousX=x;
+}
+near(previousX,problemView.x);
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 for(const [,link] of pitchDoc.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g))assert(fs.existsSync(new URL(link,new URL('docs/PITCH_skeleton.md',root))),`Missing pitch figure: ${link}`);

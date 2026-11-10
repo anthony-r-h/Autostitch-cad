@@ -18,6 +18,8 @@ An editable path on which real slit centres lie, made of straight or circular **
 
 A slit is one type of **opening**; a round hole is the other. Its **axis** is the finite centreline between its tips. **Length** $\ell$ runs along that axis, **width** $w$ across it, and **lean** $\alpha$ is its signed angle to the guide tangent.
 
+An **obverse stitch** uses the reference slit lean; a **reverse stitch** uses its mirrored lean. These describe the slit row relative to its guide, separately from travel direction and the material face shown.
+
 ![Magnified slit showing its axis, length, width and lean relative to the tangent](../examples/illustrated/assets/terms-slit.png)
 
 A **virtual slit** is construction only: its selected tip helps locate a corner hole. It is not a separate opening.
@@ -63,6 +65,8 @@ A meeting with two or more **arms**: portions of stitch lines extending away fro
 - A **smooth join** keeps the tangent direction. Straight or co-circular continuation at equal pitch remains one run; a smooth change of curvature shares one slit.
 - A **sharp corner** has two arms with different tangent directions. Virtual slits locate its shared round hole.
 - A junction with three or more arms, such as a T or X, shares a round hole at the guide intersection.
+
+The corner comparisons use three other treatments: **Vertex point** puts a round hole at the guide vertex; **Bridge** carries thread directly between the terminal slits, bypassing the vertex; **Reverse corner** joins obverse and reverse rows through a shared diagonal slit at the vertex. A shared diagonal slit without a change of lean is a separate treatment.
 
 For a two-arm corner, the **turn angle** $\delta$ is the signed change of tangent direction. The **included angle** $\beta$ is the angle between the arms pointing away from the corner:
 

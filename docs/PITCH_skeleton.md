@@ -18,6 +18,7 @@
 - Digital arrays create many objects; fitting and revising the seam requires manual edits
 - Physical layout relies on judgement developed through practice, repeated for each pattern
 - Encode that judgement in repeatable placement instructions: preserve nominal spacing where possible and identify every adjustment
+- Make the placement choices explicit so the same rules can be reapplied when the pattern changes
 - Reject layouts that cannot satisfy the rules so the design can be revised
 - Ground the axioms in manufacturability with the intended tools, visual balance through consistent lean and deliberate adjustments, and precision through explicit constraints and reproducible geometry
 
@@ -25,6 +26,7 @@
 
 - **Guide and stitch line:** the guide carries the slit centres; one stitch line can follow several connected guides
 - **Slit and lean:** a slit has length, width and an axis between its tips. Lean is the angle of that axis to the guide's local tangent
+- **Obverse and reverse stitch:** obverse uses the reference slit lean; reverse mirrors that lean. Travel direction and material face are separate choices
 - **Gap and pitch:** a gap is the direct distance between consecutive opening centres; pitch $p$ is the target. On a curve, the gap is a chord, while arc length follows the guide
 - **Nominal, adjusted and protected gaps:** nominal gaps equal $p$; adjusted gaps depart from $p$ within the fitting bounds; protected gaps stay nominal
 - Blue guide segments identify adjusted gaps between opening centres; red segments identify residuals
@@ -104,11 +106,11 @@
 - Move the vertical run to vary the visible bridge stitch from $1.00$ to $3.00\,\mathrm{mm}$; the red angles change with it
 - Both positions retain nominal arm spacing; the far endpoint moves with the row
 
-### Shared diagonal slit with mirrored lean
+### Reverse corner
 
-![A shared diagonal slit joins the top row to a row with mirrored lean](../examples/illustrated/assets/problem-corner-mirrored.gif)
+![Reverse corner joins obverse and reverse rows through a shared diagonal slit](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
-- Refines Bridge: carry the turn through a shared diagonal slit at the vertex and mirror the vertical row
+- Refines Bridge: add a shared diagonal slit at the vertex and mirror the outgoing row, joining obverse and reverse stitches
 - Mirroring brings the outgoing corner stitch closer to the ordinary thread direction along that row
 - Arm spacing stays nominal; the final gaps into the shared slit absorb the residual
 - Length brackets show the two visible corner stitches; red angles show how they meet the arms
@@ -117,17 +119,20 @@
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
+- Refines Vertex point at this right-angle corner: derive the shared hole from the two slit rows, keeping their lean consistent
 - The horizontal row's terminal virtual slit locates the vertical row through its lower tip
 - Slide that virtual slit and its preceding real slit until the vertical row lines up with its guide; the whole vertical row follows sideways
 - That movement creates the horizontal residual. Distribute it within the arm while keeping the corner construction fixed
 - The vertical guide fixes the outgoing arm's direction. With nominal corner steps, the entering and leaving thread both meet their guides at $27.5^\circ$
-- Keep slit lean consistent and absorb the residual within the arm spans; the shared hole sits off the guide vertex
+- Slit lean, slit length and corner angle determine the hole's offset from the vertex; changing the tool profile changes that placement
+- The corner step measures from the last real slit centre to the virtual slit centre; the round hole is where the two virtual tips meet
 
 ### Corner tradeoffs
 
 - Keeping the opening at the vertex, keeping slit lean consistent and keeping the arm gaps nominal lead to different corner treatments
-- Shared diagonal slit with mirrored lean gives less visible thread-length deviation here; Autostitch keeps consistent lean and bounded gaps, with an offset corner hole
-- The choice depends on which geometric and manufacturing rules the pattern must preserve
+- Reverse corner keeps the turn at the vertex and gives less visible thread-length deviation here; Autostitch preserves lean with an offset hole
+- Autostitch resolves the corner first, then fits the remaining spans around it. Endpoints, landmark pairs, gap bounds and clearance apply together
+- The rules determine a repeatable layout; the maker judges whether its thread angles, lengths and corner position suit the design
 
 # Axioms
 
@@ -171,6 +176,7 @@
 
 - The last real slit on each arm stays on its guide
 - Its centre is one corner step $q$ from the virtual slit's centre, within $0.9p\leq q\leq1.1p$
+- The virtual tips determine the hole position; the corner step controls the approach from each real row
 
 - The same construction applies to straight and circular arms
 
@@ -181,9 +187,10 @@
 ## Branching junctions
 
 - A through-line contributes two arms; a T has three and an X four
-- Three or more arms share one round hole at the guide intersection
+- Three or more arms use Vertex point: one round hole at the guide intersection
 - Each arm's first neighbour is one nominal pitch from that hole
-- Keep those neighbours fixed while distributing each arm's residual through its free gaps
+- Releasing the common virtual-tip constraint admits more arm directions, at the cost of ordinary thread angle and visible length at the hole
+- Keep the hole and neighbours fixed; fit each remaining span with the fewest bounded adjustments, centred within that span
 
 ![A9: a T junction reserves one hole and its nominal neighbours](../examples/illustrated/assets/axiom-junction.gif)
 
@@ -207,7 +214,8 @@
 # Model and solution
 
 - Given a guide and tool profile, find the opening positions that satisfy the axioms
-- Fix the features, fit the gaps between them, then check the complete layout
+- Resolve the fixed features first; fit the gaps between them without undoing those choices
+- Check the complete layout for clearance. A valid corner construction can still leave an impossible span or colliding openings
 
 ## Establish the fixed openings
 
@@ -318,14 +326,14 @@ $$
 
 ### Reference
 
-- Shared diagonal slit with mirrored lean: rear-style top row, front-style vertical row
+- Reverse corner: the top and vertical rows use opposite lean
 - The stitches entering the H continue the adjoining thread angles
 
-![Sellier: Shared diagonal slit with mirrored lean](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
+![Sellier: Reverse corner](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
 
 ### Autostitch
 
-- Consistent rear-style lean; a round corner hole at the virtual slit-tip intersection
+- Consistent lean from the top row through the vertical run; a round corner hole at the virtual slit-tip intersection
 - The H keeps its shape and nominal approaches; its position and the bottom row move to suit the changed slit lean
 
 ![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.png)
@@ -334,6 +342,8 @@ $$
 | --- | ---: | ---: | ---: |
 | Reference | $0$ | $0.000$ | $1.213$ |
 | Autostitch | $0$ | $0.000$ | $1.090$ |
+
+- Both layouts keep nominal gaps; the choice changes the corner position and thread geometry
 
 ## Loewe Mini Feather hanger
 
@@ -381,6 +391,7 @@ $$
 - Same pentagonal guides; five round corner holes
 - Each span uses the fewest adjusted gaps allowed by the pitch bounds
 - The loop closes at its starting opening
+- Most gaps return to the iron's pitch, reducing the individual placements required by the reference layout
 
 ![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
@@ -408,7 +419,7 @@ $$
 - Same guides and aligned straight rows
 - Virtual slit tips place the shared hole right of the vertex, changing the available span on each arm
 - One adjusted gap on the left; four on the right
-- Minimizing adjusted gaps gives different spacing patterns on the two sides
+- Fewer gaps need individual placement; the two sides lose their matching spacing pattern
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
@@ -425,6 +436,7 @@ $$
 
 - Skilled bespoke leatherworkers already exercise judgement over pitch, corners and visual balance
 - Codifying that judgement makes precise layout repeatable across a piece and through revisions
+- Corner treatments and spacing corrections become decisions that can be checked together across the whole pattern
 - Precise layout becomes easier to achieve consistently, with fewer missed constraints and manual corrections
 - Design judgement, accurate punching and stitching remain the practitioner's work
 

@@ -485,17 +485,8 @@ for(const f of cornerSolution.frames) {
     assert.deepEqual(f.elements.filter(e=>e.kind==='hole'),cornerSolution.final.filter(e=>e.kind==='hole'));
     for(const i of [count-1,2*count-1])near(dist(centre(real[i]),centre(cornerSolution.final.filter(e=>e.kind==='slit')[i])),0);
   }
-  const values=f.elements.filter(e=>e.kind==='gap-value');
-  if(values.length) {
-    const initial=['crossing','reset'].includes(f.stage);
-    const gapsPerArm=initial?count:count-1;
-    assert.equal(values.length,2*gapsPerArm);
-    values.forEach((e,i)=>{
-      const arm=Math.floor(i/gapsPerArm),gap=i%gapsPerArm,k=arm*count+gap;
-      const next=gap===count-1?[problemView.x,problemView.y]:centre(real[k+1]);
-      near(+e.value,dist(centre(real[k]),next)/problemView.scale,.00501);
-    });
-  }
+  assert(!f.elements.some(e=>['gap-value','gap-dimension'].includes(e.kind)));
+  assert.equal(f.elements.filter(e=>e.kind==='thread-length-value').length,f.elements.some(e=>e.kind==='thread')?2:0);
 }
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
@@ -524,7 +515,7 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
     const annotated=f.elements.some(e=>e.kind==='thread-angle-value');
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
   }
-  if(['problem-corner-vertex-point','problem-corner-bridge','problem-corner-mirrored'].includes(s.name)) {
+  if(s.name.startsWith('problem-corner-')) {
     if(s.name==='problem-corner-vertex-point')assert.equal(s.frames.length,0);
     const expectedThreads=s.name==='problem-corner-bridge'?adjacent.slice(0,1):adjacent;
     const lengths=s.final.filter(e=>e.kind==='thread-length-value');

@@ -186,8 +186,6 @@ function cornerProblemScenes() {
       const changed=gaps.map(g=>Math.abs(g-3)>1e-6);
       points.forEach((x,i)=>elements.push(...opening(position(x),arm===0?alpha:alpha-Math.PI/2,view,{marked:changed[i-1]||changed[i]})));
       elements.push(...opening(virtuals[arm],arm===0?alpha:alpha-Math.PI/2,view,{virtual:true}));
-      gaps.forEach((gap,i)=>elements.push(...measure(position(points[i]),position(points[i+1]),gap.toFixed(2),view,arm===0?-36:-38).map(e=>
-        ({...e,...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{}),kind:e.type==='text'?'gap-value':'gap-dimension',color:gap<2.7||gap>3.3?'#C62828':changed[i]?ink:construction}))));
     }
     if(showHole)elements.push(hole(joint,view));
     return elements;
@@ -792,7 +790,7 @@ function finishThread(s) {
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const angles=s.name.startsWith('problem-corner-')?cornerThreadAngles(s,threads):[];
   const staticResult=s.name==='problem-corner-vertex-point';
-  const lengths=staticResult||s.name==='problem-corner-mirrored'?cornerThreadLengths(s,threads):[];
+  const lengths=s.name.startsWith('problem-corner-')?cornerThreadLengths(s,threads):[];
   const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles,...lengths];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[
     {...f,delay:80},

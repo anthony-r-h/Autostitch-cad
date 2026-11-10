@@ -117,10 +117,10 @@
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
-- Shared round hole where the terminal virtual slit tips meet
-- Consistent lean throughout; bounded pitch adjustments centred within each free span
-- Hole offset from the guide vertex
-- Preserves the arm lean and bounds each pitch change, using three adjusted gaps instead of the diagonal slit's two
+- Place the incoming row's pitch adjustments so its terminal virtual slit lands at the required offset past the vertical guide
+- Slit length, lean and guide directions determine that offset; the selected tips of both virtual slits meet at one round hole
+- The vertical guide fixes the outgoing arm's direction. With nominal corner steps, the entering and leaving thread both meet their guides at $27.5^\circ$
+- Keep slit lean consistent and absorb the residual within the arm spans; the shared hole sits off the guide vertex
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: |

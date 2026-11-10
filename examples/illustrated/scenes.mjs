@@ -318,22 +318,38 @@ function cornerScene() {
 
 function junctionScene() {
   const input=catalog.illustrations.find(item=>item.id==='ILL-JUNCTION').inputs;
-  const view={x:300,y:145,scale:23},center=input.junction;
-  const arms=input.arms.map(end=>({end,angle:end[1]<0?alpha-Math.PI/2:alpha}));
+  const {view}=input,center=input.junction;
+  const arms=input.arms.map(end=>{
+    const distance=Math.hypot(...end),fit=selectFit({D:distance-3,p:3});
+    if(!fit)throw new Error('T-junction illustration has no fit.');
+    const fitted=stations(fit).map(s=>distance-s);
+    const initial=fitted.map((s,i)=>i===fit.n?3:distance-i*3);
+    return {end,distance,initial,fitted,angle:end[1]<0?alpha-Math.PI/2:alpha};
+  });
   const base=arms.map(arm=>worldLine(center,arm.end,view));
+  const drawArm=(arm,row,annotated=false)=>{
+    const points=row.map(s=>mul(arm.end,s/arm.distance));
+    const changed=row.slice(1).map((s,i)=>Math.abs(row[i]-s-3)>1e-6);
+    const elements=points.flatMap((point,i)=>opening(point,arm.angle,view,{marked:annotated&&(changed[i-1]||changed[i])}));
+    if(annotated)for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
+      points[i],points[i+1],(row[i]-row[i+1]).toFixed(2),view,arm.end[0]<0?32:-38).map(e=>
+        arm.end[0]===0&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e));
+    return elements;
+  };
   const s=scene('axiom-junction','Three arms share one round hole','A9');
   frame(s,base,100,'arms');
   const result=[...base];
   for(const [index,arm] of arms.entries()) {
-    const distance=Math.hypot(...arm.end);
-    for(let i=Math.floor(distance/3);i>=1;i--) {
-      result.push(...opening(mul(arm.end,i*3/distance),arm.angle,view));
-      frame(s,[...result],i===1?140:70,`arm-${index}-stitch`);
+    for(const [i,station] of arm.initial.entries()) {
+      result.push(...opening(mul(arm.end,station/arm.distance),arm.angle,view));
+      frame(s,[...result],i===arm.initial.length-1?140:70,`arm-${index}-stitch`);
     }
   }
   result.push(hole(center,view));frame(s,[...result],170,'shared-hole');
-  result.push(...measure(center,[3,0],'3',view,40));
-  return finish(s,result);
+  const draw=t=>[...base,hole(center,view),...arms.flatMap(arm=>drawArm(arm,arm.initial.map((v,i)=>lerp(v,arm.fitted[i],t)),true))];
+  frame(s,draw(0),120,'free-spans');
+  for(let i=1;i<=30;i++)frame(s,draw(ease(i/30)),8,'planning-revision');
+  return finish(s,draw(1));
 }
 
 function curvedJunctionScene() {
@@ -652,8 +668,9 @@ function termsSlitScene() {
 function termsJunctionScene() {
   const original=junctionScene(),s=scene('terms-junction','Junction, round hole and arms','A9');
   const result=original.final.filter(e=>['guide','hole','slit'].includes(e.kind));
-  result.push(...termLabel([300,71],'Junction / round hole',[300,134]));
-  for(const x of [185,415])result.push(...termLabel([x,220],'Arm',[x,145]));
+  const {view}=catalog.illustrations.find(item=>item.id==='ILL-JUNCTION').inputs;
+  result.push(...termLabel([300,view.y-60],'Junction / round hole',[300,view.y-11]));
+  for(const x of [185,415])result.push(...termLabel([x,220],'Arm',[x,view.y]));
   result.push(...termLabel([400,264],'Arm',[300,260],[370,260]));
   return {...s,final:result};
 }
@@ -734,7 +751,8 @@ function annotateScene(s) {
     const v=variant('A05'),g=v.route.primitives[1],station=v.settings.end-18;
     marks=[...routeMarks([82,115],project(primitivePoint(g,station),{x:370,y:115,scale:16}),[1,0],screenTangent(g,station)),notationText([384,97],'j','junction')];
   } else if(['axiom-junction','terms-junction'].includes(s.name)) {
-    marks=[...routeMarks([93,145],[507,145]),endMark([300,283],[0,1]),...directionMark([300,145],[0,1])];
+    const {arms,junction,view}=catalog.illustrations.find(item=>item.id==='ILL-JUNCTION').inputs;
+    marks=[...routeMarks(project(arms[0],view),project(arms[1],view)),endMark(project(arms[2],view),[0,1]),...directionMark(project(junction,view),[0,1])];
   } else if(s.name==='axiom-closure') {
     const {radius}=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
     marks=startMark([300,187.5-13*radius],[1,0]);

@@ -181,6 +181,7 @@
 - A through-line contributes two arms; a T has three and an X four
 - Three or more arms share one round hole at the guide intersection
 - Each arm's first neighbour is one nominal pitch from that hole
+- Keep those neighbours fixed while distributing each arm's residual through its free gaps
 
 ![A9: a T junction reserves one hole and its nominal neighbours](../examples/illustrated/assets/axiom-junction.gif)
 

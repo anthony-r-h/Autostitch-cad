@@ -8808,19 +8808,24 @@
         ],
         "arms": [
           [
-            -9,
+            -12.4,
             0
           ],
           [
-            9,
+            12.4,
             0
           ],
           [
             0,
-            -6
+            -12.4
           ]
         ],
-        "diameter": 0.5
+        "diameter": 0.5,
+        "view": {
+          "x": 300,
+          "y": 95,
+          "scale": 18
+        }
       },
       "notation": [
         "s",
@@ -8831,7 +8836,8 @@
       "reveal": [
         "Show guides and s/e/j notation.",
         "Stitch inward along the first, second and third arms in turn.",
-        "Identify the shared round hole after all three arms arrive."
+        "Identify the shared round hole after all three arms arrive.",
+        "Keep endpoints and nominal junction neighbours fixed; split each 0.4 mm residual across two adjusted gaps."
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive.",
       "threadReveal": {

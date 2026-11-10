@@ -114,7 +114,7 @@ The straight and curved portions use one slit at their common tangent. Revealing
 
 ### Share the branching junction: A9
 
-Reserve one round hole and its nominal neighbours before filling the arms. `ILL-JUNCTION`.
+Four slits on each arm approach one shared round hole. Keep the endpoints and nominal junction neighbours fixed; split each $0.4\,\mathrm{mm}$ residual across two $3.20\,\mathrm{mm}$ gaps. `ILL-JUNCTION`.
 
 ![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
 

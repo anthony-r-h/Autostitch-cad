@@ -174,9 +174,10 @@ straight.slice(1).forEach((s,i)=>near(dist(s.center,straight[i].center),3));
 const curved=smooth.filter(s=>s.center[1]<-1e-6).sort((a,b)=>b.center[1]-a.center[1]);
 let previous=[0,0];for(const s of curved){near(dist(previous,s.center),3);previous=s.center;}
 
-const junctionView={x:300,y:145,scale:23},junction=circle('axiom-junction',junctionView);
+const junctionInput=catalog.illustrations.find(i=>i.id==='ILL-JUNCTION').inputs;
+const junctionView=junctionInput.view,junction=circle('axiom-junction',junctionView);
 near(dist(junction,[0,0]),0);
-const arms=slits('axiom-junction',junctionView).map(s=>s.center);assert.equal(arms.length,8);
+const arms=slits('axiom-junction',junctionView).map(s=>s.center);assert.equal(arms.length,12);
 for(const p of [[-3,0],[3,0],[0,-3]])assert(has(arms,p));
 assert(!has(arms,junction));
 const branchScene=scenes.find(s=>s.name==='axiom-junction');
@@ -188,7 +189,7 @@ for(const f of branchScene.frames) {
   assert.deepEqual(f.elements.filter(e=>e.kind==='notation-junction'),branchLabel);
   if(f.stage==='reset')continue;
   const real=f.elements.filter(e=>e.kind==='slit'),arm=f.stage.match(/^arm-(\d)-stitch$/);
-  assert.deepEqual(real.slice(0,branchReal.length),branchReal);
+  if(['arms','shared-hole'].includes(f.stage)||arm)assert.deepEqual(real.slice(0,branchReal.length),branchReal);
   if(arm) {
     const index=+arm[1];assert.equal(real.length,branchReal.length+1);
     const slit=real.at(-1),center=[(slit.a[0]+slit.b[0])/2,(slit.a[1]+slit.b[1])/2];
@@ -196,11 +197,20 @@ for(const f of branchScene.frames) {
     assert(distance<branchDistances[index],'Branch stitching must approach the junction');
     branchDistances[index]=distance;branchCounts[index]++;
   }
-  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','result','thread-fade','thread-reveal'].includes(f.stage)?1:0);
+  assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','free-spans','planning-revision','result','thread-fade','thread-reveal'].includes(f.stage)?1:0);
   branchReal=real;
 }
-assert.deepEqual(branchCounts,[3,3,2]);
+assert.deepEqual(branchCounts,[4,4,4]);
 branchDistances.forEach(d=>near(d/junctionView.scale,3));
+for(const f of branchScene.frames.filter(f=>['free-spans','planning-revision','result'].includes(f.stage))) {
+  const real=f.elements.filter(e=>e.kind==='slit');
+  for(let arm=0;arm<3;arm++) {
+    const row=real.slice(arm*4,arm*4+4).map(e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2]);
+    near(dist(row[0],[junctionView.x,junctionView.y])/junctionView.scale,12.4);
+    near(dist(row.at(-1),[junctionView.x,junctionView.y])/junctionView.scale,3);
+    if(f.stage==='result')for(let i=0;i<3;i++)near(dist(row[i],row[i+1])/junctionView.scale,i===0?3:3.2);
+  }
+}
 
 const clearanceView={x:75,y:200,scale:35};
 const clearance=slits('axiom-clearance',clearanceView);assert.equal(clearance.length,8);

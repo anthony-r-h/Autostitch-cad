@@ -35,7 +35,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 | --- | --- | --- |
 | Build | Establish the guides, features and slit layout | No thread. Slits and relevant dimensions at normal contrast; virtual slits dashed. Start, end and junction notation visible from the outset |
 | Adjustment | Slide, redistribute, mirror or otherwise revise the layout | No thread and no fading. Keep fixed features stationary; update affected dimensions with the geometry |
-| Stitch | Reveal all thread segments together; freeze the geometry | Fade holes, virtual slits and length dimensions to the theme's secondary colours over $0.3\,\mathrm{s}$. Keep thread prominent, angle annotations red and unresolved conflicts visible. Hold for four seconds, then reset |
+| Stitch | Reveal all thread segments together; freeze the geometry | Fade holes, virtual slits, landmark lines and length dimensions to the theme's secondary colours over $0.3\,\mathrm{s}$. Keep thread prominent, angle annotations red and unresolved conflicts visible. Hold for four seconds, then reset |
 
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase

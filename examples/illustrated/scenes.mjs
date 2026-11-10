@@ -1129,7 +1129,8 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
         ];
       }
     }
-    if(!amount||!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind))return shown;
+    const fades=['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)||(e.kind==='landmark'&&e.type==='line');
+    if(!amount||!fades)return shown;
     const target=e.adjusted?theme.adjustedSecondary:theme.secondary;
     const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(start.slice(i,i+2),16),parseInt(target.slice(i,i+2),16),amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
     return {...shown,color};
@@ -1169,6 +1170,14 @@ export function revealGlowFrames(frames,theme=themeFor()) {
 
 // Presentation only: keep model coordinates and a common camera across comparisons.
 export function portraitScenes(scenes,theme=themeFor()) {
+  // Turn the fixed-feature example upright after fitting and thread construction.
+  scenes=scenes.map(s=>{
+    if(s.name!=='axiom-landmark')return s;
+    const rotate=([x,y])=>[300-(y-187.5),187.5+(x-300)];
+    const elements=items=>items.map(e=>e.type==='line'?{...e,a:rotate(e.a),b:rotate(e.b)}:
+      e.type==='polygon'?{...e,points:e.points.map(rotate)}:{...e,p:rotate(e.p)});
+    return {...s,final:elements(s.final),frames:s.frames.map(f=>({...f,elements:elements(f.elements)}))};
+  });
   const bounds=new Map();
   for(const s of scenes) {
     const box=bounds.get(s.source)??[Infinity,Infinity,-Infinity,-Infinity];

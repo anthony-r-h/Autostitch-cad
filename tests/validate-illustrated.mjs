@@ -42,6 +42,16 @@ for(const name of ['graphite','porcelain']) {
   }
 }
 const presented=portraitScenes(scenes);
+const uprightLandmark=presented.find(s=>s.name==='axiom-landmark');
+const landmarkMark=uprightLandmark.final.find(e=>e.kind==='landmark'&&e.type==='line');
+assert.equal(landmarkMark.a[1],landmarkMark.b[1],'Landmark crosses the vertical guide horizontally');
+const uprightSlits=uprightLandmark.final.filter(e=>e.kind==='slit');
+assert(uprightSlits.every(e=>Math.abs((e.a[0]+e.b[0])/2-300)<1e-6),'Fixed-feature stitch run is vertical');
+for(const s of presented)for(const f of s.frames.filter(f=>f.stage==='thread-fade')) {
+  for(const e of f.elements.filter(e=>e.kind==='landmark'&&e.type==='line')) {
+    if(f.holeLightening===1)assert.equal(e.color,theme.secondary,'Landmark lines fade with holes');
+  }
+}
 // A reveal pulse borrows frame time; existing layouts and movement must not flash.
 const glowSlit={type:'line',kind:'slit',a:[10,10],b:[20,20],color:'ink',width:2.6};
 const glowInput=[{stage:'guides',delay:20,elements:[]},
@@ -113,8 +123,11 @@ function readSvg(name) {
 }
 function slits(name,view,kind='slit') {
   return readSvg(name).elements.filter(e=>e.class===kind).map(e=>{
-    const a=[(+e.x1-view.x)/view.scale,(view.y-e.y1)/view.scale];
-    const b=[(+e.x2-view.x)/view.scale,(view.y-e.y2)/view.scale];
+    const modelPoint=(x,y)=>{
+      if(view.clockwiseQuarterTurn)[x,y]=[300+(y-187.5),187.5-(x-300)];
+      return [(x-view.x)/view.scale,(view.y-y)/view.scale];
+    };
+    const a=modelPoint(+e.x1,+e.y1),b=modelPoint(+e.x2,+e.y2);
     near(dist(a,b),1.5);
     return {a,b,center:[(a[0]+b[0])/2,(a[1]+b[1])/2],angle:Math.atan2(b[1]-a[1],b[0]-a[0]),element:e};
   });
@@ -225,7 +238,7 @@ for(const f of curveScene.frames) {
 }
 
 const landmarkInput=catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs;
-const landmarkView={x:(600-landmarkInput.length*landmarkInput.scale)/2,y:187.5,scale:landmarkInput.scale};
+const landmarkView={x:(600-landmarkInput.length*landmarkInput.scale)/2,y:187.5,scale:landmarkInput.scale,clockwiseQuarterTurn:true};
 const leftFixed=landmarkInput.landmark-1.5,rightFixed=landmarkInput.landmark+1.5;
 const landmark=slits('axiom-landmark',landmarkView).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
 assert.equal(landmark.length,14);assert(has(landmark,[leftFixed,0])&&has(landmark,[rightFixed,0]));
@@ -933,7 +946,7 @@ for(const s of scenes) {
       assert.equal(f.holeLightening,(i%5+1)/5);assert.deepEqual(f.elements,s.final);
       const shown=displayElements(f.elements,f.holeLightening),base=displayElements(f.elements,0);
       shown.forEach((e,j)=>{
-        if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)) {
+        if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)||(e.kind==='landmark'&&e.type==='line')) {
           const original=base[j];
           const target=original.adjusted?theme.adjustedSecondary:theme.secondary;
           assert.equal(e.color,'#'+[1,3,5].map(k=>Math.round(parseInt(original.color.slice(k,k+2),16)+(parseInt(target.slice(k,k+2),16)-parseInt(original.color.slice(k,k+2),16))*f.holeLightening).toString(16).padStart(2,'0')).join('').toUpperCase());
@@ -949,7 +962,7 @@ for(const s of scenes) {
     assert.equal(threads.length,expected,`${s.name} incorrect thread count`);
     const tips=openings.flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
     for(const t of threads)for(const p of [t.a,t.b])assert(tips.some(q=>dist(p,q)<1e-6),`${s.name} thread misses a real opening`);
-    const rectangular=s.final.filter(e=>e.outline);
+    const rectangular=presented.find(p=>p.name===s.name).final.filter(e=>e.outline);
     assert(rectangular.every(e=>e.outlineWidth<threads[0].width));
     const polygons=[...readSvg(s.name).source.matchAll(/<polygon class="slit-outline" points="([^"]+)"/g)].map(m=>m[1].split(' ').map(p=>p.split(',').map(Number)));
     assert.equal(polygons.length,rectangular.length);

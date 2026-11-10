@@ -121,7 +121,7 @@
 <line class="guide" x1="299.565009873" y1="60.10074261" x2="306.233167972" y2="60.25257324" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="306.233167972" y1="60.25257324" x2="312.884241391" y2="60.753180222" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="312.884241391" y1="60.753180222" x2="319.5" y2="61.601191427" stroke="#797E87" stroke-width="1"/>
-<line class="landmark" x1="300" y1="49.7" x2="300" y2="325.3" stroke="#CECECE" stroke-width="1.4"/>
+<line class="landmark" x1="300" y1="49.7" x2="300" y2="325.3" stroke="#A6A9AE" stroke-width="1.4"/>
 <rect class="label-background" x="264.64" y="32.852" width="24.72" height="24.16" fill="#2D2F31"/><text class="notation-landmark" x="277" y="48.1" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED"><tspan x="274.228" y="48.1" font-size="14.4" font-style="italic">l</tspan><tspan x="279.592" y="51.7" font-size="10.08" font-style="normal">1</tspan></text>
 <rect class="label-background" x="264.64" y="322.652" width="24.72" height="24.16" fill="#2D2F31"/><text class="notation-landmark" x="277" y="337.9" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED"><tspan x="274.228" y="337.9" font-size="14.4" font-style="italic">l</tspan><tspan x="279.592" y="341.5" font-size="10.08" font-style="normal">2</tspan></text>
 <line class="adjusted-gap" x1="412.099570084" y1="126.96532905" x2="413.72212382" y2="130.071448269" stroke="#83BDFC" stroke-width="2.2"/>

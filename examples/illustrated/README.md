@@ -157,11 +157,13 @@ Two fixed arms meet at $6^\circ$. Two outer pairs pass, the next leaves only $0.
 
 ### From fixed features to a fitted layout
 
-`ILL-MODEL-SOLUTION` combines a straight landmark pair and a two-arm corner at $p=3\,\mathrm{mm}$. Build the fixed openings and terminal virtual slits, identify three $9.50\,\mathrm{mm}$ free spans, then show their $0.50\,\mathrm{mm}$ residuals. Each span fits with one nominal gap and two $3.25\,\mathrm{mm}$ gaps. Endpoints, landmark pair and corner neighbours remain fixed during adjustment.
+`ILL-MODEL-SOLUTION` combines L1 on a straight arm, a two-arm corner, a curved T junction and L2 on its left curved arm, at $p=3\,\mathrm{mm}$. Reserve endpoint slits, both landmark pairs, corner neighbours and the T's three nominal neighbours before fitting.
 
-Local labels identify fixed features and free spans; red guide segments identify residuals. Adjusted-gap dimensions follow the moving slits. The clearance annotation is backed by all-pairs checks at slit width $0.3\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and margin $0.2\,\mathrm{mm}$. Thread then appears with the standard fade and four-second hold. Analytic construction and independent fit selector; no native CAD claim.
+Three straight free spans each measure $9.50\,\mathrm{mm}$ and fit with one nominal gap and two $3.25\,\mathrm{mm}$ gaps. Three circular free spans each have $9.50\,\mathrm{mm}$ arc length; their adjusted chords are approximately $3.24\,\mathrm{mm}$. Span dimensions follow the arcs; individual gap dimensions measure chords. Red guide segments identify the residuals; blue segments follow the adjusted guides.
 
-![Fix features, distribute residuals and check the complete layout](assets/model-solution.gif)
+Every frame runs at half speed, including the $0.6\,\mathrm{s}$ fade and eight-second thread hold. No final clearance annotation. Independent checks still cover fixed openings, chord lengths and all-pairs clearance at slit width $0.3\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and margin $0.2\,\mathrm{mm}$. This is an analytic illustration, not native CAD output.
+
+![Fix both landmarks and junctions, then fit the remaining spans](assets/model-solution.gif)
 
 ### No permitted fit
 

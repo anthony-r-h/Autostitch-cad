@@ -751,8 +751,11 @@ for(const [i,e] of xWorld.entries()) {
 
 const modelScene=scenes.find(s=>s.name==='model-solution');
 const modelSpec=catalog.illustrations.find(i=>i.id===modelScene.source),modelView=modelSpec.inputs.view;
-const modelSlits=slits(modelScene.name,modelView),modelHole=circle(modelScene.name,modelView);
-assert.equal(modelSlits.length,12);
+const modelSlits=slits(modelScene.name,modelView);
+const modelHoles=modelScene.final.filter(e=>e.kind==='hole').map(e=>[(e.p[0]-modelView.x)/modelView.scale,(modelView.y-e.p[1])/modelView.scale]);
+assert.equal(modelSlits.length,24);assert.equal(modelHoles.length,2);
+const [modelHole,modelBranch]=modelHoles;
+assert(dist(modelHole,modelBranch)-modelSpec.inputs.holeDiameter>=modelSpec.inputs.margin);
 const modelFit=selectFit({D:modelSpec.inputs.spanLength,p:modelSpec.pitch});
 assert.equal(modelFit.n,3);assert.equal(modelFit.k,2);near(modelFit.correctedPitch,3.25);
 for(let arm=0;arm<3;arm++) {
@@ -760,40 +763,70 @@ for(let arm=0;arm<3;arm++) {
   near(dist(row[0].center,row[3].center),9.5);
   for(let i=0;i<3;i++)near(dist(row[i].center,row[i+1].center),i===0?3:3.25);
 }
+for(let arm=3;arm<6;arm++) {
+  const R=modelSpec.inputs.arcRadii[arm===5?1:0],center=[modelBranch[0],modelBranch[1]-R];
+  const fit=selectFit({p:3,R,sweep:modelSpec.inputs.spanLength/R});
+  const row=modelSlits.slice(arm*4,arm*4+4);
+  for(const slit of row) {
+    near(dist(slit.center,center),R);
+    const radial=Math.atan2(slit.center[1]-center[1],slit.center[0]-center[0]);
+    const tangent=radial+(arm===5?-Math.PI/2:Math.PI/2);
+    near(Math.sin(slit.angle-tangent-alpha),0);
+  }
+  let arcLength=0;
+  for(let i=0;i<3;i++) {
+    const chord=dist(row[i].center,row[i+1].center);
+    near(chord,i>=fit.i&&i<fit.i+fit.k?fit.correctedPitch:3);
+    arcLength+=2*R*Math.asin(chord/(2*R));
+  }
+  near(arcLength,modelSpec.inputs.spanLength);
+}
 near(dist(modelSlits[3].center,modelSlits[4].center),3);
+near(dist(modelSlits[15].center,modelSlits[16].center),3);
+for(const i of [11,12,20])near(dist(modelSlits[i].center,modelBranch),3);
 const modelVirtuals=slits(modelScene.name,modelView,'virtual');
 near(dist(modelVirtuals[0].a,modelHole),0);near(dist(modelVirtuals[1].b,modelHole),0);
 near(dist(modelVirtuals[0].center,modelSlits[7].center),3);
 near(dist(modelVirtuals[1].center,modelSlits[8].center),3);
-const modelResiduals=modelScene.frames.find(f=>f.stage==='residuals').elements.filter(e=>e.kind==='residual-dimension');
-assert.equal(modelResiduals.length,3);modelResiduals.forEach(e=>near(dist(e.a,e.b)/modelView.scale,.5));
+const modelResidualFrame=modelScene.frames.find(f=>f.stage==='residuals');
+const modelResiduals=modelResidualFrame.elements.filter(e=>e.kind==='residual-dimension');
+assert.equal(modelResiduals.length,39);
+modelResiduals.slice(0,3).forEach(e=>near(dist(e.a,e.b)/modelView.scale,.5));
+assert.deepEqual(modelResidualFrame.elements.filter(e=>e.kind==='residual-value').map(e=>e.value),['0.50','0.50','0.50','0.49','0.49','0.48']);
 const modelCenter=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
 const modelInitial=modelScene.frames.find(f=>f.stage==='adjustment-start').elements.filter(e=>e.kind==='slit');
 const modelFinal=modelScene.final.filter(e=>e.kind==='slit');
 let previousModelError=Infinity;
-for(const f of modelScene.frames.filter(f=>['adjustment-start','planning-revision','clearance-checked'].includes(f.stage))) {
-  const row=f.elements.filter(e=>e.kind==='slit');assert.equal(row.length,12);
-  for(const i of [0,3,4,7,8,11])assert.deepEqual(row[i],modelInitial[i],'Fixed features must not move during fitting');
+for(const f of modelScene.frames.filter(f=>['adjustment-start','planning-revision'].includes(f.stage))) {
+  const row=f.elements.filter(e=>e.kind==='slit');assert.equal(row.length,24);
+  for(const i of [0,3,4,7,8,11,12,15,16,19,20,23])assert.deepEqual(row[i],modelInitial[i],'Fixed features must not move during fitting');
   assert.deepEqual(f.elements.filter(e=>e.kind==='virtual'||e.kind==='hole'),modelScene.final.filter(e=>e.kind==='virtual'||e.kind==='hole'));
   const error=row.reduce((sum,e,i)=>sum+dist(modelCenter(e),modelCenter(modelFinal[i])),0);
   assert(error<=previousModelError+1e-6);previousModelError=error;
 }
 near(previousModelError,0);
 assert(!modelScene.final.some(e=>e.kind==='residual-dimension'));
+assert(!modelScene.frames.some(f=>f.elements.some(e=>e.value==='Clearance checked'||e.kind==='accepted')));
+assert.deepEqual(modelScene.final.filter(e=>e.kind==='notation-landmark').map(e=>e.value),['L1','L2']);
 for(const [i,s] of modelSlits.entries()) {
-  near(s.angle,i<8?alpha:alpha-Math.PI/2);
-  near(i<8?s.center[1]:s.center[0],0);
-  assert(pointSegmentDistance(modelHole,s.a,s.b)-(modelSpec.inputs.width+modelSpec.inputs.holeDiameter)/2>=modelSpec.inputs.margin);
+  if(i<12){near(s.angle,i<8?alpha:alpha-Math.PI/2);near(i<8?s.center[1]:s.center[0],0);}
+  for(const hole of modelHoles)assert(pointSegmentDistance(hole,s.a,s.b)-(modelSpec.inputs.width+modelSpec.inputs.holeDiameter)/2>=modelSpec.inputs.margin);
   for(const other of modelSlits.slice(i+1))assert(segmentDistance(s.a,s.b,other.a,other.b)-modelSpec.inputs.width>=modelSpec.inputs.margin);
 }
+const branchPixel=modelScene.final.filter(e=>e.kind==='hole')[1].p;
+assert.equal(modelScene.final.filter(e=>e.kind==='thread'&&(dist(e.a,branchPixel)<1e-6||dist(e.b,branchPixel)<1e-6)).length,3,'Curved T needs three thread connections');
 assert(modelScene.frames.findIndex(f=>f.stage==='incoming-neighbour')<modelScene.frames.findIndex(f=>f.stage==='incoming-virtual'));
 assert(modelScene.frames.findIndex(f=>f.stage==='outgoing-neighbour')<modelScene.frames.findIndex(f=>f.stage==='shared-hole'));
+assert.equal(modelScene.frames[0].delay,200);
+assert.equal(modelScene.frames.find(f=>f.stage==='planning-revision').delay,16);
+assert.equal(modelScene.frames.find(f=>f.stage==='residuals').delay,360);
 
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
   const asset=entry.assets.find(a=>a.path.endsWith('/'+s.name)),animated=asset.animated??entry.animated;
   assert.equal(Boolean(s.frames.length),animated);
   if(animated) {
+    const tempo=s.name==='model-solution'?modelSpec.inputs.durationScale:1;
     if(s.name==='problem-corner-bridge') {
       assert.equal(s.frames.length,62);
       assert.deepEqual(s.frames.filter(f=>f.delay===400).map(f=>f.stage),['short-bridge','long-bridge']);
@@ -821,12 +854,12 @@ for(const s of scenes) {
     } else {
     const threadFrames=s.frames.filter(f=>f.stage==='thread-reveal'),threadFrame=threadFrames.at(-1);
     assert.equal(threadFrames.length,1);
-    threadFrames.forEach(f=>assert.equal(f.delay,400));
-    assert(threadFrame,`${s.name} missing final thread reveal`);assert.equal(threadFrame.delay,400);
+    threadFrames.forEach(f=>assert.equal(f.delay,400*tempo));
+    assert(threadFrame,`${s.name} missing final thread reveal`);assert.equal(threadFrame.delay,400*tempo);
     assert.equal(s.frames.at(-2),threadFrame);assert.equal(s.frames.at(-1).stage,'reset');
     assert.deepEqual(threadFrame.elements,s.final);
     const fade=s.frames.filter(f=>f.stage==='thread-fade');assert.equal(fade.length,5*threadFrames.length);
-    assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30*threadFrames.length);
+    assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30*threadFrames.length*tempo);
     fade.forEach((f,i)=>{
       assert.equal(f.holeLightening,(i%5+1)/5);assert.deepEqual(f.elements,s.final);
       const shown=displayElements(f.elements,f.holeLightening),base=displayElements(f.elements,0);
@@ -904,7 +937,7 @@ for(const s of scenes) {
     assert.equal(s.final.filter(e=>e.kind==='id-box').length,8);
   }
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
-    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375,`${s.name} clips an element`);
+    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=(s.name==='model-solution'?600:375),`${s.name} clips an element`);
   }
 }
 console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} moving GIFs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

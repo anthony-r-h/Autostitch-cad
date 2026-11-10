@@ -9621,18 +9621,21 @@
         "A5",
         "A6",
         "A7",
+        "A9",
         "A10"
       ],
       "animated": true,
-      "status": "Analytic worked solution combining a landmark and two-arm corner. Fixed features, span fitting and all-pairs clearance checked independently; not native CAD output.",
+      "status": "Analytic worked solution combining two landmarks, a two-arm corner and a curved T junction. Fixed features, span fitting and all-pairs clearance checked independently; not native CAD output.",
       "inputs": {
         "spanLength": 9.5,
+        "arcRadii": [18, 12],
+        "durationScale": 2,
         "width": 0.3,
         "margin": 0.2,
         "holeDiameter": 0.5,
         "view": {
-          "x": 440,
-          "y": 115,
+          "x": 380,
+          "y": 90,
           "scale": 14
         }
       },
@@ -9642,27 +9645,27 @@
         }
       ],
       "terms": [
-        "Fixed pair",
+        "Fixed pairs",
         "Shared hole",
-        "Free spans",
-        "Clearance checked"
+        "Free spans"
       ],
       "notation": [
         "s",
         "e",
         "j",
         "L1",
+        "L2",
         "direction"
       ],
       "reveal": [
-        "Establish the guide, endpoints and landmark pair.",
+        "Establish the guide, endpoints and two landmark pairs.",
         "Continue each corner neighbour to its virtual slit; share the hole where their tips meet.",
-        "Identify three fixed free spans, each 9.5 mm long.",
-        "Show a 0.5 mm residual in each span, then split it across two 3.25 mm gaps.",
-        "Check every real opening pair, reveal thread and hold for four seconds."
+        "Reserve nominal neighbours at the curved T junction; identify three straight and three circular free spans, each 9.5 mm long.",
+        "Show each span residual; fit straight gaps to 3.25 mm and curved chords to approximately 3.24 mm.",
+        "Keep fixed openings stationary, reveal thread and hold for eight seconds. Every frame runs at half speed."
       ],
       "threadReveal": {
-        "holdCentiseconds": 400,
+        "holdCentiseconds": 800,
         "connection": "Positive slit tip to next negative tip; shared round-hole centre."
       }
     }

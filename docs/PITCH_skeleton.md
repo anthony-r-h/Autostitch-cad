@@ -216,12 +216,13 @@
 - Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
 - These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
 
-![A worked solution: fix the landmark and corner, distribute each free span's residual, then check clearance and show thread](../examples/illustrated/assets/model-solution.gif)
+![A worked solution: fix two landmarks, a corner and a curved T junction, then fit the free spans and show thread](../examples/illustrated/assets/model-solution.gif)
 
-- Example: the landmark and corner leave three $9.50\,\mathrm{mm}$ free spans, each with $p=3\,\mathrm{mm}$
+- Example: L1 and the corner leave three straight $9.50\,\mathrm{mm}$ free spans, each with $p=3\,\mathrm{mm}$
+- The curved T junction and L2 add three circular free spans. Reserve a nominal step on each junction arm and a nominal pair across L2
 - Three nominal gaps cover $9\,\mathrm{mm}$, leaving $0.50\,\mathrm{mm}$ to distribute
 - One adjusted gap would be $3.50\,\mathrm{mm}$, beyond the $3.30\,\mathrm{mm}$ limit. Two gaps at $3.25\,\mathrm{mm}$ absorb the residual; the third stays nominal
-- The landmark pair and both corner steps remain nominal throughout fitting
+- Both landmark pairs and the corner and T-junction steps remain nominal throughout fitting
 
 ## Solve one straight span
 

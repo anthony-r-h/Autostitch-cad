@@ -1,4 +1,4 @@
-# Geometric Stitch Layout
+# Introduction
 
 A seam begins as a line in a design, but making it means deciding where each opening will go and how it will face. Those decisions connect the intended appearance to the tools used to produce it. Along a straight run, a pricking iron can repeat the same spacing with little difficulty. As the seam approaches an endpoint, turns a corner or meets another row, the craftsperson has to reconcile that regular pattern with the shape of the piece.
 

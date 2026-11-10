@@ -186,7 +186,7 @@ Solve one source, then reveal corresponding openings on its reflected copy. The 
 
 ### Curved corners
 
-The same approach along each arm applies to an arc/line pair and an arc/arc pair. Each virtual slit continues the position and orientation of its row. `A03`, `A04`.
+The same approach along each arm applies to an arc/line pair and an arc/arc pair. Each virtual slit continues the position and orientation of its row. All three examples have three real slits per arm and two virtual slits, with identical $16.6\,\mathrm{s}$ timelines. The arc/arc illustration extends the outgoing outer end to fit its third nominal slit; its circle and corner construction stay fixed. `A03`, `A04`.
 
 ![Curved and straight arms share a corner hole](assets/corner-arc-line.gif)
 

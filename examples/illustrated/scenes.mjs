@@ -724,7 +724,7 @@ function virtualStation(g,tipLocus,joint,reference) {
 }
 const advance=(g,chord)=>g.kind==='line'?chord:2*g.radius*Math.asin(chord/(2*g.radius));
 export function illustratedCorner(caseId) {
-  const primitives=variant(caseId).route.primitives,[incoming,outgoing]=primitives;
+  const primitives=variant(caseId).route.primitives.map(g=>({...g})),[incoming,outgoing]=primitives;
   const lengths=primitives.map(primitiveLength),loci=[locus(incoming,-1),locus(outgoing,1)],vertex=primitivePoint(incoming,lengths[0]);
   const roots=intersections(...loci).sort((a,b)=>Math.hypot(a[0]-vertex[0],a[1]-vertex[1])-Math.hypot(b[0]-vertex[0],b[1]-vertex[1]));
   const joint=roots[0],virtual=[virtualStation(incoming,loci[0],joint,lengths[0]),virtualStation(outgoing,loci[1],joint,0)];
@@ -734,6 +734,12 @@ export function illustratedCorner(caseId) {
     if(low>high)throw new Error('No permitted illustrated corner step');
     return Math.max(low,Math.min(high,advance(g,3)));
   });
+  if(caseId==='A04') {
+    const count=catalog.illustrations.find(i=>i.id==='ILL-ARC-ARC').inputs.outgoingNominalSlits;
+    // Extend only the illustrated outer end; keep its circle and corner construction fixed.
+    lengths[1]=Math.max(lengths[1],virtual[1]+steps[1]+(count-1)*advance(outgoing,3));
+    outgoing.sweep=Math.sign(outgoing.sweep)*lengths[1]/outgoing.radius;
+  }
   const stations=primitives.map((g,i)=>{
     const result=[];
     for(let n=0;n<3;n++) {

@@ -9038,13 +9038,16 @@
         "A6"
       ],
       "animated": true,
-      "status": "Nominal outer-margin variant of the catalog corner; fixed-range failure is not illustrated.",
+      "status": "Nominal outer-margin variant of the catalog corner, with the outgoing arc extended to fit three real slits per arm. Six real slits and two virtual slits use the same reveal timing as the straight and arc/line examples; fixed-range failure is not illustrated.",
       "assets": [
         {
           "path": "examples/illustrated/assets/corner-arc-arc"
         }
       ],
       "case": "A04",
+      "inputs": {
+        "outgoingNominalSlits": 3
+      },
       "notation": [
         "s",
         "direction",

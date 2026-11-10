@@ -246,6 +246,10 @@ for(let i=1;i<=3;i++) {
 for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc']) {
   const s=scenes.find(s=>s.name===name),guides=s.final.filter(e=>e.kind==='guide'),real=s.final.filter(e=>e.kind==='slit');
   assert(!s.final.some(e=>e.kind==='adjustment-mark'));
+  assert.equal(real.length,6);
+  assert.equal(s.final.filter(e=>e.kind==='virtual').length,2);
+  const schedule=frames=>frames.map(f=>({stage:f.stage,delay:f.delay,real:f.elements.filter(e=>e.kind==='slit').length,virtual:f.elements.filter(e=>e.kind==='virtual').length}));
+  assert.deepEqual(schedule(s.frames),schedule(scenes.find(s=>s.name==='axiom-corner').frames),'Corner examples must share every reveal and hold');
   const centres=real.map(e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2]);
   for(const endpoint of [guides[0].a,guides.at(-1).b])assert(centres.some(c=>dist(c,endpoint)<1e-6));
 }
@@ -422,12 +426,14 @@ for(const [caseId,name] of [['A03','corner-arc-line'],['A04','corner-arc-arc'],[
   near(dist(virtuals[0].a,J),0);near(dist(virtuals[1].b,J),0);
   const groups=[[],[]];
   for(const slit of real) {
-    const onArm=v.route.primitives.findIndex(g=>{
+    const onArm=v.route.primitives.findIndex((g,arm)=>{
       if(g.kind==='arc'){
         const theta=Math.atan2(slit.center[1]-g.center[1],slit.center[0]-g.center[0]);
         const expected=theta+Math.sign(g.sweep)*Math.PI/2+alpha;
         const advance=Math.sign(g.sweep)*Math.atan2(Math.sin(theta-g['start-angle']),Math.cos(theta-g['start-angle']));
-        return Math.abs(dist(slit.center,g.center)-g.radius)<1e-6&&Math.abs(Math.sin(slit.angle-expected))<1e-6&&advance>=-1e-6&&advance<=Math.abs(g.sweep)+1e-6;
+        // The arc/arc illustration extends its outgoing end by less than one nominal step.
+        const extension=caseId==='A04'&&arm===1?2*Math.asin(3/(2*g.radius)):0;
+        return Math.abs(dist(slit.center,g.center)-g.radius)<1e-6&&Math.abs(Math.sin(slit.angle-expected))<1e-6&&advance>=-1e-6&&advance<=Math.abs(g.sweep)+extension+1e-6;
       }
       const d=[g.b[0]-g.a[0],g.b[1]-g.a[1]],q=[slit.center[0]-g.a[0],slit.center[1]-g.a[1]];
       const station=(d[0]*q[0]+d[1]*q[1])/Math.hypot(...d);

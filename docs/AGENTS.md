@@ -7,8 +7,8 @@
 - Keep the skeleton as concise headings, bullets and notes that capture intent, arguments, examples and open questions. Keep polished prose in the matching `_authored.md` file.
 - Embed supporting figures beside the relevant points in the skeleton; keep their production scripts in `examples/illustrated/`.
 - Develop the authored prose from the skeleton. Preserve its meaning while turning the outline into readable words.
-- Keep the skeleton up to date as the pitch evolves. When an authored edit adds, removes or changes meaning, update the skeleton in the same edit. Wording-only edits need no skeleton change.
-- When the skeleton changes, update any affected authored prose to match. Preserve unresolved points as explicit notes rather than inventing answers.
+- Keep the skeleton up to date as the pitch evolves. When an authored edit adds, removes or changes meaning, update the skeleton in the same edit if both files are in scope. Wording-only edits need no skeleton change.
+- When the skeleton changes, update affected authored prose if both files are in scope. For a section-only edit or full draft with protected inputs, report any mismatch outside scope without editing those files. Preserve unresolved points as explicit notes rather than inventing answers.
 - Preserve the introduction as a bird's-eye view of the stitching problem: design intent, tool geometry, physical execution, manual effort and the motivation for explicit rules. Do not reduce it to a product summary or a CAD justification.
 - Put Why CAD after the problem and solution overview, before CAD-specific workflow or implementation.
 - Remove self-rebuttal, project status, unfinished-work notes, narration instructions and filler from pitch copy. Keep production notes and evidence status in the illustration README or test catalog.

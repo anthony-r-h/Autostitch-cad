@@ -1,101 +1,50 @@
-# Autostitch for BricsCAD
+# Autostitch
 
-Lay out stitch holes from editable pattern guides. Connect guides to define a stitch line, set pitch and landmarks, then generate its stitches. Regenerate after editing the pattern; the source guides remain the source of truth.
+Autostitch is a BricsCAD V22 / OpenDCL plugin for laying out stitch openings on leatherwork pattern guides. It is implemented in AutoLISP, with an OpenDCL palette and a small C# bridge for native CAD editing events.
 
-## Use
+The intent is to turn a drawn seam path into discrete, oriented openings that account for pricking-iron pitch, endpoints, corners, junctions and landmarks. The fitting model keeps nominal gaps where possible and identifies adjusted gaps where the constraints require them.
 
-1. Install the [dependencies](docs/LIMITS.md#dependencies). Keep `AUTOSTITCH.lsp`, `AUTOSTITCH.odcl`, `Autostitch.Events.dll` and `source/` together.
-2. **APPLOAD** `AUTOSTITCH.lsp`, then run **AUTOSTITCH**.
-3. **Select guide**. Use **Connect guides** to include other guides in the same stitch line, if needed.
-4. Enter **Stitch pitch**, set endpoints or landmarks, then **Generate stitches**.
-5. Edit guides with normal CAD tools. Select a guide, editing marker or generated block to reopen it, then Generate again.
+Source guides and their saved settings define the stitching. Generated openings, thread display and annotations are replaceable drawing output. Guides remain editable with native CAD tools; regeneration is explicit. Connected guides form one stitch line, and matched guides on other pattern pieces receive the source layout.
 
-To add the yellow **Autostitch** ribbon button beside Csvlabel in **Home → Annotations**, run this from the installation folder with BricsCAD open and no command active:
+The current runtime requires Windows, BricsCAD V22 with .NET support and OpenDCL 10.1.2.2. Supported geometry and unresolved rules are documented in [Limits](docs/LIMITS.md).
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\source\install-ribbon.ps1
-```
+## Code and runtime files
 
-The installer backs up the current CUI under `output/ribbon-backups/`. Rerunning it updates the same button. Keep the installation folder in place; rerun the installer if you move it or reset BricsCAD's interface.
-
-Guides may be LINE, ARC, CIRCLE or LWPOLYLINE, in WCS XY at elevation $z=0$ with a positive Z normal. Pitch and tool dimensions are millimetres. Drawing units come from `INSUNITS`; unitless drawings ask for millimetres or inches.
-
-| Control | Action |
+| Path | Purpose |
 | --- | --- |
-| Set start / Set end | Pick where stitching begins and stops along an open guide. `Default` restores that endpoint; `WholeLine` restores both. |
-| Reverse | Reverse traversal. For a closed guide, Set start chooses its beginning; Set end is disabled. |
-| Front face / Back face | Identify the face shown by the drawn guide. On the source, this sets slit lean. On a matched guide, it selects the corresponding view of the source layout. |
-| Add landmark | Snap to a pattern reference. Reserve one nominal gap centred around its position on the guide, with no hole at the reference. |
-| Remove landmark | Remove the landmark chosen in the list. To move one, remove it and add it again. |
-| Connect guides | Include another guide in this stitch line and save its junctions. Creates no stitches; Generate lays out the connected guides together. Multiple intersections offer `ConnectAll`. |
-| Disconnect guide | Separate the selected guide. Generate each resulting stitch line to update its stitches. |
-| Match guide | Match this source stitch line to guides on another pattern piece. Select near the corresponding stitch start and choose the face shown. Loops request an exact snapped start point. |
-| Select source / Unlink guide | Return to the source to edit its layout, or make this guide independent. |
-| Generate stitches | Save pitch and replace the complete output in one Undo step. Failure preserves the previous output. Independently moved output returns to its guides. |
+| [AUTOSTITCH.lsp](AUTOSTITCH.lsp) | Loader and command registration. |
+| [source/autostitch-geometry.lsp](source/autostitch-geometry.lsp) | Single-guide geometry and pitch fitting, without drawing writes. |
+| [source/autostitch-network.lsp](source/autostitch-network.lsp) | Connected guides, shared openings and clearance. |
+| [source/autostitch-match-geometry.lsp](source/autostitch-match-geometry.lsp) | Exact guide matching and rigid or reflected layout transfer. |
+| [source/autostitch-matching.lsp](source/autostitch-matching.lsp) | Matched-guide relationships and generation of the source and its copies together. |
+| [source/autostitch-cad.lsp](source/autostitch-cad.lsp) | Drawing metadata, output blocks, units and undoable transactions. |
+| [source/autostitch-markers.lsp](source/autostitch-markers.lsp) | Editing markers and synchronization with native edits. |
+| [source/autostitch-ui.lsp](source/autostitch-ui.lsp) | Palette state, picking and user messages. |
+| [source/AUTOSTITCH.odcl.json](source/AUTOSTITCH.odcl.json), [source/Autostitch.Events.cs](source/Autostitch.Events.cs) | Editable palette definition and native command-event bridge. |
+| [AUTOSTITCH.odcl](AUTOSTITCH.odcl), [Autostitch.Events.dll](Autostitch.Events.dll) | Built runtime assets; rebuilt by [build-plugin.ps1](build-plugin.ps1). |
+| [source/install-ribbon.ps1](source/install-ribbon.ps1), [AUTOSTITCH.bmp](AUTOSTITCH.bmp) | Ribbon launcher installation and icon. |
+| [package.ps1](package.ps1) | Packages a clean Git revision into `output/release/Autostitch-V22.zip`. |
 
-Corners within a polyline are automatic. Separate guides need Connect guides; nearby pattern geometry does not connect itself.
+## Documentation
 
-One stitch line can contain several connected guides and has one generated output block. Each guide keeps its pitch, direction, endpoints and landmarks; the palette shows the selected guide's inputs and length. Generate recomputes the whole stitch line. Connecting or disconnecting guides saves their relationships without regenerating; previous output remains until Generate succeeds.
-
-Stitch IDs are `ST-1`, `ST-2`, and so on, local to the drawing. The generated block has the same name. The set shares one ID, shown in the palette and a small box opposite `S`; regeneration keeps that ID. At a shared start junction, the box sits slightly along the main guide. Existing drawings receive the new labels when selected; Generate updates their old output block names.
-
-## Matched guides
-
-Draw matching guides on each piece. They must have the same shape and size; their position, rotation and face may differ. Connect any junctions within each piece first, then select the source and **Match guide**. Matched guides use the source ID with letter suffixes: `ST-10-A`, `ST-10-B`, through `Z`, then `AA`, `AB` and onward. Removing a copy does not renumber the others. Generate updates existing linked names and their blocks.
-
-The source owns pitch, endpoints and landmarks. **Generate stitches** updates the source and its matched guides together. Copies receive the complete layout, including junction holes and adjusted spacing, without fitting again. A failed match preserves all previous output. Unlink guides before changing their guide connections. If a copy was deleted, select the source and use **Remove missing**.
-
-On a child, pitch, endpoints and landmarks are read-only. Moving its complete guide set is allowed; a shape change must still match the source before generation can replace output. Native COPY of a child alone creates an independent stitch line. After native REVERSE or rebuilding a guide in the opposite direction, unlink and match it again to confirm the corresponding start.
-
-Front/Back describes the face represented by the supplied guides; it does not mirror CAD geometry. Changing the source face changes its slit profile and requires regeneration. A matched guide on the opposite face must match a reflection of the source guides. **Reverse** still means travel direction.
-
-## Read the drawing
-
-| Mark | Meaning |
+| Path | Contents |
 | --- | --- |
-| Slit or filled circle | Physical opening. |
-| Thin connecting line | Thread display. |
-| Capital `I` at a slit | An adjacent gap or its corner construction step differs from nominal pitch; place it individually. |
-| Small spacing number | Actual adjusted spacing in millimetres, rounded to two decimal places and centred on the guide, on nonprinting `AUTOSTITCH_UI`. At an adjusted corner, this measures the virtual-to-real step. |
-| Dashed virtual slits | Construction for a sharp corner's round hole. |
-| `S`, `E`, arrow | Start, end and direction. |
-| `J` / `L#` | Junction / landmark. |
-| Boxed ID | Stitch block identity; one label per connected set. |
+| [docs/GLOSSARY.md](docs/GLOSSARY.md) | Domain terms used throughout the project. |
+| [docs/AXIOMS.md](docs/AXIOMS.md) | Geometric requirements and their motivation. |
+| [docs/MODEL.md](docs/MODEL.md) | Fitting mathematics and implementation choices. |
+| [docs/JUNCTIONS.md](docs/JUNCTIONS.md) | Corner and junction construction. |
+| [docs/LIMITS.md](docs/LIMITS.md) | Geometric limits, unresolved rules and runtime dependencies. |
+| [docs/FILLS.md](docs/FILLS.md) | Fill generation and solving. |
+| [docs/WHY-THIS-EXISTS.md](docs/WHY-THIS-EXISTS.md) | Broader problem statement and project rationale. |
+| [docs/PITCH_skeleton.md](docs/PITCH_skeleton.md), [docs/PITCH_authored.md](docs/PITCH_authored.md) | Long-form explanation outline and prose. |
 
-Slits and `I` marks use $0.30\,\mathrm{mm}$ strokes; thread and construction use $0.09\,\mathrm{mm}$. Round holes print black. Generate includes these displays and enables their layers. Editing labels, including boxed IDs, are on nonprinting `AUTOSTITCH_UI`.
+## Examples and tests
 
-| Layer | Contents | Prints |
-| --- | --- | --- |
-| `AUTOSTITCH` | Slits, filled round holes, spacing `I` marks and dashed virtual slits | Yes |
-| `AUTOSTITCH_STITCHES` | Thread connections | Yes |
-| `AUTOSTITCH_UI` | Start/end, direction, junctions, landmarks, boxed IDs and adjusted spacing values | No |
+- [examples/README.md](examples/README.md) maps the example sources and their dependencies. [examples/demo.md](examples/demo.md) records drawing status and reproduction/export commands.
+- `examples/demos/` contains the canonical demo drawings and artwork previews; `examples/fills/` contains fill previews. The native recipes and export scripts are in `examples/`.
+- [examples/illustrated/](examples/illustrated/README.md) contains explanatory diagrams, storyboards, generators and rendered assets.
+- [tests/cases.json](tests/cases.json) is the canonical test catalog and source of reusable example geometry. `tests/` contains executable checks, an independent fitting oracle, fixtures and runners.
+- [tests/QUALIFICATION.md](tests/QUALIFICATION.md) documents validation commands and evidence requirements; [tests/AXIOM_AUDIT.md](tests/AXIOM_AUDIT.md) maps axiom coverage.
+- `output/` holds ignored generated evidence, local drawings and release packages. It may also contain user work.
 
-Generate updates older output to these layers. In existing drawings, merge `AUTOSTITCH_NOTES` and `AUTOSTITCH_CONSTRUCTION` into `AUTOSTITCH` to remove the old layers, including their use in retained block definitions.
-
-## Edit and repair
-
-- Markers follow native MOVE, STRETCH and ERASE with Undo/Redo. Generate updates the stitches. Properties and automation edits refresh markers on selection.
-- A landmark stores a position along its guide, not a live link to the snapped pattern object. If that reference moves independently, remove and add the landmark.
-- If an edit invalidates attachments, replace start/end picks or use `WholeLine`; remove affected landmarks (`ClearAll` is available); disconnect and reconnect affected junctions.
-- If a source was deleted, select a surviving member or old output and choose **Remove missing lines**. Failed repair preserves the old output.
-- Copy the complete set of sources and output together to retain editability. Output copied alone is static. Partial copies cannot regenerate the originals.
-- After switching drawings, select a guide before generating.
-
-## Try it
-
-Open the current [demo drawings](examples/demo.md): stitched fill samples, the emblem and can / YOU / really? banner. The demo guide lists their status, canonical DWG paths and native reproduction commands.
-
-Use the relevant demo for visual checks, then run the automated tests affected by a change. The [test catalog](tests/cases.json) covers solver and lifecycle regression checks.
-
-## Reference
-
-- [Demo drawings and reproduction](examples/demo.md), [reusable fill recipes](docs/FILLS.md)
-- [Glossary](docs/GLOSSARY.md)
-- [Axioms and their motivation](docs/AXIOMS.md)
-- [Model and fitting mathematics](docs/MODEL.md)
-- [Junction construction](docs/JUNCTIONS.md)
-- [Geometric limits and dependencies](docs/LIMITS.md)
-- [Reusable test catalog](tests/cases.json), [qualification](tests/QUALIFICATION.md), [axiom coverage](tests/AXIOM_AUDIT.md)
-- [Long-form pitch outline](docs/PITCH_skeleton.md)
-- [Repository and development instructions](AGENTS.md)
-- [Why this exists](docs/WHY-THIS-EXISTS.md)
+Repository working instructions are in [AGENTS.md](AGENTS.md).

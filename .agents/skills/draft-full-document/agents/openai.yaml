@@ -1,0 +1,7 @@
+interface:
+  display_name: "Draft Full Document"
+  short_description: "Expand project sources into a prose draft"
+  default_prompt: "Use $draft-full-document to draft docs/PITCH_authored.md from docs/PITCH_skeleton.md and any designated breakout sections. Preserve source documents and existing user-written changes."
+
+policy:
+  allow_implicit_invocation: false

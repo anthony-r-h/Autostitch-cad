@@ -44,6 +44,37 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Write mathematical notation in LaTeX. Keep code identifiers and commands as code.
 - Update `tests/cases.json` when adding or changing a test scenario. Keep existing IDs stable.
 
+## Documentation editing
+
+- Change only the requested section and preserve the existing hierarchy unless restructuring is requested.
+- Keep writing short, direct and in the existing format. Add detail only when it clarifies meaning or exposes an assumption.
+- For outlines and notes, use short bullets with one main idea each. Do not expand notes into finished prose, fill empty sections or append unsolicited explanations.
+- Use simple language. Avoid contrastive setups such as "not X, but Y", generic LLM phrasing, filler, canned transitions and inflated claims.
+- Name the subject when "this", "that" or similar words could refer to more than one earlier point. State missing evidence or required actions directly.
+- Use straight quotation marks and apostrophes. Do not use em dashes or curly punctuation.
+- Keep uncertainties, disagreements and missing evidence visible. Do not silently answer unresolved design questions or make sections sound settled for completeness.
+- Include literature context only when it supports a model choice, definition, metric or interpretation.
+
+### Skeletons and full drafts
+
+- Treat `<name>_skeleton.md` as an author-facing explanation of the question, comparison choices, findings and limits. Keep agent logs, procedure diaries, file inventories and provenance records elsewhere.
+- Include setup detail when it explains a comparison or affects interpretation. Leave out bookkeeping that has no bearing on the question.
+- Keep agent instructions in `AGENTS.md` or skills. Include human-facing section intent and open questions in skeletons when they help the author reason.
+- Use [draft-full-document](.agents/skills/draft-full-document/SKILL.md) only when explicitly asked for a complete prose draft. Ordinary documentation edits retain the existing format.
+- Follow `docs/AGENTS.md` for skeleton/authored file roles. A full draft may expand the outline into prose; it must preserve its input documents and substantive unresolved questions.
+
+### Mathematical notation
+
+- Use `$...$` for inline math and `$$...$$` for display equations, including math in tables. Do not use `\(...\)` or `\[...\]`.
+- Keep each unit inside one math expression and use upright units, such as $\mathrm{mm}$ and $\mathrm{s}^{-1}$.
+- Use `\times`, never `\cdot`, for explicit multiplication, including units: $\mathrm{Pa}\times\mathrm{s}$.
+- Distinguish nested brackets with outer square brackets or larger delimiters, such as `\left[...\right]` or `\bigg(...)`. Avoid same-sized nested brackets.
+- Use uppercase, upright descriptive superscripts, such as $q^{\mathrm{HAND}}$. Do not add prose explaining that these labels are not exponents.
+- Reuse established notation for related quantities. In prose, name the quantity before giving its symbol.
+- Introduce symbols with their equations and geometric or physical meaning, grouped by concept. Interpret key equations in plain English; omit trivial rearrangements.
+- Use only the repository's notation in symbol tables. Keep source citations without adding source-symbol comparison columns.
+- Check delimiters and table structure after edits. Claim rendering is verified only after a visual check.
+
 ## Process
 
 1. Identify the narrowest files and functions. State material assumptions.

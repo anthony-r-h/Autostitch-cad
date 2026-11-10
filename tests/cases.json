@@ -8937,7 +8937,7 @@
       ],
       "inputs": {
         "count": 20,
-        "radiusRule": "p / (2 sin(pi / count))",
+        "radius": 9.75,
         "landmarks": []
       },
       "notation": [

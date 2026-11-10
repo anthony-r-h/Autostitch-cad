@@ -462,20 +462,46 @@ function noFitScene() {
 
 function closureScene() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
-  const radius=3/(2*Math.sin(Math.PI/input.count)),view={x:300,y:187.5,scale:13};
-  const point=angle=>mul(axis(angle),radius),start=Math.PI/2,step=2*Math.PI/input.count;
+  const {radius,count}=input,view={x:300,y:187.5,scale:13};
+  const point=angle=>mul(axis(angle),radius),start=Math.PI/2,step=2*Math.asin(3/(2*radius));
+  // Keep the first and closing gaps nominal; fit the free arc between them.
+  const fit=selectFit({R:radius,p:3,sweep:2*Math.PI-2*step});
+  if(!fit||fit.n+2!==count)throw new Error('Closed-loop illustration does not fit its opening count.');
+  const target=[0,step],adjusted=new Set();
+  for(let i=0;i<fit.n;i++) {
+    const changed=i>=fit.i&&i<fit.i+fit.k;
+    target.push(target.at(-1)+2*Math.asin((changed?fit.correctedPitch:3)/(2*radius)));
+    if(changed){adjusted.add(i+1);adjusted.add(i+2);}
+  }
   const base=[];
   for(let i=0;i<120;i++)base.push(worldLine(point(start-i*2*Math.PI/120),point(start-(i+1)*2*Math.PI/120),view));
   const s=scene('axiom-closure','Close the loop without duplicating the start','A8');
   frame(s,base,75,'guide');
   let result=[...base,...opening(point(start),alpha,view)];
   frame(s,result,100,'reserved-start');
-  for(let i=1;i<input.count;i++) {
+  for(let i=1;i<count;i++) {
     result.push(...opening(point(start-i*step),alpha-i*step,view));
     frame(s,[...result],i<4?35:18,'around-loop');
   }
-  frame(s,[...result,...opening(point(start),alpha,view,{proposed:true})],100,'reuse-start');
-  return finish(s,[...result,...measure(point(start-(input.count-1)*step),point(start),'3',view,-30)]);
+  const draw=t=>{
+    const elements=[...base];
+    for(let i=0;i<count;i++) {
+      const angle=lerp(i*step,target[i],t);
+      elements.push(...opening(point(start-angle),alpha-angle,view,{marked:t>0&&adjusted.has(i)}));
+    }
+    if(t<1) {
+      const terminal=lerp(count*step,2*Math.PI,t);
+      elements.push(...opening(point(start-terminal),alpha-terminal,view,{proposed:true}));
+      for(let i=0;i<12;i++)elements.push(worldLine(
+        point(start-lerp(terminal,2*Math.PI,i/12)),point(start-lerp(terminal,2*Math.PI,(i+1)/12)),
+        view,'residual-dimension','#C62828',3));
+    }
+    return elements;
+  };
+  frame(s,draw(0),150,'closure-mismatch');
+  for(let i=1;i<=30;i++)frame(s,draw(ease(i/30)),8,'planning-revision');
+  frame(s,draw(1),100,'reuse-start');
+  return finish(s,draw(1));
 }
 
 function matchedScene() {
@@ -708,8 +734,8 @@ function annotateScene(s) {
   } else if(['axiom-junction','terms-junction'].includes(s.name)) {
     marks=[...routeMarks([93,145],[507,145]),endMark([300,283],[0,1]),...directionMark([300,145],[0,1])];
   } else if(s.name==='axiom-closure') {
-    const count=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs.count;
-    marks=startMark([300,187.5-13*3/(2*Math.sin(Math.PI/count))],[1,0]);
+    const {radius}=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
+    marks=startMark([300,187.5-13*radius],[1,0]);
   } else if(s.name==='matched-guides') {
     marks=[...routeMarks([60,115],[502.25,115]),...routeMarks([540,260],[97.75,260],[-1,0]),
       ...idTag([60,150],'ST-1'),...idTag([540,225],'ST-1-A')];

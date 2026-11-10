@@ -156,7 +156,7 @@
 
 ![A8: a straight and curved portion share one compatible slit](../examples/illustrated/assets/axiom-smooth.gif)
 
-- A closed loop reuses its start opening; the closing gap must fit
+- Nominal spacing can miss the start of a closed loop; distribute the residual so the loop reuses its start opening
 
 ![A8: close the loop without duplicating its start opening](../examples/illustrated/assets/axiom-closure.gif)
 

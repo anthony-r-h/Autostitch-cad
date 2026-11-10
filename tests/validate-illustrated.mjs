@@ -252,12 +252,37 @@ assert.deepEqual(candidates.map(f=>f.elements.filter(e=>e.kind==='proposal').len
 assert(7/2>3.3&&7/3<2.7);
 
 const closure=slits('axiom-closure',{x:300,y:187.5,scale:13});
+const closureInput=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
+const closureStep=2*Math.asin(3/(2*closureInput.radius));
+const closureFit=selectFit({R:closureInput.radius,p:3,sweep:2*Math.PI-2*closureStep});
 assert.equal(closure.length,20);
 for(const [i,s] of closure.entries()) {
-  near(dist(s.center,closure[(i+1)%20].center),3);
-  near(Math.hypot(...s.center),3/(2*Math.sin(Math.PI/20)));
+  const changed=i>=closureFit.i+1&&i<closureFit.i+1+closureFit.k;
+  near(dist(s.center,closure[(i+1)%20].center),changed?closureFit.correctedPitch:3);
+  near(Math.hypot(...s.center),closureInput.radius);
 }
 assert.equal(new Set(closure.map(s=>s.center.map(x=>x.toFixed(6)).join(','))).size,20);
+assert.equal(closureFit.k,4);
+const closureScene=scenes.find(s=>s.name==='axiom-closure');
+const closureCenter=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+const closureMismatch=closureScene.frames.find(f=>f.stage==='closure-mismatch');
+const nominalLoop=closureMismatch.elements.filter(e=>e.kind==='slit').map(closureCenter);
+const candidate=closureCenter(closureMismatch.elements.find(e=>e.kind==='proposal'));
+for(let i=1;i<nominalLoop.length;i++)near(dist(nominalLoop[i-1],nominalLoop[i])/13,3);
+near(dist(nominalLoop.at(-1),candidate)/13,3);
+assert(dist(candidate,nominalLoop[0])>13,'Nominal loop must visibly miss the start.');
+let previousMismatch=Infinity;
+for(const f of closureScene.frames.filter(f=>['closure-mismatch','planning-revision','reuse-start'].includes(f.stage))) {
+  const real=f.elements.filter(e=>e.kind==='slit').map(closureCenter);
+  assert.equal(real.length,20);
+  near(dist(real[0],nominalLoop[0]),0);
+  const proposal=f.elements.find(e=>e.kind==='proposal');
+  const mismatch=proposal?dist(closureCenter(proposal),real[0]):0;
+  assert(mismatch<=previousMismatch+1e-6);
+  previousMismatch=mismatch;
+}
+near(previousMismatch,0);
+assert(!closureScene.final.some(e=>['proposal','residual-dimension','dimension','measurement'].includes(e.kind)));
 
 const matched=readSvg('matched-guides').elements.filter(e=>e.class==='slit');
 assert.equal(matched.length,22);

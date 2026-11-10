@@ -140,7 +140,7 @@ For a $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch, two equal gaps are too lo
 
 ### Loop closure
 
-Twenty nominal chord gaps return to the reserved start. Count that opening once. `ILL-CLOSURE`.
+Nominal spacing misses the reserved start on a $9.75\,\mathrm{mm}$ radius circle. The dashed next slit and red arc show the mismatch. Four central gaps lengthen to close the loop; the first and closing gaps stay nominal. Count the start opening once. `ILL-CLOSURE`.
 
 ![Close the loop and reuse the start opening](assets/axiom-closure.gif)
 

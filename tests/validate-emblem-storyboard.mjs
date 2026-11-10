@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {loadEmblem,storyboard,validateStoryboard,cameraAt,frameAt,createEmblemScene} from '../examples/illustrated/emblem.mjs';
-import {gifBlocks,svg,displayElements,termLabel} from '../examples/illustrated/scenes.mjs';
+import {gifBlocks,svg,displayElements,termLabel,colorConfig} from '../examples/illustrated/scenes.mjs';
 
 const model=loadEmblem(),book=storyboard;
 validateStoryboard(book,model);
@@ -167,6 +167,25 @@ skipAdjustment.actions=skipAdjustment.actions.filter(a=>a.action!=='adjust');
 validateStoryboard(skipAdjustment,model);
 assert.deepEqual(frameAt(book.duration,skipAdjustment,model).elements,final.elements);
 const scene=createEmblemScene(book,model);
+for(const frame of scene.frames) {
+  const labels=frame.elements.filter(e=>e.textBox);
+  for(let i=0;i<labels.length;i++)for(let j=i+1;j<labels.length;j++) {
+    const a=labels[i].textBox,b=labels[j].textBox;
+    assert(!(a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y),`Emblem at ${frame.time}: ${labels[i].value} overlaps ${labels[j].value}`);
+  }
+  const groups=Map.groupBy(frame.elements.filter(e=>e.dimensionId),e=>e.dimensionId);
+  for(const group of groups.values()) {
+    const values=group.filter(e=>e.dimensionPart==='value');
+    assert.equal(values.length,1,'Emblem dimension must retain its single label');
+    assert(group.filter(e=>e.dimensionPart==='bracket').length>=3,'Emblem label must retain its complete bracket');
+    if(frame.time>=aStitch.at+aStitch.duration)assert.equal(new Set(group.map(e=>e.color)).size,1,'Emblem bracket/value must fade together');
+  }
+  for(const e of frame.elements.filter(e=>e.type==='text'&&/^[+-]?\d+(?:\.\d+)?$/.test(e.value))) {
+    assert.equal(e.size,colorConfig.typography.lengthSize*colorConfig.typography.sizeScale);
+    assert(/^[+-]?\d+\.\d{2}$/.test(e.value));
+    assert(!e.bold);
+  }
+}
 assert.equal(fs.readFileSync(new URL('../examples/illustrated/emblem/emblem-construction.svg',import.meta.url),'utf8'),svg(scene),'Final SVG is stale');
 assert.equal(scene.frames.reduce((n,f)=>n+f.delay,0),book.duration*100);
 assert(scene.frames.every(f=>f.delay>0));

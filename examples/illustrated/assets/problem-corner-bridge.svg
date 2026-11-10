@@ -83,6 +83,6 @@
 <line class="thread-length-dimension" x1="378.516228963" y1="67.088617555" x2="389.627199051" y2="71.985709185" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="376.902993781" y1="70.748873318" x2="380.129464146" y2="63.428361793" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="388.013963869" y1="75.645964948" x2="391.240434234" y2="68.325453423" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="364.171714007" y="64.57716337" width="39.8" height="18.95" fill="#2D2F31"/><text class="thread-length-value" x="384.071714007" y="78.53716337" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">1.00</text>
+<rect class="label-background" x="366.555478212" y="66.264134961" width="35.032471591" height="16.841285511" fill="#2D2F31"/><text class="thread-length-value" x="384.071714007" y="78.53716337" text-anchor="middle" font-family="Consolas" font-size="11.166335227272727" fill="#A6A9AE">1.00</text>
 </g>
 </svg>

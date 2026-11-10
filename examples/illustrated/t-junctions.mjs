@@ -4,7 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { selectFit } from '../../tests/fit-oracle.mjs';
-import { colorConfig, themeFor, displayElements, gifBlocks, writeSceneFiles } from './scenes.mjs';
+import { colorConfig, themeFor, displayElements, gifBlocks, writeSceneFiles, measure, hole, routeMarks, notationText } from './scenes.mjs';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const catalog = JSON.parse(fs.readFileSync(new URL('../../tests/cases.json', import.meta.url)));
@@ -22,7 +22,6 @@ const policies = [
   { id: 'vertex', title: 'Vertex point' },
   { id: 'half', title: 'Vertex point, half pitch' }
 ];
-const fivePolicies = [{ id: 'half', title: 'Half pitch on every arm' }];
 const theme = themeFor(process.argv[5] || undefined);
 const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
 const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
@@ -122,34 +121,38 @@ function draw(result) {
       kind: role === 'angle' ? 'angle-value' : kind,
       adjusted: role === 'adjustedSecondary' });
   };
-  const ring = (point, radius, role) => {
-    elements.push({ type: 'circle', p: project(point), radius, color: role, kind: 'hole' });
-    elements.push({ type: 'circle', p: project(point), radius: radius - 1.3,
-      color: 'background', kind: 'opening-interior' });
-  };
-  const slit = (a, b) => {
+  const slit = (a, b, marked) => {
     elements.push({ type: 'line', a: project(a), b: project(b), kind: 'slit',
       color: 'construction', width: scale * profile.slitWidth, outline: true, outlineWidth: 0.8 });
+    if(marked) {
+      const cap=mul(normal(sub(b,a)),.2925 / distance(a,b));
+      for(const tip of [a,b])elements.push({type:'line',a:project(sub(tip,cap)),b:project(add(tip,cap)),
+        kind:'adjustment-mark',color:'adjusted',adjusted:true,width:.8});
+    }
   };
   for (const arm of result.arms) {
     line([0, 0], mul(arm.e, result.length), 'guide', 0.9);
     for (let i = 0; i < arm.fit.gaps.length; i++) if (Math.abs(arm.fit.gaps[i] - p) > epsilon) {
-      line(arm.slits[i].center, arm.slits[i + 1].center, 'adjusted', 2);
+      elements.push({type:'line',a:project(arm.slits[i].center),b:project(arm.slits[i+1].center),
+        kind:'adjusted-gap',color:'adjusted',adjusted:true,width:2});
     }
   }
-  for (const arm of result.arms) for (const opening of arm.slits) slit(opening.a, opening.b);
+  for(const arm of result.arms)for(const [index,opening] of arm.slits.entries()) {
+    const changed=i=>i>=0&&i<arm.fit.gaps.length&&Math.abs(arm.fit.gaps[i]-p)>epsilon;
+    slit(opening.a,opening.b,changed(index-1)||changed(index));
+  }
   for (const arm of result.arms) {
     line(arm.tip, arm.slits[0].a, 'ink', 2.3);
     for (let i = 0; i + 1 < arm.slits.length; i++) line(arm.slits[i].b, arm.slits[i + 1].a, 'ink', 2.3);
   }
-  ring([0, 0], profile.holeDiameter * scale / 2, 'secondary');
-  const dimension = (a, b, value, offset, role = 'secondary') => {
+  elements.push({...hole([0,0],{x:origin[0],y:origin[1],scale}),radius:profile.holeDiameter*scale/2});
+  const dimension = (a, b, value, offset) => {
     const v = sub(b, a), n = mul(normal(v), 1 / norm(v));
-    const A = add(a, mul(n, offset)), B = add(b, mul(n, offset)), tick = mul(n, 4);
-    line(A, B, role, 0.9, false, true);
-    for (const end of [A, B]) line(sub(end, tick), add(end, tick), role, 0.9, false, true);
+    const A = add(a, mul(n, offset)), B = add(b, mul(n, offset));
     const formatted = (Math.round(value * 100 + 1e-9) / 100).toFixed(2);
-    label(add(mul(add(A, B), 0.5), mul(n, Math.sign(offset) * 11)), formatted, role, 16, true);
+    elements.push(...measure([a[0],-a[1]],[b[0],-b[1]],formatted,{x:0,y:0,scale:1},-offset,false,'thread').map(e=>
+      ({...e,kind:e.type==='text'?'thread-length-value':'thread-length-dimension',
+        ...(e.type==='text'?{p:add(mul(add(A,B),.5),mul(n,Math.sign(offset)*11))}:{})})));
   };
     for (const arm of result.fiveArm ? [] : result.arms) {
       const a = project(arm.tip), b = project(arm.slits[0].a);
@@ -172,15 +175,22 @@ function draw(result) {
         const next = add(b, mul(unit(start + sweep * i / 12), radius));
         line(previous, next, 'angle', 1.1, false, true); previous = next;
       }
-      const labelOffset = arm.name === 'left' ? [-65, 55] : arm.name === 'right' ? [65, 55] : [-80, 50];
+      const labelOffset = arm.name === 'left' ? [-85, 55] : arm.name === 'right' ? [85, 55] : [-80, 50];
       label(add(b, labelOffset), Math.abs(arm.threadAngle).toFixed(2) + '\u00b0', 'angle', 16, true);
     }
-  const choices = result.fiveArm ? fivePolicies : policies;
-  const caption = `${choices.find(policy => policy.id === result.policy).title}${result.fiveArm ? '' : ` \u00b7 ${Math.round(result.beta)}\u00b0`}`;
-  label([300, 145], caption, 'text', 16, true, 'solution-label');
   if (result.fiveArm) {
-    label([origin[0], origin[1] - 30], 'j', 'secondary', 14, true, 'notation-junction');
-    label([300, 650], 'Hole to first slit: 1.50 mm', 'secondary', 16, true, 'distance-label');
+    elements.push(notationText([origin[0],origin[1]-22],'j','junction'));
+    for(const [index,arm] of result.arms.entries()) {
+      const endpoint=project(mul(arm.e,result.length)),outward=[arm.e[0],-arm.e[1]];
+      const marks=routeMarks(endpoint,endpoint,mul(outward,-1),outward);
+      elements.push(...marks.filter(e=>index<2?e.kind!=='notation-end':e.kind==='notation-end'));
+    }
+    const arm=result.arms.find(arm=>arm.name==='left');
+    elements.push(...measure([0,0],arm.slits[0].center,(p/2).toFixed(2),
+      {x:origin[0],y:origin[1],scale},-50,true,'junction-connection'));
+  } else {
+    const caption=`${policies.find(policy=>policy.id===result.policy).title} \u00b7 ${Math.round(result.beta)}\u00b0`;
+    label([300,145],caption,'text',16,true,'solution-label');
   }
   return displayElements(elements, 1, theme);
 }
@@ -203,6 +213,7 @@ function sweepScenes() {
       const result = construct(beta, choices[policyIndex].id);
       assert.ok(result.valid, `${result.policy}/${beta}: clearance below the required margin`);
       const elements = draw(result);
+      checkAnnotations(result,elements);
       const guides = elements.filter(element => element.kind === 'guide');
       if (expectedGuides) assert.deepEqual(guides, expectedGuides);
       else expectedGuides = guides;
@@ -213,7 +224,7 @@ function sweepScenes() {
       const label = elements.find(element => element.kind === 'solution-label');
       assert.ok(label.value.endsWith(`${Math.round(beta)}\u00b0`));
       assert.equal(label.fontFamily, colorConfig.typography.fontFamily);
-      assert.ok(elements.filter(element => ['slit', 'hole', 'measurement'].includes(element.kind))
+      assert.ok(elements.filter(element => ['slit', 'hole', 'measurement','thread-length-value','thread-length-dimension'].includes(element.kind))
         .every(element => element.color === theme.secondary));
       assert.ok(elements.filter(element => element.kind === 'angle-value').every(element => element.color === theme.angle));
       scenes[policyIndex].frames.push({ elements, delay: timing.frameDelayCentiseconds,
@@ -240,8 +251,25 @@ function fiveArmScene() {
   const result = construct(fiveStudy.inputs.includedDegrees, 'half', true);
   assert.ok(result.valid, 'Five-arm half-pitch openings must pass clearance');
   assert.ok(result.arms.every(arm => arm.first === p / 2));
+  assert.ok(result.arms.every(arm => arm.fit.k === 0), 'Five-arm illustration keeps ordinary gaps nominal');
   const elements = draw(result), view = fiveStudy.inputs.view;
+  checkAnnotations(result,elements);
+  assert.equal(elements.filter(e=>e.dimensionPart==='value').length,1);
+  assert.equal(elements.find(e=>e.dimensionPart==='value').value,(p/2).toFixed(2));
+  assert.equal(elements.find(e=>e.dimensionPart==='value').quantity,'junction-connection');
+  assert.ok(!elements.some(e=>e.adjusted),'Half-pitch connections are fixed geometry, not adjustments');
   assert.equal(elements.filter(e => e.kind === 'hole').length, 1);
+  assert.equal(elements.filter(e=>e.type==='circle').length,1,'Round hole must be filled, without a background cutout');
+  assert.ok(!elements.some(e=>['solution-label','distance-label'].includes(e.kind)),'Keep explanatory captions outside the embedded figure');
+  assert.equal(elements.filter(e=>e.kind==='notation-start').length,2);
+  assert.equal(elements.filter(e=>e.kind==='notation-end').length,3);
+  assert.equal(elements.filter(e=>e.kind==='notation-junction').length,1);
+  const measured=result.arms.find(a=>a.name==='left').slits[0];
+  for(const e of elements.filter(e=>e.dimensionPart==='bracket'))for(const arm of result.arms)for(const slit of arm.slits) {
+    if(slit===measured)continue;
+    const screen=p=>[view.origin[0]+p[0]*view.scale,view.origin[1]-p[1]*view.scale];
+    assert.ok(segmentDistance(e.a,e.b,screen(slit.a),screen(slit.b))>profile.slitWidth*view.scale/2,`Dimension must not cross ${arm.name} slit ${arm.slits.indexOf(slit)}`);
+  }
   assert.equal(elements.filter(e => e.kind === 'thread' && distance(e.a, view.origin) < epsilon).length, 5);
   for (const e of elements.filter(e => e.type === 'line')) for (const point of [e.a, e.b]) {
     assert.ok(point[0] >= 12 && point[0] <= view.width - 12 && point[1] >= 12 && point[1] <= view.height - 12);
@@ -249,6 +277,38 @@ function fiveArmScene() {
   return { name: 'five-half', title: 'Five arms share one half-pitch junction', source: fiveStudy.id,
     displayed: true, threadPaths: [], frames: [], final: elements,
     canvas: { width: view.width, height: view.height, background: theme.background, scale: 1, x: 0, y: 0 } };
+}
+
+function checkAnnotations(result,elements) {
+  const groups=new Map();
+  for(const e of elements.filter(e=>e.dimensionId)) {
+    if(!groups.has(e.dimensionId))groups.set(e.dimensionId,[]);
+    groups.get(e.dimensionId).push(e);
+  }
+  assert.equal(groups.size,result.fiveArm?1:3);
+  for(const group of groups.values()) {
+    assert.equal(group.filter(e=>e.dimensionPart==='value').length,1);
+    assert.ok(group.filter(e=>e.dimensionPart==='bracket').length>=3);
+    assert.ok(group.every(e=>e.color===theme.secondary),'Final brackets and values must share their fade');
+    const value=group.find(e=>e.dimensionPart==='value');
+    assert.match(value.value,/^\d+\.\d{2}$/);
+    assert.ok(!value.bold);
+  }
+  const {scale,origin}=result.fiveArm?fiveStudy.inputs.view:camera;
+  const project=point=>[origin[0]+point[0]*scale,origin[1]-point[1]*scale];
+  const marks=elements.filter(e=>e.kind==='adjustment-mark');
+  let affectedCount=0;
+  for(const arm of result.arms)for(const [index,slit] of arm.slits.entries()) {
+    const affected=arm.slits.some((other,j)=>Math.abs(j-index)===1&&Math.abs(distance(other.center,slit.center)-p)>epsilon);
+    const caps=marks.filter(e=>{
+      const center=mul(add(e.a,e.b),.5);
+      return distance(center,project(slit.a))<epsilon||distance(center,project(slit.b))<epsilon;
+    });
+    assert.equal(caps.length,affected?2:0,'I marks must match actual ordinary-gap spacing');
+    if(affected)affectedCount++;
+  }
+  assert.equal(marks.length,2*affectedCount);
+  assert.ok(marks.every(e=>e.color===theme.adjusted));
 }
 
 export function createScenes() {

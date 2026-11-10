@@ -12,6 +12,30 @@ const world=(p,v)=>[(p[0]-v.x)/v.scale,(v.y-p[1])/v.scale];
 const angle=e=>Math.atan2(e.b[1]-e.a[1],e.b[0]-e.a[0]);
 const slits=s=>s.final.filter(e=>e.kind==='slit');
 
+// Dimensions are indivisible annotations; every affected real slit keeps its I marks.
+for(const s of scenes)for(const {elements} of [...s.frames,{elements:s.final}]) {
+  const displayed=displayElements(elements,1),groups=new Map();
+  for(const e of displayed.filter(e=>e.dimensionId)) {
+    if(!groups.has(e.dimensionId))groups.set(e.dimensionId,[]);
+    groups.get(e.dimensionId).push(e);
+  }
+  for(const group of groups.values()) {
+    const values=group.filter(e=>e.dimensionPart==='value');
+    assert.equal(values.length,1,`${s.name}: dimension needs one value`);
+    assert(group.filter(e=>e.dimensionPart==='bracket').length>=3,`${s.name}: dimension needs its bracket and ticks`);
+    assert.equal(new Set(group.map(e=>e.color)).size,1,`${s.name}: bracket and value must fade together`);
+    assert(/^\d+\.\d{2}$/.test(values[0].value));
+    assert(!values[0].bold);
+  }
+  const highlights=elements.filter(e=>e.kind==='adjusted-gap'),marks=elements.filter(e=>e.kind==='adjustment-mark');
+  for(const slit of elements.filter(e=>e.kind==='slit')) {
+    const affected=highlights.some(e=>distance(midpoint(slit),e.a)<1e-6||distance(midpoint(slit),e.b)<1e-6);
+    const caps=marks.filter(e=>distance(midpoint(e),slit.a)<1e-6||distance(midpoint(e),slit.b)<1e-6);
+    assert.equal(caps.length,affected?2:0,`${s.name}: I marks must identify the current adjusted gaps`);
+  }
+  assert(marks.every(e=>e.color==='adjusted'));
+}
+
 const corner=scenes[0],cv={x:360,y:85,scale:25},openings=slits(corner);
 assert.equal(openings.length,7);assert(!corner.final.some(e=>['virtual','hole'].includes(e.kind)));
 const rows=[openings.slice(0,3),openings.slice(3,6)],shared=openings[6];
@@ -233,8 +257,11 @@ for(const f of fagliano.frames.slice(firstComplete,-1)) {
   const rows=fRows(f.elements);
   rows.forEach((row,arm)=>assert.deepEqual(row.slice(0,3),finalRows[arm].slice(0,3),'Straight rows moved'));
   const labels=f.elements.filter(e=>e.kind==='gap-value');
-  rows.filter(row=>row.length>=5).forEach((row,i)=>assert.equal(labels[i].value,
-    (distance(midpoint(row[3]),midpoint(row[4]))/fv.scale).toFixed(2)));
+  const adjustedChords=rows.filter(row=>row.length>=5)
+    .map(row=>distance(midpoint(row[3]),midpoint(row[4]))/fv.scale)
+    .filter(chord=>Math.abs(chord-3)>1e-6);
+  assert.deepEqual(labels.map(e=>e.value),adjustedChords.map(chord=>chord.toFixed(2)),
+    'Show one representative per compressed arm; omit nominal rows');
 }
 for(const arm of [0,1]) {
   const overrun=fagliano.frames.find(f=>f.stage===`arm-${arm}-overrun`),trial=fRows(overrun.elements)[arm];

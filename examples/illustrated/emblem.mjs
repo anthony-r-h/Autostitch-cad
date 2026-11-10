@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {themeFor, colorConfig, svg, writeSceneFiles, displayElements, termLabel, notationText, routeMarks, measure, text, adjustmentStyle} from './scenes.mjs';
+import {themeFor, colorConfig, svg, writeSceneFiles, displayElements, termLabel, notationText, routeMarks, measure, representativeGapIndices, text, adjustmentStyle} from './scenes.mjs';
 
 const root = new URL('../../', import.meta.url);
 const read = name => fs.readFileSync(new URL(name, root), 'utf8');
@@ -323,53 +323,64 @@ export function frameAt(time,book,model,theme=themeFor()) {
         elements.push({type:'line',a:project(start),b:project(end),width:.3*scale,outline:true,outlineWidth:Math.max(.55,.075*scale),color,kind:'slit',id:o.id,...glow});
       }
     }
-    if(planning&&build===1&&detail)for(const [primitiveIndex,source] of group.primitives.entries())for(const row of source.runs) {
+    if(planning&&build===1&&fading<1)for(const [primitiveIndex,source] of group.primitives.entries())for(const row of source.runs) {
       const p={...source,row,nominalEnd:row[0].station+(row.length-1)*source.advance};
       if(p.row.length<2)continue;
+      // Explain the two crown spans; the rest of the letter retains adjustment marks.
+      const measuredDetail=detail&&primitiveIndex===1;
       const last=p.row.at(-1),residual=last.station-p.nominalEnd;
       const offset=primitiveIndex<8?30:-25;
       const adjusting=book.actions.find(a=>a.action==='adjust'&&matches(a.target,group.id));
       const layout=book.actions.find(a=>a.action==='lay-out'&&matches(a.target,group.id));
       const residualStart=layout.at+layout.duration+(layout.residualDelay??0);
       const residualAlpha=time<residualStart?0:clamp((time-residualStart)/Math.max(layout.residualFade??0,.0001));
-      if(time<adjusting.at) {
+      if(measuredDetail&&time<adjusting.at) {
         const start=p.row[0].station,end=last.station;
-        if(!p.radius)elements.push(...displayElements(measure(p.point(start),p.point(end),(end-start).toFixed(2),view,offset),0,theme));
+        if(!p.radius)elements.push(...displayElements(measure(p.point(start),p.point(end),'Free span',view,offset,false,'span'),0,theme));
         else {
           const radial=p.radius+(primitiveIndex<8?1:-1)*24/scale;
           const arc=s=>add(p.center,mul(sub(p.point(s),p.center),radial/p.radius));
-          for(let j=0;j<30;j++)line(arc(mix(start,end,j/30)),arc(mix(start,end,(j+1)/30)),'dimension','construction',.8);
+          const dimensionId=`span:${group.id}:${primitiveIndex}:${start}:${end}`;
+          const meta={dimensionId,quantity:'arc-span',dimensionPart:'bracket'};
+          for(let j=0;j<30;j++)line(arc(mix(start,end,j/30)),arc(mix(start,end,(j+1)/30)),'dimension','construction',.8,meta);
           for(const s of [start,end]) {
             const radialUnit=mul(sub(p.point(s),p.center),1/p.radius);
-            line(add(arc(s),mul(radialUnit,-4/scale)),add(arc(s),mul(radialUnit,4/scale)),'dimension','construction',.8);
+            line(add(arc(s),mul(radialUnit,-4/scale)),add(arc(s),mul(radialUnit,4/scale)),'dimension','construction',.8,meta);
           }
           const anchor=project(arc((start+end)/2));
-          elements.push(...displayElements([text([anchor[0],anchor[1]-9],(end-start).toFixed(2))],0,theme));
+          elements.push(...displayElements([{...text([anchor[0],anchor[1]-9],'Free span'),...meta,dimensionPart:'value'}],0,theme));
         }
       }
-      if(Math.abs(residual)>.001&&adjust<1&&stitched===0&&residualAlpha>0) {
+      if(measuredDetail&&Math.abs(residual)>.001&&adjust<1&&stitched===0&&residualAlpha>0) {
         const residualColor=blendColor(theme.background,theme.angle,Math.round(residualAlpha*5)/5);
         const nominal=mix(p.nominalEnd,last.station,adjust);
         line(p.point(nominal),p.point(last.station),'residual','angle',2.4,{color:residualColor});
         const pos=project(p.point((nominal+last.station)/2));
         const value=(last.station-nominal).toFixed(2);
-        elements.push(...displayElements([{...text([pos[0]+16,pos[1]-12],value),color:'angle',kind:'residual-value'}],0,theme).map(e=>({...e,color:residualColor})));
+        elements.push(...displayElements([{...text([pos[0]+(pos[0]<300?-54:46),pos[1]+14],value),color:'angle',kind:'residual-value'}],0,theme).map(e=>({...e,color:residualColor})));
       }
       const dimensionBoxes=[];
-      const equalGaps=new Map();
+      const current=p.row.map(o=>mix(o.initial,o.station,adjust));
+      const gaps=current.slice(1).map((s,i)=>distance(p.point(current[i]),p.point(s)));
+      const measured=new Set(representativeGapIndices(gaps,model.pitch,1e-4).map(i=>i+1));
+      const marked=new Set();
       for(let i=1;i<p.row.length;i++) {
-        const value=distance(p.row[i-1].center,p.row[i].center).toFixed(2);
-        if(!equalGaps.has(value))equalGaps.set(value,[]);
-        equalGaps.get(value).push(i);
-      }
-      const measured=new Set([...equalGaps.values()].map(indices=>indices[Math.floor(indices.length/2)]));
-      if(adjust>0)for(let i=1;i<p.row.length;i++) {
         const a=p.row[i-1],b=p.row[i];
-        if(Math.abs(distance(a.center,b.center)-model.pitch)<.001)continue;
-        const start=mix(a.initial,a.station,adjust),end=mix(b.initial,b.station,adjust),count=p.radius?8:1;
-        for(let j=0;j<count;j++)line(p.point(mix(start,end,j/count)),p.point(mix(start,end,(j+1)/count)),'adjusted-gap','adjusted',1.5);
-        // One representative dimension per repeated fitted gap keeps the close-up legible.
-        if(!measured.has(i))continue;
+        if(Math.abs(gaps[i-1]-model.pitch)<=1e-4)continue;
+        const start=current[i-1],end=current[i],count=p.radius?8:1;
+        for(let j=0;j<count;j++)line(p.point(mix(start,end,j/count)),p.point(mix(start,end,(j+1)/count)),'adjusted-gap','adjusted',1.5,{color:blendColor(theme.adjusted,theme.background,fade)});
+        for(const index of [i-1,i])if(!marked.has(index)) {
+          marked.add(index);
+          const o=p.row[index],center=p.point(current[index]),turn=p.angle(current[index])-p.angle(o.station);
+          const normal=mul(rotate(sub(o.b,o.a),turn),1/distance(o.a,o.b));
+          const crossbar=[-normal[1]*.2925,normal[0]*.2925];
+          for(const tip of [o.a,o.b]) {
+            const at=add(center,rotate(sub(tip,o.center),turn));
+            line(sub(at,crossbar),add(at,crossbar),'adjustment-mark','adjusted',.8,{color:blendColor(theme.adjusted,theme.background,fade)});
+          }
+        }
+        // One dimension per contiguous equal-gap block; overview keeps marks only.
+        if(!measuredDetail||adjust===0||!measured.has(i))continue;
         // Choose dimension lanes from the fitted layout so labels do not jump during adjustment.
         let gapOffset=offset,box;
         for(let lane=0;lane<6;lane++) {
@@ -388,6 +399,7 @@ export function frameAt(time,book,model,theme=themeFor()) {
     }
     for(const extra of model.extras.filter(e=>e.group===group.id)) {
       if(fading===1)continue;
+      if(planning&&extra.kind==='adjustment-mark')continue;
       if(extra.kind==='virtual'?(!showGuides||(fixedAction?fixed<1:build<1)):(planning?adjust<1:build<1))continue;
       const role=extra.kind==='adjustment-mark'?'adjusted':stitched?'secondary':'construction';
       line(extra.a,extra.b,extra.kind,role,Math.max(.55,extra.width*scale),{color:blendColor(theme[role],theme.background,fade)});

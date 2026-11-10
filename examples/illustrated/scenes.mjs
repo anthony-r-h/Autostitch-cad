@@ -43,7 +43,18 @@ function opening(center, angle, view, {virtual = false, proposed = false, marked
   return result;
 }
 const hole = (center, view) => ({type:'circle', p:project(center,view), radius:.25*view.scale, color:ink, kind:'hole'});
-function measure(a,b,value,view,offset=34,extensions=false) {
+function representativeGapIndices(gaps,p,tolerance=1e-6) {
+  const indices=[];
+  for(let i=0;i<gaps.length;) {
+    if(Math.abs(gaps[i]-p)<=tolerance){i++;continue;}
+    let end=i+1;
+    while(end<gaps.length&&Math.abs(gaps[end]-gaps[i])<=tolerance)end++;
+    indices.push(Math.floor((i+end-1)/2));
+    i=end;
+  }
+  return indices;
+}
+function measure(a,b,value,view,offset=34,extensions=false,quantity='gap') {
   if(/^-?\d+(\.\d+)?$/.test(value))value=Number(value).toFixed(2);
   const A=project(a,view),B=project(b,view);
   const dx=B[0]-A[0],dy=B[1]-A[1],norm=Math.hypot(dx,dy);
@@ -51,7 +62,8 @@ function measure(a,b,value,view,offset=34,extensions=false) {
   const C=add(A,normal),D=add(B,normal),tick=[normal[0]/offset*4,normal[1]/offset*4];
   const result=[line(C,D,'dimension',construction,.8),line(add(C,mul(tick,-1)),add(C,tick),'dimension',construction,.8),line(add(D,mul(tick,-1)),add(D,tick),'dimension',construction,.8),text(add(mul(add(C,D),.5),[0,-9]),value)];
   if(extensions)for(const [origin,end] of [[A,C],[B,D]])result.push(line(origin,add(end,mul(normal,4/Math.abs(offset))),'dimension',construction,.6));
-  return result;
+  const dimensionId=JSON.stringify([A,B,offset,value,quantity]);
+  return result.map(e=>({...e,dimensionId,quantity,dimensionPart:e.type==='text'?'value':'bracket'}));
 }
 function straightBase(length, view) {
   const result=[worldLine([0,0],[length,0],view)];
@@ -92,7 +104,7 @@ function pitchScenes() {
     if(points.length===openings) {
       const last=project([points.at(-1),0],view)[0],end=project([length,0],view)[0];
       const remaining=Math.max(0,length-points.at(-1));
-      elements.push(
+      if(remaining>1e-6)elements.push(
         line([last,view.y],[end,view.y],'residual-dimension','angle',3),
         {...text([(last+end)/2,view.y+55],remaining.toFixed(2)),kind:'residual-value',color:'angle',size:13,bold:false});
     }
@@ -258,8 +270,8 @@ function landmarkScene(layout) {
     const gaps=points.slice(1).map((x,i)=>x-points[i]),changed=gaps.map(g=>Math.abs(g-3)>1e-6);
     const highlights=gaps.flatMap((gap,i)=>changed[i]?highlightGap([[points[i],0],[points[i+1],0]],view):[]);
     const result=[...base,...spans,...protectedDimension,...highlights,...points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:changed[i-1]||changed[i]}))];
-    for(const [i,gap] of gaps.entries()) {
-      if(i===leftPoints.length-1)continue;
+    for(const i of representativeGapIndices(gaps,3)) {
+      const gap=gaps[i];
       result.push(...measure([points[i],0],[points[i+1],0],gap.toFixed(2),view,-78).map(e=>
         adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension'},changed[i])));
     }
@@ -290,7 +302,7 @@ function curveScene() {
     const direction=mul(axis(tangent),2.2);
     const label=add(project(center,view),[55*Math.cos(angle),-55*Math.sin(angle)]);
     frame(s,[...base,worldLine(add(center,mul(direction,-1)),add(center,direction),view,'tangent',ink,1,true),
-      {...text(label,'Local tangent'),kind:'tangent-label',color:ink},...opening(center,tangent+alpha,view,{proposed:true})],
+      {...text(add(label,[30,0]),'Local tangent'),kind:'tangent-label',color:ink},...opening(center,tangent+alpha,view,{proposed:true})],
       i===0||i===30?input.tangentHoldCentiseconds:input.tangentFrameCentiseconds,'local-tangent');
   }
   let result=[...base];
@@ -331,7 +343,7 @@ function cornerScene() {
     {real:[3,2,1].map(i=>({center:[0,co[1]-i*3],angle:alpha-Math.PI/2})),virtual:{center:co,angle:alpha-Math.PI/2}}
   ];
   const result=approachCorner(s,base,arms,J,view);
-  result.push(...measure([ci[0]-3,0],ci,'3',view,36,true));
+  result.push(...measure([ci[0]-3,0],ci,'3',view,36,true,'corner-step'));
   return finish(s,result);
 }
 
@@ -346,12 +358,12 @@ function junctionScene() {
     return {end,distance,initial,fitted,angle:end[1]<0?alpha-Math.PI/2:alpha};
   });
   const base=arms.map(arm=>worldLine(center,arm.end,view));
-  const drawArm=(arm,row,annotated=false)=>{
+  const drawArm=(arm,row,annotated=false,dimensioned=annotated)=>{
     const points=row.map(s=>mul(arm.end,s/arm.distance));
     const changed=row.slice(1).map((s,i)=>Math.abs(row[i]-s-3)>1e-6);
     const elements=[...changed.flatMap((yes,i)=>annotated&&yes?highlightGap([points[i],points[i+1]],view):[]),
       ...points.flatMap((point,i)=>opening(point,arm.angle,view,{marked:annotated&&(changed[i-1]||changed[i])}))];
-    if(annotated)for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
+    if(dimensioned)for(const i of representativeGapIndices(row.slice(1).map((s,i)=>row[i]-s),3))elements.push(...measure(
       points[i],points[i+1],(row[i]-row[i+1]).toFixed(2),view,arm.end[0]<0?32:-38).map(e=>
         adjustmentStyle(arm.end[0]===0&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e)));
     return elements;
@@ -363,13 +375,14 @@ function junctionScene() {
   for(let i=0;i<revealSteps;i++) {
     for(const arm of arms) {
       const station=arm.initial[i];
-      if(station===undefined)continue;
-      result.push(...opening(mul(arm.end,station/arm.distance),arm.angle,view));
+      if(station!==undefined)result.push(...opening(mul(arm.end,station/arm.distance),arm.angle,view));
     }
-    frame(s,[...result],i===revealSteps-1?140:70,'arms-stitch');
+    const annotations=arms.flatMap(arm=>drawArm(arm,arm.initial.slice(0,i+1),true,false)).filter(e=>e.kind!=='slit');
+    frame(s,[...result,...annotations],i===revealSteps-1?140:70,'arms-stitch');
   }
-  result.push(hole(center,view));frame(s,[...result],170,'shared-hole');
-  const draw=t=>[...base,hole(center,view),...arms.flatMap(arm=>drawArm(arm,arm.initial.map((v,i)=>lerp(v,arm.fitted[i],t)),true))];
+  const reserved=measure(center,mul(arms[1].end,1.5/arms[1].distance),'1.50',view,66,true,'junction-connection');
+  result.push(hole(center,view),...reserved,...arms.flatMap(arm=>drawArm(arm,arm.initial,true,false)).filter(e=>e.kind!=='slit'));frame(s,[...result],170,'shared-hole');
+  const draw=t=>[...base,hole(center,view),...reserved,...arms.flatMap(arm=>drawArm(arm,arm.initial.map((v,i)=>lerp(v,arm.fitted[i],t)),true))];
   frame(s,draw(0),120,'free-spans');
   for(let i=1;i<=30;i++)frame(s,draw(ease(i/30)),8,'planning-revision');
   return finish(s,draw(1));
@@ -402,12 +415,15 @@ function curvedJunctionScene() {
     return row.toReversed();
   });
   const base=[...guides,...marks],joint=hole([0,0],view);
+  const reserved=measure([0,0],arms[0].point(arms[0].first),(p/2).toFixed(2),view,42,true,'junction-connection');
   const draw=rows=>{
-    const elements=[...base,joint],openings=[];
+    const elements=[...base,joint,...reserved],openings=[];
     for(const [i,a] of arms.entries()) {
       const points=rows[i].map(a.point),all=[...points,[0,0]];
       const changed=points.map((point,j)=>j<points.length-1&&Math.abs(Math.hypot(...add(point,mul(all[j+1],-1)))-p)>1e-6);
       changed.forEach((yes,j)=>{if(yes)elements.push(...highlightGap(Array.from({length:13},(_,n)=>a.point(lerp(rows[i][j],rows[i][j+1]??0,n/12))),view));});
+      const gaps=points.slice(1).map((point,j)=>Math.hypot(...add(point,mul(points[j],-1))));
+      for(const j of representativeGapIndices(gaps,p))elements.push(...measure(points[j],points[j+1],gaps[j].toFixed(2),view,46).map(e=>adjustmentStyle(e)));
       const row=[];
       for(const [j,t] of rows[i].entries()) {
         const slit=opening(points[j],a.tangent(t)+(i<2?Math.PI:0)+alpha,view,{marked:changed[j-1]||changed[j]});
@@ -420,7 +436,7 @@ function curvedJunctionScene() {
   const s=scene('axiom-junction-curved','Autostitch X junction with a curved arm',spec.id);
   frame(s,[...base,joint],70,'shared-hole');
   const neighbours=arms.flatMap((a,i)=>opening(a.point(a.first),a.tangent(a.first)+(i<2?Math.PI:0)+alpha,view));
-  frame(s,[...base,joint,...neighbours],100,'reserved-neighbours');
+  frame(s,[...base,joint,...neighbours,...reserved],100,'reserved-neighbours');
   const anchored=nominal.map((row,i)=>row.map((t,j)=>j===intervals-1?arms[i].first:t));
   frame(s,draw(anchored).elements,65,'free-spans');
   for(let j=1;j<=16;j++) {
@@ -487,16 +503,15 @@ function clearanceScene() {
 function noFitScene() {
   const spec=catalog.illustrations.find(i=>i.id==='ILL-NOFIT'),input=spec.inputs;
   const s=scene('fit-rejected','No gap count fits the permitted spacing','A5, A7');
-  const result=[...termLabel([300,18],`Pitch ${spec.pitch.toFixed(2)} mm`)];
+  const result=[];
   for(const [row,count] of [2,3].entries()) {
     const view={x:160,y:110+260*row,scale:40},gap=input.length/count;
     result.push(...straightBase(input.length,view),...routeMarks(project([0,0],view),project([input.length,0],view)));
-    for(let i=0;i<=count;i++)result.push(...opening([i*gap,0],alpha,view));
-    for(let i=0;i<count;i++)result.push(...measure([i*gap,0],[(i+1)*gap,0],gap.toFixed(2),view,-45));
-    if(row===0)result.push(...measure([0,0],[input.length,0],input.length.toFixed(2),view,60));
+    for(let i=0;i<=count;i++)result.push(...opening([i*gap,0],alpha,view,{marked:true}));
+    for(let i=0;i<count;i++)result.push(...highlightGap([[i*gap,0],[(i+1)*gap,0]],view),...measure([i*gap,0],[(i+1)*gap,0],gap.toFixed(2),view,-45).map(e=>adjustmentStyle(e)));
     const reason=row===0?'Slits too far apart':'Slits too close together';
-    const limit=row===0?`Maximum gap: ${input.maximumGap.toFixed(2)} mm`:`Minimum gap: ${input.minimumGap.toFixed(2)} mm`;
-    result.push(...statusMark([185,view.y+66],false),...termLabel([310,view.y+70],reason),...termLabel([310,view.y+92],limit));
+    const limit=row===0?`maximum gap ${input.maximumGap.toFixed(2)} mm`:`minimum gap ${input.minimumGap.toFixed(2)} mm`;
+    result.push(...statusMark([90,view.y+66],false),...termLabel([320,view.y+70],`${reason}: ${limit}`));
   }
   return {...s,final:result,staticGif:true};
 }
@@ -666,7 +681,7 @@ function curvedCornerScene(caseId,name,title) {
   const selected=caseId==='J08'?1:0,g=primitives[selected],a=primitivePoint(g,virtual[selected]),b=primitivePoint(g,stations[selected][0]);
   const gap=Math.hypot(a[0]-b[0],a[1]-b[1]);
   if(Math.abs(gap-3)>1e-6)result.unshift(...highlightGap(Array.from({length:13},(_,n)=>primitivePoint(g,lerp(virtual[selected],stations[selected][0],n/12))),view));
-  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:-35,true).map(e=>adjustmentStyle(e,Math.abs(gap-3)>1e-6)));
+  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:-35,true,'corner-step').map(e=>adjustmentStyle(e,Math.abs(gap-3)>1e-6)));
   return finish(s,result);
 }
 
@@ -682,8 +697,8 @@ function termsLayoutScene() {
   const result=original.final.filter(e=>['guide','fixed-end'].includes(e.kind));
   result.push(...termLabel([510,66],'Guide',[510,187.5]));
   result.push(...original.final.filter(e=>['slit','adjustment-mark','adjusted-gap'].includes(e.kind)),...termLabel([401,66],'Slit',[401,180]));
-  result.push(...measure([0,0],[3,0],'p',view,-78),...termLabel([84,294],'Nominal gap'));
-  result.push(...measure([6,0],[8.75,0],'g',view,-78).map(e=>adjustmentStyle(e)),...termLabel([178,294],'Adjusted gap'));
+  result.push(...measure([0,0],[3,0],'p',view,-78),...termLabel([84,294],'Nominal gap').map(e=>({...e,labelBoxWidth:88})));
+  result.push(...measure([6,0],[8.75,0],'g',view,-78).map(e=>adjustmentStyle(e)),...termLabel([178,294],'Adjusted gap').map(e=>({...e,labelBoxWidth:88})));
   result.push(...original.final.filter(e=>['landmark','dimension','measurement'].includes(e.kind)),
     ...termLabel([320,66],'Landmark',[320,105]),...termLabel([320,294],'Protected gap'));
   result.push(...measure([0,0],[14.75,0],'Free span',view,83));
@@ -918,7 +933,7 @@ function cornerThreadLengths(s,threads) {
   const adjacent=s.name==='problem-corner-bridge'?[threads[count-1]]:[threads[count-1],threads[count]];
   return adjacent.flatMap((thread,arm)=>{
     const value=(Math.hypot(thread.b[0]-thread.a[0],thread.b[1]-thread.a[1])/scale).toFixed(2);
-    const dimensions=measure([thread.a[0],-thread.a[1]],[thread.b[0],-thread.b[1]],value,{x:0,y:0,scale:1},arm===0?-36:38).map(e=>
+    const dimensions=measure([thread.a[0],-thread.a[1]],[thread.b[0],-thread.b[1]],value,{x:0,y:0,scale:1},arm===0?-36:38,false,'thread').map(e=>
       ({...e,kind:e.type==='text'?'thread-length-value':'thread-length-dimension',color:ink,
         ...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})}));
     // Put the bridge value below its bracket so the long position clears the incoming thread.
@@ -1012,7 +1027,7 @@ export function pitchComparisonMetrics(s) {
     stitchLengthDeviation:absoluteStitchLengthDeviation(s)};
 }
 
-export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0,theme=themeFor()) {
+export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0,theme=themeFor(),screenScale=1) {
   return elements.map(e=>{
     if(!/^#[0-9A-F]{6}$/i.test(theme[e.color]))throw new Error(`Unknown diagram colour role: ${e.color} (${e.kind})`);
     const start=theme[e.type==='text'&&!['angle','adjusted'].includes(e.color)?'text':e.color];
@@ -1021,9 +1036,10 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
       const font=colorConfig.typography,landmark=e.value.match(/^L(\d+)$/);
       const math=Boolean(landmark)||['notation-start','notation-end'].includes(e.kind);
       const numeric=/^[+-]?\d+(?:\.\d+)?\u00b0?$/.test(e.value);
-      const size=e.size*font.sizeScale*(math?font.notationSizeScale:1);
+      const length=/^[+-]?\d+(?:\.\d+)?$/.test(e.value);
+      const size=(length?font.lengthSize/screenScale:e.size)*font.sizeScale*(math?font.notationSizeScale:1);
       // Conservative em boxes keep labels clear in both renderers, without a font dependency.
-      const width=e.value.length*size*.65+2*font.paddingX,height=size*(landmark?1.4:1.15)+2*font.paddingY;
+      const width=e.labelBoxWidth===undefined?e.value.length*size*.65+2*font.paddingX:e.labelBoxWidth*font.sizeScale,height=size*(landmark?1.4:1.15)+2*font.paddingY;
       shown={...shown,size,fontFamily:math?font.notationFontFamily:numeric?font.numberFontFamily:font.fontFamily,textBackground:font.background?theme.textBackground:null,
         textBox:{x:e.p[0]-width/2,y:e.p[1]-size*.92-font.paddingY,width,height}};
       if(math)shown.fontItalic=true;
@@ -1098,8 +1114,8 @@ export function portraitScenes(scenes,theme=themeFor()) {
   return scenes.map(s=>{
     const b=bounds.get(s.source),scale=Math.min(1.55,528/(b[2]-b[0]),654/(b[3]-b[1]));
     return {...s,canvas:{width:600,height:750,background:theme.background,scale,x:300-scale*(b[0]+b[2])/2,y:375-scale*(b[1]+b[3])/2},
-      displayed:true,final:displayElements(s.final,undefined,theme),
-      frames:revealGlowFrames(s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening,theme)})),theme)};
+      displayed:true,final:displayElements(s.final,undefined,theme,scale),
+      frames:revealGlowFrames(s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening,theme,scale)})),theme)};
   });
 }
 export function svg(scene) {
@@ -1162,5 +1178,5 @@ export function writeSceneFiles(scenes) {
     for(const scene of displayed.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }
-export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,termLabel,finishThread,slitOutlines,adjustmentStyle,highlightGap};
+export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,representativeGapIndices,scene,frame,finish,routeMarks,notationText,termLabel,finishThread,slitOutlines,adjustmentStyle,highlightGap};
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

@@ -85,11 +85,11 @@
 <line class="measured-arc" x1="414.518102462" y1="169.083892961" x2="420" y2="172.153903092" stroke="#CECECE" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="term-leader" x1="300" y1="105" x2="300" y2="137" stroke="#CECECE" stroke-width="0.8"/>
 <rect class="label-background" x="254.75" y="61.04" width="90.5" height="18.95" fill="#2D2F31"/><text class="term-label" x="300" y="75" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Arc length</text>
-<rect class="label-background" x="280.1" y="81.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="95" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">3.14</text>
+<rect class="label-background" x="286.096774194" y="85.283870968" width="27.806451613" height="13.64516129" fill="#2D2F31"/><text class="measurement" x="300" y="95" text-anchor="middle" font-family="Consolas" font-size="8.387096774193548" fill="#F5F3ED">3.14</text>
 <line class="chord" x1="180" y1="172.153903092" x2="420" y2="172.153903092" stroke="#F5F3ED" stroke-width="1"/>
 <line class="term-leader" x1="300" y1="226" x2="300" y2="176" stroke="#CECECE" stroke-width="0.8"/>
 <rect class="label-background" x="246.3" y="228.04" width="107.4" height="18.95" fill="#2D2F31"/><text class="term-label" x="300" y="242" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Chord length</text>
-<rect class="label-background" x="280.1" y="248.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="262" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">3.00</text>
+<rect class="label-background" x="286.096774194" y="252.283870968" width="27.806451613" height="13.64516129" fill="#2D2F31"/><text class="measurement" x="300" y="262" text-anchor="middle" font-family="Consolas" font-size="8.387096774193548" fill="#F5F3ED">3.00</text>
 <rect class="label-background" x="153.427695155" y="148.183471227" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="161.107695155" y="163.431471227" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="195.588457268" y1="163.153903092" x2="205.980762114" y2="157.153903092" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="205.980762114" y1="157.153903092" x2="199.034609691" y2="157.122814178" stroke="#CECECE" stroke-width="1.1"/>

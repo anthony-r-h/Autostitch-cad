@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">No gap count fits the permitted spacing</title><desc id="description">Analytic illustration of A5, A7. Static terminology figure.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-32.86677694363152 92.29902023158161) scale(1.1095559231454384)">
-<rect class="label-background" x="242.075" y="4.04" width="115.85" height="18.95" fill="#2D2F31"/><text class="term-label" x="300" y="18" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Pitch 3.00 mm</text>
+<g transform="translate(-12.667186562687505 39.630473905218935) scale(1.0461907618476305)">
 <line class="guide" x1="160" y1="110" x2="440" y2="110" stroke="#797E87" stroke-width="1"/>
 <line class="fixed-end" x1="160" y1="88" x2="160" y2="132" stroke="#CECECE" stroke-width="0.8"/>
 <line class="fixed-end" x1="440" y1="88" x2="440" y2="132" stroke="#CECECE" stroke-width="0.8"/>
@@ -11,24 +10,27 @@
 <line class="direction" x1="190" y1="110" x2="184" y2="113.5" stroke="#CECECE" stroke-width="1.1"/>
 <rect class="label-background" x="444.32" y="77.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="452" y="93" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <line class="slit" x1="137.018666706" y1="129.283628291" x2="182.981333294" y2="90.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="137.854290599,130.279486067 183.816957186,91.712229485 182.145709401,89.720513933 136.183042814,128.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="144.53928174" y1="138.246348275" x2="129.498051673" y2="120.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="190.501948327" y1="99.679091694" x2="175.46071826" y2="81.753651725" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="slit" x1="277.018666706" y1="129.283628291" x2="322.981333294" y2="90.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="277.854290599,130.279486067 323.816957186,91.712229485 322.145709401,89.720513933 276.183042814,128.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="284.53928174" y1="138.246348275" x2="269.498051673" y2="120.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="330.501948327" y1="99.679091694" x2="315.46071826" y2="81.753651725" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="slit" x1="417.018666706" y1="129.283628291" x2="462.981333294" y2="90.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="417.854290599,130.279486067 463.816957186,91.712229485 462.145709401,89.720513933 416.183042814,128.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="155" x2="300" y2="155" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="159" x2="160" y2="151" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="300" y1="159" x2="300" y2="151" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="210.1" y="132.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="230" y="146" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">3.50</text>
-<line class="dimension" x1="300" y1="155" x2="440" y2="155" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="300" y1="159" x2="300" y2="151" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="440" y1="159" x2="440" y2="151" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="350.1" y="132.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="370" y="146" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">3.50</text>
-<line class="dimension" x1="160" y1="50" x2="440" y2="50" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="54" x2="160" y2="46" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="440" y1="54" x2="440" y2="46" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="280.1" y="27.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="41" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">7.00</text>
-<line class="rejected" x1="181" y1="172" x2="189" y2="180" stroke="#FF968C" stroke-width="1.4"/>
-<line class="rejected" x1="181" y1="180" x2="189" y2="172" stroke="#FF968C" stroke-width="1.4"/>
-<rect class="label-background" x="226.725" y="166.04" width="166.55" height="18.95" fill="#2D2F31"/><text class="term-label" x="310" y="180" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Slits too far apart</text>
-<rect class="label-background" x="222.5" y="188.04" width="175" height="18.95" fill="#2D2F31"/><text class="term-label" x="310" y="202" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Maximum gap: 3.30 mm</text>
+<line class="adjustment-mark" x1="424.53928174" y1="138.246348275" x2="409.498051673" y2="120.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="470.501948327" y1="99.679091694" x2="455.46071826" y2="81.753651725" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjusted-gap" x1="160" y1="110" x2="300" y2="110" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="dimension" x1="160" y1="155" x2="300" y2="155" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="160" y1="159" x2="160" y2="151" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="300" y1="159" x2="300" y2="151" stroke="#83BDFC" stroke-width="0.8"/>
+<rect class="label-background" x="210.846158257" y="132.568050459" width="38.307683486" height="18.289936927" fill="#2D2F31"/><text class="measurement" x="230" y="146" text-anchor="middle" font-family="Consolas" font-size="12.426032110091743" fill="#83BDFC">3.50</text>
+<line class="adjusted-gap" x1="300" y1="110" x2="440" y2="110" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="dimension" x1="300" y1="155" x2="440" y2="155" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="300" y1="159" x2="300" y2="151" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="440" y1="159" x2="440" y2="151" stroke="#83BDFC" stroke-width="0.8"/>
+<rect class="label-background" x="350.846158257" y="132.568050459" width="38.307683486" height="18.289936927" fill="#2D2F31"/><text class="measurement" x="370" y="146" text-anchor="middle" font-family="Consolas" font-size="12.426032110091743" fill="#83BDFC">3.50</text>
+<line class="rejected" x1="86" y1="172" x2="94" y2="180" stroke="#FF968C" stroke-width="1.4"/>
+<line class="rejected" x1="86" y1="180" x2="94" y2="172" stroke="#FF968C" stroke-width="1.4"/>
+<rect class="label-background" x="148" y="166.04" width="344" height="18.95" fill="#2D2F31"/><text class="term-label" x="320" y="180" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Slits too far apart: maximum gap 3.30 mm</text>
 <line class="guide" x1="160" y1="370" x2="440" y2="370" stroke="#797E87" stroke-width="1"/>
 <line class="fixed-end" x1="160" y1="348" x2="160" y2="392" stroke="#CECECE" stroke-width="0.8"/>
 <line class="fixed-end" x1="440" y1="348" x2="440" y2="392" stroke="#CECECE" stroke-width="0.8"/>
@@ -38,24 +40,34 @@
 <line class="direction" x1="190" y1="370" x2="184" y2="373.5" stroke="#CECECE" stroke-width="1.1"/>
 <rect class="label-background" x="444.32" y="337.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="452" y="353" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <line class="slit" x1="137.018666706" y1="389.283628291" x2="182.981333294" y2="350.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="137.854290599,390.279486067 183.816957186,351.712229485 182.145709401,349.720513933 136.183042814,388.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="144.53928174" y1="398.246348275" x2="129.498051673" y2="380.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="190.501948327" y1="359.679091694" x2="175.46071826" y2="341.753651725" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="slit" x1="230.35200004" y1="389.283628291" x2="276.314666627" y2="350.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="231.187623932,390.279486067 277.150290519,351.712229485 275.479042734,349.720513933 229.516376147,388.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="237.872615073" y1="398.246348275" x2="222.831385006" y2="380.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="283.83528166" y1="359.679091694" x2="268.794051594" y2="341.753651725" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="slit" x1="323.685333373" y1="389.283628291" x2="369.64799996" y2="350.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="324.520957266,390.279486067 370.483623853,351.712229485 368.812376068,349.720513933 322.849709481,388.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="331.205948406" y1="398.246348275" x2="316.16471834" y2="380.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="377.168614994" y1="359.679091694" x2="362.127384927" y2="341.753651725" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="slit" x1="417.018666706" y1="389.283628291" x2="462.981333294" y2="350.716371709" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="417.854290599,390.279486067 463.816957186,351.712229485 462.145709401,349.720513933 416.183042814,388.287770515" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="415" x2="253.333333333" y2="415" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="160" y1="419" x2="160" y2="411" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="253.333333333" y1="419" x2="253.333333333" y2="411" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="186.766666667" y="392.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="206.666666667" y="406" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">2.33</text>
-<line class="dimension" x1="253.333333333" y1="415" x2="346.666666667" y2="415" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="253.333333333" y1="419" x2="253.333333333" y2="411" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="346.666666667" y1="419" x2="346.666666667" y2="411" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="280.1" y="392.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="300" y="406" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">2.33</text>
-<line class="dimension" x1="346.666666667" y1="415" x2="440" y2="415" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="346.666666667" y1="419" x2="346.666666667" y2="411" stroke="#CECECE" stroke-width="0.8"/>
-<line class="dimension" x1="440" y1="419" x2="440" y2="411" stroke="#CECECE" stroke-width="0.8"/>
-<rect class="label-background" x="373.433333333" y="392.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="393.333333333" y="406" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">2.33</text>
-<line class="rejected" x1="181" y1="432" x2="189" y2="440" stroke="#FF968C" stroke-width="1.4"/>
-<line class="rejected" x1="181" y1="440" x2="189" y2="432" stroke="#FF968C" stroke-width="1.4"/>
-<rect class="label-background" x="205.6" y="426.04" width="208.8" height="18.95" fill="#2D2F31"/><text class="term-label" x="310" y="440" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Slits too close together</text>
-<rect class="label-background" x="222.5" y="448.04" width="175" height="18.95" fill="#2D2F31"/><text class="term-label" x="310" y="462" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Minimum gap: 2.70 mm</text>
+<line class="adjustment-mark" x1="424.53928174" y1="398.246348275" x2="409.498051673" y2="380.320908306" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="470.501948327" y1="359.679091694" x2="455.46071826" y2="341.753651725" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjusted-gap" x1="160" y1="370" x2="253.333333333" y2="370" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="dimension" x1="160" y1="415" x2="253.333333333" y2="415" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="160" y1="419" x2="160" y2="411" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="253.333333333" y1="419" x2="253.333333333" y2="411" stroke="#83BDFC" stroke-width="0.8"/>
+<rect class="label-background" x="187.512824924" y="392.568050459" width="38.307683486" height="18.289936927" fill="#2D2F31"/><text class="measurement" x="206.666666667" y="406" text-anchor="middle" font-family="Consolas" font-size="12.426032110091743" fill="#83BDFC">2.33</text>
+<line class="adjusted-gap" x1="253.333333333" y1="370" x2="346.666666667" y2="370" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="dimension" x1="253.333333333" y1="415" x2="346.666666667" y2="415" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="253.333333333" y1="419" x2="253.333333333" y2="411" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="346.666666667" y1="419" x2="346.666666667" y2="411" stroke="#83BDFC" stroke-width="0.8"/>
+<rect class="label-background" x="280.846158257" y="392.568050459" width="38.307683486" height="18.289936927" fill="#2D2F31"/><text class="measurement" x="300" y="406" text-anchor="middle" font-family="Consolas" font-size="12.426032110091743" fill="#83BDFC">2.33</text>
+<line class="adjusted-gap" x1="346.666666667" y1="370" x2="440" y2="370" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="dimension" x1="346.666666667" y1="415" x2="440" y2="415" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="346.666666667" y1="419" x2="346.666666667" y2="411" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="dimension" x1="440" y1="419" x2="440" y2="411" stroke="#83BDFC" stroke-width="0.8"/>
+<rect class="label-background" x="374.17949159" y="392.568050459" width="38.307683486" height="18.289936927" fill="#2D2F31"/><text class="measurement" x="393.333333333" y="406" text-anchor="middle" font-family="Consolas" font-size="12.426032110091743" fill="#83BDFC">2.33</text>
+<line class="rejected" x1="86" y1="432" x2="94" y2="440" stroke="#FF968C" stroke-width="1.4"/>
+<line class="rejected" x1="86" y1="440" x2="94" y2="432" stroke="#FF968C" stroke-width="1.4"/>
+<rect class="label-background" x="126.875" y="426.04" width="386.25" height="18.95" fill="#2D2F31"/><text class="term-label" x="320" y="440" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Slits too close together: minimum gap 2.70 mm</text>
 </g>
 </svg>

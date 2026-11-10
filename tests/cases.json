@@ -1215,7 +1215,7 @@
     },
     {
       "id": "J02",
-      "title": "90Â° corner",
+      "title": "90Ãƒâ€šÃ‚Â° corner",
       "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
       "group": "Corner angles",
       "svg": true,
@@ -1394,7 +1394,7 @@
     },
     {
       "id": "J03",
-      "title": "135Â° corner",
+      "title": "135Ãƒâ€šÃ‚Â° corner",
       "description": "Does the same direct construction fit the supplied wider corner?",
       "group": "Corner angles",
       "svg": true,
@@ -1573,7 +1573,7 @@
     },
     {
       "id": "J04",
-      "title": "45Â° corner",
+      "title": "45Ãƒâ€šÃ‚Â° corner",
       "description": "Does the same direct construction fit the supplied tighter corner?",
       "group": "Corner angles",
       "svg": true,
@@ -4211,7 +4211,7 @@
     },
     {
       "id": "J08",
-      "title": "Shallow lineï¿½arc corner",
+      "title": "Shallow lineÃƒÂ¯Ã‚Â¿Ã‚Â½arc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4406,7 +4406,7 @@
     },
     {
       "id": "J09",
-      "title": "Shallow arcï¿½line corner",
+      "title": "Shallow arcÃƒÂ¯Ã‚Â¿Ã‚Â½line corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "J10",
-      "title": "Shallow arcï¿½arc corner",
+      "title": "Shallow arcÃƒÂ¯Ã‚Â¿Ã‚Â½arc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -8624,6 +8624,7 @@
   "illustrations": [
     {
       "id": "ILL-S02",
+      "measurementPolicy": "Dimension every gap throughout the spacing comparison. Show the remaining residual in red; remove its segment and value when resolved.",
       "pitch": 3,
       "slitLength": 1.5,
       "leanDegrees": 40,
@@ -8689,6 +8690,7 @@
     },
     {
       "id": "ILL-CURVE",
+      "measurementPolicy": "Dimension one nominal chord; identify the local tangent and slit lean. Omit repeated nominal gaps.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -8726,6 +8728,7 @@
     },
     {
       "id": "ILL-LANDMARK",
+      "measurementPolicy": "Dimension the protected nominal gap and one representative per contiguous equal-adjustment block. Label free spans; identify every adjusted gap.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -8776,6 +8779,7 @@
     },
     {
       "id": "ILL-CORNER",
+      "measurementPolicy": "Dimension one real-to-virtual corner step. Omit ordinary arm gaps and visible thread lengths.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -8810,6 +8814,7 @@
     },
     {
       "id": "ILL-SMOOTH",
+      "measurementPolicy": "Dimension one nominal gap at the smooth join. Omit repeated nominal gaps.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -8838,6 +8843,7 @@
     },
     {
       "id": "ILL-JUNCTION",
+      "measurementPolicy": "Dimension one fixed half-pitch centre distance and one representative per contiguous equal-adjustment block on each arm.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -8898,6 +8904,7 @@
     },
     {
       "id": "ILL-T-JUNCTION-STUDY",
+      "measurementPolicy": "Dimension each visible junction-thread connection and its angle in both treatments. Identify changed ordinary gaps without gap dimensions.",
       "source": "examples/illustrated/t-junctions.mjs",
       "exportStills": false,
       "pitch": 3,
@@ -8949,6 +8956,8 @@
     },
     {
       "id": "ILL-FIVE-ARM-STUDY",
+      "measurementPolicy": "Dimension one representative fixed half-pitch centre distance. All remaining gaps are nominal and undimensioned.",
+      "terms": [],
       "source": "examples/illustrated/t-junctions.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -8963,7 +8972,7 @@
       "status": "Static five-arm illustration: one shared round hole and half-pitch neighbours on every arm. Analytic geometry, not native CAD qualification.",
       "inputs": {
         "sourceIllustration": "ILL-T-JUNCTION-STUDY",
-        "armLength": 12.4,
+        "armLength": 13.5,
         "fixedArmDegrees": [
           225,
           270,
@@ -8991,6 +9000,7 @@
     },
     {
       "id": "ILL-CLEARANCE",
+      "measurementPolicy": "Show the tested edge-to-edge opening clearances and pass/fail marks in construction styling. Omit pitch dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9036,6 +9046,7 @@
     },
     {
       "id": "ILL-NOFIT",
+      "measurementPolicy": "Dimension every candidate gap and state each rejected row's applicable gap bound. Keep nominal pitch and total span in the surrounding text.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9063,16 +9074,14 @@
         "e"
       ],
       "terms": [
-        "Pitch 3.00 mm",
-        "Slits too far apart",
-        "Maximum gap: 3.30 mm",
-        "Slits too close together",
-        "Minimum gap: 2.70 mm"
+        "Slits too far apart: maximum gap 3.30 mm",
+        "Slits too close together: minimum gap 2.70 mm"
       ],
       "rejectionNotation": "Two aligned rows repeat the same fixed guide span. Dimension every gap; put a small red cross beside each rejection reason. Construction only, with no thread or fade."
     },
     {
       "id": "ILL-CLOSURE",
+      "measurementPolicy": "Identify all adjusted gaps. Show the unresolved closure mismatch as unnumbered red arcs; omit nominal gap dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9111,6 +9120,7 @@
     },
     {
       "id": "ILL-MATCHED",
+      "measurementPolicy": "Identify adjusted gaps consistently on both copies. Omit gap dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9142,6 +9152,7 @@
     },
     {
       "id": "ILL-ARC-LINE",
+      "measurementPolicy": "Dimension one real-to-virtual corner-step chord. Omit ordinary arm gaps and visible thread lengths.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9176,6 +9187,7 @@
     },
     {
       "id": "ILL-ARC-ARC",
+      "measurementPolicy": "Dimension one real-to-virtual corner-step chord. Omit ordinary arm gaps and visible thread lengths.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9213,6 +9225,7 @@
     },
     {
       "id": "ILL-SHALLOW",
+      "measurementPolicy": "Dimension the adjusted real-to-virtual corner-step chord in blue and highlight its guide segment. Mark only the real slit; omit ordinary arm-gap dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9247,6 +9260,7 @@
     },
     {
       "id": "ILL-TERMS-LAYOUT",
+      "measurementPolicy": "Use symbolic dimensions for the nominal and adjusted gap, a protected nominal pair and the free span. Retain construction contrast.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9286,6 +9300,7 @@
     },
     {
       "id": "ILL-TERMS-SLIT",
+      "measurementPolicy": "Identify slit length, width, axis and lean with the corresponding endpoints or leaders. Omit pitch dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9317,6 +9332,7 @@
     },
     {
       "id": "ILL-TERMS-JUNCTION",
+      "measurementPolicy": "Identify the shared hole and arms. Omit numeric gap dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9347,6 +9363,7 @@
     },
     {
       "id": "ILL-TERMS-CHORD",
+      "measurementPolicy": "Distinguish the centre-to-centre chord dimension from the arc-length annotation. Retain construction contrast.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9379,6 +9396,7 @@
     },
     {
       "id": "ILL-CORNER-PROBLEM",
+      "measurementPolicy": "Show visible corner-thread lengths and red angles with the thread. Identify adjusted gaps without arm-gap dimensions.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9388,7 +9406,7 @@
         "A6"
       ],
       "animated": true,
-      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison starts with both rows present and immediately mirrors the vertical row. It omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 carries the complete outgoing row sideways with the incoming virtual slit's lower tip until the row reaches its guide, creating the incoming residual; it then fits both arms to their endpoint targets, with no arm gap dimensions; only corner thread lengths and red angles appear in its stitched phase. Bridge advances its nominal incoming row by 0.5 mm, then translates the whole vertical row between visible bridge thread lengths of 1 and 3 mm; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and half-second endpoint holds. Expansion and contraction each take 1.5 seconds, with no reset. Its still and analysis totals use the 1 mm state. Analytic illustration, not native qualification.",
+      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison starts with both rows present and immediately mirrors the vertical row. It omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 carries the complete outgoing row sideways with the incoming virtual slit's lower tip until the row reaches its guide, creating the incoming residual; it then fits both arms to their endpoint targets, with no arm gap dimensions; only corner thread lengths and red angles appear in its stitched phase. Bridge advances its nominal incoming row by 0.5 mm, then translates the whole vertical row between visible bridge thread lengths of 1 and 3 mm; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and half-second endpoint holds. Expansion and contraction each take 2.14 seconds, with no reset. Its still and analysis totals use the 1 mm state. Analytic illustration, not native qualification.",
       "inputs": {
         "diagonalCase": "ILL-SELLIER-CORNER",
         "armIntervals": 8,
@@ -9450,6 +9468,7 @@
         "connection": "Positive slit tip to next negative slit tip. The shown face is encoded in the slit axes; do not reverse the thread endpoints again. All segments appear together."
       },
       "id": "ILL-SELLIER-CORNER",
+      "measurementPolicy": "Emphasize the two adjoining thread segments and mirrored lean. Omit gap dimensions; identify any adjusted gaps.",
       "axioms": [
         "A2",
         "A6"
@@ -9485,6 +9504,7 @@
         "direction"
       ],
       "id": "ILL-SELLIER-WALLET",
+      "measurementPolicy": "Show the corner and decorative H construction without gap dimensions. Identify adjusted ordinary gaps if present.",
       "axioms": [
         "A2",
         "A6"
@@ -9521,6 +9541,7 @@
         "direction"
       ],
       "id": "ILL-SELLIER-WALLET-DIAGONAL",
+      "measurementPolicy": "Use the same undimensioned case view as the Autostitch comparison; identify adjusted ordinary gaps if present.",
       "axioms": [
         "A2",
         "A6"
@@ -9538,6 +9559,7 @@
     },
     {
       "id": "ILL-LOEWE-HANGER",
+      "measurementPolicy": "Identify adjusted gaps in both treatments. Omit gap dimensions; the comparison concerns the corner openings and flat middle thread.",
       "source": "examples/counter_examples/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9574,6 +9596,7 @@
     },
     {
       "id": "ILL-LV-SPEEDY-CHAPE",
+      "measurementPolicy": "Identify every adjusted gap and bordering slit in both treatments. Omit numeric dimensions from the complete chape view.",
       "source": "examples/counter_examples/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9630,6 +9653,7 @@
     },
     {
       "id": "ILL-FAGLIANO-TIP",
+      "measurementPolicy": "Dimension one representative chord per contiguous equal-adjustment block on each arm. Identify every adjusted gap and unresolved overrun.",
       "source": "examples/counter_examples/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9671,6 +9695,7 @@
     },
     {
       "id": "ILL-FAGLIANO-AUTOSTITCH",
+      "measurementPolicy": "Dimension one representative chord per contiguous equal-adjustment block on each arm. Identify every adjusted gap; omit nominal gaps.",
       "source": "examples/counter_examples/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9707,6 +9732,7 @@
     },
     {
       "id": "ILL-JUNCTION-COMPARISON",
+      "measurementPolicy": "Dimension one fixed half-pitch chord and one representative per contiguous equal-adjustment block on each arm.",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,
       "slitLength": 1.5,
@@ -9764,6 +9790,7 @@
     },
     {
       "id": "ILL-EMBLEM-STORYBOARD",
+      "measurementPolicy": "Limit dimensions and residual values to the two outer-crown spans of A (primitive 1). Build labels Free span and residuals; Adjustment dimensions one representative per current contiguous equal-adjustment block. Other spans show blue highlights and slit marks only. Remove construction marks from the finished artwork.",
       "source": "examples/illustrated/emblem.mjs",
       "pitch": 2.7,
       "slitLength": 1.5,
@@ -9788,7 +9815,7 @@
         "branchingNeighbourChord": 1.35,
         "ringOpenings": 496,
         "aOpenings": 99,
-        "captions": "Short step labels use the shared termLabel/displayElements helpers. Close-up notation uses two closed-contour start markers, eight junction markers, two crown landmarks, bracketed dimensions, red residuals and blue adjusted gaps."
+        "captions": "Short step labels use the shared termLabel/displayElements helpers. Close-up notation uses two closed-contour start markers, eight junction markers and two crown landmarks. Only A's two outer-crown spans have bracketed dimensions and residual values; every adjusted span retains blue identification."
       },
       "assets": [
         {

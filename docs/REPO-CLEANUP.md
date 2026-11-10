@@ -16,10 +16,23 @@
 | Ribbon configuration backups | `output/ribbon-backups/` | Keep for rollback |
 | Packaged releases | `output/release/` | Keep the current package |
 
+## Unifying illustrated examples
+
+Target layout for the example cleanup:
+
+- Use `examples/illustrated/<group>/scenes.mjs` for each related example or comparison group, with its current exports in `assets/` and reproduction notes in `README.md`. Keep comparison variants together.
+- Split the scene recipes out of the oversized `examples/illustrated/scenes.mjs` by subject. Keep any central entry point limited to selecting and assembling groups.
+- Put reusable geometry, annotation, display and export helpers in small shared modules organized by responsibility. Shared helpers must not depend on individual scene recipes.
+- Scene recipes define their geometry, comparison choices and animation sequence. They use the common renderer and shared settings for colours, typography, label backgrounds, fading and canvas conventions; do not copy those settings into each recipe.
+- Keep animation behaviour aligned with the canonical [phase rules](../examples/illustrated/README.md#animation-phases): Build, Adjustment, Stitch and optional Finishing touches. Preserve phase boundaries and display rules when splitting or moving scene recipes.
+- Keep colours and typography in `examples/illustrated/colors.json` and scenario inputs in `tests/cases.json`. Keep example-specific timing and camera choices explicit; related comparisons share one set of inputs and settings.
+- Use the same build and validation workflow for every group. When moving recipes or assets, preserve catalog IDs, update imports and document links, check the rendered result and remove superseded copies.
+
 ## Diagram builds
 
 - The shared renderer creates a unique folder under `output/scratch/` for each build. Concurrent builds do not share intermediates.
 - Successful export checks remove that folder. Finished SVG/PNG/GIF files remain at the requested output destination in `examples/`.
+- Generate and retain PNG/SVG exports only when used as published figures, still fallbacks or editable masters. For animation-only examples, set `exportStills: false` in the recipe and catalog, remove unused static exports and update their references and checks. Keep temporary review frames in scratch and delete them after review.
 - A failed build retains its scratch folder and prints the path. Retention does not mean the published files passed validation.
 - Use `-KeepScratch` to retain intermediates for debugging. `-FrameTimes` also retains scratch because its review frames were explicitly requested.
 - Run the figure's documented validation command and inspect the result. If a later check fails, rebuild with `-KeepScratch` to investigate.

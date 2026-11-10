@@ -85,7 +85,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 
 ## Examples and illustrations
 
-- Follow the canonical [Build → Adjustment → Stitch phases and display rules](examples/illustrated/README.md#animation-phases) when creating or editing illustrated scenes, including static final views.
+- Read the canonical [animation phases and display rules](examples/illustrated/README.md#animation-phases) before planning, creating or editing illustrated scenes. Use Build, Adjustment and Stitch, with optional Finishing touches. Apply the same rules during review and to static final views; keep the detailed rules in that README.
 - Keep diagram colours, font and label backgrounds in `examples/illustrated/colors.json`. Scene recipes use named colour roles; the shared renderer resolves the selected theme through every phase.
 - Keep artwork recipes, reproduction instructions and current assets under `examples/`. Start with its README; use `demo.lsp` to load native recipes in dependency order.
 - Store one canonical DWG per demo under `examples/demos/`; no revision suffixes or abandoned variations. Preserve user working drawings. Use Git for recipe history and `output/native/` for temporary evidence.

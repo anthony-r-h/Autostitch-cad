@@ -2,6 +2,8 @@
 
 Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
+The explanatory figures use $3\,\mathrm{mm}$ nominal pitch unless stated otherwise. The emblem construction uses $2.7\,\mathrm{mm}$.
+
 ## Format and colour studies
 
 - All figures export at $600\times750$ px (4:5 portrait). Geometry scales uniformly; related comparisons share one fixed camera across every frame.
@@ -12,6 +14,7 @@ Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 - `leather` sets the piece fill colour; `leatherOpacity` is $0$ for a transparent surface showing the diagram background. `edge` controls the visible outline separately.
 - `typography` sets `fontFamily`, `sizeScale`, label-box `paddingX`/`paddingY`, and `background` (set `false` to omit boxes). Font sizes scale from the existing label hierarchy. Use an installed font and preview it at the intended display size.
 - `numberFontFamily` sets the monospace font for numeric measurements and angles: **Consolas**. Descriptive labels retain the normal font.
+- `typography.lengthSize` sets numeric lengths in output pixels, currently $13\,\mathrm{px}$. Camera scaling does not change their displayed size; `sizeScale` remains the global typography override.
 - Start/end markers use math italics $s$ and $e$; landmarks use $l_n$ with upright subscript digits. `notationFontFamily` (Cambria) and `notationSizeScale` control these markers in every output format.
 - Thread, measurements and angle labels meet a minimum $4.5:1$ contrast against their background. The same theme resolves every SVG, PNG and GIF frame, including slit interiors and the fade.
 - Rebuild the documentation figures after changing the selected theme or typography:
@@ -53,7 +56,56 @@ These are the shared rules for planning, implementing and reviewing illustrated 
 - Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks
 - Keep existing image paths working when changing animation to static. Vertex point, Clearance and Reject impossible fits export single-frame GIFs alongside their PNG/SVG stills; these GIFs contain no animation or loop
 - Use the same display rules in every example. Finer frame stages belong within these phases; review the transitions and completed result at $600\,\mathrm{px}$ width
-- Adjusted gaps turn blue on the guide between slit centres, following the curve on circular guides. Marks and dimensions also turn blue. During Stitch, dimensions fade to light blue; guide segments and marks retain blue. Nominal measurements stay grey, residuals and angle annotations stay red
+- Select measurements using the [annotation policy](#annotation-policy). Apply that selection in every phase and static view
+
+## Annotation policy
+
+Dimensions explain the figure's particular comparison or construction. Identify adjustments consistently even when their numeric values are omitted. Each illustration's `measurementPolicy` in [the catalog](../../tests/cases.json) records which quantities are shown.
+
+### Identification and measurement
+
+| Annotation | Meaning | Display rule |
+| --- | --- | --- |
+| Blue guide segment and `I` marks on bordering slits | Gap differs from nominal pitch | Show every adjusted ordinary gap, following the guide on curves. Colour follows the current geometry during motion |
+| Dimension bracket and value | A measured distance | Treat them as one annotation: appear, update and fade together. Dimension only the quantities selected below |
+| Red segment, with a value when its amount matters | Residual left to distribute | Draw directly on the guide without end ticks. Update with the layout and remove the segment and any value when resolved |
+| Red angle annotation | Visible thread direction relative to an arm | Show with the thread; retain contrast in the final view |
+
+- Blue identifies a spacing change; it does not certify feasibility. Rejected examples retain their rejection mark and reason
+- Closure uses unnumbered red residual arcs because the comparison concerns the remaining mismatch at the reserved start. Spacing comparisons retain residual values because the amount being distributed is part of their explanation
+- A gap dimension measures opening centre to centre. On a curve, its bracket follows the straight chord even though the blue guide highlight follows the arc
+- A corner-step dimension measures real slit centre to virtual slit centre. An adjusted corner step uses a blue guide highlight and dimension; only its real slit receives `I` marks. A visible-thread dimension measures between slit tips or hole centres at the thread's endpoints
+- A branching junction's half-pitch connection is fixed geometry. Its dimension stays neutral; it receives no blue adjustment marks
+- Distances from a real slit to an A6 corner hole are consequences of the corner construction, not adjusted gaps. Alternative corner treatments use their stated nominal-spacing baseline
+- State nominal pitch once in the figure or surrounding comparison text. Repeated nominal dimensions are reserved for examples where comparing all gaps is the point
+- Use one bracket and value per contiguous block of equal adjusted gaps. Different values receive separate dimensions; all affected gaps retain blue highlights and slit marks
+- Keep numeric lengths in the shared monospace font, regular weight and two decimal places. Keep units in the surrounding explanation or one figure label. Symbolic glossary labels remain symbolic
+- Keep bracket endpoints tied to the measured points. Place values beside their brackets with consistent offsets and clear separation from thread, slit marks and other labels. Use the shared renderer and theme settings
+
+### Selection by purpose
+
+| Figure purpose | Measurements |
+| --- | --- |
+| Spacing problem and completed solutions | Every gap, plus the unresolved residual |
+| Rejected fit | Every candidate gap and applicable bound. Keep nominal pitch and total span in the surrounding text |
+| Landmark and redistribution | Protected nominal gap; one representative per adjusted block. Label the free spans |
+| Two-arm construction | The virtual-to-real corner step being explained. Omit ordinary arm-gap dimensions |
+| Corner appearance comparison | Adjoining visible thread lengths and angles. Omit arm-gap dimensions |
+| Branching construction | One representative half-pitch centre distance. Add representative adjusted-gap dimensions where fitting is part of the lesson |
+| T-junction treatment comparison | Visible connection lengths and angles for each arm; both treatments show the same quantities |
+| Worked case reconstruction | Only measurements that explain the case's difference. Retain adjustment identification elsewhere |
+| Closure or matched layout | Adjustment identification; no repeated nominal dimensions |
+| Guide, slit, chord and glossary definitions | The quantities being defined, with endpoints or leaders identifying their geometric meaning |
+| Clearance | The tested opening separation and pass/fail result; no pitch dimensions |
+| Finished artwork overview | No measurements. Construction close-ups may label free spans and show residuals and representative adjusted gaps |
+
+### Phase behaviour and review
+
+- Build: show the selected construction dimensions at normal contrast; omit thread-length dimensions until their thread exists
+- Adjustment: update endpoints and numbers from the same current geometry. Blue marks track current deviations from nominal; red tracks the remaining residual
+- Stitch: fade each length bracket and its value together to secondary grey, or light blue for adjusted gaps. Keep blue guide highlights and slit marks visible. Retain selected final measurements and red angles
+- Finishing touches: an artwork overview may remove construction annotations together. Explanatory static views keep the corresponding construction or Stitch state
+- Checks must cover bracket/value pairing, numeric formatting, phase colours, measured endpoints and the selected quantities. Inspect the final view and representative moving frames at their published size
 
 ## Spacing setup
 
@@ -95,7 +147,7 @@ The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift
 
 Vertex point translates its vertical row upward by $0.4821\,\mathrm{mm}$. The fixed vertex hole then joins two equal $1.9574\,\mathrm{mm}$ visible stitches at $14.3^\circ$ to their respective arms. The final gaps into the hole are both $2.4717\,\mathrm{mm}$; internal arm gaps remain nominal. Move the outgoing virtual slit and end marker with the row. The still and compatibility GIF use this balanced layout.
 
-Bridge advances the incoming row by $0.50\,\mathrm{mm}$ along its guide, preserving nominal pitch, so a $1.00\,\mathrm{mm}$ bridge is reachable. The vertical row then moves between $1.00$ and $3.00\,\mathrm{mm}$ of visible thread. Expand for $1.5\,\mathrm{s}$, hold for $0.5\,\mathrm{s}$, contract for $1.5\,\mathrm{s}$ and hold for $0.5\,\mathrm{s}$. Ease into each hold; omit duplicate endpoint frames and reset frames. Slits remain faded and thread stays visible throughout. The still uses the $1.00\,\mathrm{mm}$ position. Range, initial advance and endpoint hold are stored in the test catalog.
+Bridge advances the incoming row by $0.50\,\mathrm{mm}$ along its guide, preserving nominal pitch, so a $1.00\,\mathrm{mm}$ bridge is reachable. The vertical row then moves between $1.00$ and $3.00\,\mathrm{mm}$ of visible thread. Expand for $2.14\,\mathrm{s}$, hold for $0.5\,\mathrm{s}$, contract for $2.14\,\mathrm{s}$ and hold for $0.5\,\mathrm{s}$. Ease into each hold; omit duplicate endpoint frames and reset frames. Slits remain faded and thread stays visible throughout. The still uses the $1.00\,\mathrm{mm}$ position. Range, initial advance and endpoint hold are stored in the test catalog.
 
 The mirrored treatment reuses `diagonalCornerScene` with the Sellier construction parameters from `ILL-SELLIER-CORNER`, extended to the common arm lengths. Its rows stay nominal from the outer endpoints; only the final gaps into the vertex slit absorb the residuals. These are approximately $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first is below the Autostitch gap bound. Total absolute adjustment matches A6, but the adjusted-gap count does not. Both rows are present in the first frame; the vertical row immediately mirrors in place before the shared diagonal slit appears. Omit arm gap dimensions. Show only the two visible corner-thread lengths and red thread angles when the thread appears; length dimensions lighten with the slits.
 
@@ -109,9 +161,7 @@ Motion shows planning revisions, not physical punching order; the analytic const
 
 - Vertex point is a static final thread view. Holes and length dimensions use the same secondary colours as the final animated views; angle annotations stay red. Length brackets measure visible thread between slit tips or the round-hole centre, in millimetres
 - Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
-- Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
-- Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values
-- Static diagrams use the same final appearance; glossary figures without thread retain their contrast
+- Apply the [annotation policy](#annotation-policy) to brackets, values, residuals and static views
 - `pitchComparisonMetrics` calculates comparison totals for analysis; the pitch uses the diagrams and their corner measurements
 - Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
 - Comparison totals include out-of-bound final gaps in the vertex treatments. The Bridge analysis totals and still use its $2.00\,\mathrm{mm}$ position. Visible thread-length deviation includes the actual connections to the Autostitch round hole
@@ -134,6 +184,8 @@ A slit follows the labelled local tangent without changing length or lean. Tange
 
 Seven slits on each side of the central landmark. Extending the guide preserves the $0.50\,\mathrm{mm}$ residual per span while adding nominal runs around each adjustment block. Each free span has two central $3.25\,\mathrm{mm}$ gaps, with nominal gaps at its ends; the protected landmark gap remains $3\,\mathrm{mm}$. The animation moves the adjustments away from the feature while maintaining mirrored positions and fixed openings. `ILL-LANDMARK`: $40\,\mathrm{mm}$ guide, L1 at $20\,\mathrm{mm}$.
 
+Dimension the protected pair and one gap in each equal-adjustment block. Mark every adjusted gap; omit repeated nominal values.
+
 ![Adjustments move into the free spans while endpoints and the landmark pair stay fixed](assets/axiom-landmark.gif)
 
 ### Construct the corner hole: A6
@@ -151,6 +203,8 @@ The straight and curved portions use one slit at their common tangent. Revealing
 ### Share the branching junction: A9
 
 Five slits on each arm approach one shared round hole. Reveal all three arms together, one slit per arm at each step. Keep the endpoints and half-pitch junction neighbours fixed; split each $0.6\,\mathrm{mm}$ residual across two $3.30\,\mathrm{mm}$ gaps. `ILL-JUNCTION`.
+
+Dimension one half-pitch connection and one representative gap per adjusted block. The curved X construction uses the same selection; its dimensions measure chords.
 
 ![A T junction shares one hole with half-pitch neighbours on each arm](assets/axiom-junction.gif)
 
@@ -174,7 +228,9 @@ Gap bounds, fixed neighbours, endpoint positions and opening clearance are check
 ![Five half-pitch arms share one round hole](t-junctions/five-half.png)
 
 - Every first slit is $p/2$ from the shared hole, independent of arm angles or count
-- Each guide is $12.4\,\mathrm{mm}$ long at the T study's pitch and tool profile. Endpoints stay fixed; the remaining gaps fit within the ordinary bounds. Blue marks identify those adjustments
+- Each guide is $13.5\,\mathrm{mm}$ long: a $1.5\,\mathrm{mm}$ junction connection followed by four nominal $3\,\mathrm{mm}$ gaps. No spacing adjustment is needed
+- Dimension one hole-to-slit centre distance; omit the repeated nominal gaps
+- Keep captions outside this embedded figure. Use the shared filled round hole and route notation; place the representative dimension clear of the other arms
 - `ILL-FIVE-ARM-STUDY` records the static $120^\circ$ upper-arm layout. Checks cover the single shared hole, five incident threads, half-pitch distances, fitting, clearance and framing
 
 ### Check the whole layout: A10
@@ -195,7 +251,7 @@ Two vertically separated rows repeat the same guide span. Dimension every centre
 
 ### Loop closure
 
-Nominal spacing misses the reserved start on a $9.80\,\mathrm{mm}$ radius circle. A diameter supplies two opposite landmarks, L1 and L2. Reserve a nominal pair around each, then fit the two equal free arcs. Each half needs three exactly centred adjusted gaps of approximately $3.22\,\mathrm{mm}$; the blue intervals mirror across the diameter. Red arcs show the residual before fitting. The upper protected pair includes the closing gap; count the start opening once. `ILL-CLOSURE`.
+Nominal spacing misses the reserved start on a $9.80\,\mathrm{mm}$ radius circle. A diameter supplies two opposite landmarks, L1 and L2. Reserve a nominal pair around each, then fit the two equal free arcs. Each half needs three exactly centred adjusted gaps of approximately $3.22\,\mathrm{mm}$; the blue intervals mirror across the diameter. Unnumbered red arcs show the closing mismatch before fitting; their lengths change with the unresolved residual. The upper protected pair includes the closing gap; count the start opening once. `ILL-CLOSURE`.
 
 ![Close the loop and reuse the start opening](assets/axiom-closure.gif)
 
@@ -263,10 +319,10 @@ Checks cover fitting, clearance, matching guides, thread-angle measurements, sha
 - The 40-second sequence opens on A with "Set symmetry". Its two crown landmarks appear in sequence from 0.2 to 0.8 seconds. "Resolve fixed openings" begins at 1.5 seconds, nominal gaps at 3, redistribution at 7 and thread at 12. After layout finishes at 6 seconds, red residual annotations wait 0.35 seconds, then fade in over 0.25 seconds. The 12-second pullback begins at 14 seconds. The remaining lettering builds from 14.5 seconds, redistributes from 20 to 25 and stitches at 25.7. Rings build from 18 to 24 seconds and stitch at 25.7. Openings and spacing marks fade from 26 to 26.25 seconds. The i dot punches into the thread-only emblem at 26.3 seconds and settles at 26.75 seconds, then holds until 40 seconds. There is no full-emblem flash.
 - `guides` controls visibility with `target`, `from` and `until`. Only A's guides appear, from 0 to 14 seconds. Its guides, virtual slits and detailed annotations disappear as the pullback starts. Other guides never appear. The last step label ends at 14 seconds using its commentary cue's `until`; the pullback and final hold have no text.
 - `emblem.mjs` reads finished openings, thread, spacing marks and virtual slits from the committed native SVG. It reads the lettering's literal stroke definitions and transforms from `emblem.lsp`; ring guides follow circular connections between native openings. The covered dot-fill decoration is omitted. No temporary export or CAD session is needed to render.
-- All lettering and rings use $2.7\,\mathrm{mm}$ nominal pitch. The A has two crown-apex landmarks, one per contour, with mirrored crown stations and fixed nominal gaps across the apices. Initial lettering positions use nominal advances within each free run. Shared round holes and landmark pairs split the runs; their boundary slits remain fixed during interpolation to the exported layout. The A close-up shows red residuals and blue adjusted gaps. The other letters move at their actual geometric scale during the pullback. Motion is explanatory, not physical cutting order or the native solver's execution trace. Native regeneration and save/reopen checks passed on 2026-11-10; see [the demo recipe](../demo.md).
+- All lettering and rings use $2.7\,\mathrm{mm}$ nominal pitch. The A has two crown-apex landmarks, one per contour, with mirrored crown stations and fixed nominal gaps across the apices. Initial lettering positions use nominal advances within each free run. Shared round holes and landmark pairs split the runs; their boundary slits remain fixed during interpolation to the exported layout. The A close-up measures the two outer-crown free spans beside its landmark. Other spans retain blue adjustment identification without dimensions. Blue guide highlights and slit marks follow the current opening positions during adjustment, including the overview. The other letters move at their actual geometric scale during the pullback. Motion is explanatory, not physical cutting order or the native solver's execution trace. Native regeneration and save/reopen checks passed on 2026-11-10; see [the demo recipe](../demo.md).
 - `ILL-EMBLEM-STORYBOARD` checks exported coordinates for all 1,077 openings including the dot. Thread adjacency identifies the three branching holes: the two script t crossings have four neighbours each, and the h has three. Every neighbour stays fixed at a $1.35\,\mathrm{mm}$ chord from its hole. Checks also cover crown symmetry and fixed landmark pairs, redistribution on every letter independently of camera motion, guide isolation, annotation cutoff, thread-only finish, camera continuity, phase order, random-access frame evaluation and GIF timing. Source precision is limited by the committed SVG export.
 - The canvas remains $600\times750$ px. This emblem tour permits camera movement; comparison figures retain their shared fixed camera. Short step labels inside the GIF use the shared `termLabel` and `displayElements` styling at one fixed position below the drawing. Edit each commentary cue's `text` in the storyboard; `phase` records Build, Adjustment or Stitch without adding a second heading. Theme colours, glow and fonts come from `colors.json`.
-- The A close-up uses the pitch's notation and dimension helpers: `s` for the two closed contour starts, `j` at the eight corner holes, `L1` and `L2` for the two crown landmarks, bracketed free-span lengths and adjusted gaps, two-decimal values, red residuals and blue adjusted gaps. Repeated fitted gaps within a free span share one representative dimension; every adjusted gap stays highlighted. Adjusted dimensions fade during Stitch. Adjacent gap dimensions use separate lanes where their labels would overlap. Detailed annotations leave the view as the camera pulls out.
+- The A close-up uses the pitch's notation and dimension helpers: `s` for the two closed contour starts, `j` at the eight corner holes, `L1` and `L2` for the two crown landmarks, brackets labelled "Free span", numeric adjusted-gap dimensions, red residuals and blue adjusted gaps. Dimension and residual-value annotations are limited to the two outer-crown spans of A. Build labels those free spans and residuals; Adjustment replaces the span labels with one representative dimension per current contiguous equal-adjustment block. Every adjusted gap stays highlighted, including unmeasured spans. Adjusted dimensions fade during Stitch. Detailed dimensions leave the view as the camera pulls out. Finishing touches remove the remaining construction marks; the finished artwork has no measurements or adjustment marks.
 
 ```powershell
 ./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/emblem.mjs -OutputDirectory ./examples/illustrated/emblem -FrameTimes 0,6,9,12.5,19,22.5,27

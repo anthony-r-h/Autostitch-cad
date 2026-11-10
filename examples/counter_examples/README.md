@@ -22,6 +22,8 @@ Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.p
 
 All use a $600\times750$ canvas. In the Sellier corner and Fagliano tip GIFs, the holes fade to the theme's secondary colour over $0.3\,\mathrm{s}$ when the thread appears, followed by a four-second hold. Colours, font and label backgrounds come from [colors.json](../illustrated/colors.json), using the same theme as the pitch. Static comparisons use the same final colours and a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
+Follow the shared [annotation policy](../illustrated/README.md#annotation-policy). The catalog's `measurementPolicy` records each case's selection. Fagliano measures one gap per contiguous equal-adjustment block on each arm; other case reconstructions identify changed gaps without adding repeated dimensions.
+
 Each worked case has a leather edge outline, visible throughout the animation. The surface is transparent (`leatherOpacity: 0`); theme role `edge` controls the outline colour. The wallet outline follows its top, right and bottom guidelines at a constant $2.2\,\mathrm{mm}$ offset in both constructions. The hanger and chape share stored edge polylines within each comparison; the strap tip uses an outward circular offset. Cropped ends have no edge stroke. These outlines provide context without changing the guides or fitting metrics.
 
 The vertical flip illustrates reflection by horizontal foreshortening. Opening centres and the top row stay fixed; it is a change of placement convention, not movement of punched holes.

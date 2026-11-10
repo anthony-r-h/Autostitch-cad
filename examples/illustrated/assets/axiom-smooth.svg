@@ -88,7 +88,7 @@
 <line class="dimension" x1="375.25" y1="80.395990117" x2="422.70692784" y2="87.595990117" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="dimension" x1="374.65" y1="84.350734103" x2="375.85" y2="76.44124613" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="dimension" x1="422.10692784" y1="91.550734103" x2="423.30692784" y2="83.64124613" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="379.07846392" y="61.035990117" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="398.97846392" y="74.995990117" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">3.00</text>
+<rect class="label-background" x="379.584000434" y="61.393754419" width="38.788926973" height="18.502794623" fill="#2D2F31"/><text class="measurement" x="398.97846392" y="74.995990117" text-anchor="middle" font-family="Consolas" font-size="12.611125758736545" fill="#A6A9AE">3.00</text>
 <rect class="label-background" x="62.32" y="82.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="70" y="98" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="100" y1="115" x2="112" y2="115" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="112" y1="115" x2="106" y2="111.5" stroke="#CECECE" stroke-width="1.1"/>

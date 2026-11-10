@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {selectFit} from '../../tests/fit-oracle.mjs';
 import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,finish,
-  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles,adjustmentStyle,highlightGap,colorConfig} from '../illustrated/scenes.mjs';
+  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles,adjustmentStyle,highlightGap,representativeGapIndices,colorConfig} from '../illustrated/scenes.mjs';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
@@ -107,15 +107,18 @@ function loeweScenes() {
       ...routeMarks(project(left[0],view),project(right.at(-1),view),[0,-1],[0,1]),
       notationText(add(project(solved?leftJoint:[0,0],view),[-20,-15]),'j','junction'),
       notationText(add(project(solved?rightJoint:[w,0],view),[20,-15]),'j','junction')];
-    if(Math.abs(top[1][0]-top[0][0]-p)>1e-6)result.push(...highlightGap(top,view));
+    const topChanged=Math.abs(top[1][0]-top[0][0]-p)>1e-6;
+    if(topChanged)result.push(...highlightGap(solved?top:[[0,0],...top,[w,0]],view));
     const rows=[left,top,right].map((points,arm)=>points.map((point,i)=>{
       // Mirrored top slits reproduce the flat visible middle thread; the
       // Autostitch comparison retains one signed lean throughout the route.
       const angle=arm===0?a+Math.PI/2:arm===2?a-Math.PI/2:!solved&&i===1?-a:a;
-      const slit=opening(point,angle,view,{marked:solved&&arm===1&&fit.k>0});result.push(...slit);return slit[0];
+      const slit=opening(point,angle,view,{marked:arm===1&&topChanged});result.push(...slit);return slit[0];
     }));
-    const firstJoint=solved?hole(leftJoint,view):opening([0,0],Math.PI/4,view)[0];
+    const firstJointElements=solved?[hole(leftJoint,view)]:opening([0,0],Math.PI/4,view,{marked:topChanged});
+    const firstJoint=firstJointElements[0];
     const secondJoint=hole(solved?rightJoint:[w,0],view);result.push(firstJoint,secondJoint);
+    result.push(...firstJointElements.slice(1));
     if(solved)virtuals.forEach((point,i)=>result.push(
       worldLine(i<2?[0,0]:[w,0],point,view,'extension','guide',1,true),
       ...opening(point,[a+Math.PI/2,a,a,a-Math.PI/2][i],view,{virtual:true})));
@@ -145,8 +148,11 @@ function speedyScenes() {
     const result=[...leatherEdge(spec.leatherEdge,view),...vertices.map((v,i)=>worldLine(v,vertices[(i+1)%count],view))],path=[],topRow=[];
     for(const [i,edge] of edges.entries()) {
       const next=(i+1)%count,corner=corners[i];
-      const joint=solved?hole(corner.joint,view):opening(vertices[i],corner.referenceAngle,view)[0];
-      result.push(joint);path.push(joint);
+      const changedEdge=index=>Math.abs(edges[index].length/Math.round(edges[index].length/p)-p)>1e-6;
+      const jointElements=solved?[hole(corner.joint,view)]:opening(vertices[i],corner.referenceAngle,view,
+        {marked:changedEdge(i)||changedEdge((i+count-1)%count)});
+      const joint=jointElements[0];
+      result.push(...jointElements);path.push(joint);
       if(solved) {
         for(const [point,angle] of [[corner.ci,edges[(i+count-1)%count].angle],[corner.co,edge.angle]])result.push(
           worldLine(vertices[i],point,view,'extension','guide',1,true),...opening(point,angle,view,{virtual:true}));
@@ -167,8 +173,8 @@ function speedyScenes() {
         if(Math.abs(edge.length/gaps-p)>1e-6)for(let j=0;j<gaps;j++)result.push(...highlightGap(
           [j,j+1].map(k=>add(vertices[i],mul(edge.t,k*edge.length/gaps))),view));
         for(let j=1;j<gaps;j++) {
-          const slit=opening(add(vertices[i],mul(edge.t,j*edge.length/gaps)),edge.angle,view)[0];
-          result.push(slit);path.push(slit);if(i===0)topRow.push(slit);
+          const slit=opening(add(vertices[i],mul(edge.t,j*edge.length/gaps)),edge.angle,view,{marked:changedEdge(i)});
+          result.push(...slit);path.push(slit[0]);if(i===0)topRow.push(slit[0]);
         }
       }
       const point=project(solved?corner.joint:vertices[i],view),outward=add(point,[-300,-180]);
@@ -258,10 +264,11 @@ function faglianoScene(solved=false) {
         }
         result.push(...slit);
       }
-      if(values.length>1) {
-        const index=solved?fits[arm].i:0,gap=2*R*Math.sin((values[index+1]-values[index])/2);
+      const gaps=values.slice(1).map((t,index)=>2*R*Math.sin((t-values[index])/2));
+      for(const index of representativeGapIndices(gaps,p)) {
+        const gap=gaps[index];
         result.push(...measure(point(arm,values[index]),point(arm,values[index+1]),gap.toFixed(2),view,arm===0?44:-44).map(e=>
-          adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(e.type==='text'?{size:15,bold:true,color:'ink'}:{})},Math.abs(gap-p)>1e-6)));
+          adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension'})));
       }
     }
     result.push(hole(joint,view));return result;

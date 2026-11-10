@@ -34,6 +34,7 @@ for(const illustration of catalog.illustrations||[]){
   if(illustration.case)assert(catalog.geometry.some(c=>c.id===illustration.case&&c.variants.some(v=>v.pitch===illustration.pitch)));
   else assert(illustration.axioms?.length&&illustration.inputs);
   assert(illustration.status&&illustration.assets.length);
+  assert(typeof illustration.measurementPolicy==='string'&&illustration.measurementPolicy.trim().length>0,`${illustration.id}: declare the annotation selection policy`);
   for(const asset of illustration.assets){
     const animated=asset.animated??illustration.animated;
     if(illustration.exportStills===false)assert(animated,'Disabling still exports requires an animation');

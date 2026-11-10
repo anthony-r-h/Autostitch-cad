@@ -36,6 +36,15 @@ Use the saved DWGs for routine review; generating connected stitch blocks can ta
 
 Run `ASTDEMOEXPORT` in the corresponding demo drawing before each export. It exports the whole drawing, independent of the current view. It writes generated stitches and artwork guides to `output/native/demo-export.jsonl`. [render-demos.ps1](render-demos.ps1) renders that export at the requested drawing bounds and pixel dimensions.
 
+Preview colours use `documentationTheme` in [illustrated/colors.json](illustrated/colors.json), currently Graphite. Pass `-Theme <name>` to override it. For colour changes alone, reuse the published SVG geometry:
+
+```powershell
+./examples/render-demos.ps1 -SvgPath examples/demos/emblem.svg -OutputBase examples/demos/emblem
+./examples/render-demos.ps1 -SvgPath examples/demos/can-you-really.svg -OutputBase examples/demos/can-you-really
+```
+
+The square emblem SVG comes from the native drawing. The emblem animation reads that SVG for its final stitch geometry; both use the shared theme file. Changing geometry requires a new native export and animation rebuild. Recolouring the square preview leaves the animation geometry unchanged.
+
 Example for the portrait lettering preview:
 
 ```powershell

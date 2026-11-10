@@ -102,10 +102,10 @@
 <line class="thread-length-dimension" x1="376.747394614" y1="66.074136899" x2="399.22196061" y2="77.781505511" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="374.899425314" y1="69.621672588" x2="378.595363913" y2="62.526601209" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="397.373991311" y1="81.329041201" x2="401.06992991" y2="74.233969822" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="368.084677612" y="48.967821205" width="39.8" height="18.95" fill="#2D2F31"/><text class="thread-length-value" x="387.984677612" y="62.927821205" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">2.09</text>
+<rect class="label-background" x="370.468441817" y="50.654792796" width="35.032471591" height="16.841285511" fill="#2D2F31"/><text class="thread-length-value" x="387.984677612" y="62.927821205" text-anchor="middle" font-family="Consolas" font-size="11.166335227272727" fill="#A6A9AE">2.09</text>
 <line class="thread-length-dimension" x1="449.555273356" y1="63.409392652" x2="437.847904744" y2="85.883958649" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="446.007737667" y1="61.561423352" x2="453.102809046" y2="65.257361951" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="434.300369054" y1="84.035989349" x2="441.395440433" y2="87.731927948" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="443.80158905" y="60.68667565" width="39.8" height="18.95" fill="#2D2F31"/><text class="thread-length-value" x="463.70158905" y="74.64667565" text-anchor="middle" font-family="Consolas" font-size="13" fill="#A6A9AE">2.09</text>
+<rect class="label-background" x="446.185353254" y="62.373647241" width="35.032471591" height="16.841285511" fill="#2D2F31"/><text class="thread-length-value" x="463.70158905" y="74.64667565" text-anchor="middle" font-family="Consolas" font-size="11.166335227272727" fill="#A6A9AE">2.09</text>
 </g>
 </svg>

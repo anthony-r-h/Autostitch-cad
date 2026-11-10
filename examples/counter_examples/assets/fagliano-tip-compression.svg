@@ -352,10 +352,10 @@
 <line class="slit" x1="278.969374138" y1="96.545501744" x2="276.653598497" y2="76.428352761" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="280.260845431,96.396834666 277.94506979,76.279685683 275.362127205,76.57701984 277.677902846,96.694168822" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="282.89221819" y1="96.093925494" x2="275.046530087" y2="96.997077994" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="280.576442549" y1="75.976776511" x2="272.730754446" y2="76.879929011" stroke="#83BDFC" stroke-width="0.8"/>
-<line class="gap-dimension" x1="183.459449853" y1="216.598588982" x2="190.19095619" y2="180.100833258" stroke="#98B1CD" stroke-width="0.8"/>
-<line class="gap-dimension" x1="187.393104373" y1="217.324097162" x2="179.525795333" y2="215.873080802" stroke="#98B1CD" stroke-width="0.8"/>
-<line class="gap-dimension" x1="194.12461071" y1="180.826341438" x2="186.25730167" y2="179.375325078" stroke="#98B1CD" stroke-width="0.8"/>
-<rect class="label-background" x="166.925203022" y="175.38971112" width="39.8" height="18.95" fill="#2D2F31"/><text class="gap-value" x="186.825203022" y="189.34971112" text-anchor="middle" font-family="Consolas" font-size="13" fill="#98B1CD">2.75</text>
+<line class="gap-dimension" x1="203.997271296" y1="134.989303041" x2="218.845657092" y2="100.975705911" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="207.663188211" y1="136.589632123" x2="200.33135438" y2="133.388973959" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="222.511574008" y1="102.576034992" x2="215.179740177" y2="99.375376829" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="197.518238387" y="99.266375444" width="27.806451613" height="13.64516129" fill="#2D2F31"/><text class="gap-value" x="211.421464194" y="108.982504476" text-anchor="middle" font-family="Consolas" font-size="8.387096774193548" fill="#98B1CD">2.75</text>
 <line class="adjusted-gap" x1="373.270350429" y1="224.579178961" x2="372.869641821" y2="221.510773785" stroke="#83BDFC" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="372.869641821" y1="221.510773785" x2="372.439646099" y2="218.4463356" stroke="#83BDFC" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="372.439646099" y1="218.4463356" x2="371.980402486" y2="215.386143937" stroke="#83BDFC" stroke-width="2.2"/>
@@ -431,10 +431,10 @@
 <line class="slit" x1="312.483816649" y1="83.599977219" x2="331.893210715" y2="89.373877286" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="312.113146521,84.846012394 331.522540588,90.61991246 332.263880843,88.127842111 312.854486777,82.353942045" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="311.357906136" y1="87.384809062" x2="313.609727162" y2="79.815145377" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="330.767300202" y1="93.158709129" x2="333.019121228" y2="85.589045443" stroke="#83BDFC" stroke-width="0.8"/>
-<line class="gap-dimension" x1="416.540550147" y1="216.598588982" x2="409.80904381" y2="180.100833258" stroke="#98B1CD" stroke-width="0.8"/>
-<line class="gap-dimension" x1="420.474204667" y1="215.873080802" x2="412.606895627" y2="217.324097162" stroke="#98B1CD" stroke-width="0.8"/>
-<line class="gap-dimension" x1="413.74269833" y1="179.375325078" x2="405.87538929" y2="180.826341438" stroke="#98B1CD" stroke-width="0.8"/>
-<rect class="label-background" x="393.274796978" y="175.38971112" width="39.8" height="18.95" fill="#2D2F31"/><text class="gap-value" x="413.174796978" y="189.34971112" text-anchor="middle" font-family="Consolas" font-size="13" fill="#98B1CD">2.75</text>
+<line class="gap-dimension" x1="396.002728704" y1="134.989303041" x2="381.154342908" y2="100.975705911" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="399.66864562" y1="133.388973959" x2="392.336811789" y2="136.589632123" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="384.820259823" y1="99.375376829" x2="377.488425992" y2="102.576034992" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="374.67531" y="99.266375444" width="27.806451613" height="13.64516129" fill="#2D2F31"/><text class="gap-value" x="388.578535806" y="108.982504476" text-anchor="middle" font-family="Consolas" font-size="8.387096774193548" fill="#98B1CD">2.75</text>
 <circle class="hole" cx="300" cy="56.736814462" r="3.375" fill="#A6A9AE"/>
 </g>
 </svg>

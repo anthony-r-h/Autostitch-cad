@@ -3,13 +3,28 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
-import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, revealGlowFrames, svg, themeFor, colorConfig } from '../examples/illustrated/scenes.mjs';
+import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, revealGlowFrames, svg, themeFor, colorConfig, representativeGapIndices } from '../examples/illustrated/scenes.mjs';
 import { palettes, paletteScenes } from '../examples/illustrated/palettes.mjs';
 
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
 const scenes = createScenes();
 const theme=themeFor();
+assert.deepEqual(representativeGapIndices([3,3.2,3.2,3,3.2,3.2,2.8],3),[1,4,6], 'Separate equal blocks need separate representatives');
+for(const s of scenes)for(const elements of [s.final,...s.frames.map(f=>f.elements)]) {
+  const groups=Map.groupBy(elements.filter(e=>e.dimensionId),e=>e.dimensionId);
+  for(const group of groups.values()) {
+    const value=group.filter(e=>e.dimensionPart==='value');
+    // Slit-profile labels use separate leaders rather than a numeric dimension.
+    if(!value.length&&JSON.parse(group[0].dimensionId)[3]==='')continue;
+    assert.equal(value.length,1,`${s.name}: a bracket needs one value`);
+    assert(group.filter(e=>e.dimensionPart==='bracket').length>=3,`${s.name}: value needs bracket and ticks`);
+    assert(group.every(e=>Boolean(e.adjusted)===Boolean(value[0].adjusted)),`${s.name}: bracket/value adjustment state differs`);
+    if(/^\d/.test(value[0].value))assert(/^\d+\.\d{2}$/.test(value[0].value),`${s.name}: length formatting`);
+    const shown=displayElements(group,1);
+    assert.equal(new Set(shown.map(e=>e.color)).size,1,`${s.name}: bracket and value must fade together`);
+  }
+}
 assert.throws(()=>themeFor('missing-theme'),/Unknown diagram theme/);
 assert.throws(()=>displayElements([{type:'text',kind:'measurement',color:'missing-role'}]),/Unknown diagram colour role/);
 const numberedLandmark=displayElements([{type:'text',kind:'notation-landmark',p:[100,100],value:'L12',size:12,color:'construction'}],0)[0];
@@ -42,6 +57,16 @@ for(const name of ['graphite','porcelain']) {
   }
 }
 const presented=portraitScenes(scenes);
+for(const s of presented)for(const elements of [s.final,...s.frames.map(f=>f.elements)])for(const e of elements) {
+  if(e.type==='text'&&/^[+-]?\d+(?:\.\d+)?$/.test(e.value))assert(Math.abs(e.size*s.canvas.scale-colorConfig.typography.lengthSize*colorConfig.typography.sizeScale)<1e-8,'Length text must keep its output-pixel size across cameras');
+}
+for(const s of presented.filter(s=>['axiom-junction','axiom-junction-curved','axiom-curve'].includes(s.name)))for(const frame of s.frames) {
+  const labels=frame.elements.filter(e=>e.textBox);
+  for(let i=0;i<labels.length;i++)for(let j=i+1;j<labels.length;j++) {
+    const a=labels[i].textBox,b=labels[j].textBox;
+    assert(!(a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y),`${s.name}/${frame.stage}: ${labels[i].value} overlaps ${labels[j].value}`);
+  }
+}
 const uprightLandmark=presented.find(s=>s.name==='axiom-landmark');
 const landmarkMark=uprightLandmark.final.find(e=>e.kind==='landmark'&&e.type==='line');
 assert.equal(landmarkMark.a[1],landmarkMark.b[1],'Landmark crosses the vertical guide horizontally');
@@ -188,6 +213,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     });
     if(points.length===6) {
       const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
+      if(remaining>1e-6) {
       near(+label.value,remaining,.00501);
       assert.equal(label.bold,false);assert.equal(label.size,labels[0].size);
       assert.equal(label.color,'angle');assert(/^\d+\.\d{2}$/.test(label.value));
@@ -195,6 +221,10 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
       assert.equal(indicator[0].color,'angle');near(indicator[0].a[1],view.y);near(indicator[0].b[1],view.y);
       near(dist(indicator[0].a,indicator[0].b)/view.scale,remaining);
       assert(!f.elements.some(e=>e.kind==='residual-extension'));
+      } else {
+        assert(!label,'Resolved residual must disappear');
+        assert(!f.elements.some(e=>e.kind==='residual-dimension'));
+      }
       near(points.slice(1).reduce((sum,p,i)=>sum+p-points[i],0)+remaining,15.3);
       if(f.stage==='planning-revision') {
         assert(remaining<=previousResidual+1e-9);previousResidual=remaining;
@@ -202,7 +232,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     }
   }
   const residual=s.final.find(e=>e.kind==='residual-value');
-  near(+residual.value,s.name==='pitch-problem'?.3:0);
+  if(s.name==='pitch-problem')near(+residual.value,.3);else assert(!residual);
   if(s.name!=='pitch-problem')assert.equal(s.frames.filter(f=>f.stage==='planning-revision').length,30);
 }
 
@@ -254,8 +284,8 @@ for(const frame of scenes.find(s=>s.name==='axiom-landmark').frames.filter(f=>![
     const points=xs.map(x=>(x-landmarkView.x)/landmarkView.scale).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
     bounded(gaps);near(gaps[6],3);
     const labels=frame.elements.filter(e=>e.kind==='gap-value');
-    const adjustable=gaps.filter((g,i)=>i!==6);assert.equal(labels.length,adjustable.length);
-    labels.forEach((label,i)=>near(+label.value,adjustable[i],.00501));
+    const selected=representativeGapIndices(gaps,3);assert.equal(labels.length,selected.length);
+    labels.forEach((label,i)=>near(+label.value,gaps[selected[i]],.00501));
     near(gaps.slice(0,6).reduce((a,b)=>a+b,0),leftFixed);
     near(gaps.slice(7).reduce((a,b)=>a+b,0),landmarkInput.length-rightFixed);
     points.forEach((x,i)=>near(x+points.at(-1-i),landmarkInput.length));
@@ -327,11 +357,22 @@ for(const f of branchScene.frames) {
       branchDistances[index]=distance;branchCounts[index]++;
     }
     assert(branchCounts.every(count=>count===branchCounts[0]));
+    const changed=branchCounts[0]===5;
+    assert.equal(f.elements.filter(e=>e.kind==='adjusted-gap').length,changed?3:0,'Identify changed gaps as soon as both bounding slits exist');
+    assert.equal(f.elements.filter(e=>e.kind==='adjustment-mark').length,changed?12:0);
   }
   assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','free-spans','planning-revision','result','thread-fade','thread-reveal'].includes(f.stage)?1:0);
   branchReal=real;
 }
 assert.deepEqual(branchCounts,[5,5,5]);
+for(const name of ['axiom-junction','axiom-junction-curved']) {
+  const final=scenes.find(s=>s.name===name).final;
+  const half=final.filter(e=>e.quantity==='junction-connection');
+  assert.equal(half.filter(e=>e.type==='text').length,1,'One half-pitch exemplar per branching figure');
+  assert.equal(half.find(e=>e.type==='text').value,'1.50');
+  assert(half.every(e=>!e.adjusted&&e.color!=='adjusted'),'Fixed half pitch must stay neutral');
+  assert.equal(final.filter(e=>e.dimensionPart==='value'&&e.adjusted).length,name==='axiom-junction'?3:4,'One final dimension per equal adjusted arm block');
+}
 assert.equal(branchScene.frames.filter(f=>f.stage==='arms-stitch').length,5);
 branchDistances.forEach(d=>near(d/junctionView.scale,1.5));
 for(const f of branchScene.frames.filter(f=>['free-spans','planning-revision','result'].includes(f.stage))) {
@@ -413,7 +454,8 @@ for(const [i,row] of [rejected.slice(0,3),rejected.slice(3)].entries()) {
   for(let j=1;j<row.length;j++)near(dist(row[j-1].center,row[j].center),7/(row.length-1));
 }
 assert.equal(readSvg('fit-rejected').elements.filter(e=>e.class==='rejected').length,4);
-assert.deepEqual(rejectedScene.final.filter(e=>e.kind==='measurement').map(e=>e.value),['3.50','3.50','7.00','2.33','2.33','2.33']);
+assert.deepEqual(rejectedScene.final.filter(e=>e.kind==='measurement').map(e=>e.value),['3.50','3.50','2.33','2.33','2.33']);
+assert(!rejectedScene.final.some(e=>e.quantity==='span'||e.value?.startsWith('Pitch ')));
 for(const s of [clearanceScene,rejectedScene])for(const e of s.final.filter(e=>['accepted','rejected'].includes(e.kind))) {
   assert.equal(e.color,e.kind);assert.equal(e.width,1.4);
   assert(dist(e.a,e.b)<13,'Use compact status marks');

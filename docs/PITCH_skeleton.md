@@ -136,6 +136,8 @@
 
 # Axioms
 
+- These examples use $3\,\mathrm{mm}$ nominal pitch
+
 ## Guide, slit and pitch
 
 - Real slit centres lie on the guide
@@ -356,6 +358,8 @@ $$
 
 # Even Big Fashion Gets It Wrong
 
+- The diagram comparisons use $3\,\mathrm{mm}$ nominal pitch
+
 - Diagrams compare the observed corner methods with Autostitch
 
 ## Hermès Sellier wallet
@@ -473,30 +477,34 @@ $$
 
 # Can you really?
 
-## Raise the floor
+## Craft judgement and repeatability
 
-- Skilled bespoke leatherworkers already exercise judgement over pitch, corners and visual balance
-- Codifying that judgement makes precise layout repeatable across a piece and through revisions
-- Corner treatments and spacing corrections become decisions that can be checked together across the whole pattern
-- Precise layout becomes easier to achieve consistently, with fewer missed constraints and manual corrections
-- Design judgement, accurate punching and stitching remain the practitioner's work
+- In bespoke leatherwork, the maker judges where spacing can change, how a corner should turn and which irregularities will be visible
+- A skilled practitioner can resolve an individual seam by eye. Maintaining those decisions across many short runs, shared openings and later revisions takes repeated attention
+- Explicit rules carry a chosen treatment through the whole pattern. Nominal pitch, fixed features and permitted adjustments remain consistent wherever the same conditions occur
+- Less experienced makers can use that geometric judgement without having to develop every placement rule themselves. Experienced makers can spend less attention recalculating layouts they already understand
+- The maker still chooses the composition, tool profile and corner treatment. Accurate punching, thread tension and the finished stitch remain matters of execution
 
-## Go beyond an ordinary seam
+## Complexity and layout effort
 
-- The maker draws the intended pattern; the rules resolve the opening positions and identify departures from nominal pitch
-- An array repeats a shape; each corner, junction and interrupted run still needs a placement decision
-- For an expert making a one-off piece, less repetitive layout work makes room for more ambitious detail
+- Layout effort depends on how many constraints interact: a long uninterrupted seam can need less fitting than a short letter with several corners
+- Repetition multiplies that work. Each clipped curve or crossing introduces another place where the openings must agree with the surrounding pattern
+- Changing a letter's size or moving an intersection changes the lengths available for fitting. A repeatable solution makes these revisions practical without preserving every earlier manual correction
+- For a one-off piece, this matters before there is any benefit from repeated production: the layout work is concentrated in a single object
+- More elaborate stitching still requires more physical work. The geometric contribution is to make the placement decisions explicit and consistent at that level of detail
 
-## Deliberately ridiculous
+## Stitching as ornament
 
-- Stitching becomes the decoration: lettering, texture and background all depend on resolved stitch placement
-- The emblem combines outlined capitals, script and concentric rings interrupted around the lettering
+- In these examples, the stitches form the image itself. Thread direction and spacing affect the lettering, texture and separation between shapes
+- The emblem combines outlined capitals, script and concentric rings. The rings stop around the lettering, leaving a clear border that preserves the words' silhouettes
+- Curves and interrupted runs need independent fits, while branching strokes must agree at shared openings. Their combination tests whether the local rules produce a coherent composition
 
 ![Stitched emblem with interrupted concentric rings](../examples/demos/emblem.png)
 
-- The banner pushes further: script outlines, curved fill clipped inside YOU, and a diamond background kept clear of the text
-- The banner uses $2.7\,\mathrm{mm}$ pitch; its many short runs, corners and crossings apply the same placement rules
-- The excess is intentional: the same rules handle a density of detail that would demand repeated manual fitting
+- The banner combines script outlines, curved fill inside YOU and a looser diamond background. Different stitch densities distinguish the text from its surroundings
+- The fill comes from one continuous field of curves clipped by the letters. Its alignment survives across the word, while each remaining fragment needs a complete stitch layout
+- At $2.7\,\mathrm{mm}$ pitch, the short fragments expose the relationship between drawing scale and available stitch resolution. A shape can be drawable yet leave too little room for a valid fit
+- The density of detail is deliberate. It brings many otherwise familiar placement decisions into one composition, where their consistency can be examined together
 
 ![Can YOU really banner with stitched lettering, flow fill and diamond background](../examples/demos/can-you-really.png)
 

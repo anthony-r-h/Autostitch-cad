@@ -15,13 +15,13 @@
 <line class="slit" x1="137.927736872" y1="220.194233533" x2="179.856101149" y2="188.598944817" stroke="#202225" stroke-width="10.5"/><polygon class="slit-outline" points="141.087265743,224.387069961 183.015630021,192.791781245 176.696572278,184.40610839 134.768208,216.001397105" fill="#202225" stroke="#CECECE" stroke-width="0.8"/>
 <line class="accepted" x1="469.343296194" y1="275" x2="473.343296194" y2="279" stroke="#83D4A4" stroke-width="1.4"/>
 <line class="accepted" x1="473.343296194" y1="279" x2="480.343296194" y2="270" stroke="#83D4A4" stroke-width="1.4"/>
-<rect class="label-background" x="454.443296194" y="289.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="474.343296194" y="303" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">0.55</text>
+<rect class="label-background" x="455.785862466" y="289.990123824" width="37.114867455" height="17.76234522" fill="#2D2F31"/><text class="measurement" x="474.343296194" y="303" text-anchor="middle" font-family="Consolas" font-size="11.967256713427478" fill="#F5F3ED">0.55</text>
 <line class="accepted" x1="364.487195045" y1="275" x2="368.487195045" y2="279" stroke="#83D4A4" stroke-width="1.4"/>
 <line class="accepted" x1="368.487195045" y1="279" x2="375.487195045" y2="270" stroke="#83D4A4" stroke-width="1.4"/>
-<rect class="label-background" x="349.587195045" y="289.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="369.487195045" y="303" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">0.30</text>
+<rect class="label-background" x="350.929761317" y="289.990123824" width="37.114867455" height="17.76234522" fill="#2D2F31"/><text class="measurement" x="369.487195045" y="303" text-anchor="middle" font-family="Consolas" font-size="11.967256713427478" fill="#F5F3ED">0.30</text>
 <line class="rejected" x1="260.631093895" y1="271" x2="268.631093895" y2="279" stroke="#FF968C" stroke-width="1.4"/>
 <line class="rejected" x1="260.631093895" y1="279" x2="268.631093895" y2="271" stroke="#FF968C" stroke-width="1.4"/>
-<rect class="label-background" x="244.731093895" y="289.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="264.631093895" y="303" text-anchor="middle" font-family="Consolas" font-size="13" fill="#F5F3ED">0.04</text>
+<rect class="label-background" x="246.073660168" y="289.990123824" width="37.114867455" height="17.76234522" fill="#2D2F31"/><text class="measurement" x="264.631093895" y="303" text-anchor="middle" font-family="Consolas" font-size="11.967256713427478" fill="#F5F3ED">0.04</text>
 <line class="rejected" x1="155.774992746" y1="271" x2="163.774992746" y2="279" stroke="#FF968C" stroke-width="1.4"/>
 <line class="rejected" x1="155.774992746" y1="279" x2="163.774992746" y2="271" stroke="#FF968C" stroke-width="1.4"/>
 <rect class="label-background" x="127.199992746" y="289.04" width="65.15" height="18.95" fill="#2D2F31"/><text class="measurement" x="159.774992746" y="303" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Overlap</text>

@@ -10,6 +10,7 @@
   "typography": {
     "fontFamily": "Arial",
     "numberFontFamily": "Consolas",
+    "lengthSize": 13,
     "notationFontFamily": "Cambria",
     "notationSizeScale": 1.2,
     "sizeScale": 1,

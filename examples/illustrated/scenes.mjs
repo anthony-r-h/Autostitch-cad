@@ -785,8 +785,23 @@ function bridgeComparison(s) {
   return {...s,final:first.elements,frames,threadPaths:[first.path],bridgeShifts:shifts.map(v=>v/scale)};
 }
 
+function balancedVertex(s) {
+  const count=catalog.illustrations.find(i=>i.id===s.source).inputs.armIntervals;
+  const slits=s.final.filter(e=>e.kind==='slit'),joint=s.final.find(e=>e.kind==='hole');
+  const incoming=openingCentre(slits[count-1]),outgoing=openingCentre(slits.at(-1));
+  // Equal distances from this right-angle vertex balance both thread lengths
+  // and angles. Translate the complete outgoing run, including its virtual slit.
+  const shift=(outgoing[1]-joint.p[1])-(joint.p[0]-incoming[0]);
+  const first=s.final.indexOf(slits[count]),last=s.final.indexOf(joint);
+  const result=s.final.map((e,i)=>i>=first&&i<last?{...e,a:add(e.a,[0,-shift]),b:add(e.b,[0,-shift])}:
+    e.kind==='notation-end'?{...e,p:add(e.p,[0,-shift])}:e);
+  const placed=result.filter(e=>e.kind==='slit');
+  return {...s,final:result,threadPaths:[[...placed.slice(0,count),joint,...placed.slice(count).toReversed()]]};
+}
+
 function finishThread(s) {
   if(s.name==='problem-corner-bridge')return bridgeComparison(s);
+  if(s.name==='problem-corner-vertex-point')s=balancedVertex(s);
   if(!s.frames.length&&!s.threadPaths)return s;
   const paths=threadPaths(s),threads=paths.flatMap(path=>path.slice(1).map((next,i)=>
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,s.emphasisedThreads?.includes(i)?2.6:1.8)));

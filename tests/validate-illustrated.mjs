@@ -381,7 +381,7 @@ for(const treatment of ['vertex-point','bridge']) {
   assert.equal(openings.length,2*count);
   for(const arm of [0,1]) {
     const row=openings.slice(arm*count,(arm+1)*count);
-    const shift=treatment==='bridge'&&arm===1?scenes.find(s=>s.name===name).bridgeShifts[0]:0;
+    const shift=arm===0?0:treatment==='bridge'?scenes.find(s=>s.name===name).bridgeShifts[0]:armLengths[1]-armLengths[0];
     near(dist(row[0].center,arm===0?[-armLengths[0],0]:[0,-armLengths[1]+shift]),0);
     const last=armLengths[arm]-3*(count-1);
     near(dist(row.at(-1).center,arm===0?[-last,0]:[0,-last+shift]),0);
@@ -394,13 +394,20 @@ for(const treatment of ['vertex-point','bridge']) {
   if(treatment==='vertex-point') {
     const virtuals=slits(name,problemView,'virtual');assert.equal(virtuals.length,2);
     virtuals.forEach((v,arm)=>{
-      near(dist(v.center,arm===0?[cornerShifts[arm]/2,0]:[0,cornerShifts[arm]/2]),0);
+      near(dist(v.center,arm===0?[cornerShifts[arm]/2,0]:[0,cornerShifts[arm]/2+armLengths[1]-armLengths[0]]),0);
       near(dist(v.center,openings[(arm+1)*count-1].center),3);
       assert(v.element['stroke-dasharray']);
     });
     near(Math.abs(virtuals[0].angle-virtuals[1].angle),Math.PI/2);
     near(dist(circle(name,problemView),[0,0]),0);
     assert.equal(scenes.find(s=>s.name===name).frames.length,0);
+    const layout=scenes.find(s=>s.name===name),thread=layout.final.filter(e=>e.kind==='thread');
+    near(dist(thread[count-1].a,thread[count-1].b),dist(thread[count].a,thread[count].b));
+    const values=layout.final.filter(e=>e.kind==='thread-angle-value').map(e=>e.value);
+    assert.deepEqual(values,['14.3\u00b0','14.3\u00b0']);
+    near(dist(openings[count-1].center,[0,0]),dist(openings[2*count-1].center,[0,0]));
+    const end=layout.final.find(e=>e.kind==='notation-end');
+    near(end.p[1],problemView.y+(armLengths[0])*problemView.scale+12);
   }
   else assert.equal(readSvg(name).elements.filter(e=>e.class==='hole').length,0);
   if(treatment==='bridge') {
@@ -433,8 +440,12 @@ for(const arm of [0,1]) {
 }
 assert(!mirroredCorner.final.some(e=>['hole','virtual'].includes(e.kind)));
 const crossing=scenes.find(s=>s.name==='problem-corner-vertex-point');
-const constructionOnly=elements=>elements.filter(e=>!['thread','thread-angle','thread-angle-value','angle-reference','angle-wedge','angle-leader','thread-length-value','thread-length-dimension'].includes(e.kind));
-assert.deepEqual(cornerSolution.frames[0].elements,constructionOnly(crossing.final));
+// The balanced Vertex point shifts its far endpoint; Autostitch retains the
+// original endpoint and starts from the original nominal row.
+const initial=cornerSolution.frames[0].elements;
+assert(!initial.some(e=>e.kind==='thread'));
+assert.deepEqual(initial.filter(e=>e.kind==='hole'),crossing.final.filter(e=>e.kind==='hole'));
+assert.deepEqual(initial.filter(e=>e.kind==='slit').slice(0,count),crossing.final.filter(e=>e.kind==='slit').slice(0,count));
 assert.deepEqual(cornerSolution.frames.at(-1).elements,cornerSolution.frames[0].elements);
 const solvedSlits=slits(cornerSolution.name,problemView),solvedVirtuals=slits(cornerSolution.name,problemView,'virtual'),solvedHole=circle(cornerSolution.name,problemView);
 assert.equal(solvedSlits.length,2*count);assert.equal(solvedVirtuals.length,2);

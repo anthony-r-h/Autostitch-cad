@@ -90,10 +90,10 @@
 
 ![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.png)
 
-- Nominal arm spacing, as the tool lands; round hole at the vertex
-- Residual remains in the two final gaps into the hole
-- Retains the intended vertex
-- Keeps the arm runs nominal, at the cost of concentrating the spacing and thread-angle changes at the vertex
+- Keep the round hole at the vertex and move the vertical run to balance the adjoining stitches
+- Both angles are $14.3^\circ$; both visible stitch lengths are $1.96\,\mathrm{mm}$
+- Arm spacing stays nominal; the far endpoint moves with the vertical run
+- The two final gaps into the hole absorb the spacing change
 
 ### Bridge
 
@@ -125,7 +125,7 @@
 
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: |
-| Vertex point | $2$ | $0.575$ | $0.470$ |
+| Vertex point | $2$ | $1.057$ | $0.259$ |
 | Bridge | $1$ | $0.041$ | $0.000$ |
 | Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.407$ |
 | Autostitch | $3$ | $0.575$ | $0.516$ |

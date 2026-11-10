@@ -208,23 +208,7 @@ function cornerProblemScenes() {
   // gap from each row into the fixed vertex slit absorbs its residual.
   const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armIntervals,armLengths:lengths},
     {name:'problem-corner-mirrored',source:'ILL-CORNER-PROBLEM',view,notation:false});
-  const labelled=layout=>{
-    const addDimensions=elements=>{
-      const dimensions=[];
-      const centres=elements.filter(e=>e.kind==='slit').map(e=>
-        [(e.a[0]+e.b[0]-2*view.x)/(2*view.scale),(2*view.y-e.a[1]-e.b[1])/(2*view.scale)]);
-      for(const arm of [0,1]) {
-        const points=centres.filter(p=>arm===0?p[0]<-1e-6:p[1]<-1e-6).sort((a,b)=>a[arm]-b[arm]);
-        if(centres.some(p=>Math.hypot(...p)<1e-6)||elements.some(e=>e.kind==='hole'))points.push([0,0]);
-        for(let i=1;i<points.length;i++)dimensions.push(...measure(points[i-1],points[i],
-          Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]).toFixed(2),view,arm===0?-36:-38).map(e=>
-          ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})})));
-      }
-      return [...elements,...dimensions];
-    };
-    return {...layout,final:addDimensions(layout.final),frames:layout.frames.map(f=>({...f,elements:addDimensions(f.elements)}))};
-  };
-  return [...comparisons,labelled(mirrored),finish(s,result)];
+  return [...comparisons,mirrored,finish(s,result)];
 }
 
 function landmarkScene(layout) {
@@ -808,7 +792,7 @@ function finishThread(s) {
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const angles=s.name.startsWith('problem-corner-')?cornerThreadAngles(s,threads):[];
   const staticResult=s.name==='problem-corner-vertex-point';
-  const lengths=staticResult?cornerThreadLengths(s,threads):[];
+  const lengths=staticResult||s.name==='problem-corner-mirrored'?cornerThreadLengths(s,threads):[];
   const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles,...lengths];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[
     {...f,delay:80},
@@ -823,9 +807,12 @@ function cornerThreadLengths(s,threads) {
   const adjacent=s.name==='problem-corner-bridge'?[threads[count-1]]:[threads[count-1],threads[count]];
   return adjacent.flatMap((thread,arm)=>{
     const value=(Math.hypot(thread.b[0]-thread.a[0],thread.b[1]-thread.a[1])/scale).toFixed(2);
-    return measure([thread.a[0],-thread.a[1]],[thread.b[0],-thread.b[1]],value,{x:0,y:0,scale:1},arm===0?-36:38).map(e=>
+    const dimensions=measure([thread.a[0],-thread.a[1]],[thread.b[0],-thread.b[1]],value,{x:0,y:0,scale:1},arm===0?-36:38).map(e=>
       ({...e,kind:e.type==='text'?'thread-length-value':'thread-length-dimension',color:ink,
         ...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})}));
+    // Keep the incoming dimension clear of the outgoing row at the diagonal slit.
+    return s.name==='problem-corner-mirrored'&&arm===0?dimensions.map(e=>e.type==='line'?
+      {...e,a:add(e.a,[-45,0]),b:add(e.b,[-45,0])}:{...e,p:add(e.p,[-45,0])}):dimensions;
   });
 }
 function cornerThreadAngles(s,threads) {

@@ -108,11 +108,10 @@
 
 ![A shared diagonal slit joins the top row to a row with mirrored lean](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
-- Shared diagonal slit at the vertex; mirrored lean on one arm
-- Nominal arm spacing; residual absorbed only in each final gap into the shared slit
-- Retains the intended vertex; requires mirrored lean on one arm and a separately oriented corner slit
-- Corner slit sets the direction and visible length of the two adjoining stitches
-- Final gaps: $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first falls below Autostitch's $2.7\,\mathrm{mm}$ limit
+- Refines Bridge: carry the turn through a shared diagonal slit at the vertex and mirror the vertical row
+- Mirroring brings the outgoing corner stitch closer to the ordinary thread direction along that row
+- Arm spacing stays nominal; the final gaps into the shared slit absorb the residual
+- Length brackets show the two visible corner stitches; red angles show how they meet the arms
 
 ### Autostitch
 

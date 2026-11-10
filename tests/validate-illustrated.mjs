@@ -432,7 +432,10 @@ for(const [i,e] of mirroredSlits.entries()) {
   }
   else near(dist(e.center,[0,0]),0);
 }
-assert.equal(mirroredCorner.final.filter(e=>e.kind==='gap-value').length,2*count);
+for(const f of [...mirroredCorner.frames,{elements:mirroredCorner.final}]) {
+  assert(!f.elements.some(e=>['gap-value','gap-dimension'].includes(e.kind)));
+  assert.equal(f.elements.filter(e=>e.kind==='thread-length-value').length,f.elements.some(e=>e.kind==='thread')?2:0);
+}
 for(const arm of [0,1]) {
   const row=mirroredSlits.slice(arm*count,(arm+1)*count);
   row.slice(1).forEach((e,i)=>near(dist(row[i].center,e.center),3));
@@ -518,7 +521,7 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
     const annotated=f.elements.some(e=>e.kind==='thread-angle-value');
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
   }
-  if(['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name)) {
+  if(['problem-corner-vertex-point','problem-corner-bridge','problem-corner-mirrored'].includes(s.name)) {
     if(s.name==='problem-corner-vertex-point')assert.equal(s.frames.length,0);
     const expectedThreads=s.name==='problem-corner-bridge'?adjacent.slice(0,1):adjacent;
     const lengths=s.final.filter(e=>e.kind==='thread-length-value');
@@ -630,14 +633,14 @@ for(const s of scenes) {
       assert.equal(f.holeLightening,(i%5+1)/5);assert.deepEqual(f.elements,s.final);
       const shown=displayElements(f.elements,f.holeLightening);
       shown.forEach((e,j)=>{
-        if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)) {
+        if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)) {
           const original=f.elements[j];
           assert.equal(e.color,'#'+[1,3,5].map(k=>Math.round(parseInt(original.color.slice(k,k+2),16)+(196-parseInt(original.color.slice(k,k+2),16))*f.holeLightening).toString(16).padStart(2,'0')).join('').toUpperCase());
           assert.deepEqual({...e,color:original.color},original);
         } else assert.deepEqual(e,f.elements[j]);
       });
     });
-    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
+    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
     for(const f of s.frames.filter(f=>!['thread-reveal','thread-fade'].includes(f.stage)))assert(!f.elements.some(e=>e.kind==='thread'));
     }
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');

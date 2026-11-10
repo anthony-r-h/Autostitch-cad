@@ -381,9 +381,10 @@ for(const treatment of ['vertex-point','bridge']) {
   assert.equal(openings.length,2*count);
   for(const arm of [0,1]) {
     const row=openings.slice(arm*count,(arm+1)*count);
-    near(dist(row[0].center,arm===0?[-armLengths[0],0]:[0,-armLengths[1]]),0);
+    const shift=treatment==='bridge'&&arm===1?scenes.find(s=>s.name===name).bridgeShifts[0]:0;
+    near(dist(row[0].center,arm===0?[-armLengths[0],0]:[0,-armLengths[1]+shift]),0);
     const last=armLengths[arm]-3*(count-1);
-    near(dist(row.at(-1).center,arm===0?[-last,0]:[0,-last]),0);
+    near(dist(row.at(-1).center,arm===0?[-last,0]:[0,-last+shift]),0);
     const gaps=row.slice(1).map((e,i)=>dist(e.center,row[i].center));bounded(gaps);
     const changed=gaps.filter(g=>Math.abs(g-3)>1e-6);
     assert.equal(changed.length,0);
@@ -507,7 +508,7 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
     assert.equal(annotated,f.elements.some(e=>e.kind==='thread'));
   }
   if(['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name)) {
-    assert.equal(s.frames.length,0);
+    if(s.name==='problem-corner-vertex-point')assert.equal(s.frames.length,0);
     const expectedThreads=s.name==='problem-corner-bridge'?adjacent.slice(0,1):adjacent;
     const lengths=s.final.filter(e=>e.kind==='thread-length-value');
     assert.deepEqual(lengths.map(e=>e.value),expectedThreads.map(e=>(dist(e.a,e.b)/problemView.scale).toFixed(2)));
@@ -521,9 +522,11 @@ for(const key of ['absoluteAdjustment','absoluteResidual'])near(balancedMirror[k
 assert.equal(balancedMirror.adjustedGaps,2);
 assert.equal(balancedAuto.adjustedGaps,3);
 near(balancedAuto.absoluteResidual,cornerShifts.reduce((sum,c)=>sum+c/2,0));
-assert.equal(comparisonRows.length,comparisons.length);
-for(const [i,s] of comparisons.entries()) {
-  const values=Object.values(pitchComparisonMetrics(s)).map(v=>Number(v.toFixed(3)));
+const publishedComparisons=['vertex-point','bridge','mirrored','autostitch'].map(t=>scenes.find(s=>s.name===`problem-corner-${t}`));
+assert.equal(comparisonRows.length,publishedComparisons.length);
+for(const [i,s] of publishedComparisons.entries()) {
+  const metrics=pitchComparisonMetrics(s);
+  const values=[metrics.adjustedGaps,metrics.absoluteAdjustment,metrics.stitchLengthDeviation].map(v=>Number(v.toFixed(3)));
   const published=[...comparisonRows[i].matchAll(/\$([\d.]+)/g)].map(m=>Number(m[1]));
   assert.deepEqual(published,values,s.name);
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
@@ -576,6 +579,34 @@ for(const s of scenes) {
   const asset=entry.assets.find(a=>a.path.endsWith('/'+s.name)),animated=asset.animated??entry.animated;
   assert.equal(Boolean(s.frames.length),animated);
   if(animated) {
+    if(s.name==='problem-corner-bridge') {
+      assert.equal(s.frames.length,62);
+      assert.deepEqual(s.frames.filter(f=>f.delay===400).map(f=>f.stage),['match-length','balance-angles']);
+      const holds=s.frames.filter(f=>f.delay===400);
+      const midpoint=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+      assert.deepEqual(holds[0].elements,s.final);
+      assert.deepEqual(s.frames.at(-1).elements,s.final);
+      const ordinary=s.final.filter(e=>e.kind==='thread')[0];
+      const ordinaryLength=dist(ordinary.a,ordinary.b);
+      for(const [i,f] of holds.entries()) {
+        const t=f.elements.filter(e=>e.kind==='thread')[count-1];
+        if(i===0)near(dist(t.a,t.b),ordinaryLength);
+        else near(Math.abs(t.b[0]-t.a[0]),Math.abs(t.b[1]-t.a[1]));
+      }
+      for(const f of s.frames) {
+        assert.equal(f.holeLightening,1);
+        const row=f.elements.filter(e=>e.kind==='slit'),thread=f.elements.filter(e=>e.kind==='thread')[count-1];
+        assert.deepEqual(row.slice(0,count),s.final.filter(e=>e.kind==='slit').slice(0,count));
+        for(let i=count+1;i<row.length;i++)near(dist(midpoint(row[i]),midpoint(row[i-1]))/problemView.scale,3);
+        const last=row[count];
+        const end=f.elements.find(e=>e.kind==='notation-end');
+        near(end.p[1]-midpoint(last)[1],12);
+        const dx=thread.b[0]-thread.a[0],dy=thread.b[1]-thread.a[1],deg=Math.atan2(dy,dx)*180/Math.PI;
+        assert.deepEqual(f.elements.filter(e=>e.kind==='thread-angle-value').map(e=>e.value),[deg,90-deg].map(a=>a.toFixed(1)+'\u00b0'));
+        assert.equal(f.elements.find(e=>e.kind==='thread-length-value').value,(Math.hypot(dx,dy)/problemView.scale).toFixed(2));
+        assert(displayElements(f.elements,1).filter(e=>e.kind==='slit'||e.kind==='thread-length-value').every(e=>e.color==='#C4C4C4'));
+      }
+    } else {
     const threadFrames=s.frames.filter(f=>f.stage==='thread-reveal'),threadFrame=threadFrames.at(-1);
     assert.equal(threadFrames.length,1);
     threadFrames.forEach(f=>assert.equal(f.delay,400));
@@ -597,6 +628,7 @@ for(const s of scenes) {
     });
     assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
     for(const f of s.frames.filter(f=>!['thread-reveal','thread-fade'].includes(f.stage)))assert(!f.elements.some(e=>e.kind==='thread'));
+    }
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
     const expected= s.name==='axiom-closure'?openings.length:openings.length-(s.name==='matched-guides'?2:1);
     assert.equal(threads.length,expected,`${s.name} incorrect thread count`);
@@ -647,7 +679,7 @@ for(const s of scenes) {
     if(s.name!=='axiom-closure')assert(labels.some(e=>e.kind==='notation-end'&&e.value==='e'),`${s.name} needs an end`);
   }
   if(s.final.some(e=>e.kind==='hole')||s.name==='axiom-smooth')assert(labels.some(e=>e.value==='j'),`${s.name} needs its junction label`);
-  for(const role of ['notation-start','notation-end','notation-id'])for(const f of s.frames)
+  for(const role of ['notation-start','notation-end','notation-id'].filter(role=>s.name!=='problem-corner-bridge'||role!=='notation-end'))for(const f of s.frames)
     assert.deepEqual(f.elements.filter(e=>e.kind===role),s.final.filter(e=>e.kind===role),`${s.name} notation moved during reveal`);
   if(s.name==='matched-guides') {
     assert.deepEqual(labels.filter(e=>e.kind==='notation-id').map(e=>e.value),['ST-1','ST-1-A']);

@@ -762,13 +762,37 @@ function threadPaths(s) {
   if(s.name==='fit-rejected')return [s.final.filter(e=>['slit','proposal'].includes(e.kind)).sort((a,b)=>x(a)-x(b))];
   throw new Error(`Thread path missing for ${s.name}`);
 }
+function bridgeComparison(s) {
+  const profile=catalog.illustrations.find(i=>i.id===s.source),count=profile.inputs.armIntervals;
+  const slits=s.final.filter(e=>e.kind==='slit'),incoming=slits.slice(0,count),outgoing=slits.slice(count);
+  const scale=Math.hypot(...add(incoming[0].b,mul(incoming[0].a,-1)))/profile.slitLength;
+  const from=incoming.at(-1).b,to=outgoing.at(-1).a,dx=to[0]-from[0],dy=to[1]-from[1];
+  const ordinary=Math.hypot(...add(incoming[1].a,mul(incoming[0].b,-1)));
+  const shifts=[dy-Math.sqrt(ordinary*ordinary-dx*dx),dy-dx];
+  const draw=shift=>{
+    const row=outgoing.map(e=>({...e,a:add(e.a,[0,-shift]),b:add(e.b,[0,-shift])}));
+    const path=[...incoming,...row.toReversed()];
+    const threads=path.slice(1).map((next,i)=>line(path[i].b,next.a,'thread',ink,1.8));
+    const base=s.final.filter(e=>e.kind!=='slit').map(e=>e.kind==='notation-end'?{...e,p:add(e.p,[0,-shift])}:e);
+    return {elements:[...base,...incoming,...row,...threads,...cornerThreadAngles(s,threads),...cornerThreadLengths(s,threads)],path};
+  };
+  const first=draw(shifts[0]),frames=[];
+  for(const [a,b,stage] of [[0,1,'match-length'],[1,0,'balance-angles']]) {
+    frames.push({elements:draw(shifts[a]).elements,delay:400,stage,holeLightening:1});
+    for(let i=1;i<=30;i++)frames.push({elements:draw(lerp(shifts[a],shifts[b],ease(i/30))).elements,
+      delay:5,stage:'compare-bridge',holeLightening:1});
+  }
+  return {...s,final:first.elements,frames,threadPaths:[first.path],bridgeShifts:shifts.map(v=>v/scale)};
+}
+
 function finishThread(s) {
+  if(s.name==='problem-corner-bridge')return bridgeComparison(s);
   if(!s.frames.length&&!s.threadPaths)return s;
   const paths=threadPaths(s),threads=paths.flatMap(path=>path.slice(1).map((next,i)=>
     line(path[i].type==='circle'?path[i].p:path[i].b,next.type==='circle'?next.p:next.a,'thread',ink,s.emphasisedThreads?.includes(i)?2.6:1.8)));
   const index=s.final.findIndex(e=>['slit','hole','proposal'].includes(e.kind));
   const angles=s.name.startsWith('problem-corner-')?cornerThreadAngles(s,threads):[];
-  const staticResult=['problem-corner-vertex-point','problem-corner-bridge'].includes(s.name);
+  const staticResult=s.name==='problem-corner-vertex-point';
   const lengths=staticResult?cornerThreadLengths(s,threads):[];
   const result=[...s.final.slice(0,index),...threads,...s.final.slice(index),...angles,...lengths];
   const frames=s.frames.flatMap(f=>f.stage==='result'?[

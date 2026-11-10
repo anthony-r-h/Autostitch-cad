@@ -9222,7 +9222,7 @@
         "A6"
       ],
       "animated": true,
-      "status": "Controlled comparison on identical guides: eight intervals per arm, endpoint lengths halfway between vertex and A6 nominal phases. Vertex point, Bridge and shared diagonal slit keep each arm nominal, as the tool lands. Vertex point and shared diagonal slit absorb residual only in the final connections to the vertex; Bridge connects the last nominal slits directly. Only A6 redistributes gaps within the arms. Vertex point and shared diagonal slit tie A6 in absolute adjustment; gap counts differ. Analytic illustration; Bridge and one final gap in each vertex treatment fall outside the pitch bounds. This chosen phase balance is not a general performance claim. Vertex point and Bridge are static final thread views, with lightened holes and length dimensions; red angle annotations remain visible. Other treatments retain their construction sequences. Angles are relative to each arm; Bridge uses its single thread against both arms.",
+      "status": "Eight nominal intervals per arm. Vertex point and shared diagonal slit retain the outer endpoints; their final connections absorb residual. A6 redistributes within the arms. Bridge translates the whole vertical row between matching ordinary visible thread length and balancing the two thread angles; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and four-second endpoint holds. Its still and table use the length-matched state. Analytic illustration, not native qualification.",
       "inputs": {
         "diagonalCase": "ILL-SELLIER-CORNER",
         "armIntervals": 8
@@ -9239,8 +9239,7 @@
           "path": "examples/illustrated/assets/problem-corner-bridge",
           "treatment": "gap",
           "label": "Bridge",
-          "animated": false,
-          "staticGif": true
+          "animated": true
         },
         {
           "path": "examples/illustrated/assets/problem-corner-mirrored",

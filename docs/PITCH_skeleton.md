@@ -1,128 +1,170 @@
 # Introduction
 
-- A seam path expresses design intent; making it requires exact positions and orientations for individual openings
-- Bridge design, geometric layout and physical execution: turn spacing and junction judgement into instructions someone can follow
-- Pricking-iron slits have length and orientation as well as position; diagonal slits and their transitions shape the visible stitching
-- Seam lengths and required features rarely fall on exact multiples of nominal pitch
-- Manual arrays create many objects and make edits tedious; manual placement depends on spacing and junction judgement
-- Encode that judgement in explicit rules, repeatable output and useful rejection when no valid layout exists
-- An axiomatic approach grounded in manufacturability, visual balance and precision
-- Bring specialized stitch-layout tools into established CAD: pitch, landmarks, corners and shared junctions from editable pattern guides
+## From design to execution
 
-# Even Big Fashion Gets It Wrong
+- Design sets the seam path and its intended appearance; making it requires discrete, oriented openings
+- Geometric layout is a constrained placement problem: choose opening positions, orientations and gap counts while preserving the intended seam
+- Physical execution produces those openings; craft judgement connects the design, geometric layout and tool use
 
-Research note: Anthony to find stitching examples from:
+## Pricking irons and nominal pitch
 
-- Hermès
-- Louis Vuitton
-- Loewe
-- Delvaux
-- Berluti
-- Valextra
-- Gucci
-- Bottega Veneta
+- Round holes are rotationally symmetric; slits have length, width and orientation that shape the visible thread
+- A multi-tooth iron fixes the spacing between openings, but seam lengths rarely divide into whole nominal gaps
+- Where and how much spacing changes affects both appearance and tool use
+- Adjusted gaps can require individual placement with an awl or single tooth
+
+## From manual judgement to explicit rules
+
+- Digital arrays create many objects; fitting and revising the seam requires manual edits
+- Physical layout relies on judgement developed through practice, repeated for each pattern
+- Encode that judgement in repeatable placement instructions: preserve nominal spacing where possible and identify every adjustment
+- Reject layouts that cannot satisfy the rules so the design can be revised
+- Ground the axioms in manufacturability with the intended tools, visual balance through consistent lean and deliberate adjustments, and precision through explicit constraints and reproducible geometry
 
 # Terms
 
-- [Glossary](GLOSSARY.md): guide, slit, gap, landmark, junction and arm
+- **Guide and stitch line:** the guide carries the slit centres; one stitch line can follow several connected guides
+- **Slit and lean:** a slit has length, width and an axis between its tips. Lean is the angle of that axis to the guide's local tangent
+- **Gap and pitch:** a gap is the direct distance between consecutive opening centres; pitch $p$ is the target. On a curve, the gap is a chord, while arc length follows the guide
+- **Nominal, adjusted and protected gaps:** nominal gaps equal $p$; adjusted gaps depart from $p$ within the fitting bounds; protected gaps stay nominal
+- **Landmark and free span:** a landmark fixes a nominally spaced pair of slits around a reference position, with no opening at the reference itself. Endpoints, landmarks and junctions bound the free spans where the remaining openings are fitted
+- **Junction and arms:** a junction is where stitch lines meet. Each direction away from it is an arm: two at a corner, three at a T, four at an X. A through-line contributes two arms
+- **Virtual slit:** an unpunched construction slit toward which an arm is laid out. In an Autostitch corner, the terminal virtual slit tips meet at the shared hole
+- **Clearance:** the shortest edge-to-edge distance between separate openings, accounting for slit width and hole diameter. The margin is the minimum allowed clearance
+- **Residual and adjustment:** residual is the length left over or missing before fitting; adjustment is the change made to a gap. Absolute adjustment sums gap changes, counting compression and extension positively. On curves, residual uses arc length and adjustment uses chord length
+- **Absolute stitch-length deviation:** total absolute difference between visible thread lengths and nominal straight-row stitches. It captures changes from spacing, curvature and corner treatment; it does not measure thread direction
 
 ![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.png)
 
-# The spacing problem
+# Two layout problems
+
+- Spacing: fit a seam whose length is not a whole number of nominal gaps
+- Corners: join rows of oriented slits while controlling the opening and thread at the turn
+- Compare how each solution uses the iron, where adjustments occur, and what changes in the visible stitching
+
+## The spacing problem
 
 - Six slits on a $15.3\,\mathrm{mm}$ guide, at $3\,\mathrm{mm}$ nominal pitch
 - Both endpoints must be met; the nominal row leaves a $0.30\,\mathrm{mm}$ residual
 - Red segments and numbers show the residual; bracketed dimensions show gap lengths
 
-## Even spacing
+### Even spacing
 
 ![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.gif)
 
 - Five equal $3.06\,\mathrm{mm}$ gaps
-- Uniform spacing; every gap requires individual placement
+- A fit-to-length CAD pattern: divide the line equally between the chosen openings
+- Each stitch line gets its own pitch, determined by its length and gap count
+- Spacing is uniform within each line; different lines generally have different pitches
+- The chosen iron cannot place those runs at their new pitches; every gap needs individual placement
 
-## End adjustment
+### End adjustment
 
 ![End adjustment absorbs the residual in the last gap](../examples/illustrated/assets/pitch-end.gif)
 
 - Four nominal gaps; one $3.30\,\mathrm{mm}$ gap at the end
-- One individual placement, beside the endpoint
+- The last stitch takes the entire residual, making it longer or shorter than the rest
+- Sharing the residual across more gaps makes each change smaller and easier to blend into the run, at the cost of more individual placements
 
-## Autostitch
+### Autostitch
 
 ![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.gif)
 
 - Four nominal gaps; one $3.30\,\mathrm{mm}$ gap in the centre
-- One individual placement; nominal spacing near both endpoints
+- Formalizes those decisions: bound each pitch change, use the fewest adjusted gaps needed, and centre them within the available span
+- Share the residual equally across those gaps; keep the remaining runs at the tool pitch
 
-| Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: | ---: |
-| Even spacing | $5$ | $0.300$ | $0.300$ | $0.267$ |
-| End adjustment | $1$ | $0.300$ | $0.300$ | $0.270$ |
-| Autostitch | $1$ | $0.300$ | $0.300$ | $0.270$ |
+### Spacing tradeoffs
 
-- End adjustment and Autostitch: identical totals, different placement
+- Even spacing solves the visual pattern; it gives up the common tool pitch across stitch lines
+- End adjustment preserves the tool pitch through most of the line, but leaves one visibly longer or shorter stitch at the endpoint
+- Autostitch borrows equal spacing for a selected adjustment block. The remaining runs keep the tool pitch; the correction sits away from fixed features
 
-# The corner problem
+## The corner problem
 
-- Two perpendicular guides with eight intervals per arm, at $3\,\mathrm{mm}$ nominal pitch
-- Arm lengths: $23.472\,\mathrm{mm}$ and $23.954\,\mathrm{mm}$; chosen for equal absolute adjustment between the diagonal slit and Autostitch
-- The same outer endpoints apply to every treatment
-- The choice of corner opening changes the adjoining thread and the spans available for fitting
-- Degree labels: entering and leaving thread angles relative to their respective arms
-- Vertex point and Bridge: length brackets measure visible thread at the corner
+- At a corner, two rows of angled slits must join into one continuous seam
+- How those rows meet determines where the thread turns, whether slit lean stays consistent, and the length and angle of the adjoining stitches
+- Red angles measure the entering and leaving thread against their respective guides, showing how each stitch approaches or leaves the corner
 
-## Vertex point
+### Vertex point
 
 ![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.png)
 
 - Nominal arm spacing, as the tool lands; round hole at the vertex
 - Residual remains in the two final gaps into the hole
 - Retains the intended vertex
-- Changes the direction and visible length of the two adjoining stitches
+- Keeps the arm runs nominal, at the cost of concentrating the spacing and thread-angle changes at the vertex
 
-## Bridge
+### Bridge
 
-![Bridge connecting rows that stop short of the vertex](../examples/illustrated/assets/problem-corner-bridge.png)
+![Bridge moves between matching stitch length and balancing the corner angles](../examples/illustrated/assets/problem-corner-bridge.gif)
 
-- Nominal arm spacing, as the tool lands; thread connects the last slit on each arm
-- No corner opening; thread bypasses the vertex
-- Bridging gap: $3.851\,\mathrm{mm}$, above the $3.3\,\mathrm{mm}$ adjustment limit
+- Thread bridges the last slit on each arm, bypassing the vertex
+- Move the vertical run to match the ordinary stitch length, or to balance the two thread angles
+- Both positions retain nominal arm spacing; the far endpoint moves with the row
+- The table uses the position that matches ordinary stitch length
 
-## Shared diagonal slit with mirrored lean
+### Shared diagonal slit with mirrored lean
 
 ![A shared diagonal slit joins the top row to a row with mirrored lean](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
 - Shared diagonal slit at the vertex; mirrored lean on one arm
 - Nominal arm spacing; residual absorbed only in each final gap into the shared slit
-- Retains the intended vertex; relaxes consistent lean
+- Retains the intended vertex; requires mirrored lean on one arm and a separately oriented corner slit
 - Corner slit sets the direction and visible length of the two adjoining stitches
 - Final gaps: $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first falls below Autostitch's $2.7\,\mathrm{mm}$ limit
 
-## Autostitch
+### Autostitch
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
 - Shared round hole where the terminal virtual slit tips meet
 - Consistent lean throughout; bounded pitch adjustments centred within each free span
 - Hole offset from the guide vertex
-- Same absolute adjustment as the diagonal slit, distributed across three gaps instead of two
+- Preserves the arm lean and bounds each pitch change, using three adjusted gaps instead of the diagonal slit's two
 
-| Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute residual ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: | ---: |
-| Vertex point | $2$ | $0.575$ | $0.575$ | $0.470$ |
-| Bridge | $1$ | $0.851$ | $0.851$ | $1.105$ |
-| Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.575$ | $0.407$ |
-| Autostitch | $3$ | $0.575$ | $0.575$ | $0.516$ |
+| Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
+| --- | ---: | ---: | ---: |
+| Vertex point | $2$ | $0.575$ | $0.470$ |
+| Bridge | $1$ | $0.041$ | $0.000$ |
+| Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.407$ |
+| Autostitch | $3$ | $0.575$ | $0.516$ |
 
-- Totals include out-of-bound gaps in the comparison treatments
+- Totals include out-of-bound gaps in the vertex treatments
+
+### Corner tradeoffs
+
+- Keeping the opening at the vertex, keeping slit lean consistent and keeping the arm gaps nominal lead to different corner treatments
+- Shared diagonal slit with mirrored lean gives less visible thread-length deviation here; Autostitch keeps consistent lean and bounded gaps, with an offset corner hole
+- Autostitch ties the diagonal slit on total adjustment but changes more gaps. The choice depends on which geometric and manufacturing rules the pattern must preserve
 
 # Why CAD
 
+## Keep the pattern in its design environment
+
 - Exact curves, dimensions, snaps and references define where the stitching belongs
-- Pattern guides and generated openings stay in the same drawing
-- Blocks contain the generated geometry; source guides remain editable
-- Use existing drafting tools, libraries and production drawings
+- Retain existing drafting tools, libraries, constraints and production drawings
+- Pattern guides and generated openings stay in the same drawing; source guides remain editable
+
+## What arrays and linetypes leave unresolved
+
+- Arrays repeat geometry; the user still resolves competing spacing and corner requirements
+- Linetypes show a repeated pattern without specifying every opening's position
+- Stitch layout needs tool geometry, protected features and fitting rules alongside the CAD geometry
+
+## Specialized leathercraft CAD
+
+- Comparison scope: Stitch Hero, Leathercraft CAD, LeatherCAD and EasyPatt
+- Compare hole generation, pitch fitting, corner treatment, closure, slit profiles and matching holes across pieces
+- Check each application's support for those features and its native CAD integration
+- Separate design environments add project files and DXF/SVG transfers; editing continuity and retained CAD relationships matter
+
+## The plugin approach
+
+- Add stitch-placement rules to the CAD tools already used for the pattern
+- Keep generated openings in manageable blocks on dedicated layers
+- BricsCAD implementation; a potential AutoCAD port requires checking API compatibility
+- Compare native drafting, stitch placement, tool profiles, file transfers and execution instructions across general CAD, specialized CAD and the plugin
 
 # Axioms
 
@@ -199,6 +241,9 @@ Research note: Anthony to find stitching examples from:
 
 # Model and solution
 
+- Resolve the continuous guide into ordered openings with fixed tool geometry
+- Satisfy the geometric constraints, minimize nonstandard gaps and specify their positions
+
 ## Fit the free spans
 
 - Fit between the fixed openings at endpoints, landmarks and junctions
@@ -222,12 +267,64 @@ Research note: Anthony to find stitching examples from:
 
 ![A5 and A7: no permitted gap count fits the fixed span](../examples/illustrated/assets/fit-rejected.gif)
 
+# Even Big Fashion Gets It Wrong
+
+Research note: Anthony to find stitching examples from:
+
+- Hermès
+- Louis Vuitton
+- Loewe
+- Delvaux
+- Berluti
+- Valextra
+- Gucci
+- Bottega Veneta
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Pattern workflow
 
-- Draw the guides; connect those belonging to one stitch line
-- Set pitch, extent, direction and landmarks
-- Generate contained stitch blocks with opening geometry and placement notation
+## Design intent
+
+- Draw the seam with native CAD tools; connect guides belonging to one stitch line
+- Set pitch, extent, direction, landmarks and junctions
+
+## Geometric layout
+
+- Resolve the position and orientation of every opening, including shared openings and closure
+- Generate stitch blocks with opening geometry, adjustment marks and gap measurements
 - Edit the source guides and regenerate
+
+## Physical execution
+
+- Follow the resolved positions and local spacing instructions
+- Punching accuracy and stitching technique remain physical skills
+- Variable-pitch equipment provides placement freedom; the layout still has to determine where that freedom is used
+- Explicit geometry communicates those decisions between designer and maker, and across production runs
 
 # Can you really?
 
@@ -240,9 +337,39 @@ Research note: Anthony to find stitching examples from:
 
 # Who it helps
 
-- Makers: explicit hole positions and spacing adjustments
-- Pattern designers: reusable layouts that remain editable
-- Small-batch production: repeatable placement instructions
+## Craft and pattern design
+
+- Make spacing and corner judgement available as reusable instructions
+- Reduce layout effort while keeping control of the pattern
+- More consistent layout across makers; physical execution still depends on skill
+
+| Experience | Main benefit |
+| --- | --- |
+| Beginner | Usable geometric layouts with less prior layout experience |
+| Intermediate | More precise, consistent placement decisions |
+| Advanced | Fewer manual adjustments and easier revision |
+| Expert | Efficiency, repeatability and standardization |
+
+## Manufacturing
+
+- Identify, quantify and locate nonstandard gaps before production
+- Manual and semi-automated work: fewer spacing decisions left to the operator; clearer instructions for controlled placement
+- Repeated production: the same design carries the same placement decisions across operators and runs
+- CNC planning: resolved openings can supply placement geometry; variable spacing may add little execution effort when the equipment supports it
+- Equipment integration and achievable tolerances depend on the production process
+
+## Value by application
+
+- Additional precision matters when stitch appearance or opening placement affects the product
+
+| Context | Expected value |
+| --- | --- |
+| Ordinary industrial textiles | Limited where existing processes already meet placement tolerances |
+| Precision leather goods | Control of visible regularity, symmetry and consistency |
+| Small-batch luxury production | Repeatability with less manual layout effort |
+| Bespoke leathercraft | Control over irregular geometry and individual pieces |
+| Fully automated production | Explicit placement geometry for manufacturing planning, subject to equipment integration |
+| Footwear and technical textiles | Useful where visible stitching or perforation placement needs tight control |
 
 # Reference
 

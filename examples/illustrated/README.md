@@ -14,8 +14,9 @@ Use **Build → Adjustment → Stitch**, in that order.
 
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
+- Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with four-second holds at both positions
 - Static stitched figures are the final Stitch state, including the same lightened measurements
-- Keep existing image paths working when changing animation to static. Vertex point and Bridge export single-frame GIFs alongside their PNG/SVG stills; the GIFs contain no animation or loop
+- Keep existing image paths working when changing animation to static. Vertex point exports a single-frame GIF alongside its PNG/SVG stills; the GIF contains no animation or loop
 - Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
 
 ## Spacing setup
@@ -46,15 +47,17 @@ Each solution starts at the problem's completed residual state and proceeds dire
 
 ## The corner problem
 
-`ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare Vertex point, Bridge, Shared diagonal slit with mirrored lean, and Autostitch. Each treatment retains the same outer endpoints. The bridge bypasses the vertex and has one off-pitch gap outside the adjustment bounds.
+`ILL-CORNER-PROBLEM`: the same right-angle guides, at $3\,\mathrm{mm}$ pitch with eight intervals per arm. Compare Vertex point, Bridge, Shared diagonal slit with mirrored lean, and Autostitch. Vertex point, the diagonal slit and Autostitch retain the outer endpoints. Bridge moves its vertical row, including the far endpoint, while retaining nominal spacing within both arms.
 
 ![Nominal rows joined by a round hole at the vertex](assets/problem-corner-vertex-point.png)
 
-![Stop short and bridge between the arms](assets/problem-corner-bridge.png)
+![Compare bridge length and angle balance](assets/problem-corner-bridge.gif)
 
 ![Shared diagonal slit with mirrored lean](assets/problem-corner-mirrored.gif)
 
-The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift from the guide vertex to the A6 virtual centre along each arm's incoming direction. This gives approximately $23.471688\,\mathrm{mm}$ and $23.953779\,\mathrm{mm}$. Vertex point and Bridge keep the arm rows nominal from the outer endpoints. Vertex point absorbs the residual in the final connections to its fixed hole; Bridge joins the last nominal slits directly. A6 alone uses the minimum-adjustment selector and reserves a nominal step next to each virtual slit. The controlled balance is a fixture choice, not a general result for arbitrary endpoints.
+The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift from the guide vertex to the A6 virtual centre along each arm's incoming direction. This gives approximately $23.471688\,\mathrm{mm}$ and $23.953779\,\mathrm{mm}$. Vertex point keeps the arm rows nominal from the outer endpoints. Vertex point absorbs the residual in the final connections to its fixed hole; Bridge joins the last nominal slits directly. A6 alone uses the minimum-adjustment selector and reserves a nominal step next to each virtual slit. The controlled balance is a fixture choice, not a general result for arbitrary endpoints.
+
+Bridge translates the vertical run between two calculated positions. Matching ordinary visible thread length moves it up $1.3273\,\mathrm{mm}$, giving $2.0870\,\mathrm{mm}$ of thread and angles $47.3^\circ$ and $42.7^\circ$. Balancing the angles moves it up $1.4463\,\mathrm{mm}$, giving $2.0012\,\mathrm{mm}$ of thread and two $45^\circ$ angles. Hold each for four seconds and interpolate over $1.5\,\mathrm{s}$ each way. The still uses the length-matched position. The whole row and its end marker move; guides and incoming row stay fixed.
 
 The mirrored treatment reuses `diagonalCornerScene` with the Sellier construction parameters from `ILL-SELLIER-CORNER`, extended to the common arm lengths. Its rows stay nominal from the outer endpoints; only the final gaps into the vertex slit absorb the residuals. These are approximately $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first is below the Autostitch gap bound. Total absolute adjustment matches A6, but the adjusted-gap count does not. The top row starts punched; the vertical row mirrors in place before the shared diagonal slit appears.
 
@@ -66,14 +69,14 @@ Motion shows planning revisions, not physical punching order; the analytic const
 
 ## Comparison notation and totals
 
-- Vertex point and Bridge are static final thread views. Holes and length dimensions use the same light grey as the final animated views; angle annotations stay red. Length brackets measure visible thread between slit tips or the round-hole centre, in millimetres
+- Vertex point is a static final thread view. Holes and length dimensions use the same light grey as the final animated views; angle annotations stay red. Length brackets measure visible thread between slit tips or the round-hole centre, in millimetres
 - Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values
 - Static diagrams use the same final appearance; glossary figures without thread retain their contrast
-- The tables in the pitch exclude the setup fixture and are calculated by `pitchComparisonMetrics` and checked by `tests/validate-illustrated.mjs`
+- The corner table in the pitch uses `pitchComparisonMetrics`; `tests/validate-illustrated.mjs` checks the published totals
 - Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
-- Comparison totals include out-of-bound bridge and diagonal-corner gaps. Visible thread-length deviation includes the actual connections to the Autostitch round hole
+- Comparison totals include out-of-bound final gaps in the vertex treatments. The Bridge totals and still use its ordinary-length position. Visible thread-length deviation includes the actual connections to the Autostitch round hole
 
 Recalculate totals from the repository root:
 

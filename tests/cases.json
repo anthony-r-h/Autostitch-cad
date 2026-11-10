@@ -9629,24 +9629,27 @@
         "A3",
         "A4",
         "A5",
-        "A6",
         "A7",
+        "A8",
         "A9",
         "A10"
       ],
       "animated": true,
-      "status": "Analytic worked solution combining two landmarks, a two-arm corner and a curved T junction. Fixed features, span fitting and all-pairs clearance checked independently; not native CAD output.",
+      "status": "Analytic single-line adaptation of the emblem's rounded A: two landmarks, two crossbar T junctions and a circular crown with shared slits at its smooth joins. Not native CAD output.",
       "inputs": {
-        "spanLength": 9.5,
-        "arcRadii": [18, 12],
+        "radius": 9.25,
+        "springHeight": 31.25,
+        "crossbarHeight": 21.75,
+        "landmarkHeight": 10.75,
         "durationScale": 2,
+        "redistributionSpeed": 1.5,
         "width": 0.3,
         "margin": 0.2,
         "holeDiameter": 0.5,
         "view": {
-          "x": 380,
-          "y": 90,
-          "scale": 14
+          "x": 300,
+          "y": 510,
+          "scale": 11
         }
       },
       "assets": [
@@ -9657,9 +9660,9 @@
       "terms": [
         "Mark landmarks",
         "Fixed landmark pairs",
-        "Junctions",
+        "Resolve junctions",
         "Free spans",
-        "Redistribute"
+        "Redistribute residuals"
       ],
       "notation": [
         "s",
@@ -9671,10 +9674,10 @@
       ],
       "reveal": [
         "Label each major step in the same position. Mark both landmarks together, then fix both landmark pairs and endpoint slits together.",
-        "Construct both junctions together: reserve their neighbours, continue the corner neighbours to their virtual slits, then reveal both shared holes.",
-        "Identify all six free spans together: three straight and three circular spans, each 9.5 mm long.",
-        "Show all residuals together, then redistribute across all spans simultaneously; fit straight gaps to 3.25 mm and curved chords to approximately 3.24 mm.",
-        "Keep fixed openings stationary, reveal thread and hold for eight seconds. Every frame runs at half speed."
+        "Resolve both T junctions together: reserve their three nominal neighbours and shared round holes. Reuse one slit at each smooth straight-to-crown join.",
+        "Identify all eight free spans together: seven straight spans and the semicircular crown.",
+        "Show all residuals together, then redistribute across all spans simultaneously. The crown compresses; the straight spans extend. The redistribution phase runs 50 percent faster than the previous worked example.",
+        "Keep fixed openings stationary, reveal thread and hold for eight seconds. Other phases retain the half-speed timing."
       ],
       "threadReveal": {
         "holdCentiseconds": 800,

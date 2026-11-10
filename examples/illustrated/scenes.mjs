@@ -337,110 +337,95 @@ function cornerScene() {
 
 function modelSolutionScene() {
   const spec=catalog.illustrations.find(item=>item.id==='ILL-MODEL-SOLUTION');
-  const {view,spanLength:D,arcRadii,durationScale}=spec.inputs,p=spec.pitch,h=spec.slitLength/2;
-  const ui=axis(alpha),uo=axis(alpha-Math.PI/2);
-  const joint=[h*uo[0],-h*ui[1]],ci=add(joint,mul(ui,h)),co=add(joint,mul(uo,-h));
-  const near=[ci[0]-p,0],start=[near[0]-2*D-p,0],stem=[0,co[1]-p-D],branch=add(stem,[0,-p]);
-  const left=[start[0]+D,0],right=[left[0]+p,0],landmark=(left[0]+right[0])/2;
-  const straight=(a,b,angle,offset)=>({a,b,angle:()=>angle,advance:q=>q,offset,
-    point:t=>add(a,mul(add(b,mul(a,-1)),t/D)),fit:selectFit({D,p})});
-  const spans=[straight(start,left,alpha,36),straight(right,near,alpha,36),
-    straight([0,co[1]-p],stem,alpha-Math.PI/2,44)];
-  const arcs=arcRadii.map((R,i)=>{
-    const sign=i===0?-1:1,step=2*Math.asin(p/(2*R)),sweep=D/R;
-    const point=theta=>add(branch,[sign*R*Math.sin(theta),R*(Math.cos(theta)-1)]);
-    return {R,sign,step,sweep,point,end:i===0?2*step+2*sweep:step+sweep,
-      angle:theta=>(i===0?Math.PI+theta:-theta)+alpha};
-  });
-  for(const [arm,arc] of arcs.entries())for(const origin of arm===0?[arc.step,2*arc.step+arc.sweep]:[arc.step]) {
-    spans.push({a:arc.point(origin),b:arc.point(origin+arc.sweep),arc,origin,offset:arm===0?36:-36,
-      point:t=>arc.point(origin+t/arc.R),angle:t=>arc.angle(origin+t/arc.R),
-      advance:q=>2*arc.R*Math.asin(q/(2*arc.R)),fit:selectFit({p,R:arc.R,sweep:arc.sweep})});
-  }
+  const {view,radius:R,springHeight:H,crossbarHeight:B,landmarkHeight:L,durationScale,redistributionSpeed}=spec.inputs,p=spec.pitch;
+  const left=[-R,B],right=[R,B],leftJoin=[-R,H],rightJoin=[R,H];
+  const straight=(a,b,offset)=>{
+    const d=add(b,mul(a,-1)),D=Math.hypot(...d),angle=Math.atan2(d[1],d[0])+alpha;
+    return {D,offset,point:t=>add(a,mul(d,t/D)),angle:()=>angle,advance:q=>q,fit:selectFit({D,p})};
+  };
+  const crown={D:Math.PI*R,offset:32,point:t=>[R*Math.cos(Math.PI-t/R),H+R*Math.sin(Math.PI-t/R)],
+    angle:t=>Math.PI/2-t/R+alpha,advance:q=>2*R*Math.asin(q/(2*R)),fit:selectFit({R,sweep:Math.PI,p})};
+  const spans=[straight([-R,0],[-R,L-p/2],38),straight([-R,L+p/2],[-R,B-p],38),
+    straight([-R,B+p],leftJoin,38),crown,straight(rightJoin,[R,B+p],38),
+    straight([R,B-p],[R,L+p/2],38),straight([R,L-p/2],[R,0],38),straight([-R+p,B],[R-p,B],-36)];
   for(const span of spans) {
-    if(!span.fit)throw new Error('Model illustration has no span fit.');
+    if(!span.fit)throw new Error('Model A has no span fit.');
     span.fitted=[0];
     for(let i=0;i<span.fit.n;i++)span.fitted.push(span.fitted.at(-1)+span.advance(
       i>=span.fit.i&&i<span.fit.i+span.fit.k?span.fit.correctedPitch:p));
-    span.initial=span.fitted.map((_,i)=>i===span.fit.n?D:i*span.advance(p));
+    span.initial=span.fitted.map((_,i)=>i===span.fit.n?span.D:i*span.advance(p));
   }
-  const arc=arcs[0],landmarkAngle=arc.step+arc.sweep+arc.step/2;
-  const landmarkPoint=arc.point(landmarkAngle),normal=[-Math.sin(landmarkAngle),Math.cos(landmarkAngle)];
-  const base=[worldLine(start,[0,0],view),worldLine([0,0],branch,view),
-    worldLine([0,0],ci,view,'extension',guideInk,1,true),worldLine([0,0],co,view,'extension',guideInk,1,true),
-    ...arcs.flatMap(a=>Array.from({length:40},(_,i)=>worldLine(a.point(a.end*i/40),a.point(a.end*(i+1)/40),view))),
-    ...routeMarks(project(start,view),project(arcs[0].point(arcs[0].end),view),[1,0],[-Math.cos(arcs[0].end),Math.sin(arcs[0].end)]),
-    notationText(add(project(arcs[1].point(arcs[1].end),view),[12,15]),'e','end'),
-    notationText(add(project(joint,view),[20,12]),'j','junction'),
-    notationText(add(project(branch,view),[0,-23]),'j','junction')];
-  const s=scene('model-solution','Fix landmarks and junctions, then fit the free spans',spec.id);
-  const step=label=>termLabel([170,210],label);
+  const base=[worldLine([-R,0],leftJoin,view),worldLine([R,0],rightJoin,view),worldLine(left,right,view),
+    ...Array.from({length:60},(_,i)=>worldLine(crown.point(crown.D*i/60),crown.point(crown.D*(i+1)/60),view)),
+    ...routeMarks(project([-R,0],view),project([R,0],view),[0,-1],[0,1]),
+    ...[left,right].map((point,i)=>notationText(add(project(point,view),[i===0?-23:23,-15]),'j','junction'))];
+  const s=scene('model-solution','Fit the rounded A: landmarks, junctions, free spans and residuals',spec.id);
+  const step=label=>termLabel([300,435],label);
   frame(s,[...base,...step('Mark landmarks')],100,'guides');
-  base.push(worldLine([landmark,-.8],[landmark,.8],view,'landmark',ink,2),
-    notationText(add(project([landmark,0],view),[0,27]),'L1','landmark'),
-    worldLine(add(landmarkPoint,mul(normal,-.8)),add(landmarkPoint,mul(normal,.8)),view,'landmark',ink,2),
-    notationText(add(project(landmarkPoint,view),[-25,-12]),'L2','landmark'));
+  for(const [i,x] of [-R,R].entries())base.push(worldLine([x-.8,L],[x+.8,L],view,'landmark',ink,2),
+    notationText(add(project([x,L],view),[i===0?-25:25,4]),`L${i+1}`,'landmark'));
   frame(s,[...base,...step('Mark landmarks')],140,'landmarks');
-  const fixed=[...base,...[start,left,right].flatMap(c=>opening(c,alpha,view)),
-    ...opening(spans[3].b,spans[3].angle(D),view),...opening(spans[4].a,spans[4].angle(0),view),
-    ...[4,5].flatMap(i=>opening(spans[i].b,spans[i].angle(D),view))];
+  const fixed=[...base,...[-R,R].flatMap((x,i)=>[0,L-p/2,L+p/2].flatMap(y=>opening([x,y],(i===0?Math.PI/2:-Math.PI/2)+alpha,view)))];
   frame(s,[...fixed,...step('Fixed landmark pairs')],140,'fixed-features');
-  fixed.push(...opening(near,alpha,view),...opening(spans[2].a,alpha-Math.PI/2,view),
-    ...opening(stem,alpha-Math.PI/2,view),
-    ...[3,5].flatMap(i=>opening(spans[i].a,spans[i].angle(0),view)));
-  frame(s,[...fixed,...step('Junctions')],60,'junction-neighbours');
-  fixed.push(...opening(ci,alpha,view,{virtual:true}),...opening(co,alpha-Math.PI/2,view,{virtual:true}));
-  frame(s,[...fixed,...step('Junctions')],80,'junction-virtuals');
-  fixed.push(hole(joint,view),hole(branch,view));
-  frame(s,[...fixed,...step('Junctions')],140,'junction-holes');
-  const spanDimensions=spans.flatMap((span,i)=>{
-    if(!span.arc)return measure(span.a,span.b,D.toFixed(2),view,i===2?65:-55).map(e=>
-      e.type==='text'&&i===2?{...e,p:add(e.p,[23,9])}:e);
-    // A curved free span is measured along its arc, not by its endpoint chord.
-    const {arc,origin}=span,radius=arc.R+48/view.scale;
-    const point=theta=>add(add(branch,[0,-arc.R]),[arc.sign*radius*Math.sin(theta),radius*Math.cos(theta)]);
-    const elements=Array.from({length:20},(_,j)=>worldLine(point(origin+arc.sweep*j/20),point(origin+arc.sweep*(j+1)/20),view,'dimension',construction,.8));
-    for(const theta of [origin,origin+arc.sweep]) {
-      const n=[arc.sign*Math.sin(theta),Math.cos(theta)],c=point(theta);
-      elements.push(worldLine(add(c,mul(n,-4/view.scale)),add(c,mul(n,4/view.scale)),view,'dimension',construction,.8));
+  for(const [i,x] of [-R,R].entries()) {
+    fixed.push(...[B-p,B+p,H].flatMap(y=>opening([x,y],(i===0?Math.PI/2:-Math.PI/2)+alpha,view)),
+      ...opening([x+(i===0?p:-p),B],alpha,view));
+  }
+  frame(s,[...fixed,...step('Resolve junctions')],100,'junction-neighbours');
+  const holes=[hole(left,view),hole(right,view)];fixed.push(...holes);
+  frame(s,[...fixed,...step('Resolve junctions')],140,'junction-holes');
+  const dimensions=spans.flatMap(span=>{
+    if(span!==crown)return measure(span.point(0),span.point(span.D),span.D.toFixed(2),view,span.offset);
+    const outer=t=>[Math.cos(Math.PI-t/R)*(R+3.5),H+Math.sin(Math.PI-t/R)*(R+3.5)];
+    const elements=Array.from({length:40},(_,i)=>worldLine(outer(span.D*i/40),outer(span.D*(i+1)/40),view,'dimension',construction,.8));
+    for(const t of [0,span.D]) {
+      const c=outer(t);elements.push(worldLine(add(c,[-.35,0]),add(c,[.35,0]),view,'dimension',construction,.8));
     }
-    elements.push(text(add(project(point(origin+arc.sweep/2),view),[arc.sign*8,-12]),D.toFixed(2)));
-    return elements;
+    return [...elements,text(add(project(outer(span.D/2),view),[0,-9]),span.D.toFixed(2))];
   });
-  frame(s,[...fixed,...spanDimensions,...step('Free spans')],160,'free-spans');
-  const cornerHole=hole(joint,view),branchHole=hole(branch,view);
-  const fixedConstruction=[...base,...opening(ci,alpha,view,{virtual:true}),...opening(co,alpha-Math.PI/2,view,{virtual:true}),cornerHole,branchHole];
+  frame(s,[...fixed,...dimensions,...step('Free spans')],160,'free-spans');
+  const key=point=>point.map(v=>v.toFixed(7)).join(',');
   const draw=(t,residual=false)=>{
-    const elements=[...fixedConstruction],paths=[];
-    for(const [arm,span] of spans.entries()) {
-      const row=span.initial.map((v,i)=>lerp(v,span.fitted[i],t)),points=row.map(span.point);
-      const changed=row.slice(1).map((v,i)=>Math.abs(v-row[i]-span.advance(p))>1e-6),path=[];
-      changed.forEach((yes,i)=>{if(yes)elements.push(...highlightGap(
-        Array.from({length:span.arc?13:2},(_,j)=>span.point(lerp(row[i],row[i+1],j/(span.arc?12:1)))),view));});
-      for(const [i,c] of points.entries()) {
-        const slit=opening(c,span.angle(row[i]),view,{marked:changed[i-1]||changed[i]});
-        elements.push(...slit);path.push(slit[0]);
+    const elements=[...base,...holes],rows=[],marked=new Set(),openings=new Map();
+    const stations=spans.map(span=>span.initial.map((v,i)=>lerp(v,span.fitted[i],t)));
+    for(const [j,span] of spans.entries()) {
+      const row=stations[j],points=row.map(span.point);
+      for(let i=0;i<row.length-1;i++)if(Math.abs(row[i+1]-row[i]-span.advance(p))>1e-6) {
+        marked.add(key(points[i]));marked.add(key(points[i+1]));
+        elements.push(...highlightGap(Array.from({length:span===crown?13:2},(_,n)=>span.point(lerp(row[i],row[i+1],n/(span===crown?12:1)))),view));
+        if(!residual)elements.push(...measure(points[i],points[i+1],Math.hypot(...add(points[i+1],mul(points[i],-1))).toFixed(2),view,span.offset).map(e=>adjustmentStyle(e)));
       }
-      paths.push(path);
       if(residual) {
-        const nominal=span.fit.n*span.advance(p),label=add(project(span.point((nominal+D)/2),view),arm===2?[30,4]:[0,-25]);
-        const points=Array.from({length:span.arc?13:2},(_,i)=>span.point(lerp(nominal,D,i/(span.arc?12:1))));
+        const nominal=span.fit.n*span.advance(p),r=span.D-nominal;
+        const points=Array.from({length:span===crown?13:2},(_,i)=>span.point(lerp(nominal,span.D,i/(span===crown?12:1))));
+        const centre=project(span.point((nominal+span.D)/2),view),label=j===7?add(centre,[0,24]):add(centre,[j<=2?-26:26,0]);
         elements.push(...points.slice(1).map((b,i)=>worldLine(points[i],b,view,'residual-dimension','angle',3)),
-          {...text(label,(D-nominal).toFixed(2)),kind:'residual-value',color:'angle'});
-      } else for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
-        points[i],points[i+1],Math.hypot(...add(points[i+1],mul(points[i],-1))).toFixed(2),view,span.offset).map(e=>
-          adjustmentStyle(arm===2&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e)));
+          {...text(label,r.toFixed(2)),kind:'residual-value',color:'angle'});
+      }
     }
-    return {elements,paths:[[...paths[0],...paths[1],cornerHole,...paths[2],branchHole,...paths[5]],
-      [branchHole,...paths[3],...paths[4]]]};
+    // The straight legs and circular crown reuse one slit at each smooth join.
+    for(const [j,span] of spans.entries())rows.push(stations[j].map(station=>{
+      const point=span.point(station),id=key(point);
+      if(!openings.has(id)) {
+        const slit=opening(point,span.angle(station),view,{marked:marked.has(id)});
+        openings.set(id,slit[0]);elements.push(...slit);
+      }
+      return openings.get(id);
+    }));
+    return {elements,paths:[[...rows[0],...rows[1],holes[0],...rows[2],...rows[3].slice(1),...rows[4].slice(1),holes[1],...rows[5],...rows[6]],
+      [holes[0],...rows[7],holes[1]]]};
   };
-  frame(s,[...draw(0,true).elements,...step('Redistribute')],180,'residuals');
-  frame(s,[...draw(0).elements,...step('Redistribute')],80,'adjustment-start');
-  for(let i=1;i<=30;i++)frame(s,[...draw(ease(i/30)).elements,...step('Redistribute')],8,'planning-revision');
-  const final=draw(1);
-  s.threadPaths=final.paths;
+  frame(s,[...draw(0,true).elements,...step('Redistribute residuals')],180,'residuals');
+  frame(s,[...draw(0).elements,...step('Redistribute residuals')],80,'adjustment-start');
+  for(let i=1;i<=30;i++)frame(s,[...draw(ease(i/30)).elements,...step('Redistribute residuals')],8,'planning-revision');
+  const final=draw(1);s.threadPaths=final.paths;
   const result=slitOutlines(finishThread(finish(s,final.elements)));
-  result.frames=result.frames.map(f=>({...f,delay:f.delay*durationScale}));
+  let elapsed=0;
+  result.frames=result.frames.map(f=>{
+    const faster=['residuals','adjustment-start','planning-revision'].includes(f.stage);
+    const next=elapsed+f.delay*durationScale/(faster?redistributionSpeed:1),delay=Math.round(next)-Math.round(elapsed);
+    elapsed=next;return {...f,delay};
+  });
   return result;
 }
 

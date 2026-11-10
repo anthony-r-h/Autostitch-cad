@@ -163,15 +163,15 @@ Two fixed arms meet at $6^\circ$. Two outer pairs pass, the next leaves only $0.
 
 ### From fixed features to a fitted layout
 
-`ILL-MODEL-SOLUTION` combines L1 on a straight arm, a two-arm corner, a curved T junction and L2 on its left curved arm, at $p=3\,\mathrm{mm}$. Reserve endpoint slits, both landmark pairs, corner neighbours and the T's three nominal neighbours before fitting.
+`ILL-MODEL-SOLUTION` adapts the rounded A from `ast:show-outline` in `examples/emblem.lsp` to one stitch line and a crossbar, at $p=3\,\mathrm{mm}$. Two leg landmarks and two T junctions fix the openings. Each smooth join between the crown and a straight leg reuses one slit.
 
-Label the five steps in one consistent position: **Mark landmarks**, **Fixed landmark pairs**, **Junctions**, **Free spans**, **Redistribute**. Reveal both landmarks together, then both pairs together. Construct the junctions in parallel, with real neighbours preceding virtual slits and shared holes. Identify all free spans together and redistribute their residuals simultaneously.
+Label the five steps in one consistent position: **Mark landmarks**, **Fixed landmark pairs**, **Resolve junctions**, **Free spans**, **Redistribute residuals**. Reveal both landmarks together, then both pairs together. Reserve both T junctions' neighbours and shared holes together. Identify all eight free spans together and redistribute their residuals simultaneously.
 
-Three straight free spans each measure $9.50\,\mathrm{mm}$ and fit with one nominal gap and two $3.25\,\mathrm{mm}$ gaps. Three circular free spans each have $9.50\,\mathrm{mm}$ arc length; their adjusted chords are approximately $3.24\,\mathrm{mm}$. Span dimensions follow the arcs; individual gap dimensions measure chords. Red guide segments identify the residuals; blue segments follow the adjusted guides.
+The straight spans measure $9.25\,\mathrm{mm}$ (twice), $6.50\,\mathrm{mm}$ (four times) and $12.50\,\mathrm{mm}$ across the crossbar. Their adjusted gaps are $3.25\,\mathrm{mm}$. The crown has radius $9.25\,\mathrm{mm}$ and arc length $29.06\,\mathrm{mm}$; four central chords compress to approximately $2.73\,\mathrm{mm}$. Its negative residual marks the nominal overrun beyond the span end. The fitted positions are symmetric. Span dimensions follow the arc; gap dimensions measure chords. Residuals are red; adjusted guide intervals are blue.
 
-Every frame runs at half speed, including the $0.6\,\mathrm{s}$ fade and eight-second thread hold. No final clearance annotation. Independent checks still cover fixed openings, chord lengths and all-pairs clearance at slit width $0.3\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and margin $0.2\,\mathrm{mm}$. This is an analytic illustration, not native CAD output.
+Build retains half-speed timing. Redistribute residuals runs $50\%$ faster than the earlier worked example, including $3.20\,\mathrm{s}$ of sliding. Keep the $0.6\,\mathrm{s}$ fade and eight-second thread hold. Independent checks cover fixed openings, chord lengths, symmetry and all-pairs clearance at slit width $0.3\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and margin $0.2\,\mathrm{mm}$. This is an analytic illustration, not native CAD output.
 
-![Fix both landmarks and junctions, then fit the remaining spans](assets/model-solution.gif)
+![Resolve the rounded A's fixed openings, then redistribute residuals](assets/model-solution.gif)
 
 ### No permitted fit
 

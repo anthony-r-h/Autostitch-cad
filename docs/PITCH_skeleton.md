@@ -162,13 +162,13 @@
 
 ## Two-arm corners
 
-- Stitch along each arm towards the corner; the virtual slit is the terminal slit of that row
-- Its position and orientation continue the approaching row
-- The two terminal virtual slits meet tip-to-tip at one shared round hole
-- Real neighbours lie on their arms, one corner step from the virtual centres
-- Corner steps satisfy $0.9p\leq q\leq1.1p$; real neighbours stay on their finite guides
+- Continue each arm's slit row towards the corner, ending in a virtual slit with the same lean
+- The virtual slits meet tip-to-tip; one round hole replaces them both
 
 ![A6: stitching approaches the corner along each arm, ending at virtual slits whose tips share one hole](../examples/illustrated/assets/axiom-corner.gif)
+
+- The last real slit on each arm stays on its guide
+- Its centre is one corner step $q$ from the virtual slit's centre, within $0.9p\leq q\leq1.1p$
 
 - The same construction applies to straight and circular arms
 

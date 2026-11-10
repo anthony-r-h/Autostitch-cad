@@ -97,7 +97,7 @@
 - Vertex point: symmetric curves meet at a round hole
 - Residual distributed equally through five gaps on each curve; the straight rows remain aligned
 
-![Fagliano: Vertex point with equal compression along both curves](../examples/counter_examples/assets/fagliano-tip-compression.gif)
+![Fagliano: Vertex point with equal compression along both curves](../examples/counter_examples/assets/fagliano-tip-compression.png)
 
 #### Autostitch
 

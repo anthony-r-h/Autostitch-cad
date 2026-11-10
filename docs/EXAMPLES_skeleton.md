@@ -1,11 +1,7 @@
 # Stitching examples
 
-- Stitching in finished work, reconstructed and compared with Autostitch
-
-- Reference diagrams interpret the photographs; slit axes are inferred from the visible thread
-- Grey outlines show the implied leather edges; their dimensions are schematic
-- Dimensions and spacing are chosen for the diagrams, using $p=3\,\mathrm{mm}$. The totals describe these reconstructions, not the products
-- Autostitch changes corner openings and sometimes start/end positions. The comparisons include those changes, as well as the distribution of adjustments
+- Examples of stitching precision in luxury goods
+- Diagrams compare the observed corner methods with Autostitch
 
 ## Cases
 
@@ -14,14 +10,14 @@
 <img src="../examples/counter_examples/hermies_sellier.webp" width="300" alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
 
 - Focus: the top corner and the decorative H below the right-hand run
-- The H is represented by six round holes; its two approaches are set to nominal pitch, with no residual
+- The H is represented by six round holes
 
 #### Reference
 
-- Shared diagonal corner slit; rear-style top row and front-style vertical row
+- Shared diagonal slit with mirrored lean: rear-style top row, front-style vertical row
 - The stitches entering the H continue the adjoining thread angles
 
-![Sellier reconstruction with a shared diagonal corner slit](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
+![Sellier: Shared diagonal slit with mirrored lean](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
 
 #### Autostitch
 
@@ -44,15 +40,15 @@
 
 #### Reference
 
-- Shared slit at the left corner; round hole at the right corner
+- Shared diagonal slit at the left corner; Vertex point at the right corner
 - The two top slits have opposing lean, giving the middle thread a horizontal line
 
-![Loewe reconstruction with a slit corner, horizontal middle thread and round corner](../examples/counter_examples/assets/loewe-hanger-reference.png)
+![Loewe: Shared diagonal slit on the left, Vertex point on the right, horizontal middle thread](../examples/counter_examples/assets/loewe-hanger-reference.png)
 
 #### Autostitch
 
 - Same guides; round holes at both corners and consistent slit lean
-- One adjusted top gap, approximately $3.249\,\mathrm{mm}$
+- One adjusted gap across the top
 - Start and end positions shift along the vertical guides to keep those rows nominal
 
 ![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.png)
@@ -71,10 +67,10 @@
 
 #### Reference
 
-- A shared slit at each corner
+- Shared diagonal slit at each corner; consistent lean around the loop
 - Each side uses equal spacing between its corner slits
 
-![Speedy reconstruction with five shared slit corners](../examples/counter_examples/assets/lv-speedy-chape-reference.png)
+![Speedy: five Shared diagonal slit corners with consistent lean](../examples/counter_examples/assets/lv-speedy-chape-reference.png)
 
 #### Autostitch
 
@@ -98,18 +94,16 @@
 
 #### Reference
 
-- Symmetric curves meet at a round hole fixed at the vertex
-- Equal compression through each curve is an assumption of this reconstruction
-- Five adjusted gaps per side, approximately $2.749\,\mathrm{mm}$ each; the straight rows remain aligned
+- Vertex point: symmetric curves meet at a round hole
+- Residual distributed equally through five gaps on each curve; the straight rows remain aligned
 
-![Symmetric reference curves compressed equally into a fixed vertex hole](../examples/counter_examples/assets/fagliano-tip-compression.gif)
+![Fagliano: Vertex point with equal compression along both curves](../examples/counter_examples/assets/fagliano-tip-compression.gif)
 
 #### Autostitch
 
 - Same guides and aligned straight rows
-- Virtual slit tips locate the shared hole slightly right of the vertex, changing the available span on each arm
-- Left: one adjusted gap of approximately $2.747\,\mathrm{mm}$
-- Right: four adjusted gaps of approximately $2.729\,\mathrm{mm}$
+- Virtual slit tips place the shared hole right of the vertex, changing the available span on each arm
+- One adjusted gap on the left; four on the right
 - Minimizing adjusted gaps gives different spacing patterns on the two sides
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)

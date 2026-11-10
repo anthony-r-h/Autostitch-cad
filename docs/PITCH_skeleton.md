@@ -236,27 +236,24 @@
 - Keep one round hole at the guide intersection. Measure from its centre to each first slit centre; on curves, use chord distance
 - Ordinary slit-to-slit gaps retain their fitting bounds; both treatments must pass clearance and leave feasible free spans
 
-#### Even number of arms: $4,6,8,\ldots$
+#### Angle rule
 
-- Always use Vertex point: the first slit on every arm is one pitch $p$ from the hole, regardless of angle
-
-#### Odd number of arms: $3,5,7,\ldots$
-
-- If any pair of arms is within $10^\circ$ of straight, use half pitch: the first slit on every arm is $p/2$ from the hole
+- Use half pitch when a pair of arms forms an angle from $160^\circ$ to $200^\circ$, inclusive: $180^\circ\pm20^\circ$
 - Otherwise use Vertex point: the first slit on every arm is $p$ from the hole
 - For curved arms, measure the angle between their outward tangents at the junction
-- The $10^\circ$ cutoff is a visual choice to review
+- Arm count does not determine the treatment; both odd- and even-arm junctions can contain a nearly straight pair
+- Open choice: place the first slits at $p/2$ on every arm, or only on qualifying pairs. Compare both in the [five-arm study](../examples/illustrated/t-junctions/index.html#five-arms)
 
 ### X junctions
 
-- An X has four arms, so it always uses Vertex point: one shared round hole with each first slit centre one pitch away
-- The rule holds regardless of whether one, both or neither opposing pair is nearly straight
+- Apply the same angle rule to an X, keeping one shared round hole
+- Check cases where one, both or neither opposing pair qualifies for half pitch
 - Include an X with a curved arm to check how curvature changes the local thread angles
 
 ### Follow-through after the decision
 
 - Revise A9, the junction construction, glossary and model; implement the selected fixed neighbour distances before fitting the remaining spans
-- Test odd and even arm counts, both sides of the $170^\circ$ boundary for odd-arm junctions, curved arms, clearance and short spans
+- Test odd and even arm counts, the inclusive $160^\circ$ and $200^\circ$ boundaries and angles just outside them, curved arms, clearance and short spans
 - Replace the current T/X illustrations and junction glossary figure; rebuild the rounded-A solution and affected connected fill/demo examples
 
 ## Clearance

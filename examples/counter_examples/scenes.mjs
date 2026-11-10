@@ -9,7 +9,9 @@ import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,fin
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
 function leatherEdge(points,view) {
-  return points.slice(1).map((point,i)=>worldLine(points[i],point,view,'leather-edge','edge',1.2));
+  const outline=points.map(point=>project(point,view));
+  return [{type:'polygon',points:outline,p:outline[0],kind:'leather-fill',color:'leather'},
+    ...points.slice(1).map((point,i)=>worldLine(points[i],point,view,'leather-edge','edge',1.2))];
 }
 function diagonalCorner() {
   return slitOutlines(finishThread(diagonalCornerScene(input('ILL-SELLIER-CORNER'),{

@@ -34,7 +34,8 @@
       "text": "#252A31",
       "textBackground": "#FAFAF7",
       "rejected": "#B32F3C",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#F1F2EF"
     },
     "ivory-ink": {
       "id": "02",
@@ -53,7 +54,8 @@
       "text": "#253349",
       "textBackground": "#F6F0E3",
       "rejected": "#A13732",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#EEE8DD"
     },
     "glacier": {
       "id": "03",
@@ -72,7 +74,8 @@
       "text": "#16394E",
       "textBackground": "#EDF5FA",
       "rejected": "#B12E48",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#E4EDF3"
     },
     "sage-paper": {
       "id": "04",
@@ -91,7 +94,8 @@
       "text": "#253D31",
       "textBackground": "#EDF3E9",
       "rejected": "#A33636",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#E5ECE2"
     },
     "rose-quartz": {
       "id": "05",
@@ -110,7 +114,8 @@
       "text": "#4B2D42",
       "textBackground": "#FAEFF0",
       "rejected": "#A92142",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#F3E7E9"
     },
     "lilac-mist": {
       "id": "06",
@@ -129,7 +134,8 @@
       "text": "#352D52",
       "textBackground": "#F1EEFA",
       "rejected": "#AF3046",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#E9E6F3"
     },
     "linen": {
       "id": "07",
@@ -148,7 +154,8 @@
       "text": "#49372B",
       "textBackground": "#F3E9DB",
       "rejected": "#AC3828",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#ECE2D4"
     },
     "mint-porcelain": {
       "id": "08",
@@ -167,7 +174,8 @@
       "text": "#163D3E",
       "textBackground": "#E8F5F2",
       "rejected": "#AC3548",
-      "accepted": "#247145"
+      "accepted": "#247145",
+      "leather": "#E0EEEB"
     },
     "midnight-blue": {
       "id": "09",
@@ -186,7 +194,8 @@
       "text": "#E9F1FF",
       "textBackground": "#1E2A3D",
       "rejected": "#FF8D88",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#1E2A3D"
     },
     "graphite": {
       "id": "10",
@@ -205,7 +214,8 @@
       "text": "#F5F3ED",
       "textBackground": "#2D2F31",
       "rejected": "#FF968C",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#2D2F31"
     },
     "bottle-green": {
       "id": "11",
@@ -224,7 +234,8 @@
       "text": "#E7F4E7",
       "textBackground": "#203933",
       "rejected": "#FFA08E",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#203933"
     },
     "aubergine": {
       "id": "12",
@@ -243,7 +254,8 @@
       "text": "#F8EAF6",
       "textBackground": "#3C2C42",
       "rejected": "#FF9DAA",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#3C2C42"
     },
     "oxblood": {
       "id": "13",
@@ -262,7 +274,8 @@
       "text": "#FAEEE3",
       "textBackground": "#422A30",
       "rejected": "#FFAD87",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#422A30"
     },
     "deep-petrol": {
       "id": "14",
@@ -281,7 +294,8 @@
       "text": "#E5F6F5",
       "textBackground": "#1D3C44",
       "rejected": "#FFA396",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#1D3C44"
     },
     "espresso": {
       "id": "15",
@@ -300,7 +314,8 @@
       "text": "#F9F0DC",
       "textBackground": "#3B342E",
       "rejected": "#FFAB8B",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#3B342E"
     },
     "indigo": {
       "id": "16",
@@ -319,7 +334,8 @@
       "text": "#F1EFFF",
       "textBackground": "#2F2E49",
       "rejected": "#FFA0AA",
-      "accepted": "#83D4A4"
+      "accepted": "#83D4A4",
+      "leather": "#2F2E49"
     }
   }
 }

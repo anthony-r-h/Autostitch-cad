@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createScenes,absoluteStitchLengthDeviation} from '../examples/counter_examples/scenes.mjs';
-import {gifBlocks,svg,portraitScenes} from '../examples/illustrated/scenes.mjs';
+import {gifBlocks,svg,portraitScenes,displayElements,colorConfig,themeFor} from '../examples/illustrated/scenes.mjs';
 
 const root=new URL('../',import.meta.url),scenes=createScenes();
 const near=(a,b)=>assert(Math.abs(a-b)<1e-6,`${a} != ${b}`);
@@ -311,14 +311,28 @@ for(const [i,[a,b]] of axes.entries()) {
 for(const [i,c] of centres.entries())for(const d of centres.slice(i+1))assert(distance(c,d)-.5>=.2);
 }
 
-// Piece edges remain identical across each comparison and every animation phase.
+// Piece surfaces remain behind the stitching and identical across comparisons and phases.
 for(const [reference,solution] of [[2,1],[3,4],[5,6],[7,8]]) {
   const edge=scenes[reference].final.filter(e=>e.kind==='leather-edge');
+  const fill=scenes[reference].final.filter(e=>e.kind==='leather-fill');
   assert(edge.length>0);
+  assert.equal(fill.length,1);assert.equal(fill[0].color,'leather');
+  assert.deepEqual(fill[0].points,[edge[0].a,...edge.map(e=>e.b)]);
   assert.deepEqual(edge,scenes[solution].final.filter(e=>e.kind==='leather-edge'));
+  assert.deepEqual(fill,scenes[solution].final.filter(e=>e.kind==='leather-fill'));
+  for(const name of Object.keys(colorConfig.themes)) {
+    const theme=themeFor(name);
+    assert.notEqual(theme.leather,theme.background);
+    assert.equal(displayElements(fill,0,theme)[0].color,theme.leather);
+    assert.deepEqual(displayElements(fill,1,theme),displayElements(fill,0,theme),'Leather must not fade with holes');
+  }
   for(const index of [reference,solution]) {
     const layout=scenes[index];
-    for(const f of layout.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='leather-edge'),edge);
+    for(const f of [...layout.frames,{elements:layout.final}]) {
+      assert.deepEqual(f.elements.filter(e=>e.kind==='leather-edge'),edge);
+      assert.deepEqual(f.elements.filter(e=>e.kind==='leather-fill'),fill);
+      assert.equal(f.elements[0].kind,'leather-fill','Fill must sit behind all diagram elements');
+    }
     for(const segment of edge) {
       for(const slit of slits(layout))assert(segmentDistance(segment.a,segment.b,slit.a,slit.b)>2);
       for(const circle of layout.final.filter(e=>e.kind==='hole'))assert(pointSegment(circle.p,segment.a,segment.b)>circle.radius);
@@ -353,7 +367,7 @@ for(const s of scenes) {
   expected.forEach((e,i)=>{near(distance(drawn[i].a,e.a),0);near(distance(drawn[i].b,e.b),0);});
   for(const f of [...s.frames,{elements:s.final}]) {
     for(const role of ['notation-start','notation-end','notation-junction'])assert.deepEqual(f.elements.filter(e=>e.kind===role),s.final.filter(e=>e.kind===role));
-    for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
+    for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
   }
 }
 // Keep the published thread-length totals tied to the final drawn geometry.

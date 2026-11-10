@@ -9,6 +9,7 @@ Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 - [colors.json](colors.json) is the single colour and typography file. `documentationTheme` selects **graphite** for both the pitch and counter-example diagrams.
 - Each theme defines thread, construction, faded measurements, guides, leather edges, angles/residuals and adjusted-gap colours. `text` sets normal font colour; `textBackground` sets the label box colour. Semantic red/blue text and the Stitch fade retain their roles.
 - `rejected` colours crosses red; `accepted` colours checks green. Keep their shapes distinct as well as their colours.
+- `leather` sets the piece fill behind stitching in the worked examples. Light themes use a pale tint; dark themes use a lighter surface tone. `edge` controls its outline separately.
 - `typography` sets `fontFamily`, `sizeScale`, label-box `paddingX`/`paddingY`, and `background` (set `false` to omit boxes). Font sizes scale from the existing label hierarchy. Use an installed font and preview it at the intended display size.
 - `numberFontFamily` sets the monospace font for numeric measurements and angles: **Consolas**. Descriptive labels retain the normal font.
 - Start/end markers use math italics $s$ and $e$; landmarks use $l_n$ with upright subscript digits. `notationFontFamily` (Cambria) and `notationSizeScale` control these markers in every output format.

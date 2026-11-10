@@ -10,7 +10,7 @@ export const colorConfig=JSON.parse(fs.readFileSync(new URL('colors.json',import
 export function themeFor(name=colorConfig.documentationTheme) {
   const theme=colorConfig.themes[name];
   if(!theme)throw new Error(`Unknown diagram theme: ${name}`);
-  for(const role of ['background','ink','construction','secondary','guide','angle','adjusted','adjustedSecondary','accepted','rejected','edge','alignment','text','textBackground']) {
+  for(const role of ['background','leather','ink','construction','secondary','guide','angle','adjusted','adjustedSecondary','accepted','rejected','edge','alignment','text','textBackground']) {
     if(!/^#[0-9A-F]{6}$/i.test(theme[role]))throw new Error(`Theme ${name} needs a hex colour for ${role}`);
   }
   return theme;

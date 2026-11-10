@@ -10,7 +10,7 @@ export const colorConfig=JSON.parse(fs.readFileSync(new URL('colors.json',import
 export function themeFor(name=colorConfig.documentationTheme) {
   const theme=colorConfig.themes[name];
   if(!theme)throw new Error(`Unknown diagram theme: ${name}`);
-  for(const role of ['background','ink','construction','secondary','guide','angle','adjusted','adjustedSecondary','edge','alignment','text','textBackground']) {
+  for(const role of ['background','ink','construction','secondary','guide','angle','adjusted','adjustedSecondary','accepted','rejected','edge','alignment','text','textBackground']) {
     if(!/^#[0-9A-F]{6}$/i.test(theme[role]))throw new Error(`Theme ${name} needs a hex colour for ${role}`);
   }
   return theme;
@@ -561,6 +561,12 @@ function smoothScene() {
   return finish(s,result);
 }
 
+function statusMark(p,valid) {
+  const kind=valid?'accepted':'rejected';
+  const segments=valid?[[[-5,0],[-1,4]],[[-1,4],[6,-5]]]:[[[-4,-4],[4,4]],[[-4,4],[4,-4]]];
+  return segments.map(([a,b])=>line(add(p,a),add(p,b),kind,kind,1.4));
+}
+
 function clearanceScene() {
   const input=catalog.illustrations.find(item=>item.id==='ILL-CLEARANCE').inputs;
   const view={x:75,y:200,scale:35},half=input.includedDegrees*Math.PI/360,h=.75;
@@ -580,8 +586,7 @@ function clearanceScene() {
     }
     const x=(project(centre(0,input.steps[n]),view)[0]+project(centre(1,input.steps[n]),view)[0])/2;
     const p=[x,275],gap=input.edgeClearances[n],valid=gap>=input.margin;
-    if(valid)checks.push(line(add(p,[-5,0]),add(p,[-1,4]),'accepted',ink,1.4),line(add(p,[-1,4]),add(p,[6,-5]),'accepted',ink,1.4));
-    else checks.push(line(add(p,[-4,-4]),add(p,[4,4]),'rejected',ink,1.4),line(add(p,[-4,4]),add(p,[4,-4]),'rejected',ink,1.4));
+    checks.push(...statusMark(p,valid));
     checks.push(text([x,303],gap<0?'Overlap':gap.toFixed(2)));
   }
   const virtuals=directions.flatMap((d,i)=>opening(centre(i,0),alpha+(i===0?half:-half),view,{virtual:true}));
@@ -589,22 +594,19 @@ function clearanceScene() {
 }
 
 function noFitScene() {
-  const input=catalog.illustrations.find(i=>i.id==='ILL-NOFIT').inputs;
-  const view={x:160,y:190,scale:40},base=straightBase(input.length,view);
-  const fixed=[...base,...opening([0,0],alpha,view),...opening([input.length,0],alpha,view)];
+  const spec=catalog.illustrations.find(i=>i.id==='ILL-NOFIT'),input=spec.inputs;
   const s=scene('fit-rejected','No gap count fits the permitted spacing','A5, A7');
-  frame(s,base,80,'guide');frame(s,fixed,100,'fixed-ends');
-  const reject=[line([240,130],[360,250],'rejected',ink,12),line([240,250],[360,130],'rejected',ink,12)];
-  let lastCandidate;
-  for(const count of [2,3]) {
-    const gap=input.length/count;
-    const proposed=Array.from({length:count-1},(_,i)=>opening([(i+1)*gap,0],alpha,view,{proposed:true})).flat();
-    const candidate=[...fixed,...proposed,...measure([0,0],[gap,0],gap.toFixed(2),view,-45)];
-    lastCandidate=candidate;
-    frame(s,candidate,160,'candidate');frame(s,[...candidate,...reject],90,'outside-bounds');
-    frame(s,fixed,50,'withdraw-proposal');
+  const result=[...termLabel([300,18],`Pitch ${spec.pitch.toFixed(2)} mm`)];
+  for(const [row,count] of [2,3].entries()) {
+    const view={x:160,y:110+160*row,scale:40},gap=input.length/count;
+    result.push(...straightBase(input.length,view),...routeMarks(project([0,0],view),project([input.length,0],view)));
+    for(let i=0;i<=count;i++)result.push(...opening([i*gap,0],alpha,view));
+    for(let i=0;i<count;i++)result.push(...measure([i*gap,0],[(i+1)*gap,0],gap.toFixed(2),view,-45));
+    if(row===0)result.push(...measure([0,0],[input.length,0],input.length.toFixed(2),view,60));
+    const reason=row===0?`Too long: maximum ${input.maximumGap.toFixed(2)} mm`:`Too short: minimum ${input.minimumGap.toFixed(2)} mm`;
+    result.push(...statusMark([170,view.y+76],false),...termLabel([310,view.y+80],reason));
   }
-  return finish(s,[...lastCandidate,...reject,...measure([0,0],[input.length,0],'7',view,65)]);
+  return {...s,final:result,staticGif:true};
 }
 
 function closureScene() {
@@ -883,7 +885,6 @@ function annotateScene(s) {
   else if(['axiom-landmark','terms-layout'].includes(s.name)) {
     const guide=s.final.find(e=>e.kind==='guide');marks=routeMarks(guide.a,guide.b);
   }
-  else if(s.name==='fit-rejected')marks=routeMarks([160,190],[440,190]);
   else if(s.name==='axiom-clearance') {
     const ends=s.final.filter(e=>e.kind==='slit').slice(0,2).map(e=>mul(add(e.a,e.b),.5));
     const half=catalog.illustrations.find(i=>i.id==='ILL-CLEARANCE').inputs.includedDegrees*Math.PI/360;
@@ -949,7 +950,6 @@ function threadPaths(s) {
     ...slits.filter(e=>y(e)<200).sort((a,b)=>x(b)-x(a)).map(e=>({...e,a:e.b,b:e.a})),joint,
     ...slits.filter(e=>y(e)>200).sort((a,b)=>x(a)-x(b))
   ]];
-  if(s.name==='fit-rejected')return [s.final.filter(e=>['slit','proposal'].includes(e.kind)).sort((a,b)=>x(a)-x(b))];
   throw new Error(`Thread path missing for ${s.name}`);
 }
 function bridgeComparison(s) {

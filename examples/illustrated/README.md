@@ -8,6 +8,7 @@ Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 - [Sixteen colour options](palettes/index.html): eight light and eight dark backgrounds, using the same Vertex point corner. [Contact sheet](palettes/contact-sheet.png).
 - [colors.json](colors.json) is the single colour and typography file. `documentationTheme` selects **graphite** for both the pitch and counter-example diagrams.
 - Each theme defines thread, construction, faded measurements, guides, leather edges, angles/residuals and adjusted-gap colours. `text` sets normal font colour; `textBackground` sets the label box colour. Semantic red/blue text and the Stitch fade retain their roles.
+- `rejected` colours crosses red; `accepted` colours checks green. Keep their shapes distinct as well as their colours.
 - `typography` sets `fontFamily`, `sizeScale`, label-box `paddingX`/`paddingY`, and `background` (set `false` to omit boxes). Font sizes scale from the existing label hierarchy. Use an installed font and preview it at the intended display size.
 - Start/end markers use math italics $s$ and $e$; landmarks use $l_n$ with upright subscript digits. `notationFontFamily` (Cambria) and `notationSizeScale` control these markers in every output format.
 - Thread, measurements and angle labels meet a minimum $4.5:1$ contrast against their background. The same theme resolves every SVG, PNG and GIF frame, including slit interiors and the fade.
@@ -39,7 +40,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 - Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with half-second holds at both positions
 - Static stitched figures are the final Stitch state, including the same lightened measurements
 - Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks
-- Keep existing image paths working when changing animation to static. Vertex point and Clearance export single-frame GIFs alongside their PNG/SVG stills; these GIFs contain no animation or loop
+- Keep existing image paths working when changing animation to static. Vertex point, Clearance and Reject impossible fits export single-frame GIFs alongside their PNG/SVG stills; these GIFs contain no animation or loop
 - Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
 - Adjusted gaps turn blue on the guide between slit centres, following the curve on circular guides. Marks and dimensions also turn blue. During Stitch, dimensions fade to light blue; guide segments and marks retain blue. Nominal measurements stay grey, residuals and angle annotations stay red
 
@@ -172,7 +173,9 @@ Every frame runs at half speed, including the $0.6\,\mathrm{s}$ fade and eight-s
 
 For a $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch, two equal gaps are too long and three are too short. Reject the span rather than move its fixed ends. `ILL-NOFIT`.
 
-![No gap count fits the permitted bounds](assets/fit-rejected.gif)
+Two aligned rows repeat the same guide span. Dimension every gap and put a small red cross beside each reason: $3.50\,\mathrm{mm}$ exceeds the $3.30\,\mathrm{mm}$ maximum; $2.33\,\mathrm{mm}$ falls below the $2.70\,\mathrm{mm}$ minimum. Static construction, without thread or fading.
+
+![Two gaps are too long; three gaps are too short](assets/fit-rejected.png)
 
 ### Loop closure
 

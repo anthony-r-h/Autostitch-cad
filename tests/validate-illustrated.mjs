@@ -58,7 +58,7 @@ const luminance=hex=>hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255)
 assert.equal(palettes.filter(p=>p.mode==='light').length,8);
 assert.equal(palettes.filter(p=>p.mode==='dark').length,8);
 assert.equal(new Set(palettes.map(p=>p.background)).size,16);
-for(const p of palettes)for(const role of ['ink','text','secondary','angle','adjusted','adjustedSecondary'])for(const background of ['background','textBackground']) {
+for(const p of palettes)for(const role of ['ink','text','secondary','angle','adjusted','adjustedSecondary','accepted','rejected'])for(const background of ['background','textBackground']) {
   const a=luminance(p[background]),b=luminance(p[role]);
   assert((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)>=4.5,`${p.title}: ${role} needs readable contrast`);
 }
@@ -355,11 +355,23 @@ const firstClearanceSlit=clearanceScene.final.findIndex(e=>e.kind==='slit');
 assert(clearanceScene.final.slice(firstClearanceSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
 
 assert.equal(selectFit({D:7,p:3}),null);
-const rejected=slits('fit-rejected',{x:160,y:190,scale:40});
-assert.equal(rejected.length,2);near(dist(rejected[0].center,rejected[1].center),7);
-assert.equal(readSvg('fit-rejected').elements.filter(e=>e.class==='rejected').length,2);
-const candidates=scenes.find(s=>s.name==='fit-rejected').frames.filter(f=>f.stage==='candidate');
-assert.deepEqual(candidates.map(f=>f.elements.filter(e=>e.kind==='proposal').length),[1,2]);
+const rejectedScene=scenes.find(s=>s.name==='fit-rejected');
+assert.equal(rejectedScene.frames.length,0);
+assert(!rejectedScene.final.some(e=>e.kind==='thread'));
+const rejected=slits('fit-rejected',{x:160,y:110,scale:40});
+assert.equal(rejected.length,7);
+for(const [i,row] of [rejected.slice(0,3),rejected.slice(3)].entries()) {
+  near(row[0].center[0],0);near(row.at(-1).center[0],7);
+  assert(row.every(s=>Math.abs(s.center[1]+i*4)<1e-6));
+  for(let j=1;j<row.length;j++)near(dist(row[j-1].center,row[j].center),7/(row.length-1));
+}
+assert.equal(readSvg('fit-rejected').elements.filter(e=>e.class==='rejected').length,4);
+assert.deepEqual(rejectedScene.final.filter(e=>e.kind==='measurement').map(e=>e.value),['3.50','3.50','7.00','2.33','2.33','2.33']);
+for(const s of [clearanceScene,rejectedScene])for(const e of s.final.filter(e=>['accepted','rejected'].includes(e.kind))) {
+  assert.equal(e.color,e.kind);assert.equal(e.width,1.4);
+  assert(dist(e.a,e.b)<13,'Use compact status marks');
+  assert.equal(displayElements([e])[0].color,theme[e.kind]);
+}
 assert(7/2>3.3&&7/3<2.7);
 
 const closure=slits('axiom-closure',{x:300,y:187.5,scale:13});

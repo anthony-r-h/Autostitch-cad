@@ -31,7 +31,9 @@
       "edge": "#6D7076",
       "alignment": "#91969B",
       "text": "#252A31",
-      "textBackground": "#FAFAF7"
+      "textBackground": "#FAFAF7",
+      "rejected": "#B32F3C",
+      "accepted": "#247145"
     },
     "ivory-ink": {
       "id": "02",
@@ -48,7 +50,9 @@
       "edge": "#6E685A",
       "alignment": "#979182",
       "text": "#253349",
-      "textBackground": "#F6F0E3"
+      "textBackground": "#F6F0E3",
+      "rejected": "#A13732",
+      "accepted": "#247145"
     },
     "glacier": {
       "id": "03",
@@ -65,7 +69,9 @@
       "edge": "#5B6D7C",
       "alignment": "#859BAA",
       "text": "#16394E",
-      "textBackground": "#EDF5FA"
+      "textBackground": "#EDF5FA",
+      "rejected": "#B12E48",
+      "accepted": "#247145"
     },
     "sage-paper": {
       "id": "04",
@@ -82,7 +88,9 @@
       "edge": "#5E705D",
       "alignment": "#899B86",
       "text": "#253D31",
-      "textBackground": "#EDF3E9"
+      "textBackground": "#EDF3E9",
+      "rejected": "#A33636",
+      "accepted": "#247145"
     },
     "rose-quartz": {
       "id": "05",
@@ -99,7 +107,9 @@
       "edge": "#7F6773",
       "alignment": "#AA909B",
       "text": "#4B2D42",
-      "textBackground": "#FAEFF0"
+      "textBackground": "#FAEFF0",
+      "rejected": "#A92142",
+      "accepted": "#247145"
     },
     "lilac-mist": {
       "id": "06",
@@ -116,7 +126,9 @@
       "edge": "#6F6682",
       "alignment": "#9A91B0",
       "text": "#352D52",
-      "textBackground": "#F1EEFA"
+      "textBackground": "#F1EEFA",
+      "rejected": "#AF3046",
+      "accepted": "#247145"
     },
     "linen": {
       "id": "07",
@@ -133,7 +145,9 @@
       "edge": "#786758",
       "alignment": "#A18D7B",
       "text": "#49372B",
-      "textBackground": "#F3E9DB"
+      "textBackground": "#F3E9DB",
+      "rejected": "#AC3828",
+      "accepted": "#247145"
     },
     "mint-porcelain": {
       "id": "08",
@@ -150,7 +164,9 @@
       "edge": "#57736F",
       "alignment": "#81A29B",
       "text": "#163D3E",
-      "textBackground": "#E8F5F2"
+      "textBackground": "#E8F5F2",
+      "rejected": "#AC3548",
+      "accepted": "#247145"
     },
     "midnight-blue": {
       "id": "09",
@@ -167,7 +183,9 @@
       "edge": "#91A6C3",
       "alignment": "#637994",
       "text": "#E9F1FF",
-      "textBackground": "#1E2A3D"
+      "textBackground": "#1E2A3D",
+      "rejected": "#FF8D88",
+      "accepted": "#83D4A4"
     },
     "graphite": {
       "id": "10",
@@ -184,7 +202,9 @@
       "edge": "#A6A9AE",
       "alignment": "#797E87",
       "text": "#F5F3ED",
-      "textBackground": "#2D2F31"
+      "textBackground": "#2D2F31",
+      "rejected": "#FF968C",
+      "accepted": "#83D4A4"
     },
     "bottle-green": {
       "id": "11",
@@ -201,7 +221,9 @@
       "edge": "#9BBDB0",
       "alignment": "#668F82",
       "text": "#E7F4E7",
-      "textBackground": "#203933"
+      "textBackground": "#203933",
+      "rejected": "#FFA08E",
+      "accepted": "#83D4A4"
     },
     "aubergine": {
       "id": "12",
@@ -218,7 +240,9 @@
       "edge": "#BAA0BC",
       "alignment": "#8B6F90",
       "text": "#F8EAF6",
-      "textBackground": "#3C2C42"
+      "textBackground": "#3C2C42",
+      "rejected": "#FF9DAA",
+      "accepted": "#83D4A4"
     },
     "oxblood": {
       "id": "13",
@@ -235,7 +259,9 @@
       "edge": "#C0A0A1",
       "alignment": "#946D75",
       "text": "#FAEEE3",
-      "textBackground": "#422A30"
+      "textBackground": "#422A30",
+      "rejected": "#FFAD87",
+      "accepted": "#83D4A4"
     },
     "deep-petrol": {
       "id": "14",
@@ -252,7 +278,9 @@
       "edge": "#97BAC1",
       "alignment": "#638D98",
       "text": "#E5F6F5",
-      "textBackground": "#1D3C44"
+      "textBackground": "#1D3C44",
+      "rejected": "#FFA396",
+      "accepted": "#83D4A4"
     },
     "espresso": {
       "id": "15",
@@ -269,7 +297,9 @@
       "edge": "#B9AB94",
       "alignment": "#8D806C",
       "text": "#F9F0DC",
-      "textBackground": "#3B342E"
+      "textBackground": "#3B342E",
+      "rejected": "#FFAB8B",
+      "accepted": "#83D4A4"
     },
     "indigo": {
       "id": "16",
@@ -286,7 +316,9 @@
       "edge": "#B0A9CE",
       "alignment": "#8078A5",
       "text": "#F1EFFF",
-      "textBackground": "#2F2E49"
+      "textBackground": "#2F2E49",
+      "rejected": "#FFA0AA",
+      "accepted": "#83D4A4"
     }
   }
 }

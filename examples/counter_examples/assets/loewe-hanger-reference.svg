@@ -12,6 +12,7 @@
 <text class="notation-end" x="418.25" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 <text class="notation-junction" x="178.75" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
 <text class="notation-junction" x="421.25" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
+<line class="adjusted-gap" x1="266.25" y1="80" x2="333.75" y2="80" stroke="#2166AC" stroke-width="2.2"/>
 <line class="thread" x1="186.697732318" y1="290.636666692" x2="210.802267682" y2="244.363333308" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="186.697732318" y1="215.636666692" x2="210.802267682" y2="169.363333308" stroke="#252525" stroke-width="1.8"/>
 <line class="thread" x1="186.697732318" y1="140.636666692" x2="185.491747853" y2="93.258252147" stroke="#252525" stroke-width="1.8"/>

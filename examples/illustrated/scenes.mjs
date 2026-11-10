@@ -8,6 +8,8 @@ const root = new URL('../../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
 const alpha = 40 * Math.PI / 180;
 const ink = '#252525', guideInk = '#C4C4C4', construction = '#8B8B8B';
+const adjustmentInk = '#2166AC';
+const adjustmentStyle = (element,adjusted=true) => adjusted?{...element,adjusted:true,color:adjustmentInk}:element;
 const variant = id => catalog.geometry.find(item => item.id === id).variants.find(item => item.pitch === 3);
 const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
 const mul = (a, s) => a.map(x => x * s);
@@ -18,6 +20,9 @@ const project = (p, view) => [view.x + p[0] * view.scale, view.y - p[1] * view.s
 const line = (a, b, kind = 'guide', color = guideInk, width = 1, dash = false) => ({type:'line', a, b, kind, color, width, dash});
 const text = (p, value) => ({type:'text', p, value, size:13, color:construction, kind:'measurement'});
 function worldLine(a, b, view, kind, color, width, dash) { return line(project(a, view), project(b, view), kind, color, width, dash); }
+function highlightGap(points,view) {
+  return points.slice(1).map((point,i)=>adjustmentStyle(worldLine(points[i],point,view,'adjusted-gap',adjustmentInk,2.2)));
+}
 function opening(center, angle, view, {virtual = false, proposed = false, marked = false} = {}) {
   const direction = axis(angle), half = mul(direction, .75);
   const a = add(center, mul(half, -1)), b = add(center, half);
@@ -69,10 +74,11 @@ function pitchScenes() {
   const draw=points=>{
     const gaps=points.slice(1).map((x,i)=>x-points[i]);
     const changed=gaps.map(g=>Math.abs(g-3)>1e-6);
-    const elements=[...base,...points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:changed[i-1]||changed[i]}))];
+    const highlights=gaps.flatMap((gap,i)=>changed[i]?highlightGap([[points[i],0],[points[i+1],0]],view):[]);
+    const elements=[...base,...highlights,...points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:changed[i-1]||changed[i]}))];
     for(const [i,gap] of gaps.entries()) {
       elements.push(...measure([points[i],0],[points[i+1],0],gap.toFixed(2),view,-64).map(e=>
-        e.type==='text'?{...e,kind:'gap-value',color:changed[i]?ink:construction,size:15}:{...e,kind:'gap-dimension'}));
+        adjustmentStyle(e.type==='text'?{...e,kind:'gap-value',size:15}:{...e,kind:'gap-dimension'},changed[i])));
     }
     if(points.length===openings) {
       const last=project([points.at(-1),0],view)[0],end=project([length,0],view)[0];
@@ -118,6 +124,7 @@ export function diagonalCornerScene(spec,{name,source,view,notation=true,startWi
   const result=[...base],rows=[[],[]];
   for(const [arm,row] of rows.entries())for(const [i,station] of positions[arm].entries()) {
     const adjusted=j=>j>=0&&j<positions[arm].length&&Math.abs(positions[arm][j]-(positions[arm][j+1]??0)-p)>1e-6;
+    if(adjusted(i))row.push(...highlightGap([station,positions[arm][i+1]??0].map(t=>arm===0?[-t,0]:[0,-t]),view));
     row.push(...opening(arm===0?[-station,0]:[0,-station],angles[arm],view,{marked:adjusted(i-1)||adjusted(i)}));
   }
   result.push(...rows[0]);
@@ -187,6 +194,7 @@ function cornerProblemScenes() {
     for(const [arm,points] of rows.entries()) {
       const position=x=>arm===0?[-x,0]:[virtuals[1][0],-x],gaps=points.slice(1).map((x,i)=>points[i]-x);
       const changed=gaps.map(g=>Math.abs(g-3)>1e-6);
+      changed.forEach((yes,i)=>{if(yes)elements.push(...highlightGap([position(points[i]),position(points[i+1])],view));});
       points.forEach((x,i)=>elements.push(...opening(position(x),arm===0?alpha:alpha-Math.PI/2,view,{marked:changed[i-1]||changed[i]})));
       elements.push(...opening(virtuals[arm],arm===0?alpha:alpha-Math.PI/2,view,{virtual:true}));
     }
@@ -239,11 +247,12 @@ function landmarkScene(layout) {
     ...rightPoints.map((x,i)=>i===rightPoints.length-1?length:right+i*3)];
   const draw=points=>{
     const gaps=points.slice(1).map((x,i)=>x-points[i]),changed=gaps.map(g=>Math.abs(g-3)>1e-6);
-    const result=[...base,...spans,...protectedDimension,...points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:changed[i-1]||changed[i]}))];
+    const highlights=gaps.flatMap((gap,i)=>changed[i]?highlightGap([[points[i],0],[points[i+1],0]],view):[]);
+    const result=[...base,...spans,...protectedDimension,...highlights,...points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:changed[i-1]||changed[i]}))];
     for(const [i,gap] of gaps.entries()) {
       if(i===leftPoints.length-1)continue;
       result.push(...measure([points[i],0],[points[i+1],0],gap.toFixed(2),view,-78).map(e=>
-        ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',color:changed[i]?ink:construction})));
+        adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension'},changed[i])));
     }
     return result;
   };
@@ -353,6 +362,7 @@ function modelSolutionScene() {
     for(const [arm,span] of spans.entries()) {
       const row=initial.map((v,i)=>lerp(v,fitted[i],t)),points=row.map(v=>point(span,v));
       const changed=row.slice(1).map((v,i)=>Math.abs(v-row[i]-p)>1e-6),path=[];
+      changed.forEach((yes,i)=>{if(yes)elements.push(...highlightGap([points[i],points[i+1]],view));});
       for(const [i,c] of points.entries()) {
         const slit=opening(c,span.angle,view,{marked:changed[i-1]||changed[i]});
         elements.push(...slit);path.push(slit[0]);
@@ -364,7 +374,7 @@ function modelSolutionScene() {
           {...text(label,(D-fit.n*p).toFixed(2)),kind:'residual-value',color:'#C62828'});
       } else for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
         points[i],points[i+1],(row[i+1]-row[i]).toFixed(2),view,arm===2?44:36).map(e=>
-          arm===2&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e));
+          adjustmentStyle(arm===2&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e)));
     }
     return {elements,path:[...paths[0],...paths[1],construction.at(-1),...paths[2]]};
   };
@@ -393,10 +403,11 @@ function junctionScene() {
   const drawArm=(arm,row,annotated=false)=>{
     const points=row.map(s=>mul(arm.end,s/arm.distance));
     const changed=row.slice(1).map((s,i)=>Math.abs(row[i]-s-3)>1e-6);
-    const elements=points.flatMap((point,i)=>opening(point,arm.angle,view,{marked:annotated&&(changed[i-1]||changed[i])}));
+    const elements=[...changed.flatMap((yes,i)=>annotated&&yes?highlightGap([points[i],points[i+1]],view):[]),
+      ...points.flatMap((point,i)=>opening(point,arm.angle,view,{marked:annotated&&(changed[i-1]||changed[i])}))];
     if(annotated)for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
       points[i],points[i+1],(row[i]-row[i+1]).toFixed(2),view,arm.end[0]<0?32:-38).map(e=>
-        arm.end[0]===0&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e));
+        adjustmentStyle(arm.end[0]===0&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e)));
     return elements;
   };
   const s=scene('axiom-junction','Three arms share one round hole','A9');
@@ -447,6 +458,7 @@ function curvedJunctionScene() {
     for(const [i,a] of arms.entries()) {
       const points=rows[i].map(a.point),all=[...points,[0,0]];
       const changed=points.map((point,j)=>Math.abs(Math.hypot(...add(point,mul(all[j+1],-1)))-p)>1e-6);
+      changed.forEach((yes,j)=>{if(yes)elements.push(...highlightGap(Array.from({length:13},(_,n)=>a.point(lerp(rows[i][j],rows[i][j+1]??0,n/12))),view));});
       const row=[];
       for(const [j,t] of rows[i].entries()) {
         const slit=opening(points[j],a.tangent(t)+(i<2?Math.PI:0)+alpha,view,{marked:changed[j-1]||changed[j]});
@@ -565,8 +577,11 @@ function closureScene() {
   }
   const draw=t=>{
     const elements=[...base];
+    const angles=target.map((angle,i)=>lerp(i*step,angle,t));
+    for(let i=0;i<count-1;i++)if(Math.abs(2*radius*Math.sin((angles[i+1]-angles[i])/2)-3)>1e-6)
+      elements.push(...highlightGap(Array.from({length:13},(_,n)=>point(start-lerp(angles[i],angles[i+1],n/12))),view));
     for(let i=0;i<count;i++) {
-      const angle=lerp(i*step,target[i],t);
+      const angle=angles[i];
       elements.push(...opening(point(start-angle),alpha-angle,view,{marked:t>0&&adjusted.has(i)}));
     }
     if(t<1) {
@@ -593,9 +608,11 @@ function matchedScene() {
   const s=scene('matched-guides','One solved layout, one reflected copy','S02');
   frame(s,base,90,'guides');
   const source=points.flatMap((x,i)=>opening([x,0],alpha,view,{marked:i>=4&&i<=6}));
-  let result=[...base,...source];frame(s,result,160,'source-solved');
+  const highlights=points.slice(1).flatMap((x,i)=>Math.abs(x-points[i]-3)>1e-6?highlightGap([[points[i],0],[x,0]],view):[]);
+  let result=[...base,...highlights,...source];frame(s,result,160,'source-solved');
   for(const [i,x] of points.entries()) {
     const copy=opening([x,0],alpha,view,{marked:i>=4&&i<=6}).map(reflect);
+    if(i>0&&Math.abs(x-points[i-1]-3)>1e-6)result.push(...highlightGap([[points[i-1],0],[x,0]],view).map(reflect));
     result.push(...copy);
     const p=project([x,0],view);
     frame(s,[...result,line(p,reflected(p),'correspondence',guideInk,.8,true)],35,'copy-correspondence');
@@ -681,7 +698,8 @@ function curvedCornerScene(caseId,name,title) {
   const result=approachCorner(s,base,arms,joint,view);
   const selected=caseId==='J08'?1:0,g=primitives[selected],a=primitivePoint(g,virtual[selected]),b=primitivePoint(g,stations[selected][0]);
   const gap=Math.hypot(a[0]-b[0],a[1]-b[1]);
-  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:-35,true));
+  if(Math.abs(gap-3)>1e-6)result.unshift(...highlightGap(Array.from({length:13},(_,n)=>primitivePoint(g,lerp(virtual[selected],stations[selected][0],n/12))),view));
+  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:-35,true).map(e=>adjustmentStyle(e,Math.abs(gap-3)>1e-6)));
   return finish(s,result);
 }
 
@@ -696,9 +714,9 @@ function termsLayoutScene() {
   const s=scene('terms-layout','Guide, gaps, landmark and free span','F02');
   const result=original.final.filter(e=>['guide','fixed-end'].includes(e.kind));
   result.push(...termLabel([510,66],'Guide',[510,187.5]));
-  result.push(...original.final.filter(e=>['slit','adjustment-mark'].includes(e.kind)),...termLabel([401,66],'Slit',[401,180]));
+  result.push(...original.final.filter(e=>['slit','adjustment-mark','adjusted-gap'].includes(e.kind)),...termLabel([401,66],'Slit',[401,180]));
   result.push(...measure([0,0],[3,0],'p',view,-78),...termLabel([84,294],'Nominal gap'));
-  result.push(...measure([6,0],[8.75,0],'g',view,-78),...termLabel([178,294],'Adjusted gap'));
+  result.push(...measure([6,0],[8.75,0],'g',view,-78).map(e=>adjustmentStyle(e)),...termLabel([178,294],'Adjusted gap'));
   result.push(...original.final.filter(e=>['landmark','dimension','measurement'].includes(e.kind)),
     ...termLabel([320,66],'Landmark',[320,105]),...termLabel([320,294],'Protected gap'));
   result.push(...measure([0,0],[14.75,0],'Free span',view,83));
@@ -893,6 +911,8 @@ function balancedVertex(s) {
   const result=s.final.map((e,i)=>i>=first&&i<last?{...e,a:add(e.a,[0,-shift]),b:add(e.b,[0,-shift])}:
     e.kind==='notation-end'?{...e,p:add(e.p,[0,-shift])}:e);
   const placed=result.filter(e=>e.kind==='slit');
+  for(const slit of [placed[count-1],placed.at(-1)])result.unshift(...highlightGap(
+    [openingCentre(slit),joint.p].map(p=>[p[0],-p[1]]),{x:0,y:0,scale:1}));
   return {...s,final:result,threadPaths:[[...placed.slice(0,count),joint,...placed.slice(count).toReversed()]]};
 }
 
@@ -955,7 +975,7 @@ function slitOutlines(s) {
   const style=elements=>elements.map(e=>{
     if(e.type==='text'&&['measurement','gap-value','residual-value'].includes(e.kind))return {...e,size:13,bold:false};
     if(['slit','proposal'].includes(e.kind))return {...e,color:construction,outline:!e.round,outlineWidth:.8};
-    if(e.kind==='adjustment-mark')return {...e,color:construction,width:.8};
+    if(e.kind==='adjustment-mark')return adjustmentStyle({...e,width:.8});
     return e;
   });
   return {...s,final:style(s.final),frames:s.frames.map(f=>({...f,elements:style(f.elements)}))};
@@ -1016,7 +1036,8 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
   if(!amount)return elements;
   return elements.map(e=>{
     if(!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind))return e;
-    const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(e.color.slice(i,i+2),16),196,amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
+    const target=e.adjusted?'#9CBAD7':'#C4C4C4';
+    const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(e.color.slice(i,i+2),16),parseInt(target.slice(i,i+2),16),amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
     return {...e,color};
   });
 }
@@ -1077,5 +1098,5 @@ export function writeSceneFiles(scenes) {
     for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }
-export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines};
+export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines,adjustmentStyle,highlightGap};
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

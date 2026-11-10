@@ -68,7 +68,18 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     const points=slits.map(e=>((e.a[0]+e.b[0])/2-view.x)/view.scale);
     const labels=f.elements.filter(e=>e.kind==='gap-value');
     assert.equal(labels.length,Math.max(0,points.length-1));
-    labels.forEach((label,i)=>near(+label.value,points[i+1]-points[i],.00501));
+    labels.forEach((label,i)=>{
+      const gap=points[i+1]-points[i];near(+label.value,gap,.00501);
+      assert.equal(Boolean(label.adjusted),Math.abs(gap-3)>1e-6);
+      assert.equal(label.color,label.adjusted?'#2166AC':'#8B8B8B');
+    });
+    const highlighted=f.elements.filter(e=>e.kind==='adjusted-gap');
+    const changed=points.slice(1).map((x,i)=>({a:points[i],b:x})).filter(g=>Math.abs(g.b-g.a-3)>1e-6);
+    assert.equal(highlighted.length,changed.length);
+    highlighted.forEach((e,i)=>{
+      near(e.a[1],view.y);near(e.b[1],view.y);
+      near(e.a[0],view.x+changed[i].a*view.scale);near(e.b[0],view.x+changed[i].b*view.scale);
+    });
     if(points.length===6) {
       const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
       near(+label.value,remaining,.00501);
@@ -284,6 +295,9 @@ for(const [i,s] of closure.entries()) {
 assert.equal(new Set(closure.map(s=>s.center.map(x=>x.toFixed(6)).join(','))).size,20);
 assert.equal(closureFit.k,4);
 const closureScene=scenes.find(s=>s.name==='axiom-closure');
+const closureHighlights=closureScene.final.filter(e=>e.kind==='adjusted-gap');
+assert.equal(closureHighlights.length,closureFit.k*12);
+for(const e of closureHighlights)for(const p of [e.a,e.b])near(Math.hypot(p[0]-300,p[1]-187.5)/13,closureInput.radius);
 const closureCenter=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
 const closureMismatch=closureScene.frames.find(f=>f.stage==='closure-mismatch');
 const nominalLoop=closureMismatch.elements.filter(e=>e.kind==='slit').map(closureCenter);
@@ -743,12 +757,13 @@ for(const s of scenes) {
       shown.forEach((e,j)=>{
         if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)) {
           const original=f.elements[j];
-          assert.equal(e.color,'#'+[1,3,5].map(k=>Math.round(parseInt(original.color.slice(k,k+2),16)+(196-parseInt(original.color.slice(k,k+2),16))*f.holeLightening).toString(16).padStart(2,'0')).join('').toUpperCase());
+          const target=original.adjusted?'#9CBAD7':'#C4C4C4';
+          assert.equal(e.color,'#'+[1,3,5].map(k=>Math.round(parseInt(original.color.slice(k,k+2),16)+(parseInt(target.slice(k,k+2),16)-parseInt(original.color.slice(k,k+2),16))*f.holeLightening).toString(16).padStart(2,'0')).join('').toUpperCase());
           assert.deepEqual({...e,color:original.color},original);
         } else assert.deepEqual(e,f.elements[j]);
       });
     });
-    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
+    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)).every(e=>e.color===(e.adjusted?'#9CBAD7':'#C4C4C4')));
     for(const f of s.frames.filter(f=>!['thread-reveal','thread-fade'].includes(f.stage)))assert(!f.elements.some(e=>e.kind==='thread'));
     }
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
@@ -793,6 +808,11 @@ for(const s of scenes) {
   for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||
     (s.name.startsWith('problem-corner-')&&/^\d+\.\d\u00b0$/.test(match[1]))||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
+  for(const elements of [s.final,...s.frames.map(f=>f.elements)]) {
+    for(const e of elements.filter(e=>e.kind==='adjustment-mark'||e.adjusted))assert.equal(e.color,'#2166AC');
+    for(const e of displayElements(elements).filter(e=>e.kind==='adjusted-gap'))assert.equal(e.color,'#2166AC');
+    for(const e of displayElements(elements).filter(e=>e.adjusted&&!['adjustment-mark','adjusted-gap'].includes(e.kind)))assert.equal(e.color,elements.some(v=>v.kind==='thread')?'#9CBAD7':'#2166AC');
+  }
   const allLabels=[...labels,...s.frames.flatMap(f=>f.elements.filter(e=>e.type==='text'))];
   for(const term of terms)assert(allLabels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);
   if(s.name!=='terms-slit') {

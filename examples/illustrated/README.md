@@ -18,6 +18,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 - Static stitched figures are the final Stitch state, including the same lightened measurements
 - Keep existing image paths working when changing animation to static. Vertex point exports a single-frame GIF alongside its PNG/SVG stills; the GIF contains no animation or loop
 - Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
+- Adjusted gaps turn blue on the guide between slit centres, following the curve on circular guides. Marks and dimensions also turn blue. During Stitch, dimensions fade to light blue; guide segments and marks retain blue. Nominal measurements stay grey, residuals and angle annotations stay red
 
 ## Spacing setup
 

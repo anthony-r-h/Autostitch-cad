@@ -285,6 +285,12 @@ for(const [arm,row] of solvedRows.entries()) {
   }
 }
 assert.deepEqual(faglianoSolved.final.filter(e=>e.kind==='gap-value').map(e=>e.value),['2.75','2.73']);
+assert(faglianoSolved.final.filter(e=>e.kind==='gap-value').every(e=>e.adjusted&&e.color==='#2166AC'));
+for(const name of ['loewe-hanger-autostitch','lv-speedy-chape-autostitch','fagliano-tip-compression','fagliano-tip-autostitch']) {
+  const highlighted=scenes.find(s=>s.name===name).final.filter(e=>e.kind==='adjusted-gap');
+  assert(highlighted.length>0,`${name}: adjusted gaps must appear on the guide`);
+  assert(highlighted.every(e=>e.color==='#2166AC'));
+}
 
 function pointSegment(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]*d[0]+d[1]*d[1])));

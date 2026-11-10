@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {selectFit} from '../../tests/fit-oracle.mjs';
 import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,finish,
-  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles} from '../illustrated/scenes.mjs';
+  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles,adjustmentStyle,highlightGap} from '../illustrated/scenes.mjs';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
@@ -102,6 +102,7 @@ function loeweScenes() {
       ...routeMarks(project(left[0],view),project(right.at(-1),view),[0,-1],[0,1]),
       notationText(add(project(solved?leftJoint:[0,0],view),[-20,-15]),'j','junction'),
       notationText(add(project(solved?rightJoint:[w,0],view),[20,-15]),'j','junction')];
+    if(Math.abs(top[1][0]-top[0][0]-p)>1e-6)result.push(...highlightGap(top,view));
     const rows=[left,top,right].map((points,arm)=>points.map((point,i)=>{
       // Mirrored top slits reproduce the flat visible middle thread; the
       // Autostitch comparison retains one signed lean throughout the route.
@@ -150,12 +151,16 @@ function speedyScenes() {
         let station=0;
         for(let j=0;j<=fit.n;j++) {
           const marked=fit.k>0&&j>=fit.i&&j<=fit.i+fit.k;
+          if(j<fit.n&&j>=fit.i&&j<fit.i+fit.k)result.push(...highlightGap(
+            [station,station+fit.correctedPitch].map(t=>add(first,mul(edge.t,t))),view));
           const slit=opening(add(first,mul(edge.t,station)),edge.angle,view,{marked});
           result.push(...slit);path.push(slit[0]);if(i===0)topRow.push(slit[0]);
           station+=j>=fit.i&&j<fit.i+fit.k?fit.correctedPitch:p;
         }
       } else {
         const gaps=Math.round(edge.length/p);
+        if(Math.abs(edge.length/gaps-p)>1e-6)for(let j=0;j<gaps;j++)result.push(...highlightGap(
+          [j,j+1].map(k=>add(vertices[i],mul(edge.t,k*edge.length/gaps))),view));
         for(let j=1;j<gaps;j++) {
           const slit=opening(add(vertices[i],mul(edge.t,j*edge.length/gaps)),edge.angle,view)[0];
           result.push(slit);path.push(slit);if(i===0)topRow.push(slit);
@@ -225,6 +230,8 @@ function faglianoScene(solved=false) {
     }
     result.push(...straight.flatMap(row=>row.slice(0,straightCount)));
     for(const [arm,values] of angles.entries()) {
+      for(let i=0;i<values.length-1;i++)if(Math.abs(values[i+1]-values[i]-step)>1e-8)result.push(...highlightGap(
+        Array.from({length:13},(_,n)=>point(arm,values[i]+(values[i+1]-values[i])*n/12)),view));
       if(values.at(-1)>sweep)for(let i=0;i<12;i++)result.push(worldLine(
         point(arm,sweep+(values.at(-1)-sweep)*i/12),point(arm,sweep+(values.at(-1)-sweep)*(i+1)/12),view,'extension','#C4C4C4',1,true));
       for(const [i,t] of values.entries()) {
@@ -250,7 +257,7 @@ function faglianoScene(solved=false) {
       if(values.length>1) {
         const index=solved?fits[arm].i:0,gap=2*R*Math.sin((values[index+1]-values[index])/2);
         result.push(...measure(point(arm,values[index]),point(arm,values[index+1]),gap.toFixed(2),view,arm===0?44:-44).map(e=>
-          ({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(e.type==='text'?{size:15,bold:true,color:'#252525'}:{})})));
+          adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(e.type==='text'?{size:15,bold:true,color:'#252525'}:{})},Math.abs(gap-p)>1e-6)));
       }
     }
     result.push(hole(joint,view));return result;

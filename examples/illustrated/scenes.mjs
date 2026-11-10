@@ -583,13 +583,14 @@ function noFitScene() {
   const s=scene('fit-rejected','No gap count fits the permitted spacing','A5, A7');
   const result=[...termLabel([300,18],`Pitch ${spec.pitch.toFixed(2)} mm`)];
   for(const [row,count] of [2,3].entries()) {
-    const view={x:160,y:110+160*row,scale:40},gap=input.length/count;
+    const view={x:160,y:110+260*row,scale:40},gap=input.length/count;
     result.push(...straightBase(input.length,view),...routeMarks(project([0,0],view),project([input.length,0],view)));
     for(let i=0;i<=count;i++)result.push(...opening([i*gap,0],alpha,view));
     for(let i=0;i<count;i++)result.push(...measure([i*gap,0],[(i+1)*gap,0],gap.toFixed(2),view,-45));
     if(row===0)result.push(...measure([0,0],[input.length,0],input.length.toFixed(2),view,60));
-    const reason=row===0?`Too long: maximum ${input.maximumGap.toFixed(2)} mm`:`Too short: minimum ${input.minimumGap.toFixed(2)} mm`;
-    result.push(...statusMark([170,view.y+76],false),...termLabel([310,view.y+80],reason));
+    const reason=row===0?'Slits too far apart':'Slits too close together';
+    const limit=row===0?`Maximum gap: ${input.maximumGap.toFixed(2)} mm`:`Minimum gap: ${input.minimumGap.toFixed(2)} mm`;
+    result.push(...statusMark([185,view.y+66],false),...termLabel([310,view.y+70],reason),...termLabel([310,view.y+92],limit));
   }
   return {...s,final:result,staticGif:true};
 }

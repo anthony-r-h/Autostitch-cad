@@ -177,7 +177,7 @@ Build retains half-speed timing. Redistribute residuals runs $50\%$ faster than 
 
 For a $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch, two equal gaps are too long and three are too short. Reject the span rather than move its fixed ends. `ILL-NOFIT`.
 
-Two aligned rows repeat the same guide span. Dimension every gap and put a small red cross beside each reason: $3.50\,\mathrm{mm}$ exceeds the $3.30\,\mathrm{mm}$ maximum; $2.33\,\mathrm{mm}$ falls below the $2.70\,\mathrm{mm}$ minimum. Static construction, without thread or fading.
+Two vertically separated rows repeat the same guide span. Dimension every centre-to-centre gap. Small red crosses identify slits too far apart ($3.50\,\mathrm{mm}$ exceeds the $3.30\,\mathrm{mm}$ maximum) or too close together ($2.33\,\mathrm{mm}$ falls below the $2.70\,\mathrm{mm}$ minimum). Static construction, without thread or fading.
 
 ![Two gaps are too long; three gaps are too short](assets/fit-rejected.png)
 

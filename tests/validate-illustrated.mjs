@@ -386,7 +386,7 @@ const rejected=slits('fit-rejected',{x:160,y:110,scale:40});
 assert.equal(rejected.length,7);
 for(const [i,row] of [rejected.slice(0,3),rejected.slice(3)].entries()) {
   near(row[0].center[0],0);near(row.at(-1).center[0],7);
-  assert(row.every(s=>Math.abs(s.center[1]+i*4)<1e-6));
+  assert(row.every(s=>Math.abs(s.center[1]+i*6.5)<1e-6));
   for(let j=1;j<row.length;j++)near(dist(row[j-1].center,row[j].center),7/(row.length-1));
 }
 assert.equal(readSvg('fit-rejected').elements.filter(e=>e.class==='rejected').length,4);
@@ -1007,7 +1007,7 @@ for(const s of scenes) {
     assert.equal(s.final.filter(e=>e.kind==='id-box').length,8);
   }
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
-    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=(s.name==='model-solution'?600:375),`${s.name} clips an element`);
+    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=(['model-solution','fit-rejected'].includes(s.name)?600:375),`${s.name} clips an element`);
   }
 }
 console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} moving GIFs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

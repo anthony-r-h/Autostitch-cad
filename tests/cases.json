@@ -8922,8 +8922,10 @@
       ],
       "terms": [
         "Pitch 3.00 mm",
-        "Too long: maximum 3.30 mm",
-        "Too short: minimum 2.70 mm"
+        "Slits too far apart",
+        "Maximum gap: 3.30 mm",
+        "Slits too close together",
+        "Minimum gap: 2.70 mm"
       ],
       "rejectionNotation": "Two aligned rows repeat the same fixed guide span. Dimension every gap; put a small red cross beside each rejection reason. Construction only, with no thread or fade."
     },

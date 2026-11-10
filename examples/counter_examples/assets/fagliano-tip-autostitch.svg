@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Autostitch: minimum adjusted gaps on the same strap guides</title><desc id="description">Analytic illustration of ILL-FAGLIANO-AUTOSTITCH. Static stitch diagram.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Autostitch: minimum adjusted gaps on the same strap guides</title><desc id="description">Analytic illustration of ILL-FAGLIANO-AUTOSTITCH. Static stitch diagram.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-183.6068073180915 67.51796127316368) scale(1.55)">
 <line class="leather-edge" x1="203.948399571" y1="370.3" x2="203.948399571" y2="265" stroke="#909090" stroke-width="1.2"/>
 <line class="leather-edge" x1="203.948399571" y1="265" x2="203.976422448" y2="260.607624145" stroke="#909090" stroke-width="1.2"/>
 <line class="leather-edge" x1="203.976422448" y1="260.607624145" x2="204.060486517" y2="256.215963393" stroke="#909090" stroke-width="1.2"/>
@@ -393,4 +395,5 @@
 <line class="gap-dimension" x1="413.8108298" y1="179.659468088" x2="405.942912219" y2="181.107181093" stroke="#9CBAD7" stroke-width="0.8"/>
 <text class="gap-value" x="413.210384066" y="189.50004101" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#9CBAD7">2.73</text>
 <circle class="hole" cx="308.495883766" cy="56.663997267" r="3.375" fill="#C4C4C4"/>
+</g>
 </svg>

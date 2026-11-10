@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Shared diagonal slit with mirrored lean</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Shared diagonal slit with mirrored lean</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-84.24351747463362 165.85147089775492) scale(1.1905298759864713)">
 <line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="410" y1="40" x2="410" y2="330.853684306" stroke="#C4C4C4" stroke-width="1"/>
 <line class="thread" x1="131.976149302" y1="45.853684306" x2="154.450715299" y2="34.146315694" stroke="#252525" stroke-width="1.8"/>
@@ -96,4 +98,5 @@
 <line class="thread-length-dimension" x1="446.261240328" y1="62.769119967" x2="453.278139053" y2="66.611402138" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="433.968135277" y1="85.219182024" x2="440.985034003" y2="89.061464194" stroke="#C4C4C4" stroke-width="0.8"/>
 <text class="thread-length-value" x="463.623137165" y="75.915292081" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">2.11</text>
+</g>
 </svg>

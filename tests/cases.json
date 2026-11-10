@@ -8407,7 +8407,7 @@
         }
       ],
       "coverage": [
-        "Portrait 10:16 page, 160 by 256 mm",
+        "Portrait 4:5 page, 160 by 200 mm",
         "Equal-sized script rows with tighter spacing and true circular a bowls",
         "No upright or other lettering stroke crosses an a bowl",
         "All lettering and fill solved at 2.7 mm pitch",
@@ -8415,18 +8415,18 @@
         "3 mm clearance between fill holes and lettering holes; empty O counter",
         "One round punch for the question-mark dot",
         "Nominal fill pitch, symmetric free-end trimming; single-stitch fragments retained",
-        "600 by 960 pixel preview of native stitched output",
+        "600 by 750 pixel preview of native stitched output",
         "Loose diamond quilt with shared crossings, clipped outside a 6 mm text perimeter",
         "Outer frame acts as a stopping boundary; every background hole stays inside it",
         "Closed letter interiors and counters remain free of background stitches",
         "Sloping e spine, l loops without low entry strokes, closer question mark; can unchanged"
       ],
-      "expected": "19 lettering guides in 16 blocks with 604 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 41 guides in 15 blocks with 467 openings, 26 shared junctions and 15 adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
+      "expected": "19 lettering guides in 16 blocks with 604 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 27 guides in 15 blocks with 218 openings, 12 shared junctions and no adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
       "parameters": {
         "pageWidth": 160,
-        "pageHeight": 256,
+        "pageHeight": 200,
         "previewWidth": 600,
-        "previewHeight": 960,
+        "previewHeight": 750,
         "words": [
           "can",
           "YOU",
@@ -8458,7 +8458,7 @@
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "135 current blocks, 1476 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
+          "expected": "135 current blocks, 1227 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
         }
       ]
     }

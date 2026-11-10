@@ -3,11 +3,40 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
-import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics } from '../examples/illustrated/scenes.mjs';
+import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, svg } from '../examples/illustrated/scenes.mjs';
+import { palettes, paletteScenes } from '../examples/illustrated/palettes.mjs';
 
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
 const scenes = createScenes();
+const presented=portraitScenes(scenes);
+for(const s of presented) {
+  const c=s.canvas;
+  assert.equal(c.width/c.height,4/5);
+  for(const peer of presented.filter(p=>p.source===s.source))assert.deepEqual(peer.canvas,c,'Comparisons need one fixed camera');
+  assert.equal(fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.svg`,root),'utf8'),svg(s),'Stale portrait SVG');
+  for(const elements of [s.final,...s.frames.map(f=>f.elements)])for(const e of elements) {
+    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p]) {
+      const x=p[0]*c.scale+c.x,y=p[1]*c.scale+c.y;
+      assert(x>=24&&x<=576&&y>=24&&y<=726,`${s.name} clips in portrait`);
+    }
+  }
+}
+const luminance=hex=>hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255)
+  .map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[0.2126,0.7152,0.0722][i],0);
+assert.equal(palettes.filter(p=>p.mode==='light').length,8);
+assert.equal(palettes.filter(p=>p.mode==='dark').length,8);
+assert.equal(new Set(palettes.map(p=>p.background)).size,16);
+for(const p of palettes)for(const role of ['ink','secondary','angle','adjusted']) {
+  const a=luminance(p.background),b=luminance(p[role]);
+  assert((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)>=4.5,`${p.title}: ${role} needs readable contrast`);
+}
+for(const s of paletteScenes()) {
+  const base=new URL(`examples/illustrated/palettes/${s.name}`,root);
+  assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(s));
+  const png=fs.readFileSync(new URL(base.href+'.png'));
+  assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),750);
+}
 const near = (a,b,tolerance=1e-6) => assert(Math.abs(a-b)<tolerance,`${a} != ${b}`);
 const dist = (a,b) => Math.hypot(a[0]-b[0],a[1]-b[1]);
 const alpha = 40*Math.PI/180;
@@ -804,7 +833,7 @@ for(const s of scenes) {
     assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
     assert(gif.includes(Buffer.from([0x21,0xff,11,...Buffer.from('NETSCAPE2.0'),3,1,0,0,0])));
     assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
-    near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
+    near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),750);
   } else {
     const gifPath=new URL(`examples/illustrated/assets/${s.name}.gif`,root);
     if(asset.staticGif) {
@@ -812,12 +841,12 @@ for(const s of scenes) {
       const gif=fs.readFileSync(gifPath);
       assert.equal(gifBlocks(gif).blocks.filter(b=>b.kind==='image').length,1,'Static GIF must contain exactly the final still');
       assert(!gif.includes(Buffer.from('NETSCAPE2.0')),'Static GIF must not loop');
-      assert.equal(gif.readUInt16LE(6),600);assert.equal(gif.readUInt16LE(8),375);
+      assert.equal(gif.readUInt16LE(6),600);assert.equal(gif.readUInt16LE(8),750);
     } else assert(!fs.existsSync(gifPath),'Static figures must not retain obsolete GIFs');
     for(const leader of s.final.filter(e=>e.kind==='term-leader'))assert(leader.a[0]===leader.b[0]||leader.a[1]===leader.b[1],`${s.name} has an oblique callout`);
   }
   const png=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.png`,root));
-  assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
+  assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),750);
   const source=readSvg(s.name).source;
   const terms=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)))?.terms??[];
   const termMatches=(value,term)=>value===term||(value.startsWith(term+' ')&&/^\d+\.\d{2}$/.test(value.slice(term.length+1)));

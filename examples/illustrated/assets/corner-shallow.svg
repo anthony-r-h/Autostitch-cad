@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">A shallow curved corner can need an adjusted corner step</title><desc id="description">Analytic illustration of J08. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">A shallow curved corner can need an adjusted corner step</title><desc id="description">Analytic illustration of J08. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-50.97685261460441 121.02012403610777) scale(1.3620900688930562)">
 <line class="adjusted-gap" x1="256.834206857" y1="213.716701856" x2="262.126782638" y2="211.817958282" stroke="#2166AC" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="262.126782638" y1="211.817958282" x2="267.414255464" y2="209.905050371" stroke="#2166AC" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="267.414255464" y1="209.905050371" x2="272.696587427" y2="207.977991838" stroke="#2166AC" stroke-width="2.2"/>
@@ -180,4 +182,5 @@
 <line class="direction" x1="117.855434087" y1="190" x2="111.855434087" y2="193.5" stroke="#8B8B8B" stroke-width="1.1"/>
 <text class="notation-end" x="439.494997768" y="119.855994843" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 <text class="notation-junction" x="282.790234108" y="218.123904853" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
+</g>
 </svg>

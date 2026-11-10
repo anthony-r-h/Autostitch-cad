@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Slit axis, length, width and lean</title><desc id="description">Analytic illustration of A2. Static terminology figure.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Slit axis, length, width and lean</title><desc id="description">Analytic illustration of A2. Static terminology figure.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-44.60176991150445 145.34336283185837) scale(1.168141592920354)">
 <line class="tangent" x1="70" y1="200" x2="520" y2="200" stroke="#C4C4C4" stroke-width="1"/>
 <text class="term-label" x="472" y="222" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Tangent</text>
 <line class="slit-profile" x1="206.801333443" y1="253.029977799" x2="333.198666557" y2="146.970022201" stroke="#252525" stroke-width="16.5" stroke-linecap="round"/>
@@ -41,4 +43,5 @@
 <line class="lean-angle" x1="307.272908646" y1="170.879212217" x2="306.23390216" y2="169.596146062" stroke="#8B8B8B" stroke-width="1"/>
 <line class="term-leader" x1="400" y1="183.822447221" x2="314.447460963" y2="183.822447221" stroke="#8B8B8B" stroke-width="0.8"/>
 <text class="term-label" x="430" y="187.822447221" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#252525">Lean</text>
+</g>
 </svg>

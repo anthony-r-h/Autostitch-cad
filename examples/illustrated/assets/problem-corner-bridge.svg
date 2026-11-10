@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Bridge</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Bridge</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-84.24351747463362 165.85147089775492) scale(1.1905298759864713)">
 <line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="410" y1="40" x2="410" y2="330.853684306" stroke="#C4C4C4" stroke-width="1"/>
 <text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
@@ -82,4 +84,5 @@
 <line class="thread-length-dimension" x1="358.696948055" y1="62.447594506" x2="364.350398745" y2="56.787338743" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="375.879062244" y1="79.609051407" x2="381.532512934" y2="73.948795644" stroke="#C4C4C4" stroke-width="0.8"/>
 <text class="thread-length-value" x="370.114730494" y="59.198195075" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">2.00</text>
+</g>
 </svg>

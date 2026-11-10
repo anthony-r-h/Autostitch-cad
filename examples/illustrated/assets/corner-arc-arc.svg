@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Two curved arms share one corner hole</title><desc id="description">Analytic illustration of A04. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Two curved arms share one corner hole</title><desc id="description">Analytic illustration of A04. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-129.1347068555848 140.83573405576587) scale(1.55)">
 <line class="guide" x1="172.842769472" y1="170.327654215" x2="175.362810832" y2="167.808073832" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="175.362810832" y1="167.808073832" x2="177.915886245" y2="165.321972527" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="177.915886245" y1="165.321972527" x2="180.501550977" y2="162.869783371" stroke="#C4C4C4" stroke-width="1"/>
@@ -184,4 +186,5 @@
 <line class="direction" x1="193.917474559" y1="148.976850823" x2="192.193460604" y2="155.705727095" stroke="#8B8B8B" stroke-width="1.1"/>
 <text class="notation-end" x="312.472637618" y="256.462298285" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
 <text class="notation-junction" x="396.179216904" y="120.88623485" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
+</g>
 </svg>

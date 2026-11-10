@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Autostitch</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Autostitch</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-84.24351747463362 165.85147089775492) scale(1.1905298759864713)">
 <line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="410" y1="40" x2="410" y2="330.853684306" stroke="#C4C4C4" stroke-width="1"/>
 <line class="extension" x1="410" y1="40" x2="422.829833608" y2="40" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
@@ -105,4 +107,5 @@
 <line class="thread-length-dimension" x1="446.007737667" y1="61.561423352" x2="453.102809046" y2="65.257361951" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="thread-length-dimension" x1="434.300369054" y1="84.035989349" x2="441.395440433" y2="87.731927948" stroke="#C4C4C4" stroke-width="0.8"/>
 <text class="thread-length-value" x="463.70158905" y="74.64667565" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">2.09</text>
+</g>
 </svg>

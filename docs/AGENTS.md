@@ -16,7 +16,7 @@
 ## Illustrated pitch demos
 
 - Keep illustration guidelines and demo scripts in [examples/illustrated/README.md](../examples/illustrated/README.md). Link to them from the pitch instead of duplicating the production scripts in documentation.
-- Use a 600 × 375 px landscape canvas (16:10) for illustrated examples, including every animation frame. Compose and check label readability at 600 px wide.
+- Use a 600 by 750 px portrait canvas (4:5) for illustrated examples, including every animation frame. Compose and check label readability at 600 px wide.
 - Compose examples from independent diagram elements. Use automatically looping GIF/silent WebM animations with SVG masters and PNG still fallbacks, with no playback controls or interactive UI. Generate frames from the elements rather than recording CAD or the screen.
 - Use small, direct examples, each showing one geometric problem or decision. Keep comparison inputs identical and make their different placement policies explicit.
 - Standardize every animation as **Build → Adjustment → Stitch** using the [phase and display rules](../examples/illustrated/README.md#animation-phases). Build establishes the slit layout; Adjustment changes positions or orientations; Stitch reveals thread and fades holes and dimensions. Do not introduce example-specific phase styling.

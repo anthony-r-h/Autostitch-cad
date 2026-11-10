@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">One solved layout, one reflected copy</title><desc id="description">Analytic illustration of S02. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">One solved layout, one reflected copy</title><desc id="description">Analytic illustration of S02. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(0.047664081709854145 187.74825042557217) scale(0.9986759977302817)">
 <line class="guide" x1="60" y1="115" x2="502.25" y2="115" stroke="#C4C4C4" stroke-width="1"/>
 <line class="fixed-end" x1="60" y1="93" x2="60" y2="137" stroke="#8B8B8B" stroke-width="0.8"/>
 <line class="fixed-end" x1="502.25" y1="93" x2="502.25" y2="137" stroke="#8B8B8B" stroke-width="0.8"/>
@@ -83,4 +85,5 @@
 <line class="id-box" x1="564" y1="229" x2="516" y2="229" stroke="#8B8B8B" stroke-width="0.7"/>
 <line class="id-box" x1="516" y1="229" x2="516" y2="213" stroke="#8B8B8B" stroke-width="0.7"/>
 <text class="notation-id" x="540" y="225" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#8B8B8B">ST-1-A</text>
+</g>
 </svg>

@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Loewe hanger: slit corner, flat middle thread and round corner</title><desc id="description">Analytic illustration of ILL-LOEWE-HANGER. Static stitch diagram.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Loewe hanger: slit corner, flat middle thread and round corner</title><desc id="description">Analytic illustration of ILL-LOEWE-HANGER. Static stitch diagram.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-169.14800745325755 74.6875) scale(1.55)">
 <line class="leather-edge" x1="161.25" y1="367.5" x2="161.25" y2="20" stroke="#909090" stroke-width="1.2"/>
 <line class="leather-edge" x1="161.25" y1="20" x2="438.75" y2="20" stroke="#909090" stroke-width="1.2"/>
 <line class="leather-edge" x1="438.75" y1="20" x2="438.75" y2="367.5" stroke="#909090" stroke-width="1.2"/>
@@ -32,4 +34,5 @@
 <line class="slit" x1="389.197732318" y1="290.636666692" x2="413.302267682" y2="319.363333308" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="388.201874542,291.472290584 412.306409906,320.198957201 414.298125458,318.527709416 390.193590094,289.801042799" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="slit" x1="185.491747853" y1="93.258252147" x2="212.008252147" y2="66.741747853" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="186.410986668,94.177490963 212.927490963,67.660986668 211.089013332,65.822509037 184.572509037,92.339013332" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <circle class="hole" cx="401.25" cy="80" r="6.25" fill="#C4C4C4"/>
+</g>
 </svg>

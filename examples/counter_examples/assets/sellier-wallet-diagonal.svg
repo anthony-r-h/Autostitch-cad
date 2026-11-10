@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Shared diagonal corner slit with a decorative H</title><desc id="description">Analytic illustration of ILL-SELLIER-WALLET-DIAGONAL. Static stitch diagram.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Shared diagonal corner slit with a decorative H</title><desc id="description">Analytic illustration of ILL-SELLIER-WALLET-DIAGONAL. Static stitch diagram.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-34.148571428571415 138.2079378286683) scale(1.2571428571428571)">
 <line class="leather-edge" x1="57" y1="32.4" x2="474.6" y2="32.4" stroke="#909090" stroke-width="1.2"/>
 <line class="leather-edge" x1="474.6" y1="32.4" x2="474.6" y2="338.4" stroke="#909090" stroke-width="1.2"/>
 <line class="leather-edge" x1="474.6" y1="338.4" x2="57" y2="338.4" stroke="#909090" stroke-width="1.2"/>
@@ -48,4 +50,5 @@
 <line class="slit" x1="233.588490193" y1="327.411509807" x2="212.905290229" y2="310.056244346" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="234.424114085,326.415652031 213.740914121,309.06038657 212.069666336,311.052102122 232.7528663,328.407367583" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="slit" x1="179.588490193" y1="327.411509807" x2="158.905290229" y2="310.056244346" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="180.424114085,326.415652031 159.740914121,309.06038657 158.069666336,311.052102122 178.7528663,328.407367583" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="slit" x1="425.454058454" y1="43.434825741" x2="444.545941546" y2="62.526708833" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="424.534819638,44.354064557 443.62670273,63.445947649 445.465180362,61.607470018 426.37329727,42.515586926" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+</g>
 </svg>

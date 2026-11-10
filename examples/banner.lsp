@@ -291,6 +291,8 @@
     background (ast:emblem-guides "BANNER_DIAMONDS") frame (ast:emblem-guides "BANNER_PAGE"))
   (ast:cad-require (= 4 (length outlines)) "The banner needs the four YOU contours.")
   (ast:cad-require (= 1 (length frame)) "The banner needs one outer frame.")
+  (ast:cad-require (equal (ast:banner-bounds frame) '((0.0 0.0 0.0) (160.0 200.0 0.0)) 1e-6)
+    "The banner frame must be 160 by 200 mm.")
   (ast:banner-shape-check)
   (foreach guide (append guides lettering background)
     (setq state (ast:cad-read guide))
@@ -308,8 +310,8 @@
   (ast:cad-require (and (= 19 (length lettering)) (= 104 (length guides))
     (= 404 (ast:cad-get 'openings report)) (= 604 (ast:cad-get 'lettering-openings text-report))
     (= 16 (ast:cad-get 'lettering-sources text-report))) "The banner geometry or hole count has changed.")
-  (ast:cad-require (and (= 41 (length background)) (= 467 (ast:cad-get 'background-openings background-report))
-    (= 15 (ast:cad-get 'background-blocks background-report)) (= 26 (ast:cad-get 'background-junctions background-report)))
+  (ast:cad-require (and (= 27 (length background)) (= 218 (ast:cad-get 'background-openings background-report))
+    (= 15 (ast:cad-get 'background-blocks background-report)) (= 12 (ast:cad-get 'background-junctions background-report)))
     "The background geometry or hole count has changed.")
   (append report text-report background-report))
 
@@ -322,13 +324,13 @@
   (foreach entry ast:banner-lettering-layout
     (setq rows (append rows (list (ast:banner-row entry)))))
   ;; Equal gaps between word extents, with the whole composition centred on the page.
-  (setq total (+ 56.0 (apply '+ (mapcar '(lambda (row) (ast:cad-get 'height row)) rows)))
-    cursor (+ 128.0 (* 0.5 total)))
+  (setq total (+ 28.0 (apply '+ (mapcar '(lambda (row) (ast:cad-get 'height row)) rows)))
+    cursor (+ 100.0 (* 0.5 total)))
   (foreach row rows
     (setq cursor (- cursor (ast:cad-get 'height row)))
     (ast:banner-move (ast:cad-get 'guides row) 0.0 cursor)
     (if (= (ast:cad-get 'label row) "YOU") (setq outlines (ast:cad-get 'guides row)))
-    (setq cursor (- cursor 28.0) guides (append guides (ast:cad-get 'guides row))))
+    (setq cursor (- cursor 14.0) guides (append guides (ast:cad-get 'guides row))))
   ;; The question-mark dot is one punch, not a tiny loop of slit holes.
   (setq dot-guide (last guides) dot (ast:banner-dot dot-guide) guides (vl-remove dot-guide guides))
   (entdel dot-guide)
@@ -337,7 +339,7 @@
   (setq text-plans (ast:fill-plans guides T) fill (ast:banner-fill outlines)
     report (ast:banner-text-check text-plans (ast:cad-get 'plans fill) dot)
     foreground (cons dot (append (ast:emblem-openings text-plans) (ast:emblem-openings (ast:cad-get 'plans fill))))
-    frame (ast:banner-poly (ast:show-stroke '((0 0) (160 0) (160 256) (0 256)) T) '(0.0 0.0) "BANNER_PAGE")
+    frame (ast:banner-poly (ast:show-stroke '((0 0) (160 0) (160 200) (0 200)) T) '(0.0 0.0) "BANNER_PAGE")
     background (ast:banner-background guides foreground frame)
     result (ast:cad-transaction 'ast:cad-write-components-inner
       (list (append text-plans (ast:cad-get 'plans fill) (ast:cad-get 'plans background)))))
@@ -350,9 +352,9 @@
   (entmod (subst '(8 . "BANNER_PUNCTUATION") (assoc 8 entity) entity))
   (vl-cmdf "_.-LAYER" "_OFF" "BANNER_FLOW,BANNER_LETTERS,BANNER_YOU,BANNER_DIAMONDS,AUTOSTITCH_UI" "")
   (setvar "LWDISPLAY" 1) (setvar "UCSICON" 0)
-  (vl-cmdf "_.ZOOM" "_W" '(0.0 0.0) '(160.0 256.0))
+  (vl-cmdf "_.ZOOM" "_W" '(0.0 0.0) '(160.0 200.0))
   (vl-cmdf "_.-VIEW" "_Save" "BANNER")
   (princ "\nBanner lettering, flow fill and diamond background stitched.")
   (append (vl-remove (assoc 'plans fill) fill) report (vl-remove (assoc 'plans background) background)
-    (list (cons 'lettering-guides (length guides)) '(page-width . 160.0) '(page-height . 256.0))))
+    (list (cons 'lettering-guides (length guides)) '(page-width . 160.0) '(page-height . 200.0))))
 (princ)

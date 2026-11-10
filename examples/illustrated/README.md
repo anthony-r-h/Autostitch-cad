@@ -2,6 +2,17 @@
 
 Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
+## Format and colour studies
+
+- All figures export at $600\times750$ px (4:5 portrait). Geometry scales uniformly; related comparisons share one fixed camera across every frame.
+- [Sixteen colour options](palettes/index.html): eight light and eight dark backgrounds, using the same Vertex point corner. [Contact sheet](palettes/contact-sheet.png).
+- Thread, measurements and angle labels meet a minimum 4.5:1 contrast against their background. Slit holes remain lighter than thread. These are options; the main diagrams retain their existing colours until a palette is selected.
+- Palette definitions: `palettes.mjs`. Rebuild the gallery, individual SVG/PNG figures and contact sheet:
+
+```powershell
+./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/palettes.mjs -OutputDirectory ./examples/illustrated/palettes -ContactSheet
+```
+
 ## Animation phases
 
 Use **Build → Adjustment → Stitch**, in that order.
@@ -226,7 +237,7 @@ The builder reads catalog inputs and analytic JavaScript scene recipes. It does 
 
 ## Figure rules
 
-- Fixed $600\times375$ px canvas and framing throughout each loop.
+- Fixed $600\times750$ px canvas and framing throughout each loop.
 - Geometry on a plain background. No headings, scorecards, counters, banners or duplicate prose inside the image.
 - Only local dimensions and feature labels needed to follow the current step.
 - Follow the [animation phases](#animation-phases); show only the construction and adjustment needed for the example.

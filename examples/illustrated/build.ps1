@@ -2,7 +2,8 @@
 [CmdletBinding()]
 param(
  [string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'),
- [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs')
+ [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs'),
+ [switch]$ContactSheet
 )
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing,PresentationCore,WindowsBase
@@ -13,13 +14,16 @@ $temporary = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ('../../output/'+(S
 if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
 $scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 
-function Draw-Frame($elements) {
- $large=[Drawing.Bitmap]::new(1200,750)
+function Draw-Frame($elements,$canvas) {
+ $large=[Drawing.Bitmap]::new(($canvas.width*2),($canvas.height*2))
  $g=[Drawing.Graphics]::FromImage($large)
- $small=[Drawing.Bitmap]::new(600,375)
+ $small=[Drawing.Bitmap]::new($canvas.width,$canvas.height)
  try {
-  $g.Clear([Drawing.Color]::White)
+  $background=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($canvas.background))
+  $g.Clear($background.Color)
   $g.ScaleTransform(2,2)
+  $g.TranslateTransform([single]$canvas.x,[single]$canvas.y)
+  $g.ScaleTransform([single]$canvas.scale,[single]$canvas.scale)
   $g.SmoothingMode=[Drawing.Drawing2D.SmoothingMode]::AntiAlias
   $g.TextRenderingHint=[Drawing.Text.TextRenderingHint]::AntiAliasGridFit
   foreach($element in $elements) {
@@ -38,7 +42,7 @@ function Draw-Frame($elements) {
       $border=[Drawing.Pen]::new($color,[single]$element.outlineWidth)
       try {
        if($element.dash){$border.DashPattern=@([single](4/$element.outlineWidth),[single](4/$element.outlineWidth))}
-       $g.FillPolygon([Drawing.Brushes]::White,$points)
+       $g.FillPolygon($background,$points)
        $g.DrawPolygon($border,$points)
       } finally {$border.Dispose()}
       break
@@ -78,14 +82,14 @@ function Draw-Frame($elements) {
   $finish=[Drawing.Graphics]::FromImage($small)
   try {
    $finish.InterpolationMode=[Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-   $finish.DrawImage($large,0,0,600,375)
+   $finish.DrawImage($large,0,0,$canvas.width,$canvas.height)
   } finally {$finish.Dispose()}
   return $small
  } catch {$small.Dispose();throw}
- finally {$g.Dispose();$large.Dispose()}
+ finally {if($background){$background.Dispose()};$g.Dispose();$large.Dispose()}
 }
 foreach($scene in $scenes) {
- $still=Draw-Frame $scene.final
+ $still=Draw-Frame $scene.final $scene.canvas
  try {
   $still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
   # Preserve existing embed paths when an animation becomes a static figure.
@@ -104,7 +108,7 @@ foreach($scene in $scenes) {
  }
  $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
  foreach($frame in $scene.frames) {
-  $bitmap=Draw-Frame $frame.elements
+  $bitmap=Draw-Frame $frame.elements $scene.canvas
   $stream=[IO.MemoryStream]::new()
   try {
    $bitmap.Save($stream,[Drawing.Imaging.ImageFormat]::Png)
@@ -127,3 +131,23 @@ foreach($scene in $scenes) {
 & node $SceneScript finish $OutputDirectory $temporary
 if ($LASTEXITCODE -ne 0) { throw 'Animation timing export failed.' }
 Write-Output 'Looping GIFs written with explicit reveal timing and result holds.'
+if($ContactSheet) {
+ $sheet=[Drawing.Bitmap]::new(1280,1720)
+ $g=[Drawing.Graphics]::FromImage($sheet)
+ $font=[Drawing.Font]::new('Arial',18,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
+ $heading=[Drawing.Font]::new('Arial',24,[Drawing.FontStyle]::Bold,[Drawing.GraphicsUnit]::Pixel)
+ $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml('#292B30'))
+ try {
+  $g.Clear([Drawing.ColorTranslator]::FromHtml('#E4E2DE'))
+  $g.InterpolationMode=[Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+  $g.TextRenderingHint=[Drawing.Text.TextRenderingHint]::AntiAliasGridFit
+  $g.DrawString('AUTOSTITCH / COLOUR STUDIES',$heading,$brush,28,18)
+  for($index=0;$index -lt $scenes.Count;$index++) {
+   $row=[Math]::Floor($index/4);$x=28+($index%4)*312;$y=62+$row*410
+   $picture=[Drawing.Image]::FromFile((Join-Path $OutputDirectory ($scenes[$index].name+'.png')))
+   try {$g.DrawImage($picture,[single]$x,[single]$y,[single]288,[single]360)} finally {$picture.Dispose()}
+   $g.DrawString($scenes[$index].title,$font,$brush,[single]$x,[single]($y+371))
+  }
+  $sheet.Save((Join-Path $OutputDirectory 'contact-sheet.png'),[Drawing.Imaging.ImageFormat]::Png)
+ } finally {$brush.Dispose();$heading.Dispose();$font.Dispose();$g.Dispose();$sheet.Dispose()}
+}

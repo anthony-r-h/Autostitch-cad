@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Chord length and arc length between the same slit centres</title><desc id="description">Analytic illustration of A3. Static terminology figure.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Chord length and arc length between the same slit centres</title><desc id="description">Analytic illustration of A3. Static terminology figure.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-188.86702425987238 123.27999999999997) scale(1.55)">
 <line class="guide" x1="180" y1="172.153903092" x2="185.481897538" y2="169.083892961" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="185.481897538" y1="169.083892961" x2="191.042280063" y2="166.158434195" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="191.042280063" y1="166.158434195" x2="196.677336766" y2="163.379531756" stroke="#C4C4C4" stroke-width="1"/>
@@ -93,4 +95,5 @@
 <line class="direction" x1="205.980762114" y1="157.153903092" x2="199.034609691" y2="157.122814178" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="205.980762114" y1="157.153903092" x2="202.534609691" y2="163.184992005" stroke="#8B8B8B" stroke-width="1.1"/>
 <text class="notation-end" x="438.892304845" y="163.431471227" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">e</text>
+</g>
 </svg>

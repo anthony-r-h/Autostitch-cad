@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createScenes,absoluteStitchLengthDeviation} from '../examples/counter_examples/scenes.mjs';
-import {gifBlocks,svg} from '../examples/illustrated/scenes.mjs';
+import {gifBlocks,svg,portraitScenes} from '../examples/illustrated/scenes.mjs';
 
 const root=new URL('../',import.meta.url),scenes=createScenes();
 const near=(a,b)=>assert(Math.abs(a-b)<1e-6,`${a} != ${b}`);
@@ -328,11 +328,11 @@ for(const [reference,solution] of [[2,1],[3,4],[5,6],[7,8]]) {
 
 for(const s of scenes) {
   const base=new URL(`examples/counter_examples/assets/${s.name}`,root);
-  assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(s),'Stale SVG');
-  const png=fs.readFileSync(new URL(base.href+'.png'));assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),375);
+  assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(portraitScenes(scenes).find(v=>v.name===s.name)),'Stale SVG');
+  const png=fs.readFileSync(new URL(base.href+'.png'));assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),750);
   if(s.frames.length) {
     const gif=fs.readFileSync(new URL(base.href+'.gif')),blocks=gifBlocks(gif).blocks;
-    near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),375);
+    near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),750);
     assert.equal(blocks.filter(b=>b.kind==='image').length,s.frames.length);
     assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
     assert(gif.includes(Buffer.from('NETSCAPE2.0')));

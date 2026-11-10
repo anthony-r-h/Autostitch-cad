@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Autostitch X junction with a curved arm</title><desc id="description">Analytic illustration of ILL-JUNCTION-COMPARISON. Final state of the accompanying animation.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Autostitch X junction with a curved arm</title><desc id="description">Analytic illustration of ILL-JUNCTION-COMPARISON. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(-177.4671764357953 102.38685999809854) scale(1.55)">
 <line class="guide" x1="300" y1="185" x2="302.76476775" y2="182.191299021" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="302.76476775" y1="182.191299021" x2="305.484915161" y2="179.339362843" stroke="#C4C4C4" stroke-width="1"/>
 <line class="guide" x1="305.484915161" y1="179.339362843" x2="308.159766211" y2="176.44490024" stroke="#C4C4C4" stroke-width="1"/>
@@ -192,4 +194,5 @@
 <line class="adjustment-mark" x1="343.37502011" y1="240.858260366" x2="344.012346479" y2="233.573586636" stroke="#2166AC" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="362.053670699" y1="242.492430542" x2="362.690997068" y2="235.207756812" stroke="#2166AC" stroke-width="0.8"/>
 <line class="slit" x1="317.177179" y1="210.699419206" x2="335.855829589" y2="212.333589383" stroke="#FFFFFF" stroke-width="2.6"/><polygon class="slit-outline" points="317.063876534,211.994472314 335.742527124,213.62864249 335.969132055,211.038536275 317.290481465,209.404366099" fill="#FFFFFF" stroke="#C4C4C4" stroke-width="0.8"/>
+</g>
 </svg>

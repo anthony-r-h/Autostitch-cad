@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">Clearance fails near an acute junction and passes farther away</title><desc id="description">Analytic illustration of A10. Static terminology figure.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Clearance fails near an acute junction and passes farther away</title><desc id="description">Analytic illustration of A10. Static terminology figure.</desc>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(1.3185072877833477 117.22285205159739) scale(1.0985016112890698)">
 <line class="guide" x1="75" y1="200" x2="475.226369929" y2="179.025024741" stroke="#C4C4C4" stroke-width="1"/>
 <line class="extension" x1="75" y1="200" x2="55.801965332" y2="201.006126364" stroke="#C4C4C4" stroke-width="1" stroke-dasharray="4 4"/>
 <line class="guide" x1="75" y1="200" x2="473.460222458" y2="220.882415392" stroke="#C4C4C4" stroke-width="1"/>
@@ -32,4 +34,5 @@
 <line class="direction" x1="445.267483887" y1="180.595103429" x2="451.442436942" y2="183.776291063" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="445.267483887" y1="180.595103429" x2="451.076085248" y2="176.78588432" stroke="#8B8B8B" stroke-width="1.1"/>
 <text class="notation-junction" x="93" y="201.103669412" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">j</text>
+</g>
 </svg>

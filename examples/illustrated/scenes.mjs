@@ -1054,18 +1054,37 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
     return {...e,color};
   });
 }
+// Presentation only: keep model coordinates and a common camera across comparisons.
+export function portraitScenes(scenes) {
+  const bounds=new Map();
+  for(const s of scenes) {
+    const box=bounds.get(s.source)??[Infinity,Infinity,-Infinity,-Infinity];
+    for(const elements of [s.final,...s.frames.map(f=>f.elements)])for(const e of elements) {
+      const points=e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p];
+      const pad=e.type==='text'?Math.max(e.size,e.value.length*e.size*0.3):(e.radius??e.width??0);
+      for(const p of points){box[0]=Math.min(box[0],p[0]-pad);box[1]=Math.min(box[1],p[1]-pad);box[2]=Math.max(box[2],p[0]+pad);box[3]=Math.max(box[3],p[1]+pad);}
+    }
+    bounds.set(s.source,box);
+  }
+  return scenes.map(s=>{
+    const b=bounds.get(s.source),scale=Math.min(1.55,528/(b[2]-b[0]),654/(b[3]-b[1]));
+    return {...s,canvas:{width:600,height:750,background:'#FFFFFF',scale,x:300-scale*(b[0]+b[2])/2,y:375-scale*(b[1]+b[3])/2},
+      displayed:true,final:displayElements(s.final),frames:s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening)}))};
+  });
+}
 export function svg(scene) {
-  const elements=displayElements(scene.final).map(e=>{
+  const canvas=scene.canvas??{width:600,height:750,background:'#FFFFFF',scale:1,x:0,y:187.5};
+  const elements=(scene.displayed?scene.final:displayElements(scene.final)).map(e=>{
     if(e.type==='line') {
-      const axisLine=`<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.outline?'#FFFFFF':e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
+      const axisLine=`<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.outline?canvas.background:e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
       if(!e.outline)return axisLine;
-      return axisLine+`<polygon class="slit-outline" points="${rectanglePoints(e).map(p=>p.map(n).join(',')).join(' ')}" fill="#FFFFFF" stroke="${e.color}" stroke-width="${e.outlineWidth}"${e.dash?' stroke-dasharray="4 4"':''}/>`;
+      return axisLine+`<polygon class="slit-outline" points="${rectanglePoints(e).map(p=>p.map(n).join(',')).join(' ')}" fill="${canvas.background}" stroke="${e.color}" stroke-width="${e.outlineWidth}"${e.dash?' stroke-dasharray="4 4"':''}/>`;
     }
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
     if(e.type==='polygon')return `<polygon class="${e.kind}" points="${e.points.map(p=>p.map(n).join(',')).join(' ')}" fill="${e.color}" fill-opacity="${e.opacity??1}"/>`;
     return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
   });
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':scene.threadPaths?'Static stitch diagram.':'Static terminology figure.'}</desc>\n${elements.join('\n')}\n</svg>\n`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':scene.threadPaths?'Static stitch diagram.':'Static terminology figure.'}</desc>\n<rect width="100%" height="100%" fill="${canvas.background}"/>\n<g transform="translate(${canvas.x} ${canvas.y}) scale(${canvas.scale})">\n${elements.join('\n')}\n</g>\n</svg>\n`;
 }
 
 // GIF89a blocks: https://www.w3.org/Graphics/GIF/spec-gif89a.txt
@@ -1103,10 +1122,9 @@ export function writeSceneFiles(scenes) {
   const mode=process.argv[2],output=path.resolve(process.argv[3]),temporary=path.resolve(process.argv[4]);
   fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
   if(mode==='prepare') {
-    const displayed=scenes.map(s=>({...s,final:displayElements(s.final),frames:s.frames.map(f=>
-      ({...f,elements:displayElements(f.elements,f.holeLightening)}))}));
+    const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes);
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(displayed));
-    for(const scene of scenes)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
+    for(const scene of displayed)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {
     for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');

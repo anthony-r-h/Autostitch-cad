@@ -348,8 +348,8 @@
     (null (ast:cad-get 'range-conflict state)))
     "Set start on a loop removes obsolete endpoint limits left by a former open guide")
 
-  (setq first (entmakex '((0 . "LINE") (8 . "0") (10 -12.0 1800.0 0.0) (11 12.0 1800.0 0.0)))
-        second (entmakex '((0 . "LINE") (8 . "0") (10 0.0 1800.0 0.0) (11 0.0 1812.0 0.0)))
+  (setq first (entmakex '((0 . "LINE") (8 . "0") (10 -10.5 1800.0 0.0) (11 10.5 1800.0 0.0)))
+        second (entmakex '((0 . "LINE") (8 . "0") (10 0.0 1800.0 0.0) (11 0.0 1810.5 0.0)))
         result (ast:cad-connect first second '(0.0 1800.0 0.0) settings nil)
         output (ast:cad-get 'output result) first-data (entget first) second-data (entget second))
   (ast:cad-require output "Could not create the connected palette fixture.")

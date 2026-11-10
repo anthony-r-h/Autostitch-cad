@@ -1,6 +1,13 @@
 /.playwright-cli/
+# Local artifacts only; canonical sources and published figures belong outside output.
+# Retention and cleanup: docs/REPO-CLEANUP.md
 /output/
 
 # BricsCAD drawing locks
 *.dwl
 *.dwl2
+
+# Local crash reports and sync conflict copies
+*.dmp
+* (conflicted).*
+* \[conflicted\].*

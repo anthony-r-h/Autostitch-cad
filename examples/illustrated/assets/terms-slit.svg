@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Slit axis, length, width and lean</title><desc id="description">Analytic illustration of A2. Static terminology figure.</desc>
+<rect width="100%" height="100%" fill="#202225"/>
+<g transform="translate(-44.60176991150445 145.72300884955754) scale(1.168141592920354)">
+<line class="tangent" x1="70" y1="200" x2="520" y2="200" stroke="#797E87" stroke-width="1"/>
+<rect class="label-background" x="439.425" y="208.04" width="65.15" height="18.95" fill="#2D2F31"/><text class="term-label" x="472" y="222" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Tangent</text>
+<line class="slit-profile" x1="206.801333443" y1="253.029977799" x2="333.198666557" y2="146.970022201" stroke="#F5F3ED" stroke-width="16.5" stroke-linecap="round"/>
+<line class="term-leader" x1="210" y1="294" x2="210" y2="257" stroke="#CECECE" stroke-width="0.8"/>
+<rect class="label-background" x="190.1" y="296.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="term-label" x="210" y="310" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Slit</text>
+<line class="slit-axis" x1="206.801333443" y1="253.029977799" x2="333.198666557" y2="146.970022201" stroke="#202225" stroke-width="1" stroke-dasharray="4 4"/>
+<line class="term-leader" x1="270" y1="294" x2="270" y2="200" stroke="#CECECE" stroke-width="0.8"/>
+<rect class="label-background" x="250.1" y="296.04" width="39.8" height="18.95" fill="#2D2F31"/><text class="term-label" x="270" y="310" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Axis</text>
+<line class="dimension" x1="171.44801491" y1="210.897533428" x2="297.845348025" y2="104.837577829" stroke="#CECECE" stroke-width="0.8"/>
+<line class="dimension" x1="174.019165349" y1="213.9617112" x2="168.876864471" y2="207.833355655" stroke="#CECECE" stroke-width="0.8"/>
+<line class="dimension" x1="300.416498463" y1="107.901755602" x2="295.274197586" y2="101.773400057" stroke="#CECECE" stroke-width="0.8"/>
+<line class="term-leader" x1="235" y1="99" x2="235" y2="158" stroke="#CECECE" stroke-width="0.8"/>
+<rect class="label-background" x="206.65" y="77.04" width="56.7" height="18.95" fill="#2D2F31"/><text class="term-label" x="235" y="91" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Length</text>
+<line class="width-dimension" x1="363.78113096" y1="132.077897737" x2="353.1751354" y2="119.438164425" stroke="#CECECE" stroke-width="0.8"/>
+<line class="width-dimension" x1="360.716953188" y1="134.649048176" x2="366.845308733" y2="129.506747298" stroke="#CECECE" stroke-width="0.8"/>
+<line class="width-dimension" x1="350.110957628" y1="122.009314864" x2="356.239313173" y2="116.867013987" stroke="#CECECE" stroke-width="0.8"/>
+<line class="width-extension" x1="338.501664337" y1="153.289888857" x2="363.78113096" y2="132.077897737" stroke="#797E87" stroke-width="0.8"/>
+<line class="width-extension" x1="327.895668777" y1="140.650155545" x2="353.1751354" y2="119.438164425" stroke="#797E87" stroke-width="0.8"/>
+<line class="term-leader" x1="358.47813318" y1="99" x2="358.47813318" y2="125.758031081" stroke="#CECECE" stroke-width="0.8"/>
+<rect class="label-background" x="334.35313318" y="77.04" width="48.25" height="18.95" fill="#2D2F31"/><text class="term-label" x="358.47813318" y="91" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Width</text>
+<line class="lean-angle" x1="317.3" y1="200" x2="317.271186118" y2="198.349253806" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="317.271186118" y1="198.349253806" x2="317.184779577" y2="196.700518792" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="317.184779577" y1="196.700518792" x2="317.040885651" y2="195.055803687" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="317.040885651" y1="195.055803687" x2="316.839679651" y2="193.417112325" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="316.839679651" y1="193.417112325" x2="316.581406717" y2="191.786441196" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="316.581406717" y1="191.786441196" x2="316.266381515" y2="190.165777024" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="316.266381515" y1="190.165777024" x2="315.894987853" y2="188.557094338" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="315.894987853" y1="188.557094338" x2="315.467678218" y2="186.96235307" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="315.467678218" y1="186.96235307" x2="314.984973221" y2="185.383496166" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="314.984973221" y1="185.383496166" x2="314.447460963" y2="183.822447221" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="314.447460963" y1="183.822447221" x2="313.855796321" y2="182.281108131" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="313.855796321" y1="182.281108131" x2="313.210700146" y2="180.761356783" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="313.210700146" y1="180.761356783" x2="312.51295839" y2="179.265044757" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="312.51295839" y1="179.265044757" x2="311.763421142" y2="177.79399508" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="311.763421142" y1="177.79399508" x2="310.963001599" y2="176.35" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="310.963001599" y1="176.35" x2="310.112674948" y2="174.934818802" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="310.112674948" y1="174.934818802" x2="309.213477182" y2="173.550175666" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="309.213477182" y1="173.550175666" x2="308.266503834" y2="172.197757567" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="308.266503834" y1="172.197757567" x2="307.272908646" y2="170.879212217" stroke="#CECECE" stroke-width="1"/>
+<line class="lean-angle" x1="307.272908646" y1="170.879212217" x2="306.23390216" y2="169.596146062" stroke="#CECECE" stroke-width="1"/>
+<line class="term-leader" x1="400" y1="183.822447221" x2="314.447460963" y2="183.822447221" stroke="#CECECE" stroke-width="0.8"/>
+<rect class="label-background" x="410.1" y="173.862447221" width="39.8" height="18.95" fill="#2D2F31"/><text class="term-label" x="430" y="187.822447221" text-anchor="middle" font-family="Arial" font-size="13" fill="#F5F3ED">Lean</text>
+</g>
+</svg>

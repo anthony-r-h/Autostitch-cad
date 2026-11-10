@@ -1215,7 +1215,7 @@
     },
     {
       "id": "J02",
-      "title": "90\u00c2\u00b0 corner",
+      "title": "90Ãƒâ€šÃ‚Â° corner",
       "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
       "group": "Corner angles",
       "svg": true,
@@ -1394,7 +1394,7 @@
     },
     {
       "id": "J03",
-      "title": "135\u00c2\u00b0 corner",
+      "title": "135Ãƒâ€šÃ‚Â° corner",
       "description": "Does the same direct construction fit the supplied wider corner?",
       "group": "Corner angles",
       "svg": true,
@@ -1573,7 +1573,7 @@
     },
     {
       "id": "J04",
-      "title": "45\u00c2\u00b0 corner",
+      "title": "45Ãƒâ€šÃ‚Â° corner",
       "description": "Does the same direct construction fit the supplied tighter corner?",
       "group": "Corner angles",
       "svg": true,
@@ -4211,7 +4211,7 @@
     },
     {
       "id": "J08",
-      "title": "Shallow line\u00ef\u00bf\u00bdarc corner",
+      "title": "Shallow lineÃƒÂ¯Ã‚Â¿Ã‚Â½arc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4406,7 +4406,7 @@
     },
     {
       "id": "J09",
-      "title": "Shallow arc\u00ef\u00bf\u00bdline corner",
+      "title": "Shallow arcÃƒÂ¯Ã‚Â¿Ã‚Â½line corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "J10",
-      "title": "Shallow arc\u00ef\u00bf\u00bdarc corner",
+      "title": "Shallow arcÃƒÂ¯Ã‚Â¿Ã‚Â½arc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4791,6 +4791,20 @@
       ]
     }
   ],
+  "buildChecks": {
+    "id": "BUILD-DIAGRAM-LIFECYCLE",
+    "source": "tests/validate-diagram-build.ps1",
+    "command": "./tests/validate-diagram-build.ps1",
+    "expected": "Successful diagram builds remove only their own scratch; explicit review requests and failures retain diagnostics.",
+    "coverage": [
+      "Unique scratch paths and sibling preservation",
+      "Successful SVG, PNG and GIF exports survive scratch cleanup",
+      "KeepScratch retains intermediates",
+      "FrameTimes retains requested review images",
+      "Prepare and finish failures retain diagnostic files",
+      "Empty exports fail validation and retain scratch"
+    ]
+  },
   "oracle": {
     "id": "FIT-ORACLE",
     "title": "Central correction selection against exhaustive enumeration",
@@ -5668,7 +5682,7 @@
         },
         {
           "id": "NET-017",
-          "expected": "curved branch first gaps are exact three-millimetre chords",
+          "expected": "curved branch first gaps are exact half-pitch chords",
           "sourceSymbol": "ast:n-tests"
         },
         {
@@ -5836,7 +5850,7 @@
               "if",
               "expected",
               {
-                "text": " retains every nominal first chord and one shared hole"
+                "text": " retains every half-pitch first chord and one shared hole"
               },
               {
                 "text": " rejects the independently demonstrated slit-clearance violation"
@@ -5855,6 +5869,41 @@
               "text": " is unchanged by reversed guide selection"
             }
           ]
+        },
+        {
+          "id": "NET-048",
+          "expected": "Five arms reserve half pitch on every arm and nominal ordinary gaps",
+          "sourceSymbol": "ast:n-test-half-pitch"
+        },
+        {
+          "id": "NET-049",
+          "expected": "Five-arm half-pitch placement is independent of guide selection order",
+          "sourceSymbol": "ast:n-test-half-pitch"
+        },
+        {
+          "id": "NET-050",
+          "expected": "Short branch spans reject instead of falling back to full pitch",
+          "sourceSymbol": "ast:n-test-half-pitch"
+        },
+        {
+          "id": "NET-051",
+          "expected": "A pitch-long chord between curved branch holes cannot replace two half-pitch chords",
+          "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "NET-052",
+          "expected": "Two curved branch reservations share one midpoint slit at exact half-pitch chords",
+          "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "NET-053",
+          "expected": "An exact tangent arc endpoint remains one finite connection in either guide order",
+          "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "NET-054",
+          "expected": "A tangent guide outside the endpoint tolerance does not acquire a connection",
+          "sourceSymbol": "ast:n-test-curved-link"
         }
       ],
       "matrices": [
@@ -5890,16 +5939,16 @@
           "slitWidth": 0.2,
           "margin": 0.2,
           "straightAngles": [
-            5,
-            15
+            30,
+            35
           ],
-          "curvedAngle": 14,
+          "curvedAngle": 35,
           "curveRadius": 30,
           "curveWindings": [
             -1,
             1
           ],
-          "expected": "Straight T/X: 15 degrees passes, 5 degrees rejects clearance. Curved T at 14 degrees: positive winding passes, negative winding rejects clearance. All passing arms retain a 3 mm first chord and share exactly one hole; reversing selection preserves the result."
+          "expected": "Straight T/X: 35 degrees passes, 30 degrees rejects clearance. Curved T at 35 degrees: positive winding passes, negative winding rejects clearance. All passing arms retain a 1.5 mm half-pitch chord and share exactly one hole; reversing selection preserves the result."
         }
       ]
     },
@@ -6822,7 +6871,7 @@
         },
         {
           "id": "CONNECT-005",
-          "expected": "T emits twelve slits and one shared hole",
+          "expected": "T emits fifteen slits and one shared hole",
           "sourceSymbol": "ast:cad-connected-tests"
         },
         {
@@ -6878,7 +6927,7 @@
         },
         {
           "id": "CONNECT-016",
-          "expected": "X crossing emits sixteen slits and exactly one shared hole",
+          "expected": "X crossing emits twenty slits and exactly one shared hole",
           "sourceSymbol": "ast:cad-connected-tests"
         },
         {
@@ -8318,17 +8367,17 @@
         },
         {
           "id": "FILL-NATIVE-018",
-          "expected": "Maze has 77 openings with 7 shared junction holes",
+          "expected": "Maze has 82 openings with 7 shared junction holes",
           "sourceSymbol": "ast:fill-tests"
         },
         {
           "id": "FILL-NATIVE-019",
-          "expected": "Maze gaps stay nominal without spacing adjustments",
+          "expected": "Maze reserves half pitch at junctions and nominal gaps elsewhere",
           "sourceSymbol": "ast:fill-tests"
         },
         {
           "id": "FILL-NATIVE-020",
-          "expected": "Maze stays on a 6 mm grid within a 36 by 30 mm footprint",
+          "expected": "Maze junctions stay on a 6 mm grid with half-pitch free-end insets",
           "sourceSymbol": "ast:fill-tests"
         },
         {
@@ -8371,9 +8420,9 @@
         "Six millimetre separation between circle holes and lettering holes",
         "Nominal circle spacing with short remnants omitted"
       ],
-      "expected": "15 lettering guides and 11 circle arcs generate 23 stitch blocks: 521 lettering openings and 444 circle openings, plus one separate round dot. Combined clearance and the 6 mm blank border pass.",
+      "expected": "15 lettering guides and 12 circle arcs generate 24 stitch blocks: 580 lettering openings and 496 circle openings, plus one separate round dot. Two crown-apex landmarks on A. All guides use 2.7 mm pitch; combined clearance and the 6 mm blank border pass.",
       "parameters": {
-        "pitch": 3,
+        "pitch": 2.7,
         "slitLength": 1.5,
         "circleRadii": [
           110,
@@ -8387,7 +8436,7 @@
         {
           "source": "examples/emblem.lsp",
           "entrypoint": "ast:emblem-check",
-          "expected": "Every guide has current output, no obsolete circle landmarks remain, circular gaps are nominal, and all circle holes clear the text by at least 6 mm."
+          "expected": "Every guide has current output at 2.7 mm pitch, exactly two crown-apex landmarks remain on A, circular gaps are nominal, and all circle holes clear the text by at least 6 mm."
         }
       ]
     },
@@ -8407,7 +8456,7 @@
         }
       ],
       "coverage": [
-        "Portrait 10:16 page, 160 by 256 mm",
+        "Portrait 4:5 page, 160 by 200 mm",
         "Equal-sized script rows with tighter spacing and true circular a bowls",
         "No upright or other lettering stroke crosses an a bowl",
         "All lettering and fill solved at 2.7 mm pitch",
@@ -8415,18 +8464,18 @@
         "3 mm clearance between fill holes and lettering holes; empty O counter",
         "One round punch for the question-mark dot",
         "Nominal fill pitch, symmetric free-end trimming; single-stitch fragments retained",
-        "600 by 960 pixel preview of native stitched output",
+        "600 by 750 pixel preview of native stitched output",
         "Loose diamond quilt with shared crossings, clipped outside a 6 mm text perimeter",
         "Outer frame acts as a stopping boundary; every background hole stays inside it",
         "Closed letter interiors and counters remain free of background stitches",
         "Sloping e spine, l loops without low entry strokes, closer question mark; can unchanged"
       ],
-      "expected": "19 lettering guides in 16 blocks with 604 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 41 guides in 15 blocks with 467 openings, 26 shared junctions and 15 adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
+      "expected": "19 lettering guides in 16 blocks with 612 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 24 guides in 13 blocks with 204 openings, 11 shared junctions and no adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
       "parameters": {
         "pageWidth": 160,
-        "pageHeight": 256,
+        "pageHeight": 200,
         "previewWidth": 600,
-        "previewHeight": 960,
+        "previewHeight": 750,
         "words": [
           "can",
           "YOU",
@@ -8458,7 +8507,7 @@
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "135 current blocks, 1476 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
+          "expected": "135 current blocks, 1227 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
         }
       ]
     }
@@ -8500,8 +8549,8 @@
         "examples/fills/fill-maze.png",
         "examples/fills/fill-maze.svg"
       ],
-      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 6 mm corridors. Twelve wall lines and seven T junctions; all passages remain connected.",
-      "expected": "77 openings, including 7 shared round holes, at 3 mm pitch. No adjusted gaps. Production solving and combined default-model clearance pass.",
+      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 6 mm corridors. Twelve wall lines and seven T junctions; junction positions stay on the grid, while connected walls' free ends stop 1.5 mm inside their grid endpoints. All passages remain connected.",
+      "expected": "82 openings, including 7 shared round holes, at 3 mm pitch. Every branching arm reserves a 1.5 mm chord; ordinary gaps remain nominal. Production solving and combined default-model clearance pass.",
       "usedBy": [],
       "drawing": "examples/demos/fills.dwg",
       "view": "MAZE"
@@ -8513,7 +8562,7 @@
       "source": "examples/fills.lsp",
       "parameters": {
         "cells": 7,
-        "extension": 6,
+        "extension": 4.5,
         "crossing-spacing": 6
       },
       "previewName": "fill-quilt",
@@ -8521,8 +8570,8 @@
         "examples/fills/fill-quilt.png",
         "examples/fills/fill-quilt.svg"
       ],
-      "notes": "Two crossing guide families; 64 X junctions share round holes. Six millimetres between crossings leaves slit holes between nodes.",
-      "expected": "240 openings at 3 mm pitch and 1.5 mm slit length. Production solving and combined default-model clearance pass.",
+      "notes": "Two crossing guide families; 64 X junctions share round holes. Crossings remain 6 mm apart, with guides extending 4.5 mm beyond the outer crossings.",
+      "expected": "352 openings at 3 mm pitch and 1.5 mm slit length. Every branching arm reserves a 1.5 mm chord; ordinary gaps remain nominal. Production solving and combined default-model clearance pass.",
       "usedBy": [
         "ART-D"
       ],
@@ -8542,7 +8591,7 @@
         "chord": 36,
         "sag": 3,
         "rows": 25,
-        "row-spacing": 3.0
+        "row-spacing": 3
       },
       "previewName": "fill-flow",
       "exports": [
@@ -8571,5 +8620,1209 @@
       "Invalid clipping, tight curvature and infeasible junction spacing",
       "Diameter landmarks preserve nominal gaps and balance circle adjustments"
     ]
-  }
+  },
+  "illustrations": [
+    {
+      "id": "ILL-S02",
+      "measurementPolicy": "Dimension every gap throughout the spacing comparison. Show the remaining residual in red; remove its segment and value when resolved.",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "source": "examples/illustrated/scenes.mjs",
+      "status": "Analytic looping comparisons; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/pitch-problem",
+          "policy": "unresolved",
+          "label": "Residual setup"
+        },
+        {
+          "path": "examples/illustrated/assets/pitch-spread",
+          "policy": "spread",
+          "changedGaps": 5,
+          "firstChangedGap": 0,
+          "adjustedPitch": 3.06,
+          "label": "Even spacing"
+        },
+        {
+          "path": "examples/illustrated/assets/pitch-end",
+          "policy": "end",
+          "changedGaps": 1,
+          "firstChangedGap": 4,
+          "adjustedPitch": 3.3,
+          "label": "End adjustment"
+        },
+        {
+          "path": "examples/illustrated/assets/pitch-autostitch",
+          "policy": "central",
+          "changedGaps": 1,
+          "firstChangedGap": 2,
+          "adjustedPitch": 3.3,
+          "label": "Autostitch"
+        }
+      ],
+      "animated": true,
+      "notation": [
+        "s",
+        "direction",
+        "e"
+      ],
+      "inputs": {
+        "length": 15.3,
+        "openings": 6
+      },
+      "axioms": [
+        "A3",
+        "A5",
+        "A7"
+      ],
+      "terms": [],
+      "reveal": [
+        "Problem: build the solid nominal row, label every gap and identify the residual.",
+        "Solutions: begin at that complete residual state, without rebuilding the row.",
+        "Redistribute positions for each policy while gap values and residual update together.",
+        "Reveal thread, hold four seconds, then return to the residual state."
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-CURVE",
+      "measurementPolicy": "Dimension one nominal chord; identify the local tangent and slit lean. Omit repeated nominal gaps.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "animated": true,
+      "status": "Analytic illustration with guide extent set to five nominal 3 mm chords at radius 10 mm. Local tangent is labelled during the moving slit phase. No pitch adjustments; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-curve"
+        }
+      ],
+      "case": "A01",
+      "notation": [
+        "s",
+        "direction",
+        "e"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      },
+      "inputs": {
+        "nominalGaps": 5,
+        "tangentFrameCentiseconds": 12,
+        "tangentHoldCentiseconds": 200
+      },
+      "terms": [
+        "Local tangent"
+      ]
+    },
+    {
+      "id": "ILL-LANDMARK",
+      "measurementPolicy": "Dimension the protected nominal gap and one representative per contiguous equal-adjustment block. Label free spans; identify every adjusted gap.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A4",
+        "A5",
+        "A7"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-landmark"
+        }
+      ],
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "L1"
+      ],
+      "terms": [
+        "Free span"
+      ],
+      "reveal": [
+        "Reserve endpoints and the nominal landmark pair.",
+        "Identify the independent free spans.",
+        "Move bounded corrections from span ends into their central adjustment blocks while all fixed openings remain stationary."
+      ],
+      "inputs": {
+        "length": 40,
+        "landmark": 20,
+        "scale": 12,
+        "initialGaps": [
+          3,
+          3,
+          3,
+          3,
+          3.25,
+          3.25
+        ]
+      },
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-CORNER",
+      "measurementPolicy": "Dimension one real-to-virtual corner step. Omit ordinary arm gaps and visible thread lengths.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A6"
+      ],
+      "animated": true,
+      "status": "Analytic tip-intersection construction with three nominal 3 mm steps per arm. Guides end at the outermost real slits. No pitch adjustments; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-corner"
+        }
+      ],
+      "case": "J02",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ],
+      "reveal": [
+        "First arm: real slits towards the corner, then its terminal virtual slit.",
+        "Second arm: real slits towards the corner, then its terminal virtual slit.",
+        "Identify the shared hole where the terminal tips meet."
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-SMOOTH",
+      "measurementPolicy": "Dimension one nominal gap at the smooth join. Omit repeated nominal gaps.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A8"
+      ],
+      "animated": true,
+      "status": "Analytic rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-smooth"
+        }
+      ],
+      "case": "A05",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-JUNCTION",
+      "measurementPolicy": "Dimension one fixed half-pitch centre distance and one representative per contiguous equal-adjustment block on each arm.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A9"
+      ],
+      "animated": true,
+      "status": "Analytic half-pitch branching rule illustration; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-junction"
+        }
+      ],
+      "inputs": {
+        "junction": [
+          0,
+          0
+        ],
+        "arms": [
+          [
+            -14.1,
+            0
+          ],
+          [
+            14.1,
+            0
+          ],
+          [
+            0,
+            -14.1
+          ]
+        ],
+        "diameter": 0.5,
+        "view": {
+          "x": 300,
+          "y": 95,
+          "scale": 18
+        }
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ],
+      "reveal": [
+        "Show guides and s/e/j notation.",
+        "Reveal one slit on each of the three arms together, progressing inward toward the junction.",
+        "Identify the shared round hole after all three arms arrive.",
+        "Keep endpoints and half-pitch junction neighbours fixed; split each 0.6 mm residual across two adjusted gaps."
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-T-JUNCTION-STUDY",
+      "measurementPolicy": "Dimension each visible junction-thread connection and its angle in both treatments. Identify changed ordinary gaps without gap dimensions.",
+      "source": "examples/illustrated/t-junctions.mjs",
+      "exportStills": false,
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A2",
+        "A3",
+        "A9",
+        "A10"
+      ],
+      "animated": true,
+      "status": "Synchronized analytic sweeps from 180 to 120 degrees and back, five seconds each way. Full-pitch Vertex point motivates the accepted half-pitch branching construction. Not native CAD qualification.",
+      "inputs": {
+        "sourceIllustration": "ILL-JUNCTION",
+        "animation": {
+          "startDegrees": 180,
+          "endDegrees": 120,
+          "durationSeconds": 10,
+          "frameCount": 250,
+          "frameDelayCentiseconds": 4
+        },
+        "armLength": 18.4,
+        "width": 0.2,
+        "margin": 0.2,
+        "view": {
+          "width": 600,
+          "height": 750,
+          "scale": 44,
+          "origin": [
+            300,
+            270
+          ]
+        },
+        "branch": "Downward external angle bisector",
+        "policies": [
+          "vertex",
+          "half"
+        ]
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/t-junctions/vertex"
+        },
+        {
+          "path": "examples/illustrated/t-junctions/half"
+        }
+      ]
+    },
+    {
+      "id": "ILL-FIVE-ARM-STUDY",
+      "measurementPolicy": "Dimension one representative fixed half-pitch centre distance. All remaining gaps are nominal and undimensioned.",
+      "terms": [],
+      "source": "examples/illustrated/t-junctions.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A2",
+        "A3",
+        "A9",
+        "A10"
+      ],
+      "animated": false,
+      "status": "Static five-arm illustration: one shared round hole and half-pitch neighbours on every arm. Analytic geometry, not native CAD qualification.",
+      "inputs": {
+        "sourceIllustration": "ILL-T-JUNCTION-STUDY",
+        "armLength": 13.5,
+        "fixedArmDegrees": [
+          225,
+          270,
+          315
+        ],
+        "view": {
+          "width": 600,
+          "height": 750,
+          "scale": 20,
+          "origin": [
+            300,
+            330
+          ]
+        },
+        "policies": [
+          "half"
+        ],
+        "includedDegrees": 120
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/t-junctions/five-half"
+        }
+      ]
+    },
+    {
+      "id": "ILL-CLEARANCE",
+      "measurementPolicy": "Show the tested edge-to-edge opening clearances and pass/fail marks in construction styling. Omit pitch dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A10"
+      ],
+      "animated": false,
+      "status": "Deliberately rejected acute-corner layout; outer pairs pass while inner pairs fail clearance.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-clearance",
+          "staticGif": true
+        }
+      ],
+      "inputs": {
+        "includedDegrees": 6,
+        "steps": [
+          3,
+          6,
+          9,
+          12
+        ],
+        "width": 0.3,
+        "margin": 0.2,
+        "edgeClearances": [
+          -0.20600857625410282,
+          0.04477554239327519,
+          0.29555966104065107,
+          0.5463437796880297
+        ]
+      },
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "terms": [
+        "Overlap"
+      ],
+      "display": "Static construction view; no thread or fading."
+    },
+    {
+      "id": "ILL-NOFIT",
+      "measurementPolicy": "Dimension every candidate gap and state each rejected row's applicable gap bound. Keep nominal pitch and total span in the surrounding text.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A5",
+        "A7"
+      ],
+      "animated": false,
+      "status": "Static comparison of two rejected fits on the same span: no integer gap count satisfies the bounds.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/fit-rejected",
+          "staticGif": true
+        }
+      ],
+      "inputs": {
+        "length": 7,
+        "minimumGap": 2.7,
+        "maximumGap": 3.3
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e"
+      ],
+      "terms": [
+        "Slits too far apart: maximum gap 3.30 mm",
+        "Slits too close together: minimum gap 2.70 mm"
+      ],
+      "rejectionNotation": "Two aligned rows repeat the same fixed guide span. Dimension every gap; put a small red cross beside each rejection reason. Construction only, with no thread or fade."
+    },
+    {
+      "id": "ILL-CLOSURE",
+      "measurementPolicy": "Identify all adjusted gaps. Show the unresolved closure mismatch as unnumbered red arcs; omit nominal gap dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A4",
+        "A5",
+        "A7",
+        "A8"
+      ],
+      "animated": true,
+      "status": "Analytic loop closure with two diameter landmarks and symmetric half-circle fits; not native CAD output.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-closure"
+        }
+      ],
+      "inputs": {
+        "count": 20,
+        "radius": 9.8,
+        "landmarksDegrees": [
+          90,
+          270
+        ]
+      },
+      "notation": [
+        "s",
+        "L1",
+        "L2",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-MATCHED",
+      "measurementPolicy": "Identify adjusted gaps consistently on both copies. Omit gap dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [],
+      "animated": true,
+      "status": "S02 source and reflected copy; correspondence is revealed without independent fitting.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/matched-guides"
+        }
+      ],
+      "case": "S02",
+      "inputs": {
+        "screenReflectionX": 300,
+        "screenTranslationY": 145
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "ST-1",
+        "ST-1-A"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-ARC-LINE",
+      "measurementPolicy": "Dimension one real-to-virtual corner-step chord. Omit ordinary arm gaps and visible thread lengths.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A6"
+      ],
+      "animated": true,
+      "status": "Nominal outer-margin variant of the catalog corner; fixed-range failure is not illustrated.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/corner-arc-line"
+        }
+      ],
+      "case": "A03",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ],
+      "reveal": [
+        "First arm: real slits towards the corner, then its terminal virtual slit.",
+        "Second arm: real slits towards the corner, then its terminal virtual slit.",
+        "Identify the shared hole where the terminal tips meet."
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-ARC-ARC",
+      "measurementPolicy": "Dimension one real-to-virtual corner-step chord. Omit ordinary arm gaps and visible thread lengths.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A6"
+      ],
+      "animated": true,
+      "status": "Nominal outer-margin variant of the catalog corner, with the outgoing arc extended to fit three real slits per arm. Six real slits and two virtual slits use the same reveal timing as the straight and arc/line examples; fixed-range failure is not illustrated.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/corner-arc-arc"
+        }
+      ],
+      "case": "A04",
+      "inputs": {
+        "outgoingNominalSlits": 3
+      },
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ],
+      "reveal": [
+        "First arm: real slits towards the corner, then its terminal virtual slit.",
+        "Second arm: real slits towards the corner, then its terminal virtual slit.",
+        "Identify the shared hole where the terminal tips meet."
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-SHALLOW",
+      "measurementPolicy": "Dimension the adjusted real-to-virtual corner-step chord in blue and highlight its guide segment. Mark only the real slit; omit ordinary arm-gap dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A6"
+      ],
+      "animated": true,
+      "status": "Detail of J08 corner reservation; shows three nominal neighbours per arm, not the full fixed-end layout.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/corner-shallow"
+        }
+      ],
+      "case": "J08",
+      "notation": [
+        "s",
+        "direction",
+        "e",
+        "j"
+      ],
+      "reveal": [
+        "First arm: real slits towards the corner, then its terminal virtual slit.",
+        "Second arm: real slits towards the corner, then its terminal virtual slit.",
+        "Identify the shared hole where the terminal tips meet."
+      ],
+      "junctionNotation": "Visible from the first frame; the round hole appears after both arms arrive.",
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "id": "ILL-TERMS-LAYOUT",
+      "measurementPolicy": "Use symbolic dimensions for the nominal and adjusted gap, a protected nominal pair and the free span. Retain construction contrast.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A3",
+        "A4",
+        "A5",
+        "A7"
+      ],
+      "animated": false,
+      "status": "Annotated geometric definitions.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-layout"
+        }
+      ],
+      "terms": [
+        "Guide",
+        "Slit",
+        "Nominal gap",
+        "Adjusted gap",
+        "Protected gap",
+        "Landmark",
+        "Free span",
+        "p",
+        "g"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "direction",
+        "L1"
+      ],
+      "case": "F02"
+    },
+    {
+      "id": "ILL-TERMS-SLIT",
+      "measurementPolicy": "Identify slit length, width, axis and lean with the corresponding endpoints or leaders. Omit pitch dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A2"
+      ],
+      "animated": false,
+      "status": "Annotated geometric definitions.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-slit"
+        }
+      ],
+      "terms": [
+        "Slit",
+        "Axis",
+        "Length",
+        "Width",
+        "Lean",
+        "Tangent"
+      ],
+      "notation": [],
+      "inputs": {
+        "length": 1.5,
+        "width": 0.15,
+        "leanDegrees": 40
+      }
+    },
+    {
+      "id": "ILL-TERMS-JUNCTION",
+      "measurementPolicy": "Identify the shared hole and arms. Omit numeric gap dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A9"
+      ],
+      "animated": false,
+      "status": "Annotated geometric definitions.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-junction"
+        }
+      ],
+      "terms": [
+        "Junction / round hole",
+        "Arm"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "inputs": {
+        "sourceIllustration": "ILL-JUNCTION"
+      }
+    },
+    {
+      "id": "ILL-TERMS-CHORD",
+      "measurementPolicy": "Distinguish the centre-to-centre chord dimension from the arc-length annotation. Retain construction contrast.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "animated": false,
+      "status": "Annotated chord and arc distances between the same centres.",
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/terms-chord"
+        }
+      ],
+      "terms": [
+        "Chord length",
+        "Arc length"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "direction"
+      ],
+      "inputs": {
+        "radius": 3,
+        "pitch": 3
+      }
+    },
+    {
+      "id": "ILL-CORNER-PROBLEM",
+      "measurementPolicy": "Show visible corner-thread lengths and red angles with the thread. Identify adjusted gaps without arm-gap dimensions.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "animated": true,
+      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison starts with both rows present and immediately mirrors the vertical row. It omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 carries the complete outgoing row sideways with the incoming virtual slit's lower tip until the row reaches its guide, creating the incoming residual; it then fits both arms to their endpoint targets, with no arm gap dimensions; only corner thread lengths and red angles appear in its stitched phase. Bridge advances its nominal incoming row by 0.5 mm, then translates the whole vertical row between visible bridge thread lengths of 1 and 3 mm; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and half-second endpoint holds. Expansion and contraction each take 2.14 seconds, with no reset. Its still and analysis totals use the 1 mm state. Analytic illustration, not native qualification.",
+      "inputs": {
+        "diagonalCase": "ILL-SELLIER-CORNER",
+        "armIntervals": 8,
+        "bridgeThreadLengths": [1, 3],
+        "bridgeIncomingAdvance": 0.5,
+        "bridgeHoldCentiseconds": 50,
+        "bridgeMotionCentiseconds": 214
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/problem-corner-vertex-point",
+          "treatment": "cross",
+          "label": "Vertex point",
+          "animated": false,
+          "staticGif": true
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-bridge",
+          "treatment": "gap",
+          "label": "Bridge",
+          "animated": true
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-mirrored",
+          "treatment": "mirrored",
+          "label": "Shared diagonal slit with mirrored lean"
+        },
+        {
+          "path": "examples/illustrated/assets/problem-corner-autostitch",
+          "treatment": "autostitch",
+          "label": "Autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
+      }
+    },
+    {
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": true,
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative slit tip. The shown face is encoded in the slit axes; do not reverse the thread endpoints again. All segments appear together."
+      },
+      "id": "ILL-SELLIER-CORNER",
+      "measurementPolicy": "Emphasize the two adjoining thread segments and mirrored lean. Omit gap dimensions; identify any adjusted gaps.",
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "status": "Inferred alternative: nearly parallel ordinary slit axes from the annotated photo and a diagonal shared slit. Thread connects positive to negative tips. Arm signed leans differ; this is not an A2/A6-compliant Autostitch result or measured hole geometry.",
+      "inputs": {
+        "pitch": 3,
+        "leanDegrees": 40,
+        "armGaps": 3,
+        "sharedSlitDegrees": -45,
+        "armAxisDegrees": [
+          -40,
+          -50
+        ]
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/sellier-diagonal-corner"
+        }
+      ],
+      "sequence": "Start with the top row already punched. Show the vertical rear-style row and mirror it about its guide to front-style, keeping centres fixed. Add the shared diagonal slit, then reveal all thread for four seconds."
+    },
+    {
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "id": "ILL-SELLIER-WALLET",
+      "measurementPolicy": "Show the corner and decorative H construction without gap dimensions. Identify adjusted ordinary gaps if present.",
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "status": "Static Autostitch construction with nominal rows and an external six-hole H. Place the H to preserve both nominal centre spacing and the ordinary thread angle at its two joins. All runs use rear-style signed local lean; no residual fitting or native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "topSteps": 5,
+        "rightSteps": 4,
+        "bottomSteps": 4,
+        "hWidth": 3,
+        "hHeight": 3,
+        "leatherEdgeOffset": 2.2,
+        "leatherCropLeft": -21
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/sellier-wallet-autostitch"
+        }
+      ]
+    },
+    {
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "id": "ILL-SELLIER-WALLET-DIAGONAL",
+      "measurementPolicy": "Use the same undimensioned case view as the Autostitch comparison; identify adjusted ordinary gaps if present.",
+      "axioms": [
+        "A2",
+        "A6"
+      ],
+      "status": "Static case reconstruction: rear-style top and front-style vertical run, with a shared diagonal slit. Same scale, ordinary slit counts and H dimensions as the Autostitch construction. Place the H for nominal centre spacing and continuous thread angles; choose the top extent in nominal steps.",
+      "inputs": {
+        "walletCase": "ILL-SELLIER-WALLET",
+        "cornerCase": "ILL-SELLIER-CORNER"
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/sellier-wallet-diagonal"
+        }
+      ]
+    },
+    {
+      "id": "ILL-LOEWE-HANGER",
+      "measurementPolicy": "Identify adjusted gaps in both treatments. Omit gap dimensions; the comparison concerns the corner openings and flat middle thread.",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": [
+        "A2",
+        "A6",
+        "A7"
+      ],
+      "status": "Static case pair for the rectangular strap below the swivel hook. Reference: shared left slit, round right opening and mirrored top slit axes producing a flat central thread. Autostitch: two analytic A6 round-hole corners, nominal vertical approaches with chosen start/end stations, and one bounded top gap from the independent selector. Photo dimensions and exact slit axes are not measured; no native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "width": 8.1,
+        "sideSteps": 3,
+        "leatherEdge": [[-1.5, -11.5], [-1.5, 2.4], [9.6, 2.4], [9.6, -11.5]]
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/loewe-hanger-reference"
+        },
+        {
+          "path": "examples/counter_examples/assets/loewe-hanger-autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ]
+    },
+    {
+      "id": "ILL-LV-SPEEDY-CHAPE",
+      "measurementPolicy": "Identify every adjusted gap and bordering slit in both treatments. Omit numeric dimensions from the complete chape view.",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": [
+        "A2",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "status": "Closed five-sided handle-chape comparison. Reference has one shared slit per vertex, interpolated corner orientation, and one ordinary handedness throughout. Autostitch uses five analytic A6 holes and independent per-edge pitch fits, including closure. Guide proportions are schematic, not measured from the photo; no native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "vertices": [
+          [
+            -5.4,
+            0
+          ],
+          [
+            5.4,
+            0
+          ],
+          [
+            10.8,
+            -16.2
+          ],
+          [
+            0,
+            -25.2
+          ],
+          [
+            -10.8,
+            -16.2
+          ]
+        ],
+        "leatherEdge": [[-6.8, 3.4], [-6.8, 0], [-12.5, -16.7], [0, -27.5], [12.5, -16.7], [6.8, 0], [6.8, 3.4]]
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/lv-speedy-chape-reference"
+        },
+        {
+          "path": "examples/counter_examples/assets/lv-speedy-chape-autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "j",
+        "direction"
+      ]
+    },
+    {
+      "id": "ILL-FAGLIANO-TIP",
+      "measurementPolicy": "Dimension one representative chord per contiguous equal-adjustment block on each arm. Identify every adjusted gap and unresolved overrun.",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": true,
+      "axioms": [
+        "A2",
+        "A3",
+        "A7"
+      ],
+      "status": "Reference reconstruction: symmetric curves, aligned straight rows, one handedness and a round hole exactly at the guide vertex. Keep the entry gap nominal; compress the following five gaps equally on each side, including the final gap to the hole. Equal chord lengths follow from symmetry. Schematic dimensions, not measured from the photograph.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "radius": 24,
+        "sweepDegrees": 40,
+        "straightOpenings": 3,
+        "curvedSlits": 5,
+        "leatherEdgeOffset": 1.5,
+        "leatherEdgeBottom": -7.8
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/fagliano-tip-compression"
+        }
+      ],
+      "sequence": "Establish aligned straight pairs; extend each nominal row to a trial hole beyond the fixed vertex; compress five curved gaps equally, left then right. Straight runs remain fixed; reveal all thread for four seconds.",
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative tip; round-hole centre. Virtual slits are construction only."
+      }
+    },
+    {
+      "id": "ILL-FAGLIANO-AUTOSTITCH",
+      "measurementPolicy": "Dimension one representative chord per contiguous equal-adjustment block on each arm. Identify every adjusted gap; omit nominal gaps.",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": [
+        "A2",
+        "A3",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "status": "Same guides and aligned straight rows as ILL-FAGLIANO-TIP; an A6 virtual-tip intersection determines a different, offset hole. Independent circular fit selector minimizes adjusted gaps: one left and four right. Analytic illustration, not a native plugin run.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "radius": 24,
+        "sweepDegrees": 40,
+        "straightOpenings": 3,
+        "curvedSlits": 5
+      },
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/fagliano-tip-autostitch"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ]
+    },
+    {
+      "id": "ILL-JUNCTION-COMPARISON",
+      "measurementPolicy": "Dimension one fixed half-pitch chord and one representative per contiguous equal-adjustment block on each arm.",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A3",
+        "A5",
+        "A7",
+        "A9",
+        "A10"
+      ],
+      "animated": true,
+      "status": "Analytic Autostitch X junction with one circular arm. Reserve the round hole and half-pitch chord neighbours, then fit the remaining arm spans. Fixed endpoints, gap bounds, chord spacing and opening clearance are checked; not native CAD evidence.",
+      "inputs": {
+        "radius": 20,
+        "directionsDegrees": [
+          45,
+          135,
+          225,
+          315
+        ],
+        "nominalIntervals": [
+          4.6,
+          4.7,
+          4.65,
+          4.55
+        ],
+        "intervals": 5,
+        "view": {
+          "x": 300,
+          "y": 185,
+          "scale": 12.5
+        },
+        "width": 0.3,
+        "margin": 0.2,
+        "holeDiameter": 0.5
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/axiom-junction-curved",
+          "label": "Autostitch X junction with a curved arm"
+        }
+      ],
+      "terms": [],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Each arm connects to the shared round hole."
+      }
+    },
+    {
+      "id": "ILL-EMBLEM-STORYBOARD",
+      "measurementPolicy": "Limit dimensions and residual values to the two outer-crown spans of A (primitive 1). Build labels Free span and residuals; Adjustment dimensions one representative per current contiguous equal-adjustment block. Other spans show blue highlights and slit marks only. Remove construction marks from the finished artwork.",
+      "source": "examples/illustrated/emblem.mjs",
+      "pitch": 2.7,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": ["A1", "A2", "A3", "A6", "A7", "A8", "A9"],
+      "animated": true,
+      "status": "Constructed presentation of the native 2.7 mm emblem, with half-pitch neighbours at all three branching holes. Lettering uses analytic planning motion between fixed run endpoints, landmark pairs and round holes; animation is not a solver execution trace. Used in PITCH's Model and solution section.",
+      "inputs": {
+        "storyboard": "examples/illustrated/emblem.storyboard.json",
+        "geometry": "examples/demos/emblem.svg",
+        "guides": "examples/emblem.lsp",
+        "durationSeconds": 40,
+        "pullbackSeconds": 12,
+        "finalHoldSeconds": 13.25,
+        "landmarkStep": {"at": 0.2, "duration": 0.6, "annotation": "Set symmetry", "expected": "Reveal the two crown landmarks before resolving fixed openings at 1.5 seconds."},
+        "dotPunch": {"at": 26.3, "duration": 0.45, "expected": "Dot follows the opening fade by 0.05 seconds, then settles to its original radius. No full-emblem flash."},
+        "residualReveal": {"delayAfterLayout": 0.35, "fadeSeconds": 0.25, "expected": "Brief pause, then a subtle fade of red residual annotations before redistribution."},
+        "openingFade": {"at": 26, "duration": 0.25, "expected": "Hide slit outlines, round holes and spacing marks before the dot punch. Final hold contains only thread and the dot."},
+        "guideVisibility": "Only A from 0 to 14 seconds; no guides or text during pullback or final hold.",
+        "openingsIncludingDot": 1077,
+        "branchingHoles": 3,
+        "branchingNeighbourChord": 1.35,
+        "ringOpenings": 496,
+        "aOpenings": 99,
+        "captions": "Short step labels use the shared termLabel/displayElements helpers. Close-up notation uses two closed-contour start markers, eight junction markers and two crown landmarks. Only A's two outer-crown spans have bracketed dimensions and residual values; every adjusted span retains blue identification."
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/emblem/emblem-construction",
+          "label": "Emblem construction with a storyboard-controlled camera"
+        }
+      ]
+    }
+  ]
 }

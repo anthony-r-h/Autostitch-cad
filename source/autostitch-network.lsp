@@ -30,6 +30,11 @@
               (ast:n-interior aa (ast:g-point bb (/ (ast:g-length bb) 2.0)))) (setq overlap T)))
     (foreach point (ast:g-get 'points hit nil)
       (if (and (ast:g-point-on aa point) (ast:g-point-on bb point)) (setq points (cons point points)))))
+  ;; A tangent quadratic can lose an exact endpoint through roundoff. Preserve
+  ;; finite endpoints that both guides contain, using the existing join tolerance.
+  (foreach point (list (ast:g-point aa 0.0) (ast:g-point aa (ast:g-length aa))
+                      (ast:g-point bb 0.0) (ast:g-point bb (ast:g-length bb)))
+    (if (and (ast:g-point-on aa point) (ast:g-point-on bb point)) (setq points (cons point points))))
   (list (cons 'points (ast:n-unique-points (reverse points))) (cons 'overlap overlap)))
 (defun ast:n-route-error (route / primitives previous primitive error)
   (setq primitives (ast:g-get 'primitives route nil))
@@ -335,7 +340,7 @@
               opening (list '(type . round) (cons 'center (ast:g-get 'point node nil)) (cons 'diameter (ast:g-get 'diameter (ast:g-get 'settings edge nil) 0.5))))
         (foreach arm arms
           (setq side (ast:g-get 'side arm 0) edge (ast:n-edge (ast:g-get 'edge arm nil) edges) primitive (ast:g-get 'primitive edge nil)
-                limit (ast:g-step primitive (ast:g-get 'pitch (ast:g-get 'settings edge nil) 3.0)))
+                limit (ast:g-step primitive (/ (ast:g-get 'pitch (ast:g-get 'settings edge nil) 3.0) 2.0)))
           (setq edges (ast:n-set-edge edges (ast:g-get 'id edge nil) (if (= side 0) 'start 'finish) (if (= side 0) limit (- (ast:g-length primitive) limit))))))
       ((= degree 2)
         (setq first-arm (car arms) second-arm (cadr arms) first-edge (ast:n-edge (ast:g-get 'edge first-arm nil) edges)
@@ -369,7 +374,7 @@
   (if (and identity (setq existing (vl-some '(lambda (item) (if (equal identity (assoc 'node item)) item)) openings)))
     (if (ast:g-same-opening opening existing) openings nil)
     (append openings (list opening))))
-(defun ast:g-solve-set (paths connections / error prepared path item profile ids resolved node incidence owner point edges reservations nodes openings intervals warnings edge primitive settings start finish start-node end-node direct result cuts cut index local-intervals adjusted all-primitives virtual-slits corner-adjustments)
+(defun ast:g-solve-set (paths connections / error prepared path item profile ids resolved node incidence owner point edges reservations nodes openings intervals warnings edge primitive settings start finish start-node end-node result cuts cut index local-intervals adjusted all-primitives virtual-slits corner-adjustments)
   (if (null paths) (setq error "Select a stitch line first."))
   (foreach path paths
     (if (not (and (numberp (ast:g-get 'id path nil)) (= (ast:g-get 'id path nil) (fix (ast:g-get 'id path nil)))))
@@ -406,15 +411,8 @@
         (if (null error)
           (progn
             (setq primitive (ast:g-get 'primitive edge nil) settings (ast:g-get 'settings edge nil) start (ast:g-get 'start edge 0.0) finish (ast:g-get 'finish edge 0.0)
-                  start-node (ast:g-get 'start-node edge nil) end-node (ast:g-get 'end-node edge nil)
-                  direct (and (= (ast:g-get 'kind start-node nil) 'branch) (= (ast:g-get 'kind end-node nil) 'branch)
-                    (ast:g-near (ast:g-length primitive) (ast:g-step primitive (ast:g-get 'pitch settings 3.0)))))
+                  start-node (ast:g-get 'start-node edge nil) end-node (ast:g-get 'end-node edge nil))
             (cond
-              ;; A direct branch-to-branch nominal interval is reserved as a
-              ;; shared-hole stitch; a centred landmark reservation cannot replace it.
-              (direct
-                (if (ast:g-get 'landmarks edge nil) (setq error "This landmark conflicts with the fixed stitch between two junctions. Remove it or move the junctions.")
-                  (setq intervals (append intervals (list (ast:g-junction-interval (ast:g-get 'point start-node nil) (ast:g-get 'point end-node nil) index))))))
               ;; Feature reservations must remain inside each finite arm and not overlap.
               ((or (< start -1e-8) (> finish (+ (ast:g-length primitive) 1e-8)) (> start (+ finish 1e-8)))
                 (setq error "Junction stitches do not fit on this section. Move the junctions farther apart or lengthen the line."))

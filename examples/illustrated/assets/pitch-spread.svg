@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Even spacing</title><desc id="description">Analytic illustration of ILL-S02. Final state of the accompanying animation.</desc>
+<rect width="100%" height="100%" fill="#202225"/>
+<g transform="translate(-25.1231527093596 155.27093596059112) scale(1.083743842364532)">
+<line class="guide" x1="85.8" y1="187.5" x2="514.2" y2="187.5" stroke="#797E87" stroke-width="1"/>
+<line class="fixed-end" x1="85.8" y1="165.5" x2="85.8" y2="209.5" stroke="#CECECE" stroke-width="0.8"/>
+<line class="fixed-end" x1="514.2" y1="165.5" x2="514.2" y2="209.5" stroke="#CECECE" stroke-width="0.8"/>
+<line class="adjusted-gap" x1="85.8" y1="187.5" x2="171.48" y2="187.5" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="adjusted-gap" x1="171.48" y1="187.5" x2="257.16" y2="187.5" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="adjusted-gap" x1="257.16" y1="187.5" x2="342.84" y2="187.5" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="adjusted-gap" x1="342.84" y1="187.5" x2="428.52" y2="187.5" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="adjusted-gap" x1="428.52" y1="187.5" x2="514.2" y2="187.5" stroke="#83BDFC" stroke-width="2.2"/>
+<line class="thread" x1="101.886933305" y1="174.001460197" x2="155.393066695" y2="200.998539803" stroke="#F5F3ED" stroke-width="1.8"/>
+<line class="thread" x1="187.566933305" y1="174.001460197" x2="241.073066695" y2="200.998539803" stroke="#F5F3ED" stroke-width="1.8"/>
+<line class="thread" x1="273.246933305" y1="174.001460197" x2="326.753066695" y2="200.998539803" stroke="#F5F3ED" stroke-width="1.8"/>
+<line class="thread" x1="358.926933305" y1="174.001460197" x2="412.433066695" y2="200.998539803" stroke="#F5F3ED" stroke-width="1.8"/>
+<line class="thread" x1="444.606933305" y1="174.001460197" x2="498.113066695" y2="200.998539803" stroke="#F5F3ED" stroke-width="1.8"/>
+<line class="slit" x1="69.713066695" y1="200.998539803" x2="101.886933305" y2="174.001460197" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="70.548690587,201.994397579 102.722557198,174.997317973 101.051309413,173.005602421 68.877442802,200.002682027" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="74.977497218" y1="207.272443793" x2="64.448636171" y2="194.724635814" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="107.151363829" y1="180.275364186" x2="96.622502782" y2="167.727556207" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="slit" x1="155.393066695" y1="200.998539803" x2="187.566933305" y2="174.001460197" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="156.228690587,201.994397579 188.402557198,174.997317973 186.731309413,173.005602421 154.557442802,200.002682027" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="160.657497218" y1="207.272443793" x2="150.128636171" y2="194.724635814" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="192.831363829" y1="180.275364186" x2="182.302502782" y2="167.727556207" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="slit" x1="241.073066695" y1="200.998539803" x2="273.246933305" y2="174.001460197" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="241.908690587,201.994397579 274.082557198,174.997317973 272.411309413,173.005602421 240.237442802,200.002682027" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="246.337497218" y1="207.272443793" x2="235.808636171" y2="194.724635814" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="278.511363829" y1="180.275364186" x2="267.982502782" y2="167.727556207" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="slit" x1="326.753066695" y1="200.998539803" x2="358.926933305" y2="174.001460197" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="327.588690587,201.994397579 359.762557198,174.997317973 358.091309413,173.005602421 325.917442802,200.002682027" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="332.017497218" y1="207.272443793" x2="321.488636171" y2="194.724635814" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="364.191363829" y1="180.275364186" x2="353.662502782" y2="167.727556207" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="slit" x1="412.433066695" y1="200.998539803" x2="444.606933305" y2="174.001460197" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="413.268690587,201.994397579 445.442557198,174.997317973 443.771309413,173.005602421 411.597442802,200.002682027" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="417.697497218" y1="207.272443793" x2="407.168636171" y2="194.724635814" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="449.871363829" y1="180.275364186" x2="439.342502782" y2="167.727556207" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="slit" x1="498.113066695" y1="200.998539803" x2="530.286933305" y2="174.001460197" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="498.948690587,201.994397579 531.122557198,174.997317973 529.451309413,173.005602421 497.277442802,200.002682027" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="503.377497218" y1="207.272443793" x2="492.848636171" y2="194.724635814" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="adjustment-mark" x1="535.551363829" y1="180.275364186" x2="525.022502782" y2="167.727556207" stroke="#83BDFC" stroke-width="0.8"/>
+<line class="gap-dimension" x1="85.8" y1="251.5" x2="171.48" y2="251.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="85.8" y1="255.5" x2="85.8" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="171.48" y1="255.5" x2="171.48" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="110.045909091" y="229.464181818" width="37.188181818" height="17.794772727" fill="#2D2F31"/><text class="gap-value" x="128.64" y="242.5" text-anchor="middle" font-family="Consolas" font-size="11.995454545454546" fill="#98B1CD">3.06</text>
+<line class="gap-dimension" x1="171.48" y1="251.5" x2="257.16" y2="251.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="171.48" y1="255.5" x2="171.48" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="257.16" y1="255.5" x2="257.16" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="195.725909091" y="229.464181818" width="37.188181818" height="17.794772727" fill="#2D2F31"/><text class="gap-value" x="214.32" y="242.5" text-anchor="middle" font-family="Consolas" font-size="11.995454545454546" fill="#98B1CD">3.06</text>
+<line class="gap-dimension" x1="257.16" y1="251.5" x2="342.84" y2="251.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="257.16" y1="255.5" x2="257.16" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="342.84" y1="255.5" x2="342.84" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="281.405909091" y="229.464181818" width="37.188181818" height="17.794772727" fill="#2D2F31"/><text class="gap-value" x="300" y="242.5" text-anchor="middle" font-family="Consolas" font-size="11.995454545454546" fill="#98B1CD">3.06</text>
+<line class="gap-dimension" x1="342.84" y1="251.5" x2="428.52" y2="251.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="342.84" y1="255.5" x2="342.84" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="428.52" y1="255.5" x2="428.52" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="367.085909091" y="229.464181818" width="37.188181818" height="17.794772727" fill="#2D2F31"/><text class="gap-value" x="385.68" y="242.5" text-anchor="middle" font-family="Consolas" font-size="11.995454545454546" fill="#98B1CD">3.06</text>
+<line class="gap-dimension" x1="428.52" y1="251.5" x2="514.2" y2="251.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="428.52" y1="255.5" x2="428.52" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<line class="gap-dimension" x1="514.2" y1="255.5" x2="514.2" y2="247.5" stroke="#98B1CD" stroke-width="0.8"/>
+<rect class="label-background" x="452.765909091" y="229.464181818" width="37.188181818" height="17.794772727" fill="#2D2F31"/><text class="gap-value" x="471.36" y="242.5" text-anchor="middle" font-family="Consolas" font-size="11.995454545454546" fill="#98B1CD">3.06</text>
+<rect class="label-background" x="66.12" y="155.252" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="73.8" y="170.5" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
+<line class="direction" x1="103.8" y1="187.5" x2="115.8" y2="187.5" stroke="#CECECE" stroke-width="1.1"/>
+<line class="direction" x1="115.8" y1="187.5" x2="109.8" y2="184" stroke="#CECECE" stroke-width="1.1"/>
+<line class="direction" x1="115.8" y1="187.5" x2="109.8" y2="191" stroke="#CECECE" stroke-width="1.1"/>
+<rect class="label-background" x="518.52" y="145.252" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="526.2" y="160.5" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
+</g>
+</svg>

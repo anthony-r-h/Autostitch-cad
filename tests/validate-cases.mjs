@@ -29,6 +29,19 @@ for(const c of catalog.geometry){
   }
 }
 for(const file of catalog.nativeLoads)source(file);
+for(const illustration of catalog.illustrations||[]){
+  id(illustration.id);source(illustration.source);
+  if(illustration.case)assert(catalog.geometry.some(c=>c.id===illustration.case&&c.variants.some(v=>v.pitch===illustration.pitch)));
+  else assert(illustration.axioms?.length&&illustration.inputs);
+  assert(illustration.status&&illustration.assets.length);
+  assert(typeof illustration.measurementPolicy==='string'&&illustration.measurementPolicy.trim().length>0,`${illustration.id}: declare the annotation selection policy`);
+  for(const asset of illustration.assets){
+    const animated=asset.animated??illustration.animated;
+    if(illustration.exportStills===false)assert(animated,'Disabling still exports requires an animation');
+    const extensions=illustration.exportStills===false?['gif']:(animated||asset.staticGif)?['svg','png','gif']:['svg','png'];
+    for(const extension of extensions)assert(fs.existsSync(new URL(`${asset.path}.${extension}`,root)),`Missing illustration ${asset.path}.${extension}`);
+  }
+}
 for(const suite of catalog.suites){
   id(suite.id);assert(suite.setup&&suite.recipe&&suite.expected);
   assert(['suite','ui','events'].includes(suite.runner));symbol(suite.source,suite.entrypoint);
@@ -52,6 +65,7 @@ for(const recipe of catalog.fillRecipes||[]){
   if(recipe.drawing){assert(fs.existsSync(new URL(recipe.drawing,root)),`Missing fill drawing ${recipe.drawing}`);assert(recipe.view);}
 }
 if(catalog.fillChecks){source(catalog.fillChecks.source);assert(catalog.fillChecks.command&&catalog.fillChecks.coverage.length);}
+if(catalog.buildChecks){id(catalog.buildChecks.id);source(catalog.buildChecks.source);assert(catalog.buildChecks.command&&catalog.buildChecks.expected&&catalog.buildChecks.coverage.length);}
 id(catalog.oracle.id);source(catalog.oracle.source);source(catalog.oracle.nativeSource);
 assert(catalog.oracle.expected&&catalog.oracle.native.lengths.length&&catalog.oracle.exhaustive.lengthCount>0);
 console.log(`Catalog valid: ${catalog.geometry.length} geometry recipes, ${catalog.geometry.reduce((n,c)=>n+c.variants.length,0)} pitch variants, ${catalog.suites.length} suites, ${ids.size} stable IDs.`);

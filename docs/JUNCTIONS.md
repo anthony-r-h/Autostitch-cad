@@ -7,7 +7,7 @@ Construction depends on the incident arms. Terms are defined in the [glossary](G
 | Straight or co-circular continuation, equal pitch | One uninterrupted run; subdivision introduces no hole. |
 | Smooth change of curvature | One shared tangent-aligned slit. |
 | Sharp two-arm corner | Round hole where the selected virtual slit tips meet. |
-| Three or more arms | Round hole at the intersection; one nominal-pitch neighbour on each arm. |
+| Three or more arms | Round hole at the intersection; first slit centre at half-pitch chord distance on every arm. |
 
 ## Sharp corners
 
@@ -59,16 +59,25 @@ For circular arms, cap the upper chord at $2R$. An empty intersection has no per
 
 ## Junctions with three or more arms
 
-For a junction at $P$, place one round hole and fix a nominal gap to its first neighbour on each arm. The corresponding advance along the guide is
+For a junction at $P$, place one round hole and fix the first slit centre $C$ on every arm at distance $\lVert C-P\rVert=p/2$, using that arm's pitch. The corresponding advance along the guide is
 
 $$
-b=p\quad\text{on a line},\qquad
-b=2R\arcsin\left(\frac{p}{2R}\right)\quad\text{on a circle}.
+b=\frac p2\quad\text{on a line},\qquad
+b=2R\arcsin\left(\frac{p}{4R}\right)\quad\text{on a circle}.
 $$
 
-These hole-to-neighbour distances are nominal chords. Sharp two-arm hole distances instead follow the virtual-tip construction.
+Use the minor chord and require each neighbour to lie on its finite arm. Apply the same half-pitch rule at every arm count and angle. Fix these neighbours before fitting the remaining slit-to-slit spans; the half-pitch connections are excluded from the ordinary gap adjustment bounds.
 
-Two such junction holes can share a protected nominal gap, or have one middle slit with a nominal gap on either side. Fit any remaining free spans normally.
+On a straight arm, let $\mathbf e$ point away from the hole and $\mathbf u$ be the slit axis at lean $\alpha$ to $\mathbf e$. The thread vector from the hole to the nearer slit tip is
+
+$$
+\mathbf v=\frac p2\mathbf e-\frac\ell2\mathbf u
+=\frac12\left(p\mathbf e-\ell\mathbf u\right).
+$$
+
+The expression in parentheses is an ordinary straight-row thread vector. The junction connection therefore has the same direction and half its length. Opposite equal-pitch arms with compatible lean form one ordinary-length stitch through the hole. On curved arms, the chord direction and local slit tangent differ; calculate the actual thread endpoints and clearance.
+
+Two branching junctions can share one middle slit when both half-pitch constraints locate the same compatible opening. On a straight connecting guide of length $p$, that slit is midway between the holes. On a circular guide, the required arc length is $2b$. A shorter guide leaves overlapping reservations and has no solution. Branching holes do not replace these required slits with a direct hole-to-hole gap.
 
 ## Angle limits
 

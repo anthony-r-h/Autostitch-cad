@@ -1,5 +1,6 @@
 {
   "documentationTheme": "graphite",
+  "leatherOpacity": 0,
   "revealGlow": {
     "enabled": true,
     "durationCentiseconds": 24,

@@ -331,6 +331,7 @@ for(const [reference,solution] of [[2,1],[3,4],[5,6],[7,8]]) {
   const fill=scenes[reference].final.filter(e=>e.kind==='leather-fill');
   assert(edge.length>0);
   assert.equal(fill.length,1);assert.equal(fill[0].color,'leather');
+  assert.equal(fill[0].opacity,0,'Leather surface must show the diagram background');
   assert.deepEqual(fill[0].points,[edge[0].a,...edge.map(e=>e.b)]);
   if(reference!==2) {
     assert.deepEqual(edge,scenes[solution].final.filter(e=>e.kind==='leather-edge'));

@@ -4,13 +4,13 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {selectFit} from '../../tests/fit-oracle.mjs';
 import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,finish,
-  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles,adjustmentStyle,highlightGap} from '../illustrated/scenes.mjs';
+  diagonalCornerScene,routeMarks,notationText,finishThread,slitOutlines,writeSceneFiles,adjustmentStyle,highlightGap,colorConfig} from '../illustrated/scenes.mjs';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
 function leatherEdge(points,view) {
   const outline=points.map(point=>project(point,view));
-  return [{type:'polygon',points:outline,p:outline[0],kind:'leather-fill',color:'leather'},
+  return [{type:'polygon',points:outline,p:outline[0],kind:'leather-fill',color:'leather',opacity:colorConfig.leatherOpacity},
     ...points.slice(1).map((point,i)=>worldLine(points[i],point,view,'leather-edge','edge',1.2))];
 }
 function diagonalCorner() {

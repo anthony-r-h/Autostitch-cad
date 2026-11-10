@@ -554,49 +554,61 @@ function noFitScene() {
 
 function closureScene() {
   const input=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
-  const {radius,count}=input,view={x:300,y:187.5,scale:13};
-  const point=angle=>mul(axis(angle),radius),start=Math.PI/2,step=2*Math.asin(3/(2*radius));
-  // Keep the first and closing gaps nominal; fit the free arc between them.
-  const fit=selectFit({R:radius,p:3,sweep:2*Math.PI-2*step});
-  if(!fit||fit.n+2!==count)throw new Error('Closed-loop illustration does not fit its opening count.');
-  const target=[0,step],adjusted=new Set();
+  const {radius,count,landmarksDegrees}=input,view={x:300,y:187.5,scale:13};
+  const step=2*Math.asin(3/(2*radius)),diameter=landmarksDegrees[0]*Math.PI/180;
+  const point=angle=>mul(axis(angle),radius),start=diameter-step/2;
+  // Each diameter intersection is midway through a protected nominal gap.
+  const fit=selectFit({R:radius,p:3,sweep:Math.PI-step});
+  if(!fit||2*(fit.n+1)!==count||!fit.exactCentre)throw new Error('Closed-loop illustration needs symmetric semicircle fits.');
+  const half=[0];
   for(let i=0;i<fit.n;i++) {
     const changed=i>=fit.i&&i<fit.i+fit.k;
-    target.push(target.at(-1)+2*Math.asin((changed?fit.correctedPitch:3)/(2*radius)));
-    if(changed){adjusted.add(i+1);adjusted.add(i+2);}
+    half.push(half.at(-1)+2*Math.asin((changed?fit.correctedPitch:3)/(2*radius)));
   }
+  const target=[...half,...half.map(a=>a+Math.PI)],nominal=target.map((a,i)=>i*step);
+  const halfNominal=half.map((a,i)=>i===fit.n?Math.PI-step:i*step);
+  const anchored=[...halfNominal,...halfNominal.map(a=>a+Math.PI)];
   const base=[];
   for(let i=0;i<120;i++)base.push(worldLine(point(start-i*2*Math.PI/120),point(start-(i+1)*2*Math.PI/120),view));
+  base.push(worldLine(mul(axis(diameter),radius+.8),mul(axis(diameter),-radius-.8),view,'landmark',construction,1.4));
+  for(let i=0;i<2;i++)base.push(notationText(add(project(point(diameter-i*Math.PI),view),[-23,i===0?-12:23]),`L${i+1}`,'landmark'));
   const s=scene('axiom-closure','Close the loop without duplicating the start','A8');
   frame(s,base,75,'guide');
-  let result=[...base,...opening(point(start),alpha,view)];
+  let result=[...base,...opening(point(start),alpha-step/2,view)];
   frame(s,result,100,'reserved-start');
   for(let i=1;i<count;i++) {
-    result.push(...opening(point(start-i*step),alpha-i*step,view));
+    result.push(...opening(point(start-i*step),alpha-step/2-i*step,view));
     frame(s,[...result],i<4?35:18,'around-loop');
   }
-  const draw=t=>{
+  const draw=angles=>{
     const elements=[...base];
-    const angles=target.map((angle,i)=>lerp(i*step,angle,t));
-    for(let i=0;i<count-1;i++)if(Math.abs(2*radius*Math.sin((angles[i+1]-angles[i])/2)-3)>1e-6)
+    const changed=angles.slice(1).map((a,i)=>Math.abs(2*radius*Math.sin((a-angles[i])/2)-3)>1e-6);
+    for(let i=0;i<count-1;i++)if(changed[i])
       elements.push(...highlightGap(Array.from({length:13},(_,n)=>point(start-lerp(angles[i],angles[i+1],n/12))),view));
     for(let i=0;i<count;i++) {
       const angle=angles[i];
-      elements.push(...opening(point(start-angle),alpha-angle,view,{marked:t>0&&adjusted.has(i)}));
+      elements.push(...opening(point(start-angle),alpha-step/2-angle,view,{marked:changed[i-1]||changed[i]}));
     }
-    if(t<1) {
-      const terminal=lerp(count*step,2*Math.PI,t);
-      elements.push(...opening(point(start-terminal),alpha-terminal,view,{proposed:true}));
+    const residual=(a,b)=>{
+      if(b-a<1e-8)return;
       for(let i=0;i<12;i++)elements.push(worldLine(
-        point(start-lerp(terminal,2*Math.PI,i/12)),point(start-lerp(terminal,2*Math.PI,(i+1)/12)),
+        point(start-lerp(a,b,i/12)),point(start-lerp(a,b,(i+1)/12)),
         view,'residual-dimension','#C62828',3));
+    };
+    const terminal=angles.at(-1)+step;
+    if(2*Math.PI-terminal>1e-8) {
+      elements.push(...opening(point(start-terminal),alpha-step/2-terminal,view,{proposed:true}));
+      residual(terminal,2*Math.PI);
     }
+    for(const end of [fit.n,count-1])residual(angles[end-1]+step,angles[end]);
     return elements;
   };
-  frame(s,draw(0),150,'closure-mismatch');
-  for(let i=1;i<=30;i++)frame(s,draw(ease(i/30)),8,'planning-revision');
-  frame(s,draw(1),100,'reuse-start');
-  return finish(s,draw(1));
+  frame(s,draw(nominal),150,'closure-mismatch');
+  for(let i=1;i<=20;i++)frame(s,draw(nominal.map((a,j)=>lerp(a,anchored[j],ease(i/20)))),8,'reserve-landmarks');
+  frame(s,draw(anchored),140,'protected-pairs');
+  for(let i=1;i<=30;i++)frame(s,draw(anchored.map((a,j)=>lerp(a,target[j],ease(i/30)))),8,'planning-revision');
+  frame(s,draw(target),100,'reuse-start');
+  return finish(s,draw(target));
 }
 
 function matchedScene() {
@@ -834,8 +846,9 @@ function annotateScene(s) {
     const {arms,junction,view}=catalog.illustrations.find(item=>item.id==='ILL-JUNCTION').inputs;
     marks=[...routeMarks(project(arms[0],view),project(arms[1],view)),endMark(project(arms[2],view),[0,1]),...directionMark(project(junction,view),[0,1])];
   } else if(s.name==='axiom-closure') {
-    const {radius}=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
-    marks=startMark([300,187.5-13*radius],[1,0]);
+    const {radius,landmarksDegrees}=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
+    const start=landmarksDegrees[0]*Math.PI/180-Math.asin(3/(2*radius));
+    marks=startMark(project(mul(axis(start),radius),{x:300,y:187.5,scale:13}),[Math.sin(start),Math.cos(start)]);
   } else if(s.name==='matched-guides') {
     marks=[...routeMarks([60,115],[502.25,115]),...routeMarks([540,260],[97.75,260],[-1,0]),
       ...idTag([60,150],'ST-1'),...idTag([540,225],'ST-1-A')];

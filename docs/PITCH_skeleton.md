@@ -158,6 +158,7 @@
 ![A8: a straight and curved portion share one compatible slit](../examples/illustrated/assets/axiom-smooth.gif)
 
 - Nominal spacing can miss the start of a closed loop; distribute the residual so the loop reuses its start opening
+- A diameter marks two opposite landmarks. Protect their nominal pairs and fit each half separately to place equal adjustment blocks symmetrically
 
 ![A8: close the loop without duplicating its start opening](../examples/illustrated/assets/axiom-closure.gif)
 

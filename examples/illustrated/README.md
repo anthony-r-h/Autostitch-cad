@@ -150,7 +150,7 @@ For a $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch, two equal gaps are too lo
 
 ### Loop closure
 
-Nominal spacing misses the reserved start on a $9.75\,\mathrm{mm}$ radius circle. The dashed next slit and red arc show the mismatch. Four central gaps lengthen to close the loop; the first and closing gaps stay nominal. Count the start opening once. `ILL-CLOSURE`.
+Nominal spacing misses the reserved start on a $9.80\,\mathrm{mm}$ radius circle. A diameter supplies two opposite landmarks, L1 and L2. Reserve a nominal pair around each, then fit the two equal free arcs. Each half needs three exactly centred adjusted gaps of approximately $3.22\,\mathrm{mm}$; the blue intervals mirror across the diameter. Red arcs show the residual before fitting. The upper protected pair includes the closing gap; count the start opening once. `ILL-CLOSURE`.
 
 ![Close the loop and reuse the start opening](assets/axiom-closure.gif)
 

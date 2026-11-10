@@ -288,20 +288,33 @@ assert(7/2>3.3&&7/3<2.7);
 const closure=slits('axiom-closure',{x:300,y:187.5,scale:13});
 const closureInput=catalog.illustrations.find(i=>i.id==='ILL-CLOSURE').inputs;
 const closureStep=2*Math.asin(3/(2*closureInput.radius));
-const closureFit=selectFit({R:closureInput.radius,p:3,sweep:2*Math.PI-2*closureStep});
+const closureFit=selectFit({R:closureInput.radius,p:3,sweep:Math.PI-closureStep});
+assert.deepEqual(closureInput.landmarksDegrees,[90,270]);
 assert.equal(closure.length,20);
 for(const [i,s] of closure.entries()) {
-  const changed=i>=closureFit.i+1&&i<closureFit.i+1+closureFit.k;
+  const halfIndex=i%(closureFit.n+1),changed=halfIndex>=closureFit.i&&halfIndex<closureFit.i+closureFit.k;
   near(dist(s.center,closure[(i+1)%20].center),changed?closureFit.correctedPitch:3);
   near(Math.hypot(...s.center),closureInput.radius);
+  assert(has(closure.map(s=>s.center),[-s.center[0],s.center[1]]),'Loop opening positions must mirror across the diameter');
 }
 assert.equal(new Set(closure.map(s=>s.center.map(x=>x.toFixed(6)).join(','))).size,20);
-assert.equal(closureFit.k,4);
+assert.equal(closureFit.k,3);assert(closureFit.exactCentre);
 const closureScene=scenes.find(s=>s.name==='axiom-closure');
 const closureHighlights=closureScene.final.filter(e=>e.kind==='adjusted-gap');
-assert.equal(closureHighlights.length,closureFit.k*12);
+assert.equal(closureHighlights.length,2*closureFit.k*12);
 for(const e of closureHighlights)for(const p of [e.a,e.b])near(Math.hypot(p[0]-300,p[1]-187.5)/13,closureInput.radius);
 const closureCenter=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+assert.equal(closureScene.final.filter(e=>e.kind==='landmark').length,1);
+assert.deepEqual(closureScene.final.filter(e=>e.kind==='notation-landmark').map(e=>e.value),['L1','L2']);
+const protectedLoop=closureScene.frames.find(f=>f.stage==='protected-pairs').elements.filter(e=>e.kind==='slit');
+for(const [a,b] of [[19,0],[9,10]]) {
+  const first=closure[a].center,last=closure[b].center;
+  near(dist(first,last),3);near(first[0]+last[0],0);near(first[1],last[1]);
+}
+for(const f of closureScene.frames.filter(f=>['protected-pairs','planning-revision','reuse-start'].includes(f.stage))) {
+  const real=f.elements.filter(e=>e.kind==='slit');
+  for(const i of [0,9,10,19])assert.deepEqual(real[i],protectedLoop[i],'Landmark pairs must stay fixed during fitting');
+}
 const closureMismatch=closureScene.frames.find(f=>f.stage==='closure-mismatch');
 const nominalLoop=closureMismatch.elements.filter(e=>e.kind==='slit').map(closureCenter);
 const candidate=closureCenter(closureMismatch.elements.find(e=>e.kind==='proposal'));
@@ -808,7 +821,7 @@ for(const s of scenes) {
   const source=readSvg(s.name).source;
   const terms=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)))?.terms??[];
   const termMatches=(value,term)=>value===term||(value.startsWith(term+' ')&&/^\d+\.\d{2}$/.test(value.slice(term.length+1)));
-  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L1|s|e|j|ST-1(?:-A)?)$/.test(match[1])||
+  for(const match of source.matchAll(/<text[^>]*>([^<]+)<\/text>/g))assert(/^(?:\d+(?:\.\d+)?|L[1-9]\d*|s|e|j|ST-1(?:-A)?)$/.test(match[1])||
     (s.name.startsWith('problem-corner-')&&/^\d+\.\d\u00b0$/.test(match[1]))||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
   for(const elements of [s.final,...s.frames.map(f=>f.elements)]) {

@@ -8930,10 +8930,13 @@
       "slitLength": 1.5,
       "leanDegrees": 40,
       "axioms": [
+        "A4",
+        "A5",
+        "A7",
         "A8"
       ],
       "animated": true,
-      "status": "Analytic explanation; not native CAD output.",
+      "status": "Analytic loop closure with two diameter landmarks and symmetric half-circle fits; not native CAD output.",
       "assets": [
         {
           "path": "examples/illustrated/assets/axiom-closure"
@@ -8941,11 +8944,16 @@
       ],
       "inputs": {
         "count": 20,
-        "radius": 9.75,
-        "landmarks": []
+        "radius": 9.8,
+        "landmarksDegrees": [
+          90,
+          270
+        ]
       },
       "notation": [
         "s",
+        "L1",
+        "L2",
         "direction"
       ],
       "threadReveal": {

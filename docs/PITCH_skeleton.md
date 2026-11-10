@@ -532,8 +532,3 @@ $$
 | Bespoke leathercraft | Precise layout on custom shapes |
 | Fully automated production (CNC) | Automatic stitch distribution |
 | Footwear and technical textiles | Precise stitch and perforation placement |
-
-# Reference
-
-- [Glossary](GLOSSARY.md), [axioms](AXIOMS.md), [mathematical model](MODEL.md), [junction construction](JUNCTIONS.md)
-- [Demo drawings](../examples/demo.md), [figure sources](../examples/illustrated/README.md)

@@ -63,6 +63,25 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Use [draft-full-document](.agents/skills/draft-full-document/SKILL.md) only when explicitly asked for a complete prose draft. Ordinary documentation edits retain the existing format.
 - Follow `docs/AGENTS.md` for skeleton/authored file roles. A full draft may expand the outline into prose; it must preserve its input documents and substantive unresolved questions.
 
+### Blog editing style
+- For blog edits requested in chat, return only the revised passage in a markdown code block unless explicitly asked for explanation.
+- Do not add agreement, apology, praise, alternatives, or commentary unless asked.
+- Keep the voice first-person, casual, and journal-like.
+- Preserve the original meaning, specificity, and level of enthusiasm.
+- Improve flow without adding a tidy lesson, takeaway, joke, punchline, or reader-facing advice.
+- Avoid review-site, marketing, sales, or "engagement" language.
+- Avoid performative skepticism and self-important framing.
+- No curly punctuation - ASCII only
+- Do not invent feelings, memories, motivations, intentions, or personal growth.
+- Let affection come through in specific details. Avoid generic declarations like "I've always loved" or "I keep coming back to."
+- Assume an informed reader. Skip definitions, obvious visual descriptions, and background that the narrative does not need.
+- Connect ideas into a narrative. Do not simply turn each requested topic into a separate paragraph.
+- Do not impose a lesson, takeaway, inspirational arc, or tidy conclusion.
+- Avoid marketing language, exaggerated significance, clever punchlines, and sentences written to sound quotable.
+- Preserve the original meaning, specificity, and level of enthusiasm.
+- Use ASCII punctuation only.
+
+
 ### Mathematical notation
 
 - Use `$...$` for inline math and `$$...$$` for display equations, including math in tables. Do not use `\(...\)` or `\[...\]`.

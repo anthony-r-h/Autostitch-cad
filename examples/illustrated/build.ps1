@@ -3,14 +3,43 @@
 param(
  [string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'),
  [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs'),
+ [string]$Theme,
  [switch]$ContactSheet
 )
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing,PresentationCore,WindowsBase
+if(-not ('AutostitchDiagramPixels' -as [type])) {
+ Add-Type -TypeDefinition @'
+using System.Collections.Generic;
+public static class AutostitchDiagramPixels {
+ public static byte[] Index(byte[] bgra, int[] palette) {
+  var lookup = new Dictionary<int, byte>();
+  for (int i = 0; i < palette.Length; i++) lookup[palette[i]] = (byte)i;
+  var indexed = new byte[bgra.Length / 4];
+  for (int i = 0; i < indexed.Length; i++) {
+   int b = bgra[i*4], g = bgra[i*4+1], r = bgra[i*4+2];
+   int key = (r<<16) | (g<<8) | b;
+   byte index;
+   if (!lookup.TryGetValue(key, out index)) {
+    int best = int.MaxValue;
+    for (int j = 0; j < palette.Length; j++) {
+     int dr = r-(palette[j]>>16), dg = g-((palette[j]>>8)&255), db = b-(palette[j]&255);
+     int distance = 2*dr*dr + 4*dg*dg + db*db;
+     if (distance < best) { best = distance; index = (byte)j; }
+    }
+    lookup[key] = index;
+   }
+   indexed[i] = index;
+  }
+  return indexed;
+ }
+}
+'@
+}
 $OutputDirectory = [IO.Path]::GetFullPath($OutputDirectory)
 $SceneScript = [IO.Path]::GetFullPath($SceneScript)
 $temporary = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ('../../output/'+(Split-Path (Split-Path $SceneScript -Parent) -Leaf))))
-& node $SceneScript prepare $OutputDirectory $temporary
+& node $SceneScript prepare $OutputDirectory $temporary $Theme
 if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
 $scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 
@@ -66,8 +95,14 @@ function Draw-Frame($elements,$canvas) {
      finally {$brush.Dispose()}
     }
     'text' {
+     if($element.textBackground) {
+      $labelBrush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($element.textBackground))
+      $box=$element.textBox
+      try {$g.FillRectangle($labelBrush,[single]$box.x,[single]$box.y,[single]$box.width,[single]$box.height)}
+      finally {$labelBrush.Dispose()}
+     }
      $fontStyle=if($element.bold){[Drawing.FontStyle]::Bold}else{[Drawing.FontStyle]::Regular}
-     $font=[Drawing.Font]::new('Arial',[single]$element.size,$fontStyle,[Drawing.GraphicsUnit]::Pixel)
+     $font=[Drawing.Font]::new($element.fontFamily,[single]$element.size,$fontStyle,[Drawing.GraphicsUnit]::Pixel)
      $brush=[Drawing.SolidBrush]::new($color)
      $format=[Drawing.StringFormat]::GenericTypographic.Clone()
      try {
@@ -88,7 +123,44 @@ function Draw-Frame($elements,$canvas) {
  } catch {$small.Dispose();throw}
  finally {if($background){$background.Dispose()};$g.Dispose();$large.Dispose()}
 }
+function New-GifPalette($scene) {
+ $unique=[ordered]@{}
+ $unique[$scene.canvas.background]=$true
+ foreach($elements in @($scene.final)+@($scene.frames | ForEach-Object {$_.elements})) {
+  foreach($element in $elements) {
+   $unique[$element.color]=$true
+   if($element.textBackground){$unique[$element.textBackground]=$true}
+  }
+ }
+ $colors=[Collections.Generic.List[Windows.Media.Color]]::new()
+ foreach($hex in $unique.Keys){$colors.Add([Windows.Media.ColorConverter]::ConvertFromString($hex))}
+ if($colors.Count -gt 256){throw 'The scene needs more than 256 GIF colours.'}
+ # Preserve exact role colours, then spend the remaining entries on antialiased edges.
+ $background=$colors[0];$baseColors=$colors.ToArray()
+ foreach($fraction in @(0.5,0.25,0.75,0.125,0.375,0.625,0.875)) {
+  foreach($color in $baseColors) {
+   $blend=[Windows.Media.Color]::FromRgb(
+    [byte]($background.R+($color.R-$background.R)*$fraction),
+    [byte]($background.G+($color.G-$background.G)*$fraction),
+    [byte]($background.B+($color.B-$background.B)*$fraction))
+   if($colors.Count -lt 256 -and -not $colors.Contains($blend)){$colors.Add($blend)}
+  }
+ }
+ return [Windows.Media.Imaging.BitmapPalette]::new($colors)
+}
+function New-GifFrame($image,$palette) {
+ # WPF's indexed converter dithers even flat label backgrounds. Map colours directly.
+ $source=[Windows.Media.Imaging.FormatConvertedBitmap]::new($image,[Windows.Media.PixelFormats]::Bgra32,$null,0)
+ $pixels=[byte[]]::new($source.PixelWidth*$source.PixelHeight*4)
+ $source.CopyPixels($pixels,$source.PixelWidth*4,0)
+ $rgb=[int[]]@($palette.Colors | ForEach-Object {([int]$_.R -shl 16) -bor ([int]$_.G -shl 8) -bor [int]$_.B})
+ $indices=[AutostitchDiagramPixels]::Index($pixels,$rgb)
+ $indexed=[Windows.Media.Imaging.BitmapSource]::Create($source.PixelWidth,$source.PixelHeight,96,96,
+  [Windows.Media.PixelFormats]::Indexed8,$palette,$indices,$source.PixelWidth)
+ return [Windows.Media.Imaging.BitmapFrame]::Create($indexed)
+}
 foreach($scene in $scenes) {
+ $palette=if($scene.staticGif -or $scene.frames.Count){New-GifPalette $scene}else{$null}
  $still=Draw-Frame $scene.final $scene.canvas
  try {
   $still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
@@ -96,7 +168,8 @@ foreach($scene in $scenes) {
   if($scene.staticGif){
    $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
    $uri=[Uri]::new((Join-Path $OutputDirectory ($scene.name+'.png')))
-   $encoder.Frames.Add([Windows.Media.Imaging.BitmapFrame]::Create($uri,[Windows.Media.Imaging.BitmapCreateOptions]::PreservePixelFormat,[Windows.Media.Imaging.BitmapCacheOption]::OnLoad))
+   $image=[Windows.Media.Imaging.BitmapFrame]::Create($uri,[Windows.Media.Imaging.BitmapCreateOptions]::PreservePixelFormat,[Windows.Media.Imaging.BitmapCacheOption]::OnLoad)
+   $encoder.Frames.Add((New-GifFrame $image $palette))
    $file=[IO.File]::Create((Join-Path $OutputDirectory ($scene.name+'.gif')))
    try {$encoder.Save($file)} finally {$file.Dispose()}
   }
@@ -119,7 +192,7 @@ foreach($scene in $scenes) {
    $image.StreamSource=$stream
    $image.EndInit()
    $image.Freeze()
-   $encoder.Frames.Add([Windows.Media.Imaging.BitmapFrame]::Create($image))
+   $encoder.Frames.Add((New-GifFrame $image $palette))
   } finally {$stream.Dispose();$bitmap.Dispose()}
  }
  $file=[IO.File]::Create((Join-Path $temporary ($scene.name+'.gif')))
@@ -128,17 +201,19 @@ foreach($scene in $scenes) {
  $encoder=$null
  [GC]::Collect()
 }
-& node $SceneScript finish $OutputDirectory $temporary
+& node $SceneScript finish $OutputDirectory $temporary $Theme
 if ($LASTEXITCODE -ne 0) { throw 'Animation timing export failed.' }
 Write-Output 'Looping GIFs written with explicit reveal timing and result holds.'
 if($ContactSheet) {
+ $chrome=(Get-Content (Join-Path $PSScriptRoot 'colors.json') -Raw | ConvertFrom-Json).gallery
  $sheet=[Drawing.Bitmap]::new(1280,1720)
  $g=[Drawing.Graphics]::FromImage($sheet)
- $font=[Drawing.Font]::new('Arial',18,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
- $heading=[Drawing.Font]::new('Arial',24,[Drawing.FontStyle]::Bold,[Drawing.GraphicsUnit]::Pixel)
- $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml('#292B30'))
+ $fontFamily=(Get-Content (Join-Path $PSScriptRoot 'colors.json') -Raw | ConvertFrom-Json).typography.fontFamily
+ $font=[Drawing.Font]::new($fontFamily,18,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
+ $heading=[Drawing.Font]::new($fontFamily,24,[Drawing.FontStyle]::Bold,[Drawing.GraphicsUnit]::Pixel)
+ $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($chrome.ink))
  try {
-  $g.Clear([Drawing.ColorTranslator]::FromHtml('#E4E2DE'))
+  $g.Clear([Drawing.ColorTranslator]::FromHtml($chrome.background))
   $g.InterpolationMode=[Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
   $g.TextRenderingHint=[Drawing.Text.TextRenderingHint]::AntiAliasGridFit
   $g.DrawString('AUTOSTITCH / COLOUR STUDIES',$heading,$brush,28,18)

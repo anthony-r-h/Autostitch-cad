@@ -9,7 +9,7 @@ import {add,mul,axis,project,line,worldLine,opening,hole,measure,scene,frame,fin
 const catalog=JSON.parse(fs.readFileSync(new URL('../../tests/cases.json',import.meta.url),'utf8'));
 const input=id=>catalog.illustrations.find(i=>i.id===id).inputs;
 function leatherEdge(points,view) {
-  return points.slice(1).map((point,i)=>worldLine(points[i],point,view,'leather-edge','#909090',1.2));
+  return points.slice(1).map((point,i)=>worldLine(points[i],point,view,'leather-edge','edge',1.2));
 }
 function diagonalCorner() {
   return slitOutlines(finishThread(diagonalCornerScene(input('ILL-SELLIER-CORNER'),{
@@ -71,7 +71,7 @@ function walletScene(diagonal=false) {
     }
     if(a<2&&!diagonal) {
       const center=a===0?g.ci:g.co;
-      result.push(worldLine([0,0],center,view,'extension','#C4C4C4',1,true),...opening(center,angle,view,{virtual:true}));
+      result.push(worldLine([0,0],center,view,'extension','guide',1,true),...opening(center,angle,view,{virtual:true}));
     }
   }
   const joint=diagonal?opening(g.joint,reference.sharedSlitDegrees*Math.PI/180,view)[0]:hole(g.joint,view);result.push(joint);
@@ -112,7 +112,7 @@ function loeweScenes() {
     const firstJoint=solved?hole(leftJoint,view):opening([0,0],Math.PI/4,view)[0];
     const secondJoint=hole(solved?rightJoint:[w,0],view);result.push(firstJoint,secondJoint);
     if(solved)virtuals.forEach((point,i)=>result.push(
-      worldLine(i<2?[0,0]:[w,0],point,view,'extension','#C4C4C4',1,true),
+      worldLine(i<2?[0,0]:[w,0],point,view,'extension','guide',1,true),
       ...opening(point,[a+Math.PI/2,a,a,a-Math.PI/2][i],view,{virtual:true})));
     s.threadPaths=[[...rows[0],firstJoint,...rows[1],secondJoint,...rows[2]]];
     return slitOutlines(finishThread({...s,final:result}));
@@ -144,7 +144,7 @@ function speedyScenes() {
       result.push(joint);path.push(joint);
       if(solved) {
         for(const [point,angle] of [[corner.ci,edges[(i+count-1)%count].angle],[corner.co,edge.angle]])result.push(
-          worldLine(vertices[i],point,view,'extension','#C4C4C4',1,true),...opening(point,angle,view,{virtual:true}));
+          worldLine(vertices[i],point,view,'extension','guide',1,true),...opening(point,angle,view,{virtual:true}));
         const first=add(corner.co,mul(edge.t,p)),last=add(corners[next].ci,mul(edge.t,-p));
         const D=dot(add(last,mul(first,-1)),edge.t),fit=selectFit({D,p});
         if(!fit)throw new Error(`Speedy edge ${i} cannot fit`);
@@ -226,22 +226,22 @@ function faglianoScene(solved=false) {
     const result=[...base];
     for(let i=0;i<straightCount;i++) {
       const y=bottom+i*p;
-      result.push(worldLine([-halfWidth,y],[halfWidth,y],view,'alignment','#D9D9D9',.7,true));
+      result.push(worldLine([-halfWidth,y],[halfWidth,y],view,'alignment','alignment',.7,true));
     }
     result.push(...straight.flatMap(row=>row.slice(0,straightCount)));
     for(const [arm,values] of angles.entries()) {
       for(let i=0;i<values.length-1;i++)if(Math.abs(values[i+1]-values[i]-step)>1e-8)result.push(...highlightGap(
         Array.from({length:13},(_,n)=>point(arm,values[i]+(values[i+1]-values[i])*n/12)),view));
       if(values.at(-1)>sweep)for(let i=0;i<12;i++)result.push(worldLine(
-        point(arm,sweep+(values.at(-1)-sweep)*i/12),point(arm,sweep+(values.at(-1)-sweep)*(i+1)/12),view,'extension','#C4C4C4',1,true));
+        point(arm,sweep+(values.at(-1)-sweep)*i/12),point(arm,sweep+(values.at(-1)-sweep)*(i+1)/12),view,'extension','guide',1,true));
       for(const [i,t] of values.entries()) {
         const terminal=i===realCount;
         // The reference ends at the vertex hole, not an A6 virtual slit.
         if(terminal&&!solved) {
           const centre=project(point(arm,t),view),anchor=project(joint,view);
           if(Math.hypot(centre[0]-anchor[0],centre[1]-anchor[1])>1e-6)result.push(
-            {...hole(point(arm,t),view),kind:'trial-hole',color:'#C62828'},
-            line(centre,anchor,'residual-dimension','#C62828',3));
+            {...hole(point(arm,t),view),kind:'trial-hole',color:'angle'},
+            line(centre,anchor,'residual-dimension','angle',3));
           continue;
         }
         const adjusted=j=>j>=0&&j<values.length-1&&Math.abs(values[j+1]-values[j]-step)>1e-8;
@@ -249,7 +249,7 @@ function faglianoScene(solved=false) {
         if(terminal) {
           const tip=arm===0?slit[0].a:slit[0].b,anchor=project(joint,view);
           if(Math.hypot(tip[0]-anchor[0],tip[1]-anchor[1])>1e-6) {
-            slit[0].color='#C62828';result.push(line(tip,anchor,'residual-dimension','#C62828',3));
+            slit[0].color='angle';result.push(line(tip,anchor,'residual-dimension','angle',3));
           }
         }
         result.push(...slit);
@@ -257,7 +257,7 @@ function faglianoScene(solved=false) {
       if(values.length>1) {
         const index=solved?fits[arm].i:0,gap=2*R*Math.sin((values[index+1]-values[index])/2);
         result.push(...measure(point(arm,values[index]),point(arm,values[index+1]),gap.toFixed(2),view,arm===0?44:-44).map(e=>
-          adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(e.type==='text'?{size:15,bold:true,color:'#252525'}:{})},Math.abs(gap-p)>1e-6)));
+          adjustmentStyle({...e,kind:e.type==='text'?'gap-value':'gap-dimension',...(e.type==='text'?{size:15,bold:true,color:'ink'}:{})},Math.abs(gap-p)>1e-6)));
       }
     }
     result.push(hole(joint,view));return result;

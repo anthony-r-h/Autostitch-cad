@@ -6,8 +6,18 @@ Supporting figures for [the pitch](../../docs/PITCH_skeleton.md).
 
 - All figures export at $600\times750$ px (4:5 portrait). Geometry scales uniformly; related comparisons share one fixed camera across every frame.
 - [Sixteen colour options](palettes/index.html): eight light and eight dark backgrounds, using the same Vertex point corner. [Contact sheet](palettes/contact-sheet.png).
-- Thread, measurements and angle labels meet a minimum 4.5:1 contrast against their background. Slit holes remain lighter than thread. These are options; the main diagrams retain their existing colours until a palette is selected.
-- Palette definitions: `palettes.mjs`. Rebuild the gallery, individual SVG/PNG figures and contact sheet:
+- [colors.json](colors.json) is the single colour and typography file. `documentationTheme` selects **graphite** for both the pitch and counter-example diagrams.
+- Each theme defines thread, construction, faded measurements, guides, leather edges, angles/residuals and adjusted-gap colours. `text` sets normal font colour; `textBackground` sets the label box colour. Semantic red/blue text and the Stitch fade retain their roles.
+- `typography` sets `fontFamily`, `sizeScale`, label-box `paddingX`/`paddingY`, and `background` (set `false` to omit boxes). Font sizes scale from the existing label hierarchy. Use an installed font and preview it at the intended display size.
+- Thread, measurements and angle labels meet a minimum $4.5:1$ contrast against their background. The same theme resolves every SVG, PNG and GIF frame, including slit interiors and the fade.
+- Rebuild the documentation figures after changing the selected theme or typography:
+
+```powershell
+./examples/illustrated/build.ps1
+./examples/illustrated/build.ps1 -SceneScript ./examples/counter_examples/scenes.mjs -OutputDirectory ./examples/counter_examples/assets
+```
+
+Use `-Theme porcelain` (or any key in `colors.json`) to override the selection for a build. Use a separate `-OutputDirectory` for previews. Rebuild the palette gallery and contact sheet:
 
 ```powershell
 ./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/palettes.mjs -OutputDirectory ./examples/illustrated/palettes -ContactSheet
@@ -21,7 +31,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 | --- | --- | --- |
 | Build | Establish the guides, features and slit layout | No thread. Slits and relevant dimensions at normal contrast; virtual slits dashed. Start, end and junction notation visible from the outset |
 | Adjustment | Slide, redistribute, mirror or otherwise revise the layout | No thread and no fading. Keep fixed features stationary; update affected dimensions with the geometry |
-| Stitch | Reveal all thread segments together; freeze the geometry | Fade holes, virtual slits and length dimensions to light grey over $0.3\,\mathrm{s}$. Keep thread dark, angle annotations red and unresolved conflicts visible. Hold for four seconds, then reset |
+| Stitch | Reveal all thread segments together; freeze the geometry | Fade holes, virtual slits and length dimensions to the theme's secondary colours over $0.3\,\mathrm{s}$. Keep thread prominent, angle annotations red and unresolved conflicts visible. Hold for four seconds, then reset |
 
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
@@ -84,7 +94,7 @@ Motion shows planning revisions, not physical punching order; the analytic const
 
 ## Comparison notation and totals
 
-- Vertex point is a static final thread view. Holes and length dimensions use the same light grey as the final animated views; angle annotations stay red. Length brackets measure visible thread between slit tips or the round-hole centre, in millimetres
+- Vertex point is a static final thread view. Holes and length dimensions use the same secondary colours as the final animated views; angle annotations stay red. Length brackets measure visible thread between slit tips or the round-hole centre, in millimetres
 - Corner thread angles use red wedges, arcs, leaders and values, with regular $13\,\mathrm{px}$ degree labels rounded to one decimal. Measure each visible thread against its arm direction; Bridge uses the same thread against both arms. Reveal them with the thread and retain their contrast during the final hold; they are annotations, not an aggregate score
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values

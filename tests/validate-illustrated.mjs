@@ -3,12 +3,34 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
-import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, svg } from '../examples/illustrated/scenes.mjs';
+import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, svg, themeFor, colorConfig } from '../examples/illustrated/scenes.mjs';
 import { palettes, paletteScenes } from '../examples/illustrated/palettes.mjs';
 
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
 const scenes = createScenes();
+const theme=themeFor();
+assert.throws(()=>themeFor('missing-theme'),/Unknown diagram theme/);
+assert.throws(()=>displayElements([{type:'text',kind:'measurement',color:'missing-role'}]),/Unknown diagram colour role/);
+for(const name of ['graphite','porcelain']) {
+  const selected=themeFor(name);
+  for(const s of scenes)for(const f of [...s.frames,{elements:s.final}]) {
+    const shown=displayElements(f.elements,f.holeLightening,selected);
+    shown.forEach((e,i)=>{
+      const raw=f.elements[i];
+      const {color,fontFamily,textBackground,textBox,size,...shape}=e;
+      const {color:role,size:rawSize,...originalShape}=raw;
+      assert.deepEqual(shape,originalShape,'Theme must preserve diagram geometry');
+      assert(/^#[0-9A-F]{6}$/i.test(color));
+      if(e.type==='text') {
+        assert.equal(size,rawSize*colorConfig.typography.sizeScale);
+        assert.equal(fontFamily,colorConfig.typography.fontFamily);
+        assert.equal(textBackground,colorConfig.typography.background?selected.textBackground:null);
+        assert(textBox.width>0&&textBox.height>0);
+      }
+    });
+  }
+}
 const presented=portraitScenes(scenes);
 for(const s of presented) {
   const c=s.canvas;
@@ -27,10 +49,19 @@ const luminance=hex=>hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255)
 assert.equal(palettes.filter(p=>p.mode==='light').length,8);
 assert.equal(palettes.filter(p=>p.mode==='dark').length,8);
 assert.equal(new Set(palettes.map(p=>p.background)).size,16);
-for(const p of palettes)for(const role of ['ink','secondary','angle','adjusted']) {
-  const a=luminance(p.background),b=luminance(p[role]);
+for(const p of palettes)for(const role of ['ink','text','secondary','angle','adjusted','adjustedSecondary'])for(const background of ['background','textBackground']) {
+  const a=luminance(p[background]),b=luminance(p[role]);
   assert((Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)>=4.5,`${p.title}: ${role} needs readable contrast`);
 }
+// Typography switches must affect every text element without changing its anchor.
+const font=colorConfig.typography,savedFont={...font};
+try {
+  Object.assign(font,{fontFamily:'Georgia',sizeScale:1.2,background:false});
+  const label={type:'text',kind:'term-label',p:[100,100],value:'Guide',size:13,color:'construction'};
+  const shown=displayElements([label],0)[0];
+  assert.equal(shown.fontFamily,'Georgia');assert.equal(shown.size,15.6);
+  assert.equal(shown.color,theme.text);assert.equal(shown.textBackground,null);assert.deepEqual(shown.p,label.p);
+} finally {Object.assign(font,savedFont);}
 for(const s of paletteScenes()) {
   const base=new URL(`examples/illustrated/palettes/${s.name}`,root);
   assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(s));
@@ -100,7 +131,7 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
     labels.forEach((label,i)=>{
       const gap=points[i+1]-points[i];near(+label.value,gap,.00501);
       assert.equal(Boolean(label.adjusted),Math.abs(gap-3)>1e-6);
-      assert.equal(label.color,label.adjusted?'#2166AC':'#8B8B8B');
+      assert.equal(label.color,label.adjusted?'adjusted':'construction');
     });
     const highlighted=f.elements.filter(e=>e.kind==='adjusted-gap');
     const changed=points.slice(1).map((x,i)=>({a:points[i],b:x})).filter(g=>Math.abs(g.b-g.a-3)>1e-6);
@@ -113,9 +144,9 @@ for(const s of scenes.filter(s=>s.name.startsWith('pitch-'))) {
       const remaining=15.3-points.at(-1),label=f.elements.find(e=>e.kind==='residual-value');
       near(+label.value,remaining,.00501);
       assert.equal(label.bold,false);assert.equal(label.size,labels[0].size);
-      assert.equal(label.color,'#C62828');assert(/^\d+\.\d{2}$/.test(label.value));
+      assert.equal(label.color,'angle');assert(/^\d+\.\d{2}$/.test(label.value));
       const indicator=f.elements.filter(e=>e.kind==='residual-dimension');assert.equal(indicator.length,1);
-      assert.equal(indicator[0].color,'#C62828');near(indicator[0].a[1],view.y);near(indicator[0].b[1],view.y);
+      assert.equal(indicator[0].color,'angle');near(indicator[0].a[1],view.y);near(indicator[0].b[1],view.y);
       near(dist(indicator[0].a,indicator[0].b)/view.scale,remaining);
       assert(!f.elements.some(e=>e.kind==='residual-extension'));
       near(points.slice(1).reduce((sum,p,i)=>sum+p-points[i],0)+remaining,15.3);
@@ -302,7 +333,7 @@ const clearanceScene=scenes.find(s=>s.name==='axiom-clearance');
 assert(clearanceScene.final.filter(e=>e.kind==='slit').every(e=>e.outline&&!e.round),'Clearance slits must use the same sharp rectangular outlines as other figures.');
 assert.equal(clearanceScene.frames.length,0);
 assert(!clearanceScene.final.some(e=>e.kind==='thread'));
-assert.deepEqual(displayElements(clearanceScene.final),clearanceScene.final,'Construction view must not fade');
+assert.deepEqual(displayElements(clearanceScene.final),displayElements(clearanceScene.final,0),'Construction view must not fade');
 const firstClearanceSlit=clearanceScene.final.findIndex(e=>e.kind==='slit');
 assert(clearanceScene.final.slice(firstClearanceSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
 
@@ -644,11 +675,11 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
   });
   const labels=s.final.filter(e=>e.kind==='thread-angle-value');
   assert.deepEqual(labels.map(e=>e.value),expected);
-  for(const e of labels){assert.equal(e.size,13);assert.equal(e.color,'#C62828');}
-  assert(displayElements(s.final).filter(e=>e.kind==='thread-angle-value').every(e=>e.color==='#C62828'));
+  for(const e of labels){assert.equal(e.size,13);assert.equal(e.color,'angle');}
+  assert(displayElements(s.final).filter(e=>e.kind==='thread-angle-value').every(e=>e.color===theme.angle));
   const wedges=s.final.filter(e=>e.kind==='angle-wedge');
   assert.equal(wedges.length,2);
-  wedges.forEach(e=>{assert.equal(e.type,'polygon');assert.equal(e.color,'#C62828');assert(e.opacity>0&&e.opacity<1);});
+  wedges.forEach(e=>{assert.equal(e.type,'polygon');assert.equal(e.color,'angle');assert(e.opacity>0&&e.opacity<1);});
   if(s.name==='problem-corner-bridge') {
     const radii=wedges.map(e=>dist(e.points[0],e.points[1]));
     near(radii[0],24);near(radii[1],12);
@@ -663,7 +694,7 @@ for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
     const lengths=s.final.filter(e=>e.kind==='thread-length-value');
     assert.deepEqual(lengths.map(e=>e.value),expectedThreads.map(e=>(dist(e.a,e.b)/problemView.scale).toFixed(2)));
     assert(!s.final.some(e=>e.kind==='gap-value'));
-    assert(displayElements(s.final).filter(e=>['thread-length-value','thread-length-dimension','slit','hole','virtual'].includes(e.kind)).every(e=>e.color==='#C4C4C4'));
+    assert(displayElements(s.final).filter(e=>['thread-length-value','thread-length-dimension','slit','hole','virtual'].includes(e.kind)).every(e=>e.color===theme.secondary));
     assert(readSvg(s.name).source.includes('class="thread-length-value"'));
   }
 }
@@ -675,7 +706,7 @@ near(balancedAuto.absoluteResidual,cornerShifts.reduce((sum,c)=>sum+c/2,0));
 for(const s of comparisons) {
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
     if(e.type==='text'&&['gap-value','residual-value'].includes(e.kind)){assert.equal(e.size,13);assert.equal(e.bold,false);}
-    if(e.kind==='residual-dimension'){assert.equal(e.color,'#C62828');assert.equal(e.width,3);}
+    if(e.kind==='residual-dimension'){assert.equal(e.color,'angle');assert.equal(e.width,3);}
   }
 }
 const curvedJunction=scenes.find(s=>s.name==='axiom-junction-curved');
@@ -785,7 +816,7 @@ for(const s of scenes) {
         const dx=thread.b[0]-thread.a[0],dy=thread.b[1]-thread.a[1],deg=Math.atan2(dy,dx)*180/Math.PI;
         assert.deepEqual(f.elements.filter(e=>e.kind==='thread-angle-value').map(e=>e.value),[deg,90-deg].map(a=>a.toFixed(1)+'\u00b0'));
         assert.equal(f.elements.find(e=>e.kind==='thread-length-value').value,(Math.hypot(dx,dy)/problemView.scale).toFixed(2));
-        assert(displayElements(f.elements,1).filter(e=>e.kind==='slit'||e.kind==='thread-length-value').every(e=>e.color==='#C4C4C4'));
+        assert(displayElements(f.elements,1).filter(e=>e.kind==='slit'||e.kind==='thread-length-value').every(e=>e.color===theme.secondary));
       }
     } else {
     const threadFrames=s.frames.filter(f=>f.stage==='thread-reveal'),threadFrame=threadFrames.at(-1);
@@ -798,17 +829,17 @@ for(const s of scenes) {
     assert.equal(fade.reduce((sum,f)=>sum+f.delay,0),30*threadFrames.length);
     fade.forEach((f,i)=>{
       assert.equal(f.holeLightening,(i%5+1)/5);assert.deepEqual(f.elements,s.final);
-      const shown=displayElements(f.elements,f.holeLightening);
+      const shown=displayElements(f.elements,f.holeLightening),base=displayElements(f.elements,0);
       shown.forEach((e,j)=>{
         if(['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)) {
-          const original=f.elements[j];
-          const target=original.adjusted?'#9CBAD7':'#C4C4C4';
+          const original=base[j];
+          const target=original.adjusted?theme.adjustedSecondary:theme.secondary;
           assert.equal(e.color,'#'+[1,3,5].map(k=>Math.round(parseInt(original.color.slice(k,k+2),16)+(parseInt(target.slice(k,k+2),16)-parseInt(original.color.slice(k,k+2),16))*f.holeLightening).toString(16).padStart(2,'0')).join('').toUpperCase());
           assert.deepEqual({...e,color:original.color},original);
-        } else assert.deepEqual(e,f.elements[j]);
+        } else assert.deepEqual(e,base[j]);
       });
     });
-    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)).every(e=>e.color===(e.adjusted?'#9CBAD7':'#C4C4C4')));
+    assert(displayElements(s.final).filter(e=>['slit','hole','virtual','proposal','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind)).every(e=>e.color===(e.adjusted?theme.adjustedSecondary:theme.secondary)));
     for(const f of s.frames.filter(f=>!['thread-reveal','thread-fade'].includes(f.stage)))assert(!f.elements.some(e=>e.kind==='thread'));
     }
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
@@ -854,9 +885,9 @@ for(const s of scenes) {
     (s.name.startsWith('problem-corner-')&&/^\d+\.\d\u00b0$/.test(match[1]))||terms.some(term=>termMatches(match[1],term)),'Uncatalogued text in figure');
   const labels=s.final.filter(e=>e.type==='text');
   for(const elements of [s.final,...s.frames.map(f=>f.elements)]) {
-    for(const e of elements.filter(e=>e.kind==='adjustment-mark'||e.adjusted))assert.equal(e.color,'#2166AC');
-    for(const e of displayElements(elements).filter(e=>e.kind==='adjusted-gap'))assert.equal(e.color,'#2166AC');
-    for(const e of displayElements(elements).filter(e=>e.adjusted&&!['adjustment-mark','adjusted-gap'].includes(e.kind)))assert.equal(e.color,elements.some(v=>v.kind==='thread')?'#9CBAD7':'#2166AC');
+    for(const e of elements.filter(e=>e.kind==='adjustment-mark'||e.adjusted))assert.equal(e.color,'adjusted');
+    for(const e of displayElements(elements).filter(e=>e.kind==='adjusted-gap'))assert.equal(e.color,theme.adjusted);
+    for(const e of displayElements(elements).filter(e=>e.adjusted&&!['adjustment-mark','adjusted-gap'].includes(e.kind)))assert.equal(e.color,elements.some(v=>v.kind==='thread')?theme.adjustedSecondary:theme.adjusted);
   }
   const allLabels=[...labels,...s.frames.flatMap(f=>f.elements.filter(e=>e.type==='text'))];
   for(const term of terms)assert(allLabels.some(e=>termMatches(e.value,term)),`${s.name} missing ${term}`);

@@ -6,9 +6,18 @@ import { selectFit } from '../../tests/fit-oracle.mjs';
 
 const root = new URL('../../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
+export const colorConfig=JSON.parse(fs.readFileSync(new URL('colors.json',import.meta.url),'utf8'));
+export function themeFor(name=colorConfig.documentationTheme) {
+  const theme=colorConfig.themes[name];
+  if(!theme)throw new Error(`Unknown diagram theme: ${name}`);
+  for(const role of ['background','ink','construction','secondary','guide','angle','adjusted','adjustedSecondary','edge','alignment','text','textBackground']) {
+    if(!/^#[0-9A-F]{6}$/i.test(theme[role]))throw new Error(`Theme ${name} needs a hex colour for ${role}`);
+  }
+  return theme;
+}
 const alpha = 40 * Math.PI / 180;
-const ink = '#252525', guideInk = '#C4C4C4', construction = '#8B8B8B';
-const adjustmentInk = '#2166AC';
+const ink = 'ink', guideInk = 'guide', construction = 'construction';
+const adjustmentInk = 'adjusted';
 const adjustmentStyle = (element,adjusted=true) => adjusted?{...element,adjusted:true,color:adjustmentInk}:element;
 const variant = id => catalog.geometry.find(item => item.id === id).variants.find(item => item.pitch === 3);
 const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
@@ -84,8 +93,8 @@ function pitchScenes() {
       const last=project([points.at(-1),0],view)[0],end=project([length,0],view)[0];
       const remaining=Math.max(0,length-points.at(-1));
       elements.push(
-        line([last,view.y],[end,view.y],'residual-dimension','#C62828',3),
-        {...text([(last+end)/2,view.y+55],remaining.toFixed(2)),kind:'residual-value',color:'#C62828',size:13,bold:false});
+        line([last,view.y],[end,view.y],'residual-dimension','angle',3),
+        {...text([(last+end)/2,view.y+55],remaining.toFixed(2)),kind:'residual-value',color:'angle',size:13,bold:false});
     }
     return elements;
   };
@@ -370,8 +379,8 @@ function modelSolutionScene() {
       paths.push(path);
       if(residual) {
         const a=point(span,fit.n*p),b=span.b,label=add(project(mul(add(a,b),.5),view),arm===2?[30,4]:[0,-23]);
-        elements.push(worldLine(a,b,view,'residual-dimension','#C62828',3),
-          {...text(label,(D-fit.n*p).toFixed(2)),kind:'residual-value',color:'#C62828'});
+        elements.push(worldLine(a,b,view,'residual-dimension','angle',3),
+          {...text(label,(D-fit.n*p).toFixed(2)),kind:'residual-value',color:'angle'});
       } else for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
         points[i],points[i+1],(row[i+1]-row[i]).toFixed(2),view,arm===2?44:36).map(e=>
           adjustmentStyle(arm===2&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e)));
@@ -593,7 +602,7 @@ function closureScene() {
       if(b-a<1e-8)return;
       for(let i=0;i<12;i++)elements.push(worldLine(
         point(start-lerp(a,b,i/12)),point(start-lerp(a,b,(i+1)/12)),
-        view,'residual-dimension','#C62828',3));
+        view,'residual-dimension','angle',3));
     };
     const terminal=angles.at(-1)+step;
     if(2*Math.PI-terminal>1e-8) {
@@ -742,7 +751,7 @@ function termsSlitScene() {
   const profile={...worldLine(a,b,view,'slit-profile',ink,input.width*view.scale),round:true};
   const s=scene('terms-slit','Slit axis, length, width and lean','A2');
   const result=[...tangent,profile,...termLabel([210,310],'Slit',[210,257])];
-  result.push(worldLine(a,b,view,'slit-axis','#FFFFFF',1,true),...termLabel([270,310],'Axis',[270,200]));
+  result.push(worldLine(a,b,view,'slit-axis','background',1,true),...termLabel([270,310],'Axis',[270,200]));
   const lengthDimension=measure(a,b,'',view,55).filter(e=>e.type!=='text');
   result.push(...lengthDimension,...termLabel([235,91],'Length',[235,158]));
   const center=mul(direction,1.05),halfWidth=mul(normal,input.width/2);
@@ -976,11 +985,11 @@ function cornerThreadAngles(s,threads) {
     const label=arm===0?[380,16]:[525,70];
     const anchor=add(origin,mul(axis(start+turn/2),radius));
     return [
-      {type:'polygon',points:[origin,...points],p:origin,kind:'angle-wedge',color:'#C62828',opacity:.22},
-      line(origin,add(origin,mul(tangent,28)),'angle-reference','#C62828',.8,true),
-      ...points.slice(1).map((p,i)=>line(points[i],p,'thread-angle','#C62828',1)),
-      line(arm===0?add(label,[0,4]):add(label,[-28,-4]),anchor,'angle-leader','#C62828',.8),
-      {...text(label,`${degrees.toFixed(1)}\u00b0`),kind:'thread-angle-value',color:'#C62828',size:13}
+      {type:'polygon',points:[origin,...points],p:origin,kind:'angle-wedge',color:'angle',opacity:.22},
+      line(origin,add(origin,mul(tangent,28)),'angle-reference','angle',.8,true),
+      ...points.slice(1).map((p,i)=>line(points[i],p,'thread-angle','angle',1)),
+      line(arm===0?add(label,[0,4]):add(label,[-28,-4]),anchor,'angle-leader','angle',.8),
+      {...text(label,`${degrees.toFixed(1)}\u00b0`),kind:'thread-angle-value',color:'angle',size:13}
     ];
   });
 }
@@ -1045,35 +1054,44 @@ export function pitchComparisonMetrics(s) {
     stitchLengthDeviation:absoluteStitchLengthDeviation(s)};
 }
 
-export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0) {
-  if(!amount)return elements;
+export function displayElements(elements,amount=elements.some(e=>e.kind==='thread')?1:0,theme=themeFor()) {
   return elements.map(e=>{
-    if(!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind))return e;
-    const target=e.adjusted?'#9CBAD7':'#C4C4C4';
-    const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(e.color.slice(i,i+2),16),parseInt(target.slice(i,i+2),16),amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
-    return {...e,color};
+    if(!/^#[0-9A-F]{6}$/i.test(theme[e.color]))throw new Error(`Unknown diagram colour role: ${e.color} (${e.kind})`);
+    const start=theme[e.type==='text'&&!['angle','adjusted'].includes(e.color)?'text':e.color];
+    let shown={...e,color:start};
+    if(e.type==='text') {
+      const font=colorConfig.typography,size=e.size*font.sizeScale;
+      // Conservative em boxes keep labels clear in both renderers, without a font dependency.
+      const width=e.value.length*size*.65+2*font.paddingX,height=size*1.15+2*font.paddingY;
+      shown={...shown,size,fontFamily:font.fontFamily,textBackground:font.background?theme.textBackground:null,
+        textBox:{x:e.p[0]-width/2,y:e.p[1]-size*.92-font.paddingY,width,height}};
+    }
+    if(!amount||!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind))return shown;
+    const target=e.adjusted?theme.adjustedSecondary:theme.secondary;
+    const color='#'+[1,3,5].map(i=>Math.round(lerp(parseInt(start.slice(i,i+2),16),parseInt(target.slice(i,i+2),16),amount)).toString(16).padStart(2,'0')).join('').toUpperCase();
+    return {...shown,color};
   });
 }
 // Presentation only: keep model coordinates and a common camera across comparisons.
-export function portraitScenes(scenes) {
+export function portraitScenes(scenes,theme=themeFor()) {
   const bounds=new Map();
   for(const s of scenes) {
     const box=bounds.get(s.source)??[Infinity,Infinity,-Infinity,-Infinity];
     for(const elements of [s.final,...s.frames.map(f=>f.elements)])for(const e of elements) {
       const points=e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p];
-      const pad=e.type==='text'?Math.max(e.size,e.value.length*e.size*0.3):(e.radius??e.width??0);
+      const pad=e.type==='text'?Math.max(e.size,e.value.length*e.size*.325)*colorConfig.typography.sizeScale+Math.max(colorConfig.typography.paddingX,colorConfig.typography.paddingY):(e.radius??e.width??0);
       for(const p of points){box[0]=Math.min(box[0],p[0]-pad);box[1]=Math.min(box[1],p[1]-pad);box[2]=Math.max(box[2],p[0]+pad);box[3]=Math.max(box[3],p[1]+pad);}
     }
     bounds.set(s.source,box);
   }
   return scenes.map(s=>{
     const b=bounds.get(s.source),scale=Math.min(1.55,528/(b[2]-b[0]),654/(b[3]-b[1]));
-    return {...s,canvas:{width:600,height:750,background:'#FFFFFF',scale,x:300-scale*(b[0]+b[2])/2,y:375-scale*(b[1]+b[3])/2},
-      displayed:true,final:displayElements(s.final),frames:s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening)}))};
+    return {...s,canvas:{width:600,height:750,background:theme.background,scale,x:300-scale*(b[0]+b[2])/2,y:375-scale*(b[1]+b[3])/2},
+      displayed:true,final:displayElements(s.final,undefined,theme),frames:s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening,theme)}))};
   });
 }
 export function svg(scene) {
-  const canvas=scene.canvas??{width:600,height:750,background:'#FFFFFF',scale:1,x:0,y:187.5};
+  const canvas=scene.canvas??{width:600,height:750,background:themeFor().background,scale:1,x:0,y:187.5};
   const elements=(scene.displayed?scene.final:displayElements(scene.final)).map(e=>{
     if(e.type==='line') {
       const axisLine=`<line class="${e.kind}" x1="${n(e.a[0])}" y1="${n(e.a[1])}" x2="${n(e.b[0])}" y2="${n(e.b[1])}" stroke="${e.outline?canvas.background:e.color}" stroke-width="${e.width}"${e.dash?' stroke-dasharray="4 4"':''}${e.round?' stroke-linecap="round"':''}/>`;
@@ -1082,7 +1100,9 @@ export function svg(scene) {
     }
     if(e.type==='circle')return `<circle class="${e.kind}" cx="${n(e.p[0])}" cy="${n(e.p[1])}" r="${n(e.radius)}" fill="${e.color}"/>`;
     if(e.type==='polygon')return `<polygon class="${e.kind}" points="${e.points.map(p=>p.map(n).join(',')).join(' ')}" fill="${e.color}" fill-opacity="${e.opacity??1}"/>`;
-    return `<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
+    const box=e.textBox;
+    const background=e.textBackground?`<rect class="label-background" x="${n(box.x)}" y="${n(box.y)}" width="${n(box.width)}" height="${n(box.height)}" fill="${e.textBackground}"/>`:'';
+    return background+`<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="${escape(e.fontFamily)}" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
   });
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':scene.threadPaths?'Static stitch diagram.':'Static terminology figure.'}</desc>\n<rect width="100%" height="100%" fill="${canvas.background}"/>\n<g transform="translate(${canvas.x} ${canvas.y}) scale(${canvas.scale})">\n${elements.join('\n')}\n</g>\n</svg>\n`;
 }
@@ -1122,7 +1142,7 @@ export function writeSceneFiles(scenes) {
   const mode=process.argv[2],output=path.resolve(process.argv[3]),temporary=path.resolve(process.argv[4]);
   fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
   if(mode==='prepare') {
-    const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes);
+    const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes,themeFor(process.argv[5]||undefined));
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(displayed));
     for(const scene of displayed)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {

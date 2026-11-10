@@ -42,12 +42,12 @@ At $R=3\,\mathrm{mm}$ and $\theta=\pi/3$, the nominal chord gap is $3\,\mathrm{m
 - **Adjusted gap:** a slit-to-slit gap changed from $p$, within $0.9p\leq g\leq1.1p$.
 - **Protected gap:** fixed at $p$ and cannot be adjusted, such as the gap centred on a landmark.
 
-Sharp-corner gaps with a round-hole endpoint follow the corner construction. A **corner step** is the centre distance from a virtual slit to its real neighbour: nominally $p$, adjustable within $0.9p\leq q\leq1.1p$ to keep that neighbour on its guide. It is not a real slit-to-slit gap. At junctions with three or more arms, each first neighbour is one nominal pitch from the shared hole.
+Sharp-corner gaps with a round-hole endpoint follow the corner construction. A **corner step** is the centre distance from a virtual slit to its real neighbour: nominally $p$, adjustable within $0.9p\leq q\leq1.1p$ to keep that neighbour on its guide. It is not a real slit-to-slit gap. At junctions with three or more arms, each first slit centre is fixed at chord distance $p/2$ from the shared hole centre. This half-pitch connection is a junction constraint, excluded from the count and length of adjusted gaps.
 
 Consecutive equal adjusted gaps form an **adjustment block** within a free span.
 
-- **Number of adjusted gaps:** how many gaps differ from nominal pitch.
-- **Absolute adjustment:** $\sum_i\lvert g_i-p\rvert$, the total change in gap lengths. Compression and extension both add to the total.
+- **Number of adjusted gaps:** how many gaps the fit changes from nominal pitch.
+- **Absolute adjustment:** $\sum_i\lvert g_i-p\rvert$, the total change in fitted gap lengths. Compression and extension both add to the total.
 - **Absolute residual:** $\sum_j\lvert r_j\rvert$, the total length to distribute before fitting, summed over the free spans.
 
 For a span with $n$ gaps, its residual is $r=L-np$ on a straight guide, or $r=R\left(\lvert\theta\rvert-2n\arcsin\left(p/(2R)\right)\right)$ on a circular guide of radius $R$ and sweep $\theta$ in radians. Absolute residual uses length along the guide; absolute adjustment uses chord lengths. They can differ on curves.
@@ -64,7 +64,7 @@ A meeting with two or more **arms**: portions of stitch lines extending away fro
 
 - A **smooth join** keeps the tangent direction. Straight or co-circular continuation at equal pitch remains one run; a smooth change of curvature shares one slit.
 - A **sharp corner** has two arms with different tangent directions. Virtual slits locate its shared round hole.
-- A junction with three or more arms, such as a T or X, shares a round hole at the guide intersection.
+- A **branching junction** has three or more arms, such as a T or X. It shares a round hole at the guide intersection, with a fixed half-pitch connection to the first slit on every arm.
 
 The corner comparisons use three other treatments: **Vertex point** puts a round hole at the guide vertex; **Bridge** carries thread directly between the terminal slits, bypassing the vertex; **Reverse corner** joins obverse and reverse rows through a shared diagonal slit at the vertex. A shared diagonal slit without a change of lean is a separate treatment.
 

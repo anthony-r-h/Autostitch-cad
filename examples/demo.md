@@ -22,11 +22,13 @@ One canonical DWG per demo, stored in `examples/demos/`. Git keeps revisions; te
 
 All commands generate stitches. The banner includes stitched lettering, flow fill, a diamond background and one round question-mark dot. All lettering uses editable geometry, with no installed font dependency.
 
-The emblem keeps the lettering shapes, clips the rings around them and omits remnants shorter than three nominal stitches. Its clear band is measured between hole outlines; ring fragments use nominal spacing.
+The emblem uses $2.7\,\mathrm{mm}$ nominal pitch throughout, with $1.5\,\mathrm{mm}$ slits. Two landmarks at the outer and inner A crown apices reserve nominal gaps and give mirrored crown stations. The lettering guides fit this pitch; the rings clip around them and omit remnants shorter than three nominal stitches. The $6\,\mathrm{mm}$ clear band is measured between hole outlines; ring fragments use nominal spacing. Native regeneration and save/reopen checks passed on 2026-11-10: 15 lettering guides, 12 ring arcs, 580 lettering openings and 496 ring openings, plus the separate dot.
 
 The banner clips one field of translated flow arcs across all three YOU letters. Rows are $3\,\mathrm{mm}$ apart; all stitching uses $2.7\,\mathrm{mm}$ pitch; free ends trim symmetrically to nominal spacing. Fragments with at least one complete stitch are retained, including the tapered Y arms. The fill stays at least $3\,\mathrm{mm}$ from the outline holes, including O's counter. Its guide clipping inset is $3.75\,\mathrm{mm}$ to allow for the outline slits. The page is $160\times200\,\mathrm{mm}$ (4:5), with $14\,\mathrm{mm}$ between word extents. Both script rows use the same size. The a bowls are true circles, separated from their uprights.
 
-The diamond background has crossings $27\,\mathrm{mm}$ apart, giving diamonds about $38.2\,\mathrm{mm}$ wide. It stays $6\,\mathrm{mm}$ from the text holes and stops inside the outer frame. Closed letter interiors remain empty of background stitching; fragments shorter than three nominal gaps are omitted. The frame is a clipping boundary.
+Branching junctions reserve half-pitch neighbours on every arm. The h rising stroke, l approaches and y lead-in leave enough room for the remaining ordinary gaps.
+
+The diamond background has crossings $27\,\mathrm{mm}$ apart, giving diamonds about $38.2\,\mathrm{mm}$ wide. It stays $6\,\mathrm{mm}$ from the text holes and stops inside the outer frame. Closed letter interiors remain empty of background stitching; fragments shorter than three nominal gaps are omitted. Free ends stop half a pitch inside the clipped runs, keeping their phase consistent with the junction neighbours. The frame is a clipping boundary.
 
 Use the saved DWGs for routine review; generating connected stitch blocks can take a minute or more. Close each test drawing after checking it.
 
@@ -46,7 +48,7 @@ Use these fixed crop bounds with the same renderer. Bounds are drawing coordinat
 | --- | --- | --- |
 | `examples/demos/can-you-really` | `0,0,160,200` | `600` / `750` |
 | `examples/demos/emblem` | `333,-120.9290248733575,589,135.0709751266425` | `600` / `600` |
-| `examples/fills/fill-quilt` | `11.0588745030457,11.0588745030457,84.9411254969543,84.9411254969543` | `600` / `600` |
+| `examples/fills/fill-quilt` | `12.1195346748255,12.1195346748255,83.8804653251744,83.8804653251744` | `600` / `600` |
 | `examples/fills/fill-circles` | `308,-12,380,60` | `600` / `600` |
 | `examples/fills/fill-maze` | `477,-6,519,36` | `600` / `600` |
 | `examples/fills/fill-flow` | `623.552939397217,3.10587879443474,704.447060602782,84` | `600` / `600` |

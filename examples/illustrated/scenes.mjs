@@ -335,108 +335,14 @@ function cornerScene() {
   return finish(s,result);
 }
 
-function modelSolutionScene() {
-  const spec=catalog.illustrations.find(item=>item.id==='ILL-MODEL-SOLUTION');
-  const {view,radius:R,springHeight:H,crossbarHeight:B,landmarkHeight:L,durationScale,redistributionSpeed}=spec.inputs,p=spec.pitch;
-  const left=[-R,B],right=[R,B],leftJoin=[-R,H],rightJoin=[R,H];
-  const straight=(a,b,offset)=>{
-    const d=add(b,mul(a,-1)),D=Math.hypot(...d),angle=Math.atan2(d[1],d[0])+alpha;
-    return {D,offset,point:t=>add(a,mul(d,t/D)),angle:()=>angle,advance:q=>q,fit:selectFit({D,p})};
-  };
-  const crown={D:Math.PI*R,offset:32,point:t=>[R*Math.cos(Math.PI-t/R),H+R*Math.sin(Math.PI-t/R)],
-    angle:t=>Math.PI/2-t/R+alpha,advance:q=>2*R*Math.asin(q/(2*R)),fit:selectFit({R,sweep:Math.PI,p})};
-  const spans=[straight([-R,0],[-R,L-p/2],38),straight([-R,L+p/2],[-R,B-p],38),
-    straight([-R,B+p],leftJoin,38),crown,straight(rightJoin,[R,B+p],38),
-    straight([R,B-p],[R,L+p/2],38),straight([R,L-p/2],[R,0],38),straight([-R+p,B],[R-p,B],-36)];
-  for(const span of spans) {
-    if(!span.fit)throw new Error('Model A has no span fit.');
-    span.fitted=[0];
-    for(let i=0;i<span.fit.n;i++)span.fitted.push(span.fitted.at(-1)+span.advance(
-      i>=span.fit.i&&i<span.fit.i+span.fit.k?span.fit.correctedPitch:p));
-    span.initial=span.fitted.map((_,i)=>i===span.fit.n?span.D:i*span.advance(p));
-  }
-  const base=[worldLine([-R,0],leftJoin,view),worldLine([R,0],rightJoin,view),worldLine(left,right,view),
-    ...Array.from({length:60},(_,i)=>worldLine(crown.point(crown.D*i/60),crown.point(crown.D*(i+1)/60),view)),
-    ...routeMarks(project([-R,0],view),project([R,0],view),[0,-1],[0,1]),
-    ...[left,right].map((point,i)=>notationText(add(project(point,view),[i===0?-23:23,-15]),'j','junction'))];
-  const s=scene('model-solution','Fit the rounded A: landmarks, junctions, free spans and residuals',spec.id);
-  const step=label=>termLabel([300,435],label);
-  frame(s,[...base,...step('Mark landmarks')],100,'guides');
-  for(const [i,x] of [-R,R].entries())base.push(worldLine([x-.8,L],[x+.8,L],view,'landmark',ink,2),
-    notationText(add(project([x,L],view),[i===0?-25:25,4]),`L${i+1}`,'landmark'));
-  frame(s,[...base,...step('Mark landmarks')],140,'landmarks');
-  const fixed=[...base,...[-R,R].flatMap((x,i)=>[0,L-p/2,L+p/2].flatMap(y=>opening([x,y],(i===0?Math.PI/2:-Math.PI/2)+alpha,view)))];
-  frame(s,[...fixed,...step('Fixed landmark pairs')],140,'fixed-features');
-  for(const [i,x] of [-R,R].entries()) {
-    fixed.push(...[B-p,B+p,H].flatMap(y=>opening([x,y],(i===0?Math.PI/2:-Math.PI/2)+alpha,view)),
-      ...opening([x+(i===0?p:-p),B],alpha,view));
-  }
-  frame(s,[...fixed,...step('Resolve junctions')],100,'junction-neighbours');
-  const holes=[hole(left,view),hole(right,view)];fixed.push(...holes);
-  frame(s,[...fixed,...step('Resolve junctions')],140,'junction-holes');
-  const dimensions=spans.flatMap(span=>{
-    if(span!==crown)return measure(span.point(0),span.point(span.D),span.D.toFixed(2),view,span.offset);
-    const outer=t=>[Math.cos(Math.PI-t/R)*(R+3.5),H+Math.sin(Math.PI-t/R)*(R+3.5)];
-    const elements=Array.from({length:40},(_,i)=>worldLine(outer(span.D*i/40),outer(span.D*(i+1)/40),view,'dimension',construction,.8));
-    for(const t of [0,span.D]) {
-      const c=outer(t);elements.push(worldLine(add(c,[-.35,0]),add(c,[.35,0]),view,'dimension',construction,.8));
-    }
-    return [...elements,text(add(project(outer(span.D/2),view),[0,-9]),span.D.toFixed(2))];
-  });
-  frame(s,[...fixed,...dimensions,...step('Free spans')],160,'free-spans');
-  const key=point=>point.map(v=>v.toFixed(7)).join(',');
-  const draw=(t,residual=false)=>{
-    const elements=[...base,...holes],rows=[],marked=new Set(),openings=new Map();
-    const stations=spans.map(span=>span.initial.map((v,i)=>lerp(v,span.fitted[i],t)));
-    for(const [j,span] of spans.entries()) {
-      const row=stations[j],points=row.map(span.point);
-      for(let i=0;i<row.length-1;i++)if(Math.abs(row[i+1]-row[i]-span.advance(p))>1e-6) {
-        marked.add(key(points[i]));marked.add(key(points[i+1]));
-        elements.push(...highlightGap(Array.from({length:span===crown?13:2},(_,n)=>span.point(lerp(row[i],row[i+1],n/(span===crown?12:1)))),view));
-        if(!residual)elements.push(...measure(points[i],points[i+1],Math.hypot(...add(points[i+1],mul(points[i],-1))).toFixed(2),view,span.offset).map(e=>adjustmentStyle(e)));
-      }
-      if(residual) {
-        const nominal=span.fit.n*span.advance(p),r=span.D-nominal;
-        const points=Array.from({length:span===crown?13:2},(_,i)=>span.point(lerp(nominal,span.D,i/(span===crown?12:1))));
-        const centre=project(span.point((nominal+span.D)/2),view),label=j===7?add(centre,[0,24]):add(centre,[j<=2?-26:26,0]);
-        elements.push(...points.slice(1).map((b,i)=>worldLine(points[i],b,view,'residual-dimension','angle',3)),
-          {...text(label,r.toFixed(2)),kind:'residual-value',color:'angle'});
-      }
-    }
-    // The straight legs and circular crown reuse one slit at each smooth join.
-    for(const [j,span] of spans.entries())rows.push(stations[j].map(station=>{
-      const point=span.point(station),id=key(point);
-      if(!openings.has(id)) {
-        const slit=opening(point,span.angle(station),view,{marked:marked.has(id)});
-        openings.set(id,slit[0]);elements.push(...slit);
-      }
-      return openings.get(id);
-    }));
-    return {elements,paths:[[...rows[0],...rows[1],holes[0],...rows[2],...rows[3].slice(1),...rows[4].slice(1),holes[1],...rows[5],...rows[6]],
-      [holes[0],...rows[7],holes[1]]]};
-  };
-  frame(s,[...draw(0,true).elements,...step('Redistribute residuals')],180,'residuals');
-  frame(s,[...draw(0).elements,...step('Redistribute residuals')],80,'adjustment-start');
-  for(let i=1;i<=30;i++)frame(s,[...draw(ease(i/30)).elements,...step('Redistribute residuals')],8,'planning-revision');
-  const final=draw(1);s.threadPaths=final.paths;
-  const result=slitOutlines(finishThread(finish(s,final.elements)));
-  let elapsed=0;
-  result.frames=result.frames.map(f=>{
-    const faster=['residuals','adjustment-start','planning-revision'].includes(f.stage);
-    const next=elapsed+f.delay*durationScale/(faster?redistributionSpeed:1),delay=Math.round(next)-Math.round(elapsed);
-    elapsed=next;return {...f,delay};
-  });
-  return result;
-}
-
 function junctionScene() {
   const input=catalog.illustrations.find(item=>item.id==='ILL-JUNCTION').inputs;
   const {view}=input,center=input.junction;
   const arms=input.arms.map(end=>{
-    const distance=Math.hypot(...end),fit=selectFit({D:distance-3,p:3});
+    const distance=Math.hypot(...end),fit=selectFit({D:distance-1.5,p:3});
     if(!fit)throw new Error('T-junction illustration has no fit.');
     const fitted=stations(fit).map(s=>distance-s);
-    const initial=fitted.map((s,i)=>i===fit.n?3:distance-i*3);
+    const initial=fitted.map((s,i)=>i===fit.n?1.5:distance-i*3);
     return {end,distance,initial,fitted,angle:end[1]<0?alpha-Math.PI/2:alpha};
   });
   const base=arms.map(arm=>worldLine(center,arm.end,view));
@@ -475,9 +381,9 @@ function curvedJunctionScene() {
   const arms=spec.inputs.directionsDegrees.map((degrees,i)=>{
     const theta=degrees*Math.PI/180,curved=i===0;
     const advance=q=>curved?2*Math.asin(q/(2*R)):q;
-    const step=advance(p),length=spec.inputs.nominalIntervals[i]*step;
+    const step=advance(p),first=advance(p/2),length=spec.inputs.nominalIntervals[i]*step;
     const point=t=>curved?add(mul(axis(theta),R*Math.sin(t)),mul(axis(theta+Math.PI/2),R*(1-Math.cos(t)))):mul(axis(theta),t);
-    return {theta,curved,advance,step,length,point,tangent:t=>theta+(curved?t:0)};
+    return {theta,curved,advance,step,first,length,point,tangent:t=>theta+(curved?t:0)};
   });
   const nominal=arms.map(a=>Array.from({length:intervals},(_,j)=>a.length-j*a.step));
   const guides=arms.flatMap(a=>Array.from({length:a.curved?40:1},(_,j)=>
@@ -489,9 +395,9 @@ function curvedJunctionScene() {
     marks.push(...routeMarks(start,end,[from[0],-from[1]],[to[0],-to[1]]));
   }
   const auto=arms.map(a=>{
-    const fit=selectFit(a.curved?{p,R,sweep:a.length-a.step}:{p,D:a.length-a.step});
-    if(!fit||fit.n!==intervals-1)throw new Error('X-junction fixture needs four intervals per arm');
-    const row=[a.step];
+    const fit=selectFit(a.curved?{p,R,sweep:a.length-a.first}:{p,D:a.length-a.first});
+    if(!fit||fit.n!==intervals-1)throw new Error('X-junction fixture needs four free-span gaps per arm');
+    const row=[a.first];
     for(let j=0;j<fit.n;j++)row.push(row.at(-1)+a.advance(j>=fit.i&&j<fit.i+fit.k?fit.correctedPitch:p));
     return row.toReversed();
   });
@@ -500,7 +406,7 @@ function curvedJunctionScene() {
     const elements=[...base,joint],openings=[];
     for(const [i,a] of arms.entries()) {
       const points=rows[i].map(a.point),all=[...points,[0,0]];
-      const changed=points.map((point,j)=>Math.abs(Math.hypot(...add(point,mul(all[j+1],-1)))-p)>1e-6);
+      const changed=points.map((point,j)=>j<points.length-1&&Math.abs(Math.hypot(...add(point,mul(all[j+1],-1)))-p)>1e-6);
       changed.forEach((yes,j)=>{if(yes)elements.push(...highlightGap(Array.from({length:13},(_,n)=>a.point(lerp(rows[i][j],rows[i][j+1]??0,n/12))),view));});
       const row=[];
       for(const [j,t] of rows[i].entries()) {
@@ -513,9 +419,9 @@ function curvedJunctionScene() {
   };
   const s=scene('axiom-junction-curved','Autostitch X junction with a curved arm',spec.id);
   frame(s,[...base,joint],70,'shared-hole');
-  const neighbours=arms.flatMap((a,i)=>opening(a.point(a.step),a.tangent(a.step)+(i<2?Math.PI:0)+alpha,view));
+  const neighbours=arms.flatMap((a,i)=>opening(a.point(a.first),a.tangent(a.first)+(i<2?Math.PI:0)+alpha,view));
   frame(s,[...base,joint,...neighbours],100,'reserved-neighbours');
-  const anchored=nominal.map((row,i)=>row.map((t,j)=>j===intervals-1?arms[i].step:t));
+  const anchored=nominal.map((row,i)=>row.map((t,j)=>j===intervals-1?arms[i].first:t));
   frame(s,draw(anchored).elements,65,'free-spans');
   for(let j=1;j<=16;j++) {
     const t=ease(j/16),rows=auto.map((row,i)=>row.map((x,k)=>lerp(anchored[i][k],x,t)));
@@ -1065,7 +971,7 @@ export function createScenes() {
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
     curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step'),
-    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines).concat(curvedJunctionScene(),modelSolutionScene());
+    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines).concat(curvedJunctionScene());
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
@@ -1256,5 +1162,5 @@ export function writeSceneFiles(scenes) {
     for(const scene of displayed.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }
-export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines,adjustmentStyle,highlightGap};
+export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,termLabel,finishThread,slitOutlines,adjustmentStyle,highlightGap};
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

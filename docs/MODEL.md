@@ -10,7 +10,7 @@ Defaults are $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $\alpha=40^\circ$ and 
 
 ## Solution policy
 
-Fix feature positions and protected gaps, fit each free span, then check every distinct opening pair. At a sharp corner, prefer nominal virtual-to-real steps. If a nominal neighbour lies outside its finite arm, choose the nearest step within the adjustment allowance that puts it on the arm. Those neighbours then become fixed constraints for span fitting.
+Fix feature positions and protected gaps, fit each free span, then check every distinct opening pair. At a sharp two-arm corner, prefer nominal virtual-to-real steps. If a nominal neighbour lies outside its finite arm, choose the nearest step within the adjustment allowance that puts it on the arm. At a branching junction, fix each first slit at half-pitch chord distance from the shared hole. These neighbours then become fixed constraints for span fitting.
 
 Among feasible fits:
 
@@ -34,6 +34,8 @@ Rotation/translation preserves face; reflection changes face. Transform slit axe
 Validate the complete target guides under the same map. Equal length alone is insufficient. Start correspondence fixes registration; closed guides also need a chosen phase. Regenerate text placement so annotations remain readable after reflection.
 
 ## Span fitting
+
+Measure each span between its fixed slit centres after reserving junction neighbours. A branching junction's half-pitch connection lies outside this span; it is neither an adjusted gap nor a protected nominal gap counted below.
 
 Let $q_s,q_e$ count protected gaps at either end, and $q=q_s+q_e$. For a positive span:
 
@@ -128,9 +130,12 @@ For $K=0$, all gaps remain nominal. Negative sweep reverses angular advance; adj
 - A straight landmark at station $s$ fixes slit centres at $s-p/2$ and $s+p/2$.
 - A circular landmark at angle $\phi$ fixes slit centres at $\phi-a/2$ and $\phi+a/2$. This is symmetry along the guide; the chord midpoint lies inside the circle.
 - A smooth change of curvature requires one shared slit. Redundant straight or co-circular subdivisions do not force an opening.
-- Sharp corners and T/X junctions use the [junction construction](JUNCTIONS.md).
+- Sharp two-arm corners use the virtual-tip [junction construction](JUNCTIONS.md).
+- Branching junctions fix one round hole at the guide intersection and the first slit at chord distance $p/2$ on every arm. Arm count and angle do not change that distance.
 
 Coincident required openings can be reused only when their position, opening type and undirected slit axis agree.
+
+For a straight arm of available length $L$ from a branching hole to a fixed endpoint slit, the remaining span is $D=L-p/2$. Between two branching holes, reserve both neighbours first: $D=L-p$. If $D=0$, reuse one compatible slit; if $D<0$, the reservations overlap and the layout fails. For $D>0$, apply the span equations to the remaining slit-to-slit gaps. Circular arms reserve the arc advance $2R\arcsin\left(p/(4R)\right)$ at each branching end before fitting the remaining sweep.
 
 ## Opening clearance
 

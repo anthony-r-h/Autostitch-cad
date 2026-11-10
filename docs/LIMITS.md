@@ -6,6 +6,8 @@ The minimum effective angle is a geometric result of pitch $p$, slit length $\el
 
 For two straight arms, the [angle equations](JUNCTIONS.md#angle-limits) give a closed-form limit when the stated contact geometry applies, and an exact distance test otherwise. Curved arms also require their radii, windings and available lengths.
 
+Branching junctions fix every first slit at half-pitch chord distance from the shared hole. Their angle limits come from clearance between all resulting openings, not the two-arm formula. The rule has no visual angle cutoff; a collision rejects the layout.
+
 Width and margin are required inputs to a finite-width result. They are currently unset by default, which evaluates $w=m=0$. This does not produce a finite-width angle limit.
 
 ## Unresolved geometric rules

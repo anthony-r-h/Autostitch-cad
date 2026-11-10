@@ -29,25 +29,30 @@ Use `-Theme porcelain` (or any key in `colors.json`) to override the selection f
 
 ## Animation phases
 
-Use **Build → Adjustment → Stitch**, in that order.
+These are the shared rules for planning, implementing and reviewing illustrated animations. Use **Build -> Adjustment -> Stitch**, followed by optional **Finishing touches**.
 
 | Phase | Geometry and motion | Display |
 | --- | --- | --- |
 | Build | Establish the guides, features and slit layout | No thread. Slits and relevant dimensions at normal contrast; virtual slits dashed. Start, end and junction notation visible from the outset |
 | Adjustment | Slide, redistribute, mirror or otherwise revise the layout | No thread and no fading. Keep fixed features stationary; update affected dimensions with the geometry |
-| Stitch | Reveal all thread segments together; freeze the geometry | Fade holes, virtual slits, landmark lines and length dimensions to the theme's secondary colours over $0.3\,\mathrm{s}$. Keep thread prominent, angle annotations red and unresolved conflicts visible. Hold for four seconds, then reset |
+| Stitch | Reveal all thread segments together; freeze the geometry | Fade slits, holes, virtual slits, landmark lines and length dimensions to the theme's secondary colours over $0.3\,\mathrm{s}$. Keep thread prominent, angle annotations red and unresolved conflicts visible |
+| Finishing touches (optional) | Complete independent artwork details after stitching, such as the emblem's i-dot. Keep the completed stitch geometry fixed | Preserve thread styling. The storyboard may fade construction marks away and reveal finishing details using the shared theme and reveal settings. Keep unresolved conflicts visible |
 
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
+- Skip Finishing touches when the stitched result is complete. In the emblem, `fade-openings` and `punch` perform this phase after all stitching; ordinary Stitch only fades construction to secondary colours
+- For multi-part artwork, apply Build, optional Adjustment and Stitch in order within each part. Begin Finishing touches after all relevant parts have finished stitching
+- Hold the completed result after the last active phase, then loop. The default hold is four seconds; record different timing and loop behaviour in the scene recipe or storyboard
+- Record phase boundaries and optional finishing actions in each recipe or storyboard. Check phase order, fixed geometry during Stitch and finishing, shared colours and fade targets, and synchronized timing across comparisons; inspect transitions at the intended display size
 - Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with half-second holds at both positions
 - Bridge motion runs $30\%$ slower: $2.14\,\mathrm{s}$ per direction and $5.28\,\mathrm{s}$ per loop, including both holds
-- T-junction comparisons retain the final Stitch styling while the arms rotate from $180^\circ$ to $120^\circ$ and back, five seconds each way; all four panels share one clock
-- The five-arm comparison uses the same sweep and clock. Only the upper two arms rotate; the lower three and the shared hole stay fixed. Each placement treatment remains constant through the sweep
+- T-junction comparisons retain the final Stitch styling while the arms rotate from $180^\circ$ to $120^\circ$ and back, five seconds each way; both panels share one clock
+- The five-arm illustration is static: all five arms reserve a half-pitch neighbour around one shared round hole
 - Static stitched figures are the final Stitch state, including the same lightened measurements
 - New slits, virtual slits, round holes and thread receive a brief ink-coloured glow. `revealGlow` in `colors.json` controls its enable switch, duration, opacity and width in output pixels. The default is $0.24\,\mathrm{s}$, $12\,\mathrm{px}$ wide, at $68\%$ peak opacity; motion alone does not retrigger it. The pulse uses existing frame time, preserving the phase timing and final holds. Still exports have no glow
 - Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks
 - Keep existing image paths working when changing animation to static. Vertex point, Clearance and Reject impossible fits export single-frame GIFs alongside their PNG/SVG stills; these GIFs contain no animation or loop
-- Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
+- Use the same display rules in every example. Finer frame stages belong within these phases; review the transitions and completed result at $600\,\mathrm{px}$ width
 - Adjusted gaps turn blue on the guide between slit centres, following the curve on circular guides. Marks and dimensions also turn blue. During Stitch, dimensions fade to light blue; guide segments and marks retain blue. Nominal measurements stay grey, residuals and angle annotations stay red
 
 ## Spacing setup
@@ -145,38 +150,32 @@ The straight and curved portions use one slit at their common tangent. Revealing
 
 ### Share the branching junction: A9
 
-Four slits on each arm approach one shared round hole. Reveal all three arms together, one slit per arm at each step. Keep the endpoints and nominal junction neighbours fixed; split each $0.4\,\mathrm{mm}$ residual across two $3.20\,\mathrm{mm}$ gaps. `ILL-JUNCTION`.
+Five slits on each arm approach one shared round hole. Reveal all three arms together, one slit per arm at each step. Keep the endpoints and half-pitch junction neighbours fixed; split each $0.6\,\mathrm{mm}$ residual across two $3.30\,\mathrm{mm}$ gaps. `ILL-JUNCTION`.
 
-![A T junction shares one hole with nominal neighbours on each arm](assets/axiom-junction.gif)
+![A T junction shares one hole with half-pitch neighbours on each arm](assets/axiom-junction.gif)
 
-The curved X example reserves one round hole and four nominal chord neighbours, then fits the free spans with fixed outer endpoints. Pitch is $3\,\mathrm{mm}$; the circular arm has radius $20\,\mathrm{mm}$. Its advances use chord lengths. Geometry and inputs are recorded in `ILL-JUNCTION-COMPARISON`.
+The curved X example reserves one round hole and four half-pitch chord neighbours, then fits the free spans with fixed outer endpoints. Pitch is $3\,\mathrm{mm}$; the circular arm has radius $20\,\mathrm{mm}$. Its advances use chord lengths. Geometry and inputs are recorded in `ILL-JUNCTION-COMPARISON`.
 
 Gap bounds, fixed neighbours, endpoint positions and opening clearance are checked. The thread appears after fitting and holds for four seconds. This is an analytic illustration, not a native solver run.
 
 ![Autostitch X junction with a curved arm](assets/axiom-junction-curved.gif)
 
-#### T-junction comparisons
+#### T-junction comparison
 
-[Open the synchronized comparison](t-junctions/index.html). Vertex point, Vertex point at half pitch, Reverse corner and Reverse corner at half pitch sweep from $180^\circ$ to $120^\circ$ in five seconds, then reverse for five seconds before repeating. The page drives all four panels from one clock; individual GIFs have matching timing. This comparison exports animations only.
+[Open the synchronized comparison](t-junctions/index.html). Vertex point and Vertex point at half pitch sweep from $180^\circ$ to $120^\circ$ in five seconds, then reverse for five seconds. Both panels use the same clock and final-Stitch styling. They export GIFs only.
 
-- Every panel uses the same fixed camera, scale and $600\times750$ px canvas. The upper arms rotate symmetrically; the downward branch follows the external angle bisector.
-- Solution and integer junction angle share one label. Thread angles and lengths update beside each arm; lengths are in millimetres.
-- Each red angle measures the visible junction thread against its arm's inward guide direction, at the neighbouring slit tip. Vertex point remains $11.24^\circ$ and half pitch remains $27.52^\circ$ as the arms rotate. Reverse treatments vary on the upper arms; the fixed downward branch retains its angle. The title gives the separate angle between the upper arms.
-- Slit outlines and holes use the shared final-Stitch fade to `secondary`; thread stays `ink` and angles stay `angle`, from `colors.json`.
-- Pitch $3\,\mathrm{mm}$, slit length $1.5\,\mathrm{mm}$, lean $40^\circ$, slit width $0.2\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and clearance margin $0.2\,\mathrm{mm}$. All arms extend $18.4\,\mathrm{mm}$ from the vertex.
-- Vertex treatments use a round hole. Reverse treatments use a shared $45^\circ$ slit and mirror the downward branch's lean. Half-pitch variants place the first neighbour at $p/2$; the other variants use $p$.
-- Reverse treatments attach the left arm and branch to the lower-left slit tip and the right arm to the upper-right tip. This is the specified T-junction comparison policy.
-- `ILL-T-JUNCTION-STUDY` records the inputs. These are analytic candidate treatments, not native CAD qualification.
+- One round hole stays at the intersection. Vertex point reserves neighbours at $p$; half pitch reserves them at $p/2$ on every arm
+- Red angles measure visible junction thread against each arm's inward guide direction: $11.24^\circ$ for Vertex point and $27.52^\circ$ for half pitch. The caption gives the separate angle between the upper arms
+- Pitch $3\,\mathrm{mm}$, slit length $1.5\,\mathrm{mm}$, lean $40^\circ$, slit width $0.2\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and clearance margin $0.2\,\mathrm{mm}$. Arms extend $18.4\,\mathrm{mm}$ from the vertex
+- `ILL-T-JUNCTION-STUDY` records the inputs. Full pitch motivates the accepted half-pitch rule; both are analytic constructions, not native CAD qualification
 
-#### Five-arm comparison
+#### Five-arm junction
 
-[Open the five-arm comparison](t-junctions/index.html#five-arms). Compare full pitch on every arm, half pitch on every arm, and angle-dependent half pitch. The three lower guides stay at $225^\circ$, $270^\circ$ and $315^\circ$; the two upper arms sweep from straight-through alignment to a $120^\circ$ included angle and back.
+![Five half-pitch arms share one round hole](t-junctions/five-half.png)
 
-- All five threads meet the same round hole. Mixed placement changes the neighbouring slit distances, not the shared opening.
-- The third panel switches an arm to half pitch when any other arm lies within $20^\circ$ of its opposite direction, inclusive. At upper-pair angles from $180^\circ$ to $160^\circ$, only the upper pair qualifies. Below $160^\circ$ all arms use full pitch, until $130^\circ$, where each upper arm qualifies with a lower outer arm. The lower centre arm stays at full pitch.
-- Distances are shown for the upper pair, lower outer pair and lower centre. Layouts switch at the threshold, including any change in opening count; intermediate distances are not fitted solutions.
-- Each guide is $12.4\,\mathrm{mm}$ long, at the T study's pitch and tool profile. Endpoints stay at the same stations; the remaining gaps are fitted within the ordinary bounds. Blue marks show those adjustments.
-- `ILL-FIVE-ARM-STUDY` records the inputs. Checks cover inclusive angle boundaries, the single shared hole, five incident threads, first-slit distances, stationary lower guides, fitting, clearance and framing throughout the sweep.
+- Every first slit is $p/2$ from the shared hole, independent of arm angles or count
+- Each guide is $12.4\,\mathrm{mm}$ long at the T study's pitch and tool profile. Endpoints stay fixed; the remaining gaps fit within the ordinary bounds. Blue marks identify those adjustments
+- `ILL-FIVE-ARM-STUDY` records the static $120^\circ$ upper-arm layout. Checks cover the single shared hole, five incident threads, half-pitch distances, fitting, clearance and framing
 
 ### Check the whole layout: A10
 
@@ -185,18 +184,6 @@ Two fixed arms meet at $6^\circ$. Two outer pairs pass, the next leaves only $0.
 ![Pairs farther from the junction pass clearance; pairs near it fail](assets/axiom-clearance.png)
 
 ## Further model examples
-
-### From fixed features to a fitted layout
-
-`ILL-MODEL-SOLUTION` adapts the rounded A from `ast:show-outline` in `examples/emblem.lsp` to one stitch line and a crossbar, at $p=3\,\mathrm{mm}$. Two leg landmarks and two T junctions fix the openings. Each smooth join between the crown and a straight leg reuses one slit.
-
-Label the five steps in one consistent position: **Mark landmarks**, **Fixed landmark pairs**, **Resolve junctions**, **Free spans**, **Redistribute residuals**. Reveal both landmarks together, then both pairs together. Reserve both T junctions' neighbours and shared holes together. Identify all eight free spans together and redistribute their residuals simultaneously.
-
-The straight spans measure $9.25\,\mathrm{mm}$ (twice), $6.50\,\mathrm{mm}$ (four times) and $12.50\,\mathrm{mm}$ across the crossbar. Their adjusted gaps are $3.25\,\mathrm{mm}$. The crown has radius $9.25\,\mathrm{mm}$ and arc length $29.06\,\mathrm{mm}$; four central chords compress to approximately $2.73\,\mathrm{mm}$. Its negative residual marks the nominal overrun beyond the span end. The fitted positions are symmetric. Span dimensions follow the arc; gap dimensions measure chords. Residuals are red; adjusted guide intervals are blue.
-
-Build retains half-speed timing. Redistribute residuals runs $50\%$ faster than the earlier worked example, including $3.20\,\mathrm{s}$ of sliding. Keep the $0.6\,\mathrm{s}$ fade and eight-second thread hold. Independent checks cover fixed openings, chord lengths, symmetry and all-pairs clearance at slit width $0.3\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and margin $0.2\,\mathrm{mm}$. This is an analytic illustration, not native CAD output.
-
-![Resolve the rounded A's fixed openings, then redistribute residuals](assets/model-solution.gif)
 
 ### No permitted fit
 
@@ -254,6 +241,43 @@ The [glossary](../../docs/GLOSSARY.md) uses four static figures with aligned lab
 
 ## Reproduce
 
+### T comparison and five-arm junction
+
+[t-junctions.mjs](t-junctions.mjs) uses the shared renderer, colours and label styles. The two T-junction GIFs, static five-arm SVG/PNG and comparison page live in [t-junctions/](t-junctions/). The T comparison uses `exportStills: false`; the five-arm figure exports only SVG/PNG.
+
+```powershell
+./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/t-junctions.mjs -OutputDirectory ./examples/illustrated/t-junctions
+node examples/illustrated/t-junctions.mjs check
+node tests/validate-cases.mjs
+```
+
+Checks cover fitting, clearance, matching guides, thread-angle measurements, shared fade colours, reverse-frame symmetry and continuity at both turnarounds. Each GIF contains 250 frames at four centiseconds, for a ten-second loop.
+
+### Emblem construction
+
+[Animated preview and storyboard frames](emblem/emblem-preview.html). [GIF](emblem/emblem-construction.gif), [SVG](emblem/emblem-construction.svg), [PNG](emblem/emblem-construction.png). Used in PITCH's Model and solution section.
+
+- Edit [emblem.storyboard.json](emblem.storyboard.json) for timing, camera targets and commentary. Times and durations are seconds. Camera moves use named views, with linear or smoothstep easing; pan and zoom run independently of construction.
+- Targets are `A`, `U`, `T`, `O`, `script-S-1`, `script-t-2`, `script-i-3`, `script-t-4`, `script-c-5`, `script-h-6`, `ring-110`, `ring-95` and `ring-80`. `lettering-rest` and `rings` select groups.
+- Actions are `mark-landmarks`, `reveal-fixed`, `lay-out`, `adjust`, `stitch`, `fade-openings` and `punch`. All lettering supports fixed-feature reveal and adjustment. Rings use nominal spacing and skip adjustment. `fade-openings` targets `all` after stitching, removing slit outlines, round holes and spacing marks while retaining thread. `punch` targets `i-dot` after the fade: a brief impact overshoot and glow settle to the dot's actual radius. The overview Stitch actions set `glow: false`; only the dot pulses at the finish. A layout action can set `residualDelay` and `residualFade` to pause and fade in red residual annotations before redistribution. Each stitched target follows Build, optional Adjustment, then Stitch. Unknown targets, duplicate actions, invalid phase order and overlapping camera moves fail validation.
+- The 40-second sequence opens on A with "Set symmetry". Its two crown landmarks appear in sequence from 0.2 to 0.8 seconds. "Resolve fixed openings" begins at 1.5 seconds, nominal gaps at 3, redistribution at 7 and thread at 12. After layout finishes at 6 seconds, red residual annotations wait 0.35 seconds, then fade in over 0.25 seconds. The 12-second pullback begins at 14 seconds. The remaining lettering builds from 14.5 seconds, redistributes from 20 to 25 and stitches at 25.7. Rings build from 18 to 24 seconds and stitch at 25.7. Openings and spacing marks fade from 26 to 26.25 seconds. The i dot punches into the thread-only emblem at 26.3 seconds and settles at 26.75 seconds, then holds until 40 seconds. There is no full-emblem flash.
+- `guides` controls visibility with `target`, `from` and `until`. Only A's guides appear, from 0 to 14 seconds. Its guides, virtual slits and detailed annotations disappear as the pullback starts. Other guides never appear. The last step label ends at 14 seconds using its commentary cue's `until`; the pullback and final hold have no text.
+- `emblem.mjs` reads finished openings, thread, spacing marks and virtual slits from the committed native SVG. It reads the lettering's literal stroke definitions and transforms from `emblem.lsp`; ring guides follow circular connections between native openings. The covered dot-fill decoration is omitted. No temporary export or CAD session is needed to render.
+- All lettering and rings use $2.7\,\mathrm{mm}$ nominal pitch. The A has two crown-apex landmarks, one per contour, with mirrored crown stations and fixed nominal gaps across the apices. Initial lettering positions use nominal advances within each free run. Shared round holes and landmark pairs split the runs; their boundary slits remain fixed during interpolation to the exported layout. The A close-up shows red residuals and blue adjusted gaps. The other letters move at their actual geometric scale during the pullback. Motion is explanatory, not physical cutting order or the native solver's execution trace. Native regeneration and save/reopen checks passed on 2026-11-10; see [the demo recipe](../demo.md).
+- `ILL-EMBLEM-STORYBOARD` checks exported coordinates for all 1,077 openings including the dot. Thread adjacency identifies the three branching holes: the two script t crossings have four neighbours each, and the h has three. Every neighbour stays fixed at a $1.35\,\mathrm{mm}$ chord from its hole. Checks also cover crown symmetry and fixed landmark pairs, redistribution on every letter independently of camera motion, guide isolation, annotation cutoff, thread-only finish, camera continuity, phase order, random-access frame evaluation and GIF timing. Source precision is limited by the committed SVG export.
+- The canvas remains $600\times750$ px. This emblem tour permits camera movement; comparison figures retain their shared fixed camera. Short step labels inside the GIF use the shared `termLabel` and `displayElements` styling at one fixed position below the drawing. Edit each commentary cue's `text` in the storyboard; `phase` records Build, Adjustment or Stitch without adding a second heading. Theme colours, glow and fonts come from `colors.json`.
+- The A close-up uses the pitch's notation and dimension helpers: `s` for the two closed contour starts, `j` at the eight corner holes, `L1` and `L2` for the two crown landmarks, bracketed free-span lengths and adjusted gaps, two-decimal values, red residuals and blue adjusted gaps. Repeated fitted gaps within a free span share one representative dimension; every adjusted gap stays highlighted. Adjusted dimensions fade during Stitch. Adjacent gap dimensions use separate lanes where their labels would overlap. Detailed annotations leave the view as the camera pulls out.
+
+```powershell
+./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/emblem.mjs -OutputDirectory ./examples/illustrated/emblem -FrameTimes 0,6,9,12.5,19,22.5,27
+node tests/validate-emblem-storyboard.mjs
+node tests/validate-cases.mjs
+```
+
+`-FrameTimes` saves review PNGs in the build's unique `output/scratch/` folder and retains it for review; the renderer prints its path. The GIF, final SVG/PNG and HTML preview are rebuilt together. Repeated holds are encoded as longer frame delays; every moving frame is evaluated directly from its timestamp. Use the same renderer and fonts for repeatable raster output.
+
+### Existing pitch figures
+
 From the repository root, using Node and Windows PowerShell with built-in `System.Drawing` and WPF. No packages or CAD session are needed.
 
 ```powershell
@@ -266,18 +290,6 @@ node tests/validate-cases.mjs
 - `build.ps1`: renders those elements and encodes the frames. A unique `output/scratch/` folder holds intermediates and is deleted after successful export checks. Failures, `-KeepScratch` and explicit `-FrameTimes` requests retain it and print its path. Remove retained scratch after review; see [cleanup rules](../../docs/REPO-CLEANUP.md).
 - `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state. Glossary figures (`terms-*`) use only SVG/PNG.
 - `tests/cases.json`: source cases and stable illustration IDs. The validator checks drawn geometry, constraints, GIF frame counts, delays and looping.
-
-### T and five-arm comparisons
-
-[t-junctions.mjs](t-junctions.mjs) uses the shared renderer, colours and label styles. The four T-junction GIFs, three five-arm GIFs and synchronized page live in [t-junctions/](t-junctions/). Its `exportStills: false` setting omits static SVG/PNG exports; other figures keep their existing exports.
-
-```powershell
-./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/t-junctions.mjs -OutputDirectory ./examples/illustrated/t-junctions
-node examples/illustrated/t-junctions.mjs check
-node tests/validate-cases.mjs
-```
-
-Checks cover fitting, clearance, matching guides, thread-angle measurements, shared fade colours, reverse-frame symmetry and continuity at both turnarounds. Each GIF contains 250 frames at four centiseconds, for a ten-second loop.
 
 ### Notation
 

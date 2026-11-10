@@ -25,7 +25,7 @@
       ;; Start at the loop junction; omit the low entry stroke that crowds the previous letter.
       (setq rise (sqrt (+ (expt 17.41287932795540 2.0) (expt 36.41142174524449 2.0)))
         ux (/ 17.41287932795540 rise) uy (/ 36.41142174524449 rise)
-        crossing (* 6.0 (/ uy ux)) tail (- crossing (/ 5.4 scale)))
+        crossing (* 6.0 (/ uy ux)) tail (- crossing (/ 6.75 scale)))
       (list
         (ast:show-stroke (list (list 0 crossing)
           '(11.41287932795540 36.41142174524449)) nil)
@@ -33,7 +33,7 @@
           '(0 39) (list 0 tail 1.0) (list 12 tail)) nil)))
     ((= letter "y") (list
       (ast:show-stroke '((0 24) (0 9 0.414213562373095) (8.9 0.1) (18 12.2)) nil)
-      (ast:show-stroke (list (list 18 (+ 12.2 (/ 8.1 scale))) '(18 -9 -1.0)
+      (ast:show-stroke (list (list 18 (+ 12.2 (/ 9.45 scale))) '(18 -9 -1.0)
         '(0 -9) (list 0 (+ -9.0 (/ 2.7 scale)))) nil)))
     ((= letter "?") (list
       (ast:show-stroke '((0 30 -2.414213562373095) (10 20) (10 11.5)) nil)
@@ -215,7 +215,7 @@
   (ast:cad-require (= (cadr (car ast:banner-lettering-layout)) (cadr (caddr ast:banner-lettering-layout)))
     "The two script rows must use the same size.")
   T)
-;;; A loose diamond field shares nominal-pitch stations at every crossing.
+;;; Crossings stay on the pitch lattice; free ends use its half-pitch phase.
 (defun ast:banner-diamond-runs (anchor direction bounds mask packets / low high a b index finish start point runs)
   (setq a (/ (- (+ (caar bounds) 1.35) (car anchor)) (car direction))
     b (/ (- (- (caadr bounds) 1.35) (car anchor)) (car direction))
@@ -273,11 +273,11 @@
     (repeat 13
       (setq anchor (ast:g-add center (ast:g-mul normal (* k 27.0))))
       (foreach run (ast:banner-diamond-runs anchor direction bounds mask packets)
-        ;; Short isolated snippets distract from the lettering.
-        (if (>= (- (cadr run) (car run)) 3)
+        ;; Inset both free ends by half a pitch, retaining at least three gaps.
+        (if (>= (- (cadr run) (car run)) 4)
           (setq guides (cons (ast:banner-poly (ast:show-stroke
-            (list (ast:g-add anchor (ast:g-mul direction (* 2.7 (car run))))
-                  (ast:g-add anchor (ast:g-mul direction (* 2.7 (cadr run))))) nil)
+            (list (ast:g-add anchor (ast:g-mul direction (* 2.7 (+ (car run) 0.5))))
+                  (ast:g-add anchor (ast:g-mul direction (* 2.7 (- (cadr run) 0.5))))) nil)
             '(0.0 0.0) "BANNER_DIAMONDS") guides))))
       (setq k (1+ k))))
   (setq guides (reverse guides))
@@ -308,10 +308,10 @@
     background-report (ast:banner-background-check (ast:fill-plans background T)
       (cons dot (append (ast:emblem-openings text-plans) (ast:emblem-openings fill-plans))) (car frame) lettering))
   (ast:cad-require (and (= 19 (length lettering)) (= 104 (length guides))
-    (= 404 (ast:cad-get 'openings report)) (= 604 (ast:cad-get 'lettering-openings text-report))
+    (= 404 (ast:cad-get 'openings report)) (= 612 (ast:cad-get 'lettering-openings text-report))
     (= 16 (ast:cad-get 'lettering-sources text-report))) "The banner geometry or hole count has changed.")
-  (ast:cad-require (and (= 27 (length background)) (= 218 (ast:cad-get 'background-openings background-report))
-    (= 15 (ast:cad-get 'background-blocks background-report)) (= 12 (ast:cad-get 'background-junctions background-report)))
+  (ast:cad-require (and (= 24 (length background)) (= 204 (ast:cad-get 'background-openings background-report))
+    (= 13 (ast:cad-get 'background-blocks background-report)) (= 11 (ast:cad-get 'background-junctions background-report)))
     "The background geometry or hole count has changed.")
   (append report text-report background-report))
 

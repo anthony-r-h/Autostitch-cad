@@ -302,8 +302,8 @@ let previous=[0,0];for(const s of curved){near(dist(previous,s.center),3);previo
 const junctionInput=catalog.illustrations.find(i=>i.id==='ILL-JUNCTION').inputs;
 const junctionView=junctionInput.view,junction=circle('axiom-junction',junctionView);
 near(dist(junction,[0,0]),0);
-const arms=slits('axiom-junction',junctionView).map(s=>s.center);assert.equal(arms.length,12);
-for(const p of [[-3,0],[3,0],[0,-3]])assert(has(arms,p));
+const arms=slits('axiom-junction',junctionView).map(s=>s.center);assert.equal(arms.length,15);
+for(const p of [[-1.5,0],[1.5,0],[0,-1.5]])assert(has(arms,p));
 assert(!has(arms,junction));
 const branchScene=scenes.find(s=>s.name==='axiom-junction');
 const branchLabel=branchScene.final.filter(e=>e.kind==='notation-junction');
@@ -331,17 +331,27 @@ for(const f of branchScene.frames) {
   assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','free-spans','planning-revision','result','thread-fade','thread-reveal'].includes(f.stage)?1:0);
   branchReal=real;
 }
-assert.deepEqual(branchCounts,[4,4,4]);
-assert.equal(branchScene.frames.filter(f=>f.stage==='arms-stitch').length,4);
-branchDistances.forEach(d=>near(d/junctionView.scale,3));
+assert.deepEqual(branchCounts,[5,5,5]);
+assert.equal(branchScene.frames.filter(f=>f.stage==='arms-stitch').length,5);
+branchDistances.forEach(d=>near(d/junctionView.scale,1.5));
 for(const f of branchScene.frames.filter(f=>['free-spans','planning-revision','result'].includes(f.stage))) {
   const real=f.elements.filter(e=>e.kind==='slit');
   for(let arm=0;arm<3;arm++) {
-    const row=real.slice(arm*4,arm*4+4).map(e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2]);
-    near(dist(row[0],[junctionView.x,junctionView.y])/junctionView.scale,12.4);
-    near(dist(row.at(-1),[junctionView.x,junctionView.y])/junctionView.scale,3);
-    if(f.stage==='result')for(let i=0;i<3;i++)near(dist(row[i],row[i+1])/junctionView.scale,i===0?3:3.2);
+    const row=real.slice(arm*5,arm*5+5).map(e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2]);
+    near(dist(row[0],[junctionView.x,junctionView.y])/junctionView.scale,14.1);
+    near(dist(row.at(-1),[junctionView.x,junctionView.y])/junctionView.scale,1.5);
+    if(f.stage==='result')for(let i=0;i<4;i++)near(dist(row[i],row[i+1])/junctionView.scale,i===0||i===3?3:3.3);
   }
+}
+const branchThreads=branchScene.final.filter(e=>e.kind==='thread'&&
+  (dist(e.a,[junctionView.x,junctionView.y])<1e-6||dist(e.b,[junctionView.x,junctionView.y])<1e-6));
+assert.equal(branchThreads.length,3);
+const halfThreadLength=Math.hypot(3-1.5*Math.cos(alpha),1.5*Math.sin(alpha))/2;
+for(const thread of branchThreads)near(dist(thread.a,thread.b)/junctionView.scale,halfThreadLength);
+const branchOpenings=slits('axiom-junction',junctionView);
+for(const [i,opening] of branchOpenings.entries()) {
+  assert(pointSegmentDistance([0,0],opening.a,opening.b)-.25-.15>=.2);
+  for(const other of branchOpenings.slice(i+1))assert(segmentDistance(opening.a,opening.b,other.a,other.b)-.3>=.2);
 }
 
 const clearanceView={x:75,y:200,scale:35};
@@ -789,27 +799,27 @@ const xPoint=(arm,t)=>{
     xRadius*(Math.sin(t)*Math.sin(theta)+(1-Math.cos(t))*Math.cos(theta))]:[t*Math.cos(theta),t*Math.sin(theta)];
 };
 const xSlits=curvedJunction.final.filter(e=>e.kind==='slit');
-assert.equal(xSlits.length,16);
+assert.equal(xSlits.length,20);
 assert.equal(curvedJunction.final.filter(e=>e.kind==='hole').length,1);
 assert.equal(curvedJunction.frames[0].stage,'shared-hole');
 assert.equal(curvedJunction.frames[0].elements.filter(e=>e.kind==='slit').length,0);
 const reserved=curvedJunction.frames.find(f=>f.stage==='reserved-neighbours').elements.filter(e=>e.kind==='slit');
 assert.equal(reserved.length,4);
 for(let arm=0;arm<4;arm++) {
-  const step=arm===0?2*Math.asin(3/(2*xRadius)):3,length=xIntervals[arm]*step;
-  const points=xSlits.slice(arm*4,arm*4+4).map(xCentre);
+  const step=arm===0?2*Math.asin(3/(2*xRadius)):3,length=xIntervals[arm]*step,first=arm===0?2*Math.asin(1.5/(2*xRadius)):1.5;
+  const points=xSlits.slice(arm*5,arm*5+5).map(xCentre);
   near(dist(points[0],xPoint(arm,length)),0);
-  near(dist(xCentre(reserved[arm]),xPoint(arm,step)),0);
+  near(dist(xCentre(reserved[arm]),xPoint(arm,first)),0);
   const gaps=points.map((point,i)=>dist(point,points[i+1]??[0,0]));
-  bounded(gaps);near(gaps.at(-1),3);
+  bounded(gaps.slice(0,-1));near(gaps.at(-1),1.5);
   for(const f of curvedJunction.frames) {
     assert.deepEqual(f.elements.filter(e=>e.kind==='guide'),curvedJunction.final.filter(e=>e.kind==='guide'));
     near(dist(xCentre(f.elements.find(e=>e.kind==='hole')),[0,0]),0);
     const real=f.elements.filter(e=>e.kind==='slit');
-    if(real.length!==16)continue;
-    near(dist(xCentre(real[arm*4]),points[0]),0);
-    near(dist(xCentre(real[arm*4+3]),points[3]),0);
-    if(arm===0)for(const e of real.slice(0,4))near(dist(xCentre(e),[-xRadius/Math.sqrt(2),xRadius/Math.sqrt(2)]),xRadius);
+    if(real.length!==20)continue;
+    near(dist(xCentre(real[arm*5]),points[0]),0);
+    near(dist(xCentre(real[arm*5+4]),points[4]),0);
+    if(arm===0)for(const e of real.slice(0,5))near(dist(xCentre(e),[-xRadius/Math.sqrt(2),xRadius/Math.sqrt(2)]),xRadius);
   }
 }
 const xWorld=xSlits.map(e=>({a:[(e.a[0]-xView.x)/xView.scale,(xView.y-e.a[1])/xView.scale],b:[(e.b[0]-xView.x)/xView.scale,(xView.y-e.b[1])/xView.scale]}));
@@ -818,92 +828,12 @@ for(const [i,e] of xWorld.entries()) {
   for(const other of xWorld.slice(i+1))assert(segmentDistance(e.a,e.b,other.a,other.b)-.3>=.2);
 }
 
-const modelScene=scenes.find(s=>s.name==='model-solution');
-const modelSpec=catalog.illustrations.find(i=>i.id===modelScene.source),modelView=modelSpec.inputs.view;
-const {radius:modelR,springHeight:modelH,crossbarHeight:modelB,landmarkHeight:modelL}=modelSpec.inputs;
-const modelSlits=slits(modelScene.name,modelView);
-const modelHoles=modelScene.final.filter(e=>e.kind==='hole').map(e=>[(e.p[0]-modelView.x)/modelView.scale,(modelView.y-e.p[1])/modelView.scale]);
-assert.equal(modelSlits.length,34);assert.deepEqual(modelHoles,[[-modelR,modelB],[modelR,modelB]]);
-assert.equal(modelScene.final.filter(e=>e.kind==='virtual').length,0,'A has smooth joins and T junctions, not sharp two-arm corners');
-assert.equal(new Set(modelSlits.map(s=>s.center.map(v=>v.toFixed(6)).join(','))).size,34,'Smooth joins must reuse their slits');
-const modelRows=[[0,3],[4,6],[7,9],[9,19],[19,21],[22,24],[25,28],[29,33]];
-for(const [arm,[first,last]] of modelRows.entries()) {
-  const row=modelSlits.slice(first,last+1),curved=arm===3;
-  const D=dist(row[0].center,row.at(-1).center),fit=curved?selectFit({p:3,R:modelR,sweep:Math.PI}):selectFit({p:3,D});
-  assert(fit);assert(fit.exactCentre);assert.equal(row.length,fit.n+1);
-  for(let i=0;i<row.length-1;i++)near(dist(row[i].center,row[i+1].center),i>=fit.i&&i<fit.i+fit.k?fit.correctedPitch:3);
-  for(const slit of row) {
-    if(curved) {
-      near(dist(slit.center,[0,modelH]),modelR);
-      const theta=Math.atan2(slit.center[1]-modelH,slit.center[0]);
-      near(Math.sin(slit.angle-(theta-Math.PI/2+alpha)),0);
-    } else {
-      const tangent=Math.atan2(row.at(-1).center[1]-row[0].center[1],row.at(-1).center[0]-row[0].center[0]);
-      near(Math.sin(slit.angle-tangent-alpha),0);
-      near(arm<3?slit.center[0]:arm<7?slit.center[0]:slit.center[1],arm<3?-modelR:arm<7?modelR:modelB);
-    }
-  }
-}
-for(const slit of modelSlits)assert(has(modelSlits.map(s=>s.center),[-slit.center[0],slit.center[1]]),'A positions must balance across its centre');
-for(const [a,b] of [[3,4],[24,25]]) {
-  near(dist(modelSlits[a].center,modelSlits[b].center),3);
-  near((modelSlits[a].center[1]+modelSlits[b].center[1])/2,modelL);
-}
-for(const [arm,indices] of [[0,[6,7,29]],[1,[21,22,33]]])for(const i of indices)near(dist(modelSlits[i].center,modelHoles[arm]),3);
-near(dist(modelSlits[9].center,[-modelR,modelH]),0);near(dist(modelSlits[19].center,[modelR,modelH]),0);
-const modelResidualFrame=modelScene.frames.find(f=>f.stage==='residuals');
-const modelResidualValues=modelResidualFrame.elements.filter(e=>e.kind==='residual-value').map(e=>e.value);
-assert.deepEqual(modelResidualValues,['0.25','0.50','0.50','-1.07','0.50','0.50','0.25','0.50']);
-const modelCenter=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
-const modelInitial=modelScene.frames.find(f=>f.stage==='adjustment-start').elements.filter(e=>e.kind==='slit');
-const modelFinal=modelScene.final.filter(e=>e.kind==='slit');
-const modelFixed=[0,3,4,6,7,9,19,21,22,24,25,28,29,33];
-let previousModelError=Infinity;
-for(const f of modelScene.frames.filter(f=>['adjustment-start','planning-revision'].includes(f.stage))) {
-  const row=f.elements.filter(e=>e.kind==='slit');assert.equal(row.length,34);
-  for(const i of modelFixed)assert.deepEqual(row[i],modelInitial[i],'Fixed features must not move during fitting');
-  assert.deepEqual(f.elements.filter(e=>e.kind==='hole'),modelScene.final.filter(e=>e.kind==='hole'));
-  const error=row.reduce((sum,e,i)=>sum+dist(modelCenter(e),modelCenter(modelFinal[i])),0);
-  assert(error<=previousModelError+1e-6);previousModelError=error;
-  if(f.stage==='planning-revision')for(const [first,last] of modelRows)assert(row.slice(first,last+1).some((e,i)=>dist(modelCenter(e),modelCenter(modelInitial[first+i]))>0),'All spans must redistribute together');
-}
-near(previousModelError,0);
-assert(!modelScene.final.some(e=>e.kind==='residual-dimension'));
-assert(!modelScene.frames.some(f=>f.elements.some(e=>e.value==='Clearance checked'||e.kind==='accepted')));
-assert.deepEqual(modelScene.final.filter(e=>e.kind==='notation-landmark').map(e=>e.value),['L1','L2']);
-for(const [i,s] of modelSlits.entries()) {
-  for(const hole of modelHoles)assert(pointSegmentDistance(hole,s.a,s.b)-(modelSpec.inputs.width+modelSpec.inputs.holeDiameter)/2>=modelSpec.inputs.margin);
-  for(const other of modelSlits.slice(i+1))assert(segmentDistance(s.a,s.b,other.a,other.b)-modelSpec.inputs.width>=modelSpec.inputs.margin);
-}
-assert(dist(...modelHoles)-modelSpec.inputs.holeDiameter>=modelSpec.inputs.margin);
-for(const hole of modelScene.final.filter(e=>e.kind==='hole'))assert.equal(modelScene.final.filter(e=>e.kind==='thread'&&(dist(e.a,hole.p)<1e-6||dist(e.b,hole.p)<1e-6)).length,3,'Each crossbar junction needs three thread connections');
-const modelStages=new Map([
-  ['guides','Mark landmarks'],['landmarks','Mark landmarks'],['fixed-features','Fixed landmark pairs'],
-  ['junction-neighbours','Resolve junctions'],['junction-holes','Resolve junctions'],
-  ['free-spans','Free spans'],['residuals','Redistribute residuals'],['adjustment-start','Redistribute residuals'],['planning-revision','Redistribute residuals']
-]);
-for(const f of modelScene.frames.filter(f=>modelStages.has(f.stage))) {
-  const labels=f.elements.filter(e=>e.kind==='term-label');
-  assert.equal(labels.length,1);assert.equal(labels[0].value,modelStages.get(f.stage));assert.deepEqual(labels[0].p,[300,435]);
-}
-const firstModelFrame=predicate=>modelScene.frames.findIndex(f=>f.elements.some(predicate));
-const modelStageIndex=stage=>modelScene.frames.findIndex(f=>f.stage===stage);
-for(const value of ['L1','L2'])assert.equal(firstModelFrame(e=>e.kind==='notation-landmark'&&e.value===value),modelStageIndex('landmarks'));
-for(const i of [3,4,24,25])assert.equal(firstModelFrame(e=>e.kind==='slit'&&dist(modelCenter(e),modelCenter(modelFinal[i]))<1e-6),modelStageIndex('fixed-features'));
-for(const i of [6,7,9,19,21,22,29,33])assert.equal(firstModelFrame(e=>e.kind==='slit'&&dist(modelCenter(e),modelCenter(modelFinal[i]))<1e-6),modelStageIndex('junction-neighbours'));
-for(const hole of modelScene.final.filter(e=>e.kind==='hole'))assert.equal(firstModelFrame(e=>e.kind==='hole'&&dist(e.p,hole.p)<1e-6),modelStageIndex('junction-holes'));
-assert.equal(modelScene.frames.find(f=>f.stage==='free-spans').elements.filter(e=>e.kind==='measurement').length,8);
-assert.equal(modelScene.frames[0].delay,200);
-assert.equal(modelScene.frames.filter(f=>f.stage==='planning-revision').reduce((sum,f)=>sum+f.delay,0),320);
-assert.equal(modelScene.frames.find(f=>f.stage==='residuals').delay,240);
-
-
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
   const asset=entry.assets.find(a=>a.path.endsWith('/'+s.name)),animated=asset.animated??entry.animated;
   assert.equal(Boolean(s.frames.length),animated);
   if(animated) {
-    const tempo=s.name==='model-solution'?modelSpec.inputs.durationScale:1;
+    const tempo=1;
     if(s.name==='problem-corner-bridge') {
       assert.equal(s.frames.length,62);
       assert.deepEqual(s.frames.filter(f=>f.delay===50).map(f=>f.stage),['short-bridge','long-bridge']);
@@ -958,7 +888,7 @@ for(const s of scenes) {
     for(const f of s.frames.filter(f=>!['thread-reveal','thread-fade'].includes(f.stage)))assert(!f.elements.some(e=>e.kind==='thread'));
     }
     const openings=s.final.filter(e=>['slit','hole','proposal'].includes(e.kind)),threads=s.final.filter(e=>e.kind==='thread');
-    const expected= ['axiom-closure','model-solution'].includes(s.name)?openings.length:openings.length-(s.name==='matched-guides'?2:1);
+    const expected= s.name==='axiom-closure'?openings.length:openings.length-(s.name==='matched-guides'?2:1);
     assert.equal(threads.length,expected,`${s.name} incorrect thread count`);
     const tips=openings.flatMap(e=>e.type==='circle'?[e.p]:[e.a,e.b]);
     for(const t of threads)for(const p of [t.a,t.b])assert(tips.some(q=>dist(p,q)<1e-6),`${s.name} thread misses a real opening`);
@@ -1020,7 +950,7 @@ for(const s of scenes) {
     assert.equal(s.final.filter(e=>e.kind==='id-box').length,8);
   }
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
-    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=(['model-solution','fit-rejected'].includes(s.name)?600:375),`${s.name} clips an element`);
+    for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=(s.name==='fit-rejected'?600:375),`${s.name} clips an element`);
   }
 }
 console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} moving GIFs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

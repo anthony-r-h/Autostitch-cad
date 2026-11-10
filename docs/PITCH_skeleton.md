@@ -31,7 +31,7 @@
 - **Nominal, adjusted and protected gaps:** nominal gaps equal $p$; adjusted gaps depart from $p$ within the fitting bounds; protected gaps stay nominal
 - Blue guide segments identify adjusted gaps between opening centres; red segments identify residuals
 - **Landmark and free span:** a landmark fixes a nominally spaced pair of slits around a reference position, with no opening at the reference itself. Endpoints, landmarks and junctions bound the free spans where the remaining openings are fitted
-- **Junction and arms:** a junction is where stitch lines meet. Each direction away from it is an arm: two at a corner, three at a T, four at an X. A through-line contributes two arms
+- **Junction and arms:** a junction is where stitch lines meet. Each direction away from it is an arm: two at a corner, three at a T, four at an X. A through-line contributes two arms. Three or more arms form a branching junction
 - **Virtual slit:** an unpunched construction slit toward which an arm is laid out. In an Autostitch corner, the terminal virtual slit tips meet at the shared hole
 - **Clearance:** the shortest edge-to-edge distance between separate openings, accounting for slit width and hole diameter. The margin is the minimum allowed clearance
 - **Residual and adjustment:** residual is the length left over or missing before fitting; adjustment is the change made to a gap. Absolute adjustment sums gap changes, counting compression and extension positively. On curves, residual uses arc length and adjustment uses chord length
@@ -187,74 +187,48 @@
 ## Branching junctions
 
 - A through-line contributes two arms; a T has three and an X four
-- Three or more arms use Vertex point: one round hole at the guide intersection
-- Each arm's first neighbour is one nominal pitch from that hole
-- Releasing the common virtual-tip constraint admits more arm directions, at the cost of ordinary thread angle and visible length at the hole
-- Keep the hole and neighbours fixed; fit each remaining span with the fewest bounded adjustments, centred within that span
+- Three or more arms share one round hole at the guide intersection
+- Fix the first slit centre on every arm at half-pitch chord distance $p/2$ from the hole centre
+- Keep those neighbours fixed; fit the remaining slit-to-slit spans with bounded, centred adjustments
 
-![A9: a T junction reserves one hole and its nominal neighbours](../examples/illustrated/assets/axiom-junction.gif)
-
-### X junction with a curved arm
-
-- One round hole shared by four arms, including a circular arm
-- Nominal chord gap from the hole to each neighbouring slit
-- Fixed endpoints and neighbours; bounded corrections within the remaining spans
-
-![Autostitch X junction with a curved arm](../examples/illustrated/assets/axiom-junction-curved.gif)
-
-## NEW: Branching junctions
-
-- In the T study, near $180^\circ$, the two threads through a Vertex point read as one overlong stitch. As the arms turn apart, the bend makes them read as separate stitches
-- The choice controls that visible continuity while keeping one round hole at the guide intersection
-
-### T junction: three treatments
-
-[Synchronized angle study](../examples/illustrated/t-junctions/index.html): the same arms sweep from $180^\circ$ to $120^\circ$ and back.
+### Why half pitch?
 
 #### Vertex point
 
-- First slit centres are one pitch from the hole; near straight-through alignment, the combined thread looks too long
+- First slit centres are one pitch from the hole
+- Near straight-through alignment, the two connections read as one overlong stitch; their thread angles differ from the ordinary rows
 
 ![Vertex point as the T junction opens and closes](../examples/illustrated/t-junctions/vertex.gif)
 
 #### Vertex point, half pitch
 
-- First slit centres are half a pitch from the hole on all three arms
-- On straight arms, each connection has the ordinary thread angle and half its visible length. Two opposite connections read as one ordinary stitch
+- Move each first slit centre to $p/2$ from the shared hole
+- On straight arms, each connection has the ordinary thread direction and half its visible length
+- Opposite arms read as one ordinary stitch; other arms meet the hole with the same treatment
+- Use half pitch on every arm, at every angle
 
 ![Half-pitch neighbours preserve ordinary thread direction at the T junction](../examples/illustrated/t-junctions/half.gif)
 
-#### Reverse corner
+### Fit the remaining spans
 
-- The shared diagonal slit favours some arm connections over others: some stitches look continuous while others break that rhythm
-- Reject Reverse corner for this branching rule; half pitch retains the same imbalance
+- Half-pitch connections are fixed junction geometry; they do not consume the adjustment allowance
+- Endpoints and junction neighbours bound the free spans. Distribute each span's residual without moving those boundaries
+- The first neighbours sit closer together than at full pitch, so all openings must still pass clearance
 
-![Reverse corner gives unequal connections around the T junction](../examples/illustrated/t-junctions/reverse.gif)
+![A9: a T junction reserves one hole and half-pitch neighbours before fitting the remaining spans](../examples/illustrated/assets/axiom-junction.gif)
 
-### Proposed rules
+### X junction with a curved arm
 
-- Keep one round hole at the guide intersection. Measure from its centre to each first slit centre; on curves, use chord distance
-- Ordinary slit-to-slit gaps retain their fitting bounds; both treatments must pass clearance and leave feasible free spans
+- Four arms share one hole; each first slit centre is a half-pitch chord away
+- The circular arm follows the same centre-distance rule; its local tangent sets the slit lean
 
-#### Angle rule
+![Autostitch X junction with half-pitch neighbours, including a curved arm](../examples/illustrated/assets/axiom-junction-curved.gif)
 
-- Use half pitch when a pair of arms forms an angle from $160^\circ$ to $200^\circ$, inclusive: $180^\circ\pm20^\circ$
-- Otherwise use Vertex point: the first slit on every arm is $p$ from the hole
-- For curved arms, measure the angle between their outward tangents at the junction
-- Arm count does not determine the treatment; both odd- and even-arm junctions can contain a nearly straight pair
-- Open choice: place the first slits at $p/2$ on every arm, or only on qualifying pairs. Compare both in the [five-arm study](../examples/illustrated/t-junctions/index.html#five-arms)
+### Five arms
 
-### X junctions
+- The same construction applies to all five arms, with one shared hole and half-pitch neighbours
 
-- Apply the same angle rule to an X, keeping one shared round hole
-- Check cases where one, both or neither opposing pair qualifies for half pitch
-- Include an X with a curved arm to check how curvature changes the local thread angles
-
-### Follow-through after the decision
-
-- Revise A9, the junction construction, glossary and model; implement the selected fixed neighbour distances before fitting the remaining spans
-- Test odd and even arm counts, the inclusive $160^\circ$ and $200^\circ$ boundaries and angles just outside them, curved arms, clearance and short spans
-- Replace the current T/X illustrations and junction glossary figure; rebuild the rounded-A solution and affected connected fill/demo examples
+![Five arms with one shared hole and half-pitch neighbours](../examples/illustrated/t-junctions/five-half.png)
 
 ## Clearance
 
@@ -278,14 +252,27 @@
 - Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
 - These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
 
-![A worked solution on the emblem's rounded A: fix landmarks, resolve junctions and redistribute residuals](../examples/illustrated/assets/model-solution.gif)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
 
-- Example: a single-line A with a rounded crown, two landmarks and two T junctions at the crossbar; $p=3\,\mathrm{mm}$
-- Resolve junctions: locate the shared round holes and reserve their three nominal neighbours. The crown shares one slit with each straight leg at its smooth joins
-- The fixed openings leave seven straight free spans and one semicircular span
-- A $6.50\,\mathrm{mm}$ span leaves $0.50\,\mathrm{mm}$ beyond two nominal gaps. One $3.50\,\mathrm{mm}$ gap would exceed the limit; two $3.25\,\mathrm{mm}$ gaps fit
-- The crown compresses four central gaps to approximately $2.73\,\mathrm{mm}$; its other gaps stay nominal
-- Landmark pairs, junction neighbours and smooth-join slits stay fixed. The fitted opening positions balance across the A
+- Example: the emblem's outlined A, then the complete lettering and rings; $p=2.7\,\mathrm{mm}$
+- Crown landmarks establish symmetry. Protected pairs and shared corner openings bound the free spans
+- Redistribute residuals within those spans while keeping their boundary openings fixed
+
+## Reserve branching neighbours
+
+- Put the shared hole at the guide intersection $P$. On each arm, fix the first slit centre $C$ so that $\lVert C-P\rVert=p/2$
+- For a straight arm with outward unit tangent $\mathbf e$ and slit axis $\mathbf u$, the thread from the hole to the near slit tip is
+
+$$
+\mathbf v=\frac p2\mathbf e-\frac\ell2\mathbf u
+=\frac12\left(p\mathbf e-\ell\mathbf u\right).
+$$
+
+- The term in parentheses is the ordinary straight-row thread vector: half pitch preserves its direction and halves its visible length
+- On a circular arm of radius $R$, reserve angular advance $2\arcsin\left(p/(4R)\right)$. Curvature changes the thread direction; use the actual slit tips
+- A straight run of length $L$ between two branching holes leaves $D=L-p$ between its reserved slit centres. One branching end reserves only $p/2$
+- If the two reserved centres coincide, reuse their slit when its axis agrees. Overlapping reservations have no solution
+- Fit the remaining spans. The fixed half-pitch connections are excluded from ordinary gap counts and adjustments
 
 ## Solve one straight span
 

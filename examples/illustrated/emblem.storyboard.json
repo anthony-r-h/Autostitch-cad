@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "name": "emblem-construction",
+  "canvas": { "width": 600, "height": 750 },
+  "frameStep": 0.05,
+  "duration": 40,
+  "views": {
+    "overview": { "center": [461, 7.0709751266425], "height": 310 },
+    "A": { "target": "A", "padding": 12 }
+  },
+  "camera": [
+    { "at": 0, "view": "A" },
+    { "at": 14, "duration": 12, "view": "overview", "easing": "smoothstep" }
+  ],
+  "guides": [
+    { "target": "A", "from": 0, "until": 14 }
+  ],
+  "actions": [
+    { "at": 0.2, "duration": 0.6, "action": "mark-landmarks", "target": "A" },
+    { "at": 1.5, "duration": 1.2, "action": "reveal-fixed", "target": "A" },
+    { "at": 3, "duration": 3, "action": "lay-out", "target": "A", "residualDelay": 0.35, "residualFade": 0.25 },
+    { "at": 7, "duration": 4, "action": "adjust", "target": "A", "easing": "smoothstep" },
+    { "at": 12, "duration": 0.3, "action": "stitch", "target": "A" },
+    { "at": 14.5, "duration": 1.2, "action": "reveal-fixed", "target": "lettering-rest" },
+    { "at": 16, "duration": 3, "action": "lay-out", "target": "lettering-rest" },
+    { "at": 20, "duration": 5, "action": "adjust", "target": "lettering-rest", "easing": "smoothstep" },
+    { "at": 25.7, "duration": 0.3, "action": "stitch", "target": "lettering-rest", "glow": false },
+    { "at": 18, "duration": 6, "action": "lay-out", "target": "rings" },
+    { "at": 25.7, "duration": 0.3, "action": "stitch", "target": "rings", "glow": false },
+    { "at": 26, "duration": 0.25, "action": "fade-openings", "target": "all" },
+    { "at": 26.3, "duration": 0.45, "action": "punch", "target": "i-dot" }
+  ],
+  "commentary": [
+    { "at": 0, "phase": "Build", "text": "Set symmetry" },
+    { "at": 1.5, "phase": "Build", "text": "Resolve fixed openings" },
+    { "at": 3, "phase": "Build", "text": "Fit the free spans" },
+    { "at": 7, "phase": "Adjustment", "text": "Redistribute residuals" },
+    { "at": 12, "until": 14, "phase": "Stitch", "text": "Stitch" }
+  ]
+}

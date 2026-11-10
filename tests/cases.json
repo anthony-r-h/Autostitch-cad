@@ -5682,7 +5682,7 @@
         },
         {
           "id": "NET-017",
-          "expected": "curved branch first gaps are exact three-millimetre chords",
+          "expected": "curved branch first gaps are exact half-pitch chords",
           "sourceSymbol": "ast:n-tests"
         },
         {
@@ -5850,7 +5850,7 @@
               "if",
               "expected",
               {
-                "text": " retains every nominal first chord and one shared hole"
+                "text": " retains every half-pitch first chord and one shared hole"
               },
               {
                 "text": " rejects the independently demonstrated slit-clearance violation"
@@ -5869,6 +5869,41 @@
               "text": " is unchanged by reversed guide selection"
             }
           ]
+        },
+        {
+          "id": "NET-048",
+          "expected": "Five arms reserve half pitch on every arm and nominal ordinary gaps",
+          "sourceSymbol": "ast:n-test-half-pitch"
+        },
+        {
+          "id": "NET-049",
+          "expected": "Five-arm half-pitch placement is independent of guide selection order",
+          "sourceSymbol": "ast:n-test-half-pitch"
+        },
+        {
+          "id": "NET-050",
+          "expected": "Short branch spans reject instead of falling back to full pitch",
+          "sourceSymbol": "ast:n-test-half-pitch"
+        },
+        {
+          "id": "NET-051",
+          "expected": "A pitch-long chord between curved branch holes cannot replace two half-pitch chords",
+          "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "NET-052",
+          "expected": "Two curved branch reservations share one midpoint slit at exact half-pitch chords",
+          "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "NET-053",
+          "expected": "An exact tangent arc endpoint remains one finite connection in either guide order",
+          "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "NET-054",
+          "expected": "A tangent guide outside the endpoint tolerance does not acquire a connection",
+          "sourceSymbol": "ast:n-test-curved-link"
         }
       ],
       "matrices": [
@@ -5904,16 +5939,16 @@
           "slitWidth": 0.2,
           "margin": 0.2,
           "straightAngles": [
-            5,
-            15
+            30,
+            35
           ],
-          "curvedAngle": 14,
+          "curvedAngle": 35,
           "curveRadius": 30,
           "curveWindings": [
             -1,
             1
           ],
-          "expected": "Straight T/X: 15 degrees passes, 5 degrees rejects clearance. Curved T at 14 degrees: positive winding passes, negative winding rejects clearance. All passing arms retain a 3 mm first chord and share exactly one hole; reversing selection preserves the result."
+          "expected": "Straight T/X: 35 degrees passes, 30 degrees rejects clearance. Curved T at 35 degrees: positive winding passes, negative winding rejects clearance. All passing arms retain a 1.5 mm half-pitch chord and share exactly one hole; reversing selection preserves the result."
         }
       ]
     },
@@ -6836,7 +6871,7 @@
         },
         {
           "id": "CONNECT-005",
-          "expected": "T emits twelve slits and one shared hole",
+          "expected": "T emits fifteen slits and one shared hole",
           "sourceSymbol": "ast:cad-connected-tests"
         },
         {
@@ -6892,7 +6927,7 @@
         },
         {
           "id": "CONNECT-016",
-          "expected": "X crossing emits sixteen slits and exactly one shared hole",
+          "expected": "X crossing emits twenty slits and exactly one shared hole",
           "sourceSymbol": "ast:cad-connected-tests"
         },
         {
@@ -8332,17 +8367,17 @@
         },
         {
           "id": "FILL-NATIVE-018",
-          "expected": "Maze has 77 openings with 7 shared junction holes",
+          "expected": "Maze has 82 openings with 7 shared junction holes",
           "sourceSymbol": "ast:fill-tests"
         },
         {
           "id": "FILL-NATIVE-019",
-          "expected": "Maze gaps stay nominal without spacing adjustments",
+          "expected": "Maze reserves half pitch at junctions and nominal gaps elsewhere",
           "sourceSymbol": "ast:fill-tests"
         },
         {
           "id": "FILL-NATIVE-020",
-          "expected": "Maze stays on a 6 mm grid within a 36 by 30 mm footprint",
+          "expected": "Maze junctions stay on a 6 mm grid with half-pitch free-end insets",
           "sourceSymbol": "ast:fill-tests"
         },
         {
@@ -8385,9 +8420,9 @@
         "Six millimetre separation between circle holes and lettering holes",
         "Nominal circle spacing with short remnants omitted"
       ],
-      "expected": "15 lettering guides and 11 circle arcs generate 23 stitch blocks: 521 lettering openings and 444 circle openings, plus one separate round dot. Combined clearance and the 6 mm blank border pass.",
+      "expected": "15 lettering guides and 12 circle arcs generate 24 stitch blocks: 580 lettering openings and 496 circle openings, plus one separate round dot. Two crown-apex landmarks on A. All guides use 2.7 mm pitch; combined clearance and the 6 mm blank border pass.",
       "parameters": {
-        "pitch": 3,
+        "pitch": 2.7,
         "slitLength": 1.5,
         "circleRadii": [
           110,
@@ -8401,7 +8436,7 @@
         {
           "source": "examples/emblem.lsp",
           "entrypoint": "ast:emblem-check",
-          "expected": "Every guide has current output, no obsolete circle landmarks remain, circular gaps are nominal, and all circle holes clear the text by at least 6 mm."
+          "expected": "Every guide has current output at 2.7 mm pitch, exactly two crown-apex landmarks remain on A, circular gaps are nominal, and all circle holes clear the text by at least 6 mm."
         }
       ]
     },
@@ -8435,7 +8470,7 @@
         "Closed letter interiors and counters remain free of background stitches",
         "Sloping e spine, l loops without low entry strokes, closer question mark; can unchanged"
       ],
-      "expected": "19 lettering guides in 16 blocks with 604 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 27 guides in 15 blocks with 218 openings, 12 shared junctions and no adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
+      "expected": "19 lettering guides in 16 blocks with 612 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 24 guides in 13 blocks with 204 openings, 11 shared junctions and no adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 200,
@@ -8514,8 +8549,8 @@
         "examples/fills/fill-maze.png",
         "examples/fills/fill-maze.svg"
       ],
-      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 6 mm corridors. Twelve wall lines and seven T junctions; all passages remain connected.",
-      "expected": "77 openings, including 7 shared round holes, at 3 mm pitch. No adjusted gaps. Production solving and combined default-model clearance pass.",
+      "notes": "Fixed orthogonal wall motif, 36 by 30 mm with 6 mm corridors. Twelve wall lines and seven T junctions; junction positions stay on the grid, while connected walls' free ends stop 1.5 mm inside their grid endpoints. All passages remain connected.",
+      "expected": "82 openings, including 7 shared round holes, at 3 mm pitch. Every branching arm reserves a 1.5 mm chord; ordinary gaps remain nominal. Production solving and combined default-model clearance pass.",
       "usedBy": [],
       "drawing": "examples/demos/fills.dwg",
       "view": "MAZE"
@@ -8527,7 +8562,7 @@
       "source": "examples/fills.lsp",
       "parameters": {
         "cells": 7,
-        "extension": 6,
+        "extension": 4.5,
         "crossing-spacing": 6
       },
       "previewName": "fill-quilt",
@@ -8535,8 +8570,8 @@
         "examples/fills/fill-quilt.png",
         "examples/fills/fill-quilt.svg"
       ],
-      "notes": "Two crossing guide families; 64 X junctions share round holes. Six millimetres between crossings leaves slit holes between nodes.",
-      "expected": "240 openings at 3 mm pitch and 1.5 mm slit length. Production solving and combined default-model clearance pass.",
+      "notes": "Two crossing guide families; 64 X junctions share round holes. Crossings remain 6 mm apart, with guides extending 4.5 mm beyond the outer crossings.",
+      "expected": "352 openings at 3 mm pitch and 1.5 mm slit length. Every branching arm reserves a 1.5 mm chord; ordinary gaps remain nominal. Production solving and combined default-model clearance pass.",
       "usedBy": [
         "ART-D"
       ],
@@ -8811,7 +8846,7 @@
         "A9"
       ],
       "animated": true,
-      "status": "Analytic rule illustration; not native CAD output.",
+      "status": "Analytic half-pitch branching rule illustration; not native CAD output.",
       "assets": [
         {
           "path": "examples/illustrated/assets/axiom-junction"
@@ -8824,16 +8859,16 @@
         ],
         "arms": [
           [
-            -12.4,
+            -14.1,
             0
           ],
           [
-            12.4,
+            14.1,
             0
           ],
           [
             0,
-            -12.4
+            -14.1
           ]
         ],
         "diameter": 0.5,
@@ -8853,7 +8888,7 @@
         "Show guides and s/e/j notation.",
         "Reveal one slit on each of the three arms together, progressing inward toward the junction.",
         "Identify the shared round hole after all three arms arrive.",
-        "Keep endpoints and nominal junction neighbours fixed; split each 0.4 mm residual across two adjusted gaps."
+        "Keep endpoints and half-pitch junction neighbours fixed; split each 0.6 mm residual across two adjusted gaps."
       ],
       "junctionNotation": "Visible from the first frame; the round hole appears after all three arms arrive.",
       "threadReveal": {
@@ -8868,49 +8903,90 @@
       "pitch": 3,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "axioms": ["A2", "A3", "A9", "A10"],
+      "axioms": [
+        "A2",
+        "A3",
+        "A9",
+        "A10"
+      ],
       "animated": true,
-      "status": "Synchronized analytic sweeps from 180 to 120 degrees and back, five seconds each way. Vertex point and Reverse corner, each at nominal and half pitch. Candidate policies, not native CAD qualification.",
+      "status": "Synchronized analytic sweeps from 180 to 120 degrees and back, five seconds each way. Full-pitch Vertex point motivates the accepted half-pitch branching construction. Not native CAD qualification.",
       "inputs": {
         "sourceIllustration": "ILL-JUNCTION",
-        "animation": {"startDegrees": 180, "endDegrees": 120, "durationSeconds": 10, "frameCount": 250, "frameDelayCentiseconds": 4},
+        "animation": {
+          "startDegrees": 180,
+          "endDegrees": 120,
+          "durationSeconds": 10,
+          "frameCount": 250,
+          "frameDelayCentiseconds": 4
+        },
         "armLength": 18.4,
         "width": 0.2,
         "margin": 0.2,
-        "sharedSlitDegrees": 45,
-        "view": {"width": 600, "height": 750, "scale": 44, "origin": [300, 270]},
+        "view": {
+          "width": 600,
+          "height": 750,
+          "scale": 44,
+          "origin": [
+            300,
+            270
+          ]
+        },
         "branch": "Downward external angle bisector",
-        "policies": ["vertex", "half", "reverse", "reverse-half"]
+        "policies": [
+          "vertex",
+          "half"
+        ]
       },
       "assets": [
-        {"path": "examples/illustrated/t-junctions/vertex"},
-        {"path": "examples/illustrated/t-junctions/half"},
-        {"path": "examples/illustrated/t-junctions/reverse"},
-        {"path": "examples/illustrated/t-junctions/reverse-half"}
+        {
+          "path": "examples/illustrated/t-junctions/vertex"
+        },
+        {
+          "path": "examples/illustrated/t-junctions/half"
+        }
       ]
     },
     {
       "id": "ILL-FIVE-ARM-STUDY",
       "source": "examples/illustrated/t-junctions.mjs",
-      "exportStills": false,
       "pitch": 3,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "axioms": ["A2", "A3", "A9", "A10"],
-      "animated": true,
-      "status": "Analytic comparison of full pitch, half pitch on all five arms, and per-arm switching within 20 degrees of straight alignment with any other arm. Not native CAD qualification.",
+      "axioms": [
+        "A2",
+        "A3",
+        "A9",
+        "A10"
+      ],
+      "animated": false,
+      "status": "Static five-arm illustration: one shared round hole and half-pitch neighbours on every arm. Analytic geometry, not native CAD qualification.",
       "inputs": {
         "sourceIllustration": "ILL-T-JUNCTION-STUDY",
         "armLength": 12.4,
-        "fixedArmDegrees": [225, 270, 315],
-        "halfPitchToleranceDegrees": 20,
-        "view": {"width": 600, "height": 750, "scale": 20, "origin": [300, 330]},
-        "policies": ["vertex", "half", "pair"]
+        "fixedArmDegrees": [
+          225,
+          270,
+          315
+        ],
+        "view": {
+          "width": 600,
+          "height": 750,
+          "scale": 20,
+          "origin": [
+            300,
+            330
+          ]
+        },
+        "policies": [
+          "half"
+        ],
+        "includedDegrees": 120
       },
       "assets": [
-        {"path": "examples/illustrated/t-junctions/five-vertex"},
-        {"path": "examples/illustrated/t-junctions/five-half"},
-        {"path": "examples/illustrated/t-junctions/five-pair"}
+        {
+          "path": "examples/illustrated/t-junctions/five-half"
+        }
       ]
     },
     {
@@ -9643,7 +9719,7 @@
         "A10"
       ],
       "animated": true,
-      "status": "Analytic Autostitch X junction with one circular arm. Reserve the round hole and nominal chord neighbours, then fit the remaining arm spans. Fixed endpoints, gap bounds, chord spacing and opening clearance are checked; not native CAD evidence.",
+      "status": "Analytic Autostitch X junction with one circular arm. Reserve the round hole and half-pitch chord neighbours, then fit the remaining arm spans. Fixed endpoints, gap bounds, chord spacing and opening clearance are checked; not native CAD evidence.",
       "inputs": {
         "radius": 20,
         "directionsDegrees": [
@@ -9653,12 +9729,12 @@
           315
         ],
         "nominalIntervals": [
-          4.2,
-          3.85,
-          4.1,
-          3.8
+          4.6,
+          4.7,
+          4.65,
+          4.55
         ],
-        "intervals": 4,
+        "intervals": 5,
         "view": {
           "x": 300,
           "y": 185,
@@ -9687,71 +9763,39 @@
       }
     },
     {
-      "id": "ILL-MODEL-SOLUTION",
-      "source": "examples/illustrated/scenes.mjs",
-      "pitch": 3,
+      "id": "ILL-EMBLEM-STORYBOARD",
+      "source": "examples/illustrated/emblem.mjs",
+      "pitch": 2.7,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "axioms": [
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A7",
-        "A8",
-        "A9",
-        "A10"
-      ],
+      "axioms": ["A1", "A2", "A3", "A6", "A7", "A8", "A9"],
       "animated": true,
-      "status": "Analytic single-line adaptation of the emblem's rounded A: two landmarks, two crossbar T junctions and a circular crown with shared slits at its smooth joins. Not native CAD output.",
+      "status": "Constructed presentation of the native 2.7 mm emblem, with half-pitch neighbours at all three branching holes. Lettering uses analytic planning motion between fixed run endpoints, landmark pairs and round holes; animation is not a solver execution trace. Used in PITCH's Model and solution section.",
       "inputs": {
-        "radius": 9.25,
-        "springHeight": 31.25,
-        "crossbarHeight": 21.75,
-        "landmarkHeight": 10.75,
-        "durationScale": 2,
-        "redistributionSpeed": 1.5,
-        "width": 0.3,
-        "margin": 0.2,
-        "holeDiameter": 0.5,
-        "view": {
-          "x": 300,
-          "y": 510,
-          "scale": 11
-        }
+        "storyboard": "examples/illustrated/emblem.storyboard.json",
+        "geometry": "examples/demos/emblem.svg",
+        "guides": "examples/emblem.lsp",
+        "durationSeconds": 40,
+        "pullbackSeconds": 12,
+        "finalHoldSeconds": 13.25,
+        "landmarkStep": {"at": 0.2, "duration": 0.6, "annotation": "Set symmetry", "expected": "Reveal the two crown landmarks before resolving fixed openings at 1.5 seconds."},
+        "dotPunch": {"at": 26.3, "duration": 0.45, "expected": "Dot follows the opening fade by 0.05 seconds, then settles to its original radius. No full-emblem flash."},
+        "residualReveal": {"delayAfterLayout": 0.35, "fadeSeconds": 0.25, "expected": "Brief pause, then a subtle fade of red residual annotations before redistribution."},
+        "openingFade": {"at": 26, "duration": 0.25, "expected": "Hide slit outlines, round holes and spacing marks before the dot punch. Final hold contains only thread and the dot."},
+        "guideVisibility": "Only A from 0 to 14 seconds; no guides or text during pullback or final hold.",
+        "openingsIncludingDot": 1077,
+        "branchingHoles": 3,
+        "branchingNeighbourChord": 1.35,
+        "ringOpenings": 496,
+        "aOpenings": 99,
+        "captions": "Short step labels use the shared termLabel/displayElements helpers. Close-up notation uses two closed-contour start markers, eight junction markers, two crown landmarks, bracketed dimensions, red residuals and blue adjusted gaps."
       },
       "assets": [
         {
-          "path": "examples/illustrated/assets/model-solution"
+          "path": "examples/illustrated/emblem/emblem-construction",
+          "label": "Emblem construction with a storyboard-controlled camera"
         }
-      ],
-      "terms": [
-        "Mark landmarks",
-        "Fixed landmark pairs",
-        "Resolve junctions",
-        "Free spans",
-        "Redistribute residuals"
-      ],
-      "notation": [
-        "s",
-        "e",
-        "j",
-        "L1",
-        "L2",
-        "direction"
-      ],
-      "reveal": [
-        "Label each major step in the same position. Mark both landmarks together, then fix both landmark pairs and endpoint slits together.",
-        "Resolve both T junctions together: reserve their three nominal neighbours and shared round holes. Reuse one slit at each smooth straight-to-crown join.",
-        "Identify all eight free spans together: seven straight spans and the semicircular crown.",
-        "Show all residuals together, then redistribute across all spans simultaneously. The crown compresses; the straight spans extend. The redistribution phase runs 50 percent faster than the previous worked example.",
-        "Keep fixed openings stationary, reveal thread and hold for eight seconds. Other phases retain the half-speed timing."
-      ],
-      "threadReveal": {
-        "holdCentiseconds": 800,
-        "connection": "Positive slit tip to next negative tip; shared round-hole centre."
-      }
+      ]
     }
   ]
 }

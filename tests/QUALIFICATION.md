@@ -2,6 +2,17 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Half-pitch branching: 2026-11-10
+
+- All 19 native suites passed 2,046 checks; native editing events and Undo/Redo passed 61 checks.
+- Every arm at a branching junction reserves a half-pitch chord neighbour. Straight and curved shared-midpoint cases, mixed pitches, selection order, short-span rejection and clearance pass. Exact tangent endpoints are retained without widening the join tolerance; outside-tolerance near misses stay disconnected.
+- Emblem, banner and fill drawings regenerated, saved and reopened. Every saved opening matches a fresh solution from the final solver: 1,076 emblem openings across 24 blocks, 1,220 banner openings across 133 blocks and 979 fill openings across 36 blocks. Separate decorative dots are excluded from these block comparisons.
+- Emblem: 580 lettering openings, 496 ring openings and one dot. Banner: 612 lettering openings, 404 flow openings, 204 background openings and one dot. Quilt: 352 openings; maze: 82, including seven shared holes. Circle and flow specimens retain 220 and 325 openings.
+- Short artwork approaches and connected fill free ends were adjusted to fit the new reservations. All required clear bands and nominal fill spacing pass. Canonical previews were inspected at their published sizes.
+- Diagram, counter-example and emblem storyboard checks pass. The independent fit oracle passes 8,215 cases; the catalog validates 609 stable IDs. Obsolete junction alternatives and the replaced model scene were removed; post-cleanup link and build-lifecycle checks pass.
+- Earlier runs exposed stale fixture lengths/counts and the tangent endpoint defect, now corrected. Marker snap checks failed while BricsCAD was minimized and passed with its viewport restored. Final native report: `output/native/half-pitch-suites.txt`; event report: `output/native/events-e413759c56.txt`.
+- Saved-output comparisons: `output/native/half-pitch-{emblem,banner,fills}-fidelity.txt`. Reopen checks use the same prefix with `-reopen.txt`. Canonical drawings and reproduction commands: [demo.md](../examples/demo.md).
+
 ## Stitched banner: 2026-11-08
 
 - `ASTBANNERDEMO`: 19 lettering guides in 16 blocks, 604 lettering openings; 104 fill guides with 404 openings; one round question-mark dot. Page: $160\times256\,\mathrm{mm}$.
@@ -125,7 +136,7 @@ node tests/fit-oracle.mjs
 node tests/build-native-oracle.mjs
 ```
 
-With a saved disposable `output/native/Autostitch-native.dwg` open in the existing BricsCAD process:
+With a saved disposable `output/native/Autostitch-native.dwg` open in the existing BricsCAD process, keep the window restored for viewport-dependent snap checks:
 
 ```powershell
 ./tests/run-suites.ps1 -IncludeUi

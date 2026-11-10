@@ -202,6 +202,70 @@
 
 ![Autostitch X junction with a curved arm](../examples/illustrated/assets/axiom-junction-curved.gif)
 
+## NEW: Branching junctions
+
+- Proposal for review: use half pitch near a straight-through junction; retain Vertex point elsewhere
+- Near $180^\circ$, the two threads through a Vertex point read as one overlong stitch. As the arms turn apart, the bend makes them read as separate stitches
+- The choice controls that visible continuity while keeping one round hole at the guide intersection
+
+### T junction: four treatments
+
+[Synchronized angle study](../examples/illustrated/t-junctions/index.html): the same arms sweep from $180^\circ$ to $120^\circ$ and back under all four treatments.
+
+#### Vertex point
+
+- First slit centres are one pitch from the hole; near straight-through alignment, the combined thread looks too long
+
+![Vertex point as the T junction opens and closes](../examples/illustrated/t-junctions/vertex.gif)
+
+#### Vertex point, half pitch
+
+- First slit centres are half a pitch from the hole on all three arms
+- On straight arms, each connection has the ordinary thread angle and half its visible length. Two opposite connections read as one ordinary stitch
+
+![Half-pitch neighbours preserve ordinary thread direction at the T junction](../examples/illustrated/t-junctions/half.gif)
+
+#### Reverse corner
+
+- The shared diagonal slit favours some arm connections over others: some stitches look continuous while others break that rhythm
+
+![Reverse corner gives unequal connections around the T junction](../examples/illustrated/t-junctions/reverse.gif)
+
+#### Reverse corner, half pitch
+
+- Halving the centre spacing retains that imbalance; reject both Reverse corner variants for this branching rule
+
+![Half pitch does not balance the Reverse corner connections](../examples/illustrated/t-junctions/reverse-half.gif)
+
+### Proposed angle rule
+
+- Let $\beta$ be the largest angle between any pair of outward arm tangents, measured from $0^\circ$ to $180^\circ$
+- Set the fixed distance $d_J$ from the shared hole centre to the first slit centre on every arm:
+
+$$
+d_J=\begin{cases}
+p/2,&170^\circ\leq\beta\leq180^\circ,\\
+p,&\beta<170^\circ.
+\end{cases}
+$$
+
+- This is a special junction distance; ordinary slit-to-slit gaps retain their fitting bounds
+- On curved arms, use the tangent at the junction to classify the angle and a chord for $d_J$
+- The $10^\circ$ band is a visual choice to review. Half pitch still has to pass opening clearance and leave feasible free spans
+
+### X junctions
+
+- Extend the same rule to four arms: a nearly straight pair selects half pitch on all four arms; otherwise use Vertex point
+- Two nearly straight opposing pairs should each read as an ordinary stitch through the hole
+- Review the mixed case: only one pair is nearly straight. Compare halving all four arms with halving only the qualifying pair before settling the rule
+- Include an X with a curved arm to check how curvature changes the local thread angles
+
+### Follow-through after the decision
+
+- Revise A9, the junction construction, glossary and model; implement the selected fixed neighbour distances before fitting the remaining spans
+- Test both sides of the $170^\circ$ boundary, mixed X junctions, curved arms, clearance and short spans
+- Replace the current T/X illustrations and junction glossary figure; rebuild the rounded-A solution and affected connected fill/demo examples
+
 ## Clearance
 
 - Distinct openings must remain disjoint and retain the required edge-to-edge margin

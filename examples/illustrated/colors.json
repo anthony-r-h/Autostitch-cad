@@ -1,5 +1,11 @@
 {
   "documentationTheme": "graphite",
+  "revealGlow": {
+    "enabled": true,
+    "durationCentiseconds": 16,
+    "opacity": 0.28,
+    "width": 7
+  },
   "typography": {
     "fontFamily": "Arial",
     "numberFontFamily": "Consolas",

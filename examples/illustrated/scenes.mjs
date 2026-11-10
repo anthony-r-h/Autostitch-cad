@@ -1149,6 +1149,38 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
     return {...shown,color};
   });
 }
+// Split existing frame time for a brief reveal accent; geometry and total timing stay intact.
+export function revealGlowFrames(frames,theme=themeFor()) {
+  const glow=colorConfig.revealGlow;
+  if(!glow.enabled)return frames;
+  const kinds=['slit','proposal','virtual','hole','thread'],active=new Map(),result=[];
+  const key=e=>JSON.stringify([e.kind,e.a,e.b,e.p]);
+  let previous=[],time=0;
+  for(const [index,f] of frames.entries()) {
+    if(f.stage==='reset')active.clear();
+    else if(index>0)for(const kind of kinds) {
+      const before=previous.filter(e=>e.kind===kind),now=f.elements.filter(e=>e.kind===kind);
+      // A moving or mirrored row is already present; only new openings get a pulse.
+      if(now.length<=before.length)continue;
+      const known=new Set(before.map(key));
+      for(const e of now.filter(e=>!known.has(key(e))).slice(-(now.length-before.length)))active.set(key(e),time);
+    }
+    let remaining=f.delay;
+    while(remaining>0) {
+      for(const [id,start] of active)if(time-start>=glow.durationCentiseconds)active.delete(id);
+      const elements=f.elements.map(e=>{
+        const start=active.get(key(e));
+        return start===undefined?e:{...e,glow:{color:theme.ink,width:glow.width,
+          opacity:glow.opacity*(1-(time-start)/glow.durationCentiseconds)}};
+      });
+      const delay=elements.some(e=>e.glow)&&remaining>5?4:remaining;
+      result.push({...f,elements,delay});time+=delay;remaining-=delay;
+    }
+    previous=f.elements;
+  }
+  return result;
+}
+
 // Presentation only: keep model coordinates and a common camera across comparisons.
 export function portraitScenes(scenes,theme=themeFor()) {
   const bounds=new Map();
@@ -1165,7 +1197,8 @@ export function portraitScenes(scenes,theme=themeFor()) {
   return scenes.map(s=>{
     const b=bounds.get(s.source),scale=Math.min(1.55,528/(b[2]-b[0]),654/(b[3]-b[1]));
     return {...s,canvas:{width:600,height:750,background:theme.background,scale,x:300-scale*(b[0]+b[2])/2,y:375-scale*(b[1]+b[3])/2},
-      displayed:true,final:displayElements(s.final,undefined,theme),frames:s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening,theme)}))};
+      displayed:true,final:displayElements(s.final,undefined,theme),
+      frames:revealGlowFrames(s.frames.map(f=>({...f,elements:displayElements(f.elements,f.holeLightening,theme)})),theme)};
   });
 }
 export function svg(scene) {
@@ -1220,12 +1253,12 @@ function finalizeGif(raw,scene) {
 export function writeSceneFiles(scenes) {
   const mode=process.argv[2],output=path.resolve(process.argv[3]),temporary=path.resolve(process.argv[4]);
   fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
+  const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes,themeFor(process.argv[5]||undefined));
   if(mode==='prepare') {
-    const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes,themeFor(process.argv[5]||undefined));
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(displayed));
     for(const scene of displayed)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {
-    for(const scene of scenes.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
+    for(const scene of displayed.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');
 }
 export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,scene,frame,finish,routeMarks,notationText,finishThread,slitOutlines,adjustmentStyle,highlightGap};

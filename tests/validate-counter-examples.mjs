@@ -346,9 +346,10 @@ for(const s of scenes) {
   const png=fs.readFileSync(new URL(base.href+'.png'));assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),750);
   if(s.frames.length) {
     const gif=fs.readFileSync(new URL(base.href+'.gif')),blocks=gifBlocks(gif).blocks;
+    const renderedFrames=portraitScenes(scenes).find(v=>v.name===s.name).frames;
     near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),750);
-    assert.equal(blocks.filter(b=>b.kind==='image').length,s.frames.length);
-    assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
+    assert.equal(blocks.filter(b=>b.kind==='image').length,renderedFrames.length);
+    assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),renderedFrames.map(f=>f.delay));
     assert(gif.includes(Buffer.from('NETSCAPE2.0')));
     const reveal=s.frames.at(-2);assert.equal(reveal.stage,'thread-reveal');assert.equal(reveal.delay,400);assert.deepEqual(reveal.elements,s.final);
     const fade=s.frames.filter(f=>f.stage==='thread-fade');assert.equal(fade.length,5);

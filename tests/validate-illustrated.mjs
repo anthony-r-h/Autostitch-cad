@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { selectFit } from './fit-oracle.mjs';
-import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, svg, themeFor, colorConfig } from '../examples/illustrated/scenes.mjs';
+import { createScenes, gifBlocks, displayElements, pitchComparisonMetrics, portraitScenes, revealGlowFrames, svg, themeFor, colorConfig } from '../examples/illustrated/scenes.mjs';
 import { palettes, paletteScenes } from '../examples/illustrated/palettes.mjs';
 
 const root = new URL('../', import.meta.url);
@@ -42,7 +42,29 @@ for(const name of ['graphite','porcelain']) {
   }
 }
 const presented=portraitScenes(scenes);
+// A reveal pulse borrows frame time; existing layouts and movement must not flash.
+const glowSlit={type:'line',kind:'slit',a:[10,10],b:[20,20],color:'ink',width:2.6};
+const glowInput=[{stage:'guides',delay:20,elements:[]},
+  {stage:'reveal',delay:25,elements:[glowSlit]},
+  {stage:'move',delay:25,elements:[{...glowSlit,a:[12,10],b:[22,20]}]},
+  {stage:'reset',delay:20,elements:[]}];
+const glowFrames=revealGlowFrames(glowInput);
+assert.equal(glowFrames.reduce((n,f)=>n+f.delay,0),90);
+assert.equal(revealGlowFrames([glowInput[1]])[0].elements[0].glow,undefined,'Initial layout must not flash');
+assert(glowFrames.filter(f=>f.elements.some(e=>e.glow)).every(f=>f.stage==='reveal'&&f.delay>=2));
+const glowOpacity=glowFrames.filter(f=>f.elements.some(e=>e.glow)).map(f=>f.elements[0].glow.opacity);
+assert.equal(glowOpacity.length,4);
+glowOpacity.forEach((opacity,i)=>assert(Math.abs(opacity-[.28,.21,.14,.07][i])<1e-9));
+assert(glowFrames.filter(f=>f.stage==='move').every(f=>f.elements.every(e=>!e.glow)));
+assert.deepEqual(glowFrames.findLast(f=>f.stage==='reveal').elements,[glowSlit]);
+const savedGlow=colorConfig.revealGlow.enabled;
+try {colorConfig.revealGlow.enabled=false;assert.equal(revealGlowFrames(glowInput),glowInput);}
+finally {colorConfig.revealGlow.enabled=savedGlow;}
 for(const s of presented) {
+  const original=scenes.find(raw=>raw.name===s.name);
+  assert.equal(s.frames.reduce((n,f)=>n+f.delay,0),original.frames.reduce((n,f)=>n+f.delay,0));
+  assert(!s.final.some(e=>e.glow));
+  assert(s.frames.filter(f=>['thread-reveal','reset'].includes(f.stage)).every(f=>f.elements.every(e=>!e.glow)));
   const c=s.canvas;
   assert.equal(c.width/c.height,4/5);
   for(const peer of presented.filter(p=>p.source===s.source))assert.deepEqual(peer.canvas,c,'Comparisons need one fixed camera');
@@ -956,8 +978,9 @@ for(const s of scenes) {
     const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
     // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
     const blocks=gifBlocks(gif).blocks,images=blocks.filter(b=>b.kind==='image'),controls=blocks.filter(b=>b.kind==='control');
-    assert.equal(images.length,s.frames.length);assert.equal(controls.length,images.length);
-    assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),s.frames.map(f=>f.delay));
+    const renderedFrames=presented.find(p=>p.name===s.name).frames;
+    assert.equal(images.length,renderedFrames.length);assert.equal(controls.length,images.length);
+    assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),renderedFrames.map(f=>f.delay));
     assert(gif.includes(Buffer.from([0x21,0xff,11,...Buffer.from('NETSCAPE2.0'),3,1,0,0,0])));
     assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
     near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),750);

@@ -57,6 +57,16 @@ function Draw-Frame($elements,$canvas) {
   $g.TextRenderingHint=[Drawing.Text.TextRenderingHint]::AntiAliasGridFit
   foreach($element in $elements) {
    $color=[Drawing.ColorTranslator]::FromHtml($element.color)
+   if($element.glow) {
+    $glowColor=[Drawing.ColorTranslator]::FromHtml($element.glow.color)
+    foreach($layer in @(@{width=1;alpha=0.45},@{width=0.55;alpha=0.75})) {
+     $pen=[Drawing.Pen]::new([Drawing.Color]::FromArgb([int](255*$element.glow.opacity*$layer.alpha),$glowColor),[single]($element.glow.width*$layer.width/$canvas.scale))
+     try {
+      if($element.type -eq 'line'){$g.DrawLine($pen,[single]$element.a[0],[single]$element.a[1],[single]$element.b[0],[single]$element.b[1])}
+      elseif($element.type -eq 'circle'){$g.DrawEllipse($pen,[single]($element.p[0]-$element.radius),[single]($element.p[1]-$element.radius),[single](2*$element.radius),[single](2*$element.radius))}
+     } finally {$pen.Dispose()}
+    }
+   }
    switch($element.type) {
     'line' {
      if($element.outline) {

@@ -204,17 +204,88 @@
 
 # Model and solution
 
-- Resolve the continuous guide into ordered openings with fixed tool geometry
-- Satisfy the geometric constraints, minimize nonstandard gaps and specify their positions
+- Given a guide and tool profile, find the opening positions that satisfy the axioms
+- Fix the features, fit the gaps between them, then check the complete layout
 
-## Fit the free spans
+## Establish the fixed openings
 
-- Fit between the fixed openings at endpoints, landmarks and junctions
-- Prefer nominal corner steps; adjust only as needed to keep a neighbour on its finite arm
-- Minimize adjusted gaps; then prefer exact centring, smaller pitch change and fewer gaps
-- Use equal spacing within one adjustment block per free span
-- Place the block as centrally as protected gaps allow; half-index ties go toward the end
-- On circles, convert chord spacing to angular advance
+- Inputs: guide geometry, start and end, direction, landmarks, junctions and pitch $p$
+- Tool profile: slit length $\ell$, width $w$, lean $\alpha$, round-hole diameter $d$ and clearance margin $m$
+- Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
+- These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
+
+![A worked solution: fix the landmark and corner, distribute each free span's residual, then check clearance and show thread](../examples/illustrated/assets/model-solution.gif)
+
+- Example: the landmark and corner leave three $9.50\,\mathrm{mm}$ free spans, each with $p=3\,\mathrm{mm}$
+- Three nominal gaps cover $9\,\mathrm{mm}$, leaving $0.50\,\mathrm{mm}$ to distribute
+- One adjusted gap would be $3.50\,\mathrm{mm}$, beyond the $3.30\,\mathrm{mm}$ limit. Two gaps at $3.25\,\mathrm{mm}$ absorb the residual; the third stays nominal
+- The landmark pair and both corner steps remain nominal throughout fitting
+
+## Solve one straight span
+
+- Let $D>0$ be the distance between its fixed end openings, with no protected gaps inside
+- Choose an integer number of gaps $n\geq1$. There are $n+1$ openings, including both ends
+- Every gap must lie within $0.9p\leq g\leq1.1p$, so the possible counts are
+
+$$
+\max\left\{1,\left\lceil\frac{D}{1.1p}\right\rceil\right\}
+\leq n\leq
+\left\lfloor\frac{D}{0.9p}\right\rfloor.
+$$
+
+- For each count, the residual is $r=D-np$: positive means lengthen gaps; negative means shorten them
+- Each adjusted gap can absorb at most $0.1p$. The smallest number of adjusted gaps for that count is
+
+$$
+k(n)=\left\lceil\frac{|r|}{0.1p}\right\rceil.
+$$
+
+- If $r=0$, all gaps stay nominal. Otherwise require $k\leq n$ and give those $k$ gaps equal spacing
+
+$$
+g=p+\frac{r}{k}.
+$$
+
+- The bound on $k$ ensures $|g-p|\leq0.1p$. The gaps reach the fixed endpoint exactly because
+
+$$
+(n-k)p+kg=np+r=D.
+$$
+
+## Choose where the adjustments go
+
+- Among feasible counts, minimize $k$, the number of adjusted gaps
+- Break ties by exact centring, then smaller fractional pitch change, then fewer gaps
+- Put the adjusted gaps together in one block, as close to the span's centre as possible
+- Exact centring is possible when $n-k$ is even; otherwise place the block half a gap towards the end
+- Fixed openings and protected gaps do not move to improve that ranking
+
+## Apply the same fit to curves
+
+- On a circular guide of radius $R$, a gap is a chord. Its angular advance is
+
+$$
+a(g)=2\arcsin\left(\frac{g}{2R}\right).
+$$
+
+- Require $p\leq2R$ and use the minor chord. Fit the total sweep $T=|\Delta\phi|$ using angular advances
+- Nominal advance is $a=a(p)$; the limits are $a_-=a(0.9p)$ and $a_+=a(\min\{1.1p,2R\})$
+- Test integer counts with $na_-\leq T\leq na_+$
+- The residual is now angular: $r=T-na$. Each gap can absorb $a_+-a$ when extending, or $a-a_-$ when contracting
+- If $r=0$, keep nominal gaps. Otherwise divide $|r|$ by the applicable capacity and round up to obtain $k$; reject that count if the capacity is zero or $k>n$
+- Use $a'=a+r/k$ for the adjusted gaps. Convert back to chord spacing with $g=2R\sin(a'/2)$
+- Equal adjusted chords and a centred block follow from equal angular advances on the same circle
+
+## Check the complete layout
+
+- The span equations establish spacing and endpoint agreement. They do not establish clearance
+- Check every pair of distinct real openings, including openings on different arms or guides; count shared openings once
+- Accept only when openings remain disjoint and satisfy the margin $m$. Virtual slits locate corner holes and are not punched
+
+## When a corner step must change
+
+- Prefer nominal corner steps; adjust only as needed to keep a neighbour on its finite arm, within $0.9p\leq q\leq1.1p$
+- Fix those neighbours before solving their adjoining free spans
 - A shallow turn can require an adjusted corner step: approximately $3.21\,\mathrm{mm}$ here
 - Usable angles depend on pitch, slit geometry, hole diameter, clearance and available arm geometry
 
@@ -222,10 +293,10 @@
 
 ## Reject impossible fits
 
-- Straight span, fixed endpoints, no protected gaps: a fit requires $0.9np\leq L\leq1.1np$ for an integer gap count $n\geq1$
-- Shortest possible fit: $0.9p$. Every length $L\geq4.5p$ fits the spacing bounds; shorter lengths have gaps between feasible ranges
+- If the feasible count range is empty, the span cannot be fitted within the bounds
+- Shortest possible straight span: $0.9p$. Every length $D\geq4.5p$ fits the spacing bounds; shorter lengths have gaps between feasible ranges
 - Clearance remains a separate check
-- At $p=3\,\mathrm{mm}$, every length from $13.5\,\mathrm{mm}$ fits; $7\,\mathrm{mm}$ fails because $2(3.3)<7<3(2.7)$
+- At $p=3\,\mathrm{mm}$, every length from $13.5\,\mathrm{mm}$ fits; $7\,\mathrm{mm}$ fails because $2\times3.3<7<3\times2.7$
 - Change the guide or its fixed features
 
 ![A5 and A7: no permitted gap count fits the fixed span](../examples/illustrated/assets/fit-rejected.gif)

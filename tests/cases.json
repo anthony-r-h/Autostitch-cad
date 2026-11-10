@@ -9600,6 +9600,65 @@
         "holdCentiseconds": 400,
         "connection": "Each arm connects to the shared round hole."
       }
+    },
+    {
+      "id": "ILL-MODEL-SOLUTION",
+      "source": "examples/illustrated/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A10"
+      ],
+      "animated": true,
+      "status": "Analytic worked solution combining a landmark and two-arm corner. Fixed features, span fitting and all-pairs clearance checked independently; not native CAD output.",
+      "inputs": {
+        "spanLength": 9.5,
+        "width": 0.3,
+        "margin": 0.2,
+        "holeDiameter": 0.5,
+        "view": {
+          "x": 440,
+          "y": 115,
+          "scale": 14
+        }
+      },
+      "assets": [
+        {
+          "path": "examples/illustrated/assets/model-solution"
+        }
+      ],
+      "terms": [
+        "Fixed pair",
+        "Shared hole",
+        "Free spans",
+        "Clearance checked"
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "L1",
+        "direction"
+      ],
+      "reveal": [
+        "Establish the guide, endpoints and landmark pair.",
+        "Continue each corner neighbour to its virtual slit; share the hole where their tips meet.",
+        "Identify three fixed free spans, each 9.5 mm long.",
+        "Show a 0.5 mm residual in each span, then split it across two 3.25 mm gaps.",
+        "Check every real opening pair, reveal thread and hold for four seconds."
+      ],
+      "threadReveal": {
+        "holdCentiseconds": 400,
+        "connection": "Positive slit tip to next negative tip; shared round-hole centre."
+      }
     }
   ]
 }

@@ -659,6 +659,46 @@ for(const [i,e] of xWorld.entries()) {
   for(const other of xWorld.slice(i+1))assert(segmentDistance(e.a,e.b,other.a,other.b)-.3>=.2);
 }
 
+const modelScene=scenes.find(s=>s.name==='model-solution');
+const modelSpec=catalog.illustrations.find(i=>i.id===modelScene.source),modelView=modelSpec.inputs.view;
+const modelSlits=slits(modelScene.name,modelView),modelHole=circle(modelScene.name,modelView);
+assert.equal(modelSlits.length,12);
+const modelFit=selectFit({D:modelSpec.inputs.spanLength,p:modelSpec.pitch});
+assert.equal(modelFit.n,3);assert.equal(modelFit.k,2);near(modelFit.correctedPitch,3.25);
+for(let arm=0;arm<3;arm++) {
+  const row=modelSlits.slice(arm*4,arm*4+4);
+  near(dist(row[0].center,row[3].center),9.5);
+  for(let i=0;i<3;i++)near(dist(row[i].center,row[i+1].center),i===0?3:3.25);
+}
+near(dist(modelSlits[3].center,modelSlits[4].center),3);
+const modelVirtuals=slits(modelScene.name,modelView,'virtual');
+near(dist(modelVirtuals[0].a,modelHole),0);near(dist(modelVirtuals[1].b,modelHole),0);
+near(dist(modelVirtuals[0].center,modelSlits[7].center),3);
+near(dist(modelVirtuals[1].center,modelSlits[8].center),3);
+const modelResiduals=modelScene.frames.find(f=>f.stage==='residuals').elements.filter(e=>e.kind==='residual-dimension');
+assert.equal(modelResiduals.length,3);modelResiduals.forEach(e=>near(dist(e.a,e.b)/modelView.scale,.5));
+const modelCenter=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+const modelInitial=modelScene.frames.find(f=>f.stage==='adjustment-start').elements.filter(e=>e.kind==='slit');
+const modelFinal=modelScene.final.filter(e=>e.kind==='slit');
+let previousModelError=Infinity;
+for(const f of modelScene.frames.filter(f=>['adjustment-start','planning-revision','clearance-checked'].includes(f.stage))) {
+  const row=f.elements.filter(e=>e.kind==='slit');assert.equal(row.length,12);
+  for(const i of [0,3,4,7,8,11])assert.deepEqual(row[i],modelInitial[i],'Fixed features must not move during fitting');
+  assert.deepEqual(f.elements.filter(e=>e.kind==='virtual'||e.kind==='hole'),modelScene.final.filter(e=>e.kind==='virtual'||e.kind==='hole'));
+  const error=row.reduce((sum,e,i)=>sum+dist(modelCenter(e),modelCenter(modelFinal[i])),0);
+  assert(error<=previousModelError+1e-6);previousModelError=error;
+}
+near(previousModelError,0);
+assert(!modelScene.final.some(e=>e.kind==='residual-dimension'));
+for(const [i,s] of modelSlits.entries()) {
+  near(s.angle,i<8?alpha:alpha-Math.PI/2);
+  near(i<8?s.center[1]:s.center[0],0);
+  assert(pointSegmentDistance(modelHole,s.a,s.b)-(modelSpec.inputs.width+modelSpec.inputs.holeDiameter)/2>=modelSpec.inputs.margin);
+  for(const other of modelSlits.slice(i+1))assert(segmentDistance(s.a,s.b,other.a,other.b)-modelSpec.inputs.width>=modelSpec.inputs.margin);
+}
+assert(modelScene.frames.findIndex(f=>f.stage==='incoming-neighbour')<modelScene.frames.findIndex(f=>f.stage==='incoming-virtual'));
+assert(modelScene.frames.findIndex(f=>f.stage==='outgoing-neighbour')<modelScene.frames.findIndex(f=>f.stage==='shared-hole'));
+
 for(const s of scenes) {
   const entry=catalog.illustrations.find(i=>i.assets.some(a=>a.path.endsWith('/'+s.name)));
   const asset=entry.assets.find(a=>a.path.endsWith('/'+s.name)),animated=asset.animated??entry.animated;

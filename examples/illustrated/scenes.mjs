@@ -316,6 +316,69 @@ function cornerScene() {
   return finish(s,result);
 }
 
+function modelSolutionScene() {
+  const spec=catalog.illustrations.find(item=>item.id==='ILL-MODEL-SOLUTION');
+  const {view,spanLength:D}=spec.inputs,p=spec.pitch,h=spec.slitLength/2;
+  const ui=axis(alpha),uo=axis(alpha-Math.PI/2);
+  const joint=[h*uo[0],-h*ui[1]],ci=add(joint,mul(ui,h)),co=add(joint,mul(uo,-h));
+  const near=[ci[0]-p,0],start=[near[0]-2*D-p,0],end=[0,co[1]-p-D];
+  const left=[start[0]+D,0],right=[left[0]+p,0],landmark=(left[0]+right[0])/2;
+  const spans=[{a:start,b:left,angle:alpha},{a:right,b:near,angle:alpha},
+    {a:[0,co[1]-p],b:end,angle:alpha-Math.PI/2}];
+  const fit=selectFit({D,p});
+  if(!fit)throw new Error('Model illustration has no span fit.');
+  const fitted=stations(fit,p),initial=fitted.map((v,i)=>i===fit.n?D:i*p);
+  const point=(span,t)=>add(span.a,mul(add(span.b,mul(span.a,-1)),t/D));
+  const base=[worldLine(start,[0,0],view),worldLine([0,0],end,view),
+    worldLine([0,0],ci,view,'extension',guideInk,1,true),worldLine([0,0],co,view,'extension',guideInk,1,true),
+    worldLine([landmark,-.8],[landmark,.8],view,'landmark',ink,2),
+    notationText(add(project([landmark,0],view),[0,27]),'L1','landmark'),
+    ...routeMarks(project(start,view),project(end,view),[1,0],[0,1]),
+    notationText(add(project(joint,view),[20,12]),'j','junction')];
+  const s=scene('model-solution','Fix features, fit free spans, check the layout',spec.id);
+  frame(s,base,100,'guides');
+  const fixed=[...base,...[start,left,right].flatMap(c=>opening(c,alpha,view)),...opening(end,alpha-Math.PI/2,view)];
+  frame(s,[...fixed,...termLabel([project([landmark,0],view)[0],55],'Fixed pair',project([landmark,.9],view))],140,'fixed-features');
+  fixed.push(...opening(near,alpha,view));frame(s,[...fixed],60,'incoming-neighbour');
+  fixed.push(...opening(ci,alpha,view,{virtual:true}));frame(s,[...fixed],80,'incoming-virtual');
+  fixed.push(...opening(spans[2].a,alpha-Math.PI/2,view));frame(s,[...fixed],60,'outgoing-neighbour');
+  fixed.push(...opening(co,alpha-Math.PI/2,view,{virtual:true}),hole(joint,view));
+  frame(s,[...fixed,...termLabel([485,55],'Shared hole',project(joint,view),[485,65])],140,'shared-hole');
+  const spanDimensions=spans.flatMap((span,i)=>measure(span.a,span.b,D.toFixed(2),view,i===2?65:-65).map(e=>
+    e.type==='text'&&i===2?{...e,p:add(e.p,[23,9])}:e));
+  frame(s,[...fixed,...spanDimensions,...termLabel([245,220],'Free spans')],160,'free-spans');
+  const construction=[...base,...opening(ci,alpha,view,{virtual:true}),...opening(co,alpha-Math.PI/2,view,{virtual:true}),hole(joint,view)];
+  const draw=(t,residual=false)=>{
+    const elements=[...construction],paths=[];
+    for(const [arm,span] of spans.entries()) {
+      const row=initial.map((v,i)=>lerp(v,fitted[i],t)),points=row.map(v=>point(span,v));
+      const changed=row.slice(1).map((v,i)=>Math.abs(v-row[i]-p)>1e-6),path=[];
+      for(const [i,c] of points.entries()) {
+        const slit=opening(c,span.angle,view,{marked:changed[i-1]||changed[i]});
+        elements.push(...slit);path.push(slit[0]);
+      }
+      paths.push(path);
+      if(residual) {
+        const a=point(span,fit.n*p),b=span.b,label=add(project(mul(add(a,b),.5),view),arm===2?[30,4]:[0,-23]);
+        elements.push(worldLine(a,b,view,'residual-dimension','#C62828',3),
+          {...text(label,(D-fit.n*p).toFixed(2)),kind:'residual-value',color:'#C62828'});
+      } else for(let i=0;i<changed.length;i++)if(changed[i])elements.push(...measure(
+        points[i],points[i+1],(row[i+1]-row[i]).toFixed(2),view,arm===2?44:36).map(e=>
+          arm===2&&e.type==='text'?{...e,p:add(e.p,[22,9])}:e));
+    }
+    return {elements,path:[...paths[0],...paths[1],construction.at(-1),...paths[2]]};
+  };
+  frame(s,draw(0,true).elements,180,'residuals');
+  frame(s,draw(0).elements,80,'adjustment-start');
+  for(let i=1;i<=30;i++)frame(s,draw(ease(i/30)).elements,8,'planning-revision');
+  const final=draw(1);
+  final.elements.push(...termLabel([245,325],'Clearance checked'),
+    line([167,320],[171,324],'accepted',ink,1.4),line([171,324],[178,315],'accepted',ink,1.4));
+  frame(s,final.elements,140,'clearance-checked');
+  s.threadPaths=[final.path];
+  return slitOutlines(finishThread(finish(s,final.elements)));
+}
+
 function junctionScene() {
   const input=catalog.illustrations.find(item=>item.id==='ILL-JUNCTION').inputs;
   const {view}=input,center=input.junction;
@@ -908,7 +971,7 @@ export function createScenes() {
     curvedCornerScene('A03','corner-arc-line','A curved and straight arm share one corner hole'),
     curvedCornerScene('A04','corner-arc-arc','Two curved arms share one corner hole'),
     curvedCornerScene('J08','corner-shallow','A shallow curved corner can need an adjusted corner step'),
-    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines).concat(curvedJunctionScene());
+    termsLayoutScene(),termsSlitScene(),termsJunctionScene(),termsChordScene()].map(annotateScene).map(finishThread).map(slitOutlines).concat(curvedJunctionScene(),modelSolutionScene());
 }
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));

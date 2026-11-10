@@ -132,6 +132,14 @@ Two fixed arms meet at $6^\circ$. Stitching approaches the junction from the wid
 
 ## Further model examples
 
+### From fixed features to a fitted layout
+
+`ILL-MODEL-SOLUTION` combines a straight landmark pair and a two-arm corner at $p=3\,\mathrm{mm}$. Build the fixed openings and terminal virtual slits, identify three $9.50\,\mathrm{mm}$ free spans, then show their $0.50\,\mathrm{mm}$ residuals. Each span fits with one nominal gap and two $3.25\,\mathrm{mm}$ gaps. Endpoints, landmark pair and corner neighbours remain fixed during adjustment.
+
+Local labels identify fixed features and free spans; red guide segments identify residuals. Adjusted-gap dimensions follow the moving slits. The clearance annotation is backed by all-pairs checks at slit width $0.3\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and margin $0.2\,\mathrm{mm}$. Thread then appears with the standard fade and four-second hold. Analytic construction and independent fit selector; no native CAD claim.
+
+![Fix features, distribute residuals and check the complete layout](assets/model-solution.gif)
+
 ### No permitted fit
 
 For a $7\,\mathrm{mm}$ span at $3\,\mathrm{mm}$ pitch, two equal gaps are too long and three are too short. Reject the span rather than move its fixed ends. `ILL-NOFIT`.

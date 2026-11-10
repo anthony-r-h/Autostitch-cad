@@ -1,4 +1,4 @@
-// Isolated reconstructions for docs/EXAMPLES_skeleton.md; no CAD writes.
+// Case reconstructions for docs/PITCH_skeleton.md; no CAD writes.
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';

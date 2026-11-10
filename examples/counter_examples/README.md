@@ -1,8 +1,6 @@
 # Counter-examples
 
-Sources and reproducible figures for [stitching examples](../../docs/EXAMPLES_skeleton.md): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.png`, supplied by Anthony.
-
-Keep these cases in `docs/EXAMPLES_skeleton.md` and their source material here. Add them to the pitch only when Anthony requests it.
+Sources and reproducible figures for the [stitching examples in the pitch](../../docs/PITCH_skeleton.md#even-big-fashion-gets-it-wrong): observed constructions and worked cases. Sellier source photograph: `hermies_sellier.png`, supplied by Anthony.
 
 Loewe source photograph: `loewe_mini_feather.png`, supplied by Anthony. The case isolates the rectangular strap below the swivel hook.
 
@@ -24,7 +22,7 @@ Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.p
 
 All use a $600\times750$ canvas. In the Sellier corner and Fagliano tip GIFs, the holes fade to the theme's secondary colour over $0.3\,\mathrm{s}$ when the thread appears, followed by a four-second hold. Colours, font and label backgrounds come from [colors.json](../illustrated/colors.json), using the same theme as the pitch. Static comparisons use the same final colours and a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
-Each worked case has a leather fill and edge outline, visible throughout the animation. Theme roles `leather` and `edge` control their colours. The wallet outline follows its top, right and bottom guidelines at a constant $2.2\,\mathrm{mm}$ offset in both constructions. The hanger and chape share stored edge polylines within each comparison; the strap tip uses an outward circular offset. The fill closes across cropped ends without an edge stroke. These surfaces provide context without changing the guides or fitting metrics.
+Each worked case has a leather edge outline, visible throughout the animation. The surface is transparent (`leatherOpacity: 0`); theme role `edge` controls the outline colour. The wallet outline follows its top, right and bottom guidelines at a constant $2.2\,\mathrm{mm}$ offset in both constructions. The hanger and chape share stored edge polylines within each comparison; the strap tip uses an outward circular offset. Cropped ends have no edge stroke. These outlines provide context without changing the guides or fitting metrics.
 
 The vertical flip illustrates reflection by horizontal foreshortening. Opening centres and the top row stay fixed; it is a change of placement convention, not movement of punched holes.
 

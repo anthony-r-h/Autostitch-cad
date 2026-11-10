@@ -8,6 +8,8 @@ The tool profile is slit length $\ell$, transverse slit width $w$, signed lean $
 
 Defaults are $p=3\,\mathrm{mm}$, $\ell=1.5\,\mathrm{mm}$, $\alpha=40^\circ$ and $d=0.5\,\mathrm{mm}$. Width and margin must be specified for an effective angle limit; see [limits](LIMITS.md).
 
+Obverse uses the reference lean; reverse mirrors it. The stitch choice is independent of material face and travel direction. Connected guides share one stitch choice and tool profile. Matched guides inherit the source choice, with their complete layout reflected when the material face changes.
+
 ## Solution policy
 
 Fix feature positions and protected gaps, fit each free span, then check every distinct opening pair. At a sharp two-arm corner, prefer nominal virtual-to-real steps. If a nominal neighbour lies outside its finite arm, choose the nearest step within the adjustment allowance that puts it on the arm. At a branching junction, fix each first slit at half-pitch chord distance from the shared hole. These neighbours then become fixed constraints for span fitting.

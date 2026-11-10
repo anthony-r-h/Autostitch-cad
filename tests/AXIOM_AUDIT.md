@@ -5,14 +5,14 @@ Rules: [axioms](../docs/AXIOMS.md). Reusable inputs and test identities: [cases.
 | Rule | Implementation and evidence |
 | --- | --- |
 | A1: guide geometry and order | `ast:g-range`, `ast:g-normalize`, `ast:g-solve`; gap counts, reversal, closure and redundant-subdivision checks. |
-| A2: fixed local slit shape | `ast:g-slit`; independent exported-axis and dimension measurements. |
+| A2: fixed local slit shape | `ast:g-slit`; independent exported-axis and dimension measurements; STITCH-G checks separate obverse/reverse lean, material face and travel direction. |
 | A3: direct pitch | Actual centre distances by gap type; circular pitch checked as chord distance. |
 | A4: landmark gap | Required centres checked around the reference station; no hole at the reference. |
 | A5: fixed features | Fixed corner neighbours and landmark pairs; S04/J06 protected gaps and L01/L02 fixed opening positions. |
 | A6: sharp corners | Independent virtual-tip reconstruction; straight/curved corner matrices, finite-arm checks and bounded corner-step adjustment. The reported shallow corner is catalogued with its exact coordinates. |
 | A7: bounded adjustment | Exported slit-to-slit gaps within $\pm10\%$; protected gaps unchanged. |
 | A8: shared openings | Smooth joins, closure reuse, connected identity and conflicting-opening rejection. |
-| A9: three or more arms | T/X shared holes; half-pitch neighbours on straight and circular arms; adjacent junction cases. |
+| A9: three or more arms | T/X shared holes; half-pitch neighbours on straight and circular arms; adjacent junction cases; reverse-stitch T, five-arm and curved-link regressions. |
 | A10: clearance | Finite slit/disk pair distances, positive width/margin checks and whole-set collision rejection. |
 
 Solution-policy checks cover fewest adjusted gaps, central placement and deterministic ties: 540 native fits against an independent selector, checked against 8,215 exhaustive count/block cases. F05/J05 reject infeasible spans. Corner checks reject ambiguous roots and do not rescue a failed construction with a farther root.

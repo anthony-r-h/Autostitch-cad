@@ -172,6 +172,14 @@
   (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Face" '("Front face" "Back face"))
   (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Face" (if (equal face -1) 1 0))
   (ast:ui-put "Face" "Enabled" (if astui:*guide* T nil))
+  ;; Native callbacks can refresh the previous palette before ui-open upgrades it.
+  (if (equal 2 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+    (progn
+      (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Stitch")
+      (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Stitch" '("Obverse" "Reverse"))
+      (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Stitch"
+        (if (= -1 (ast:g-get 'stitch-hand astui:*settings* 1)) 1 0))
+      (ast:ui-put "Stitch" "Enabled" (and astui:*guide* (not copy)))))
   (ast:ui-put "Match" "Caption" (if copy "Select source" "Match guide"))
   (ast:ui-put "Match" "Enabled" (and astui:*guide* (or (not copy) (and source (entget source)))))
   (ast:ui-put "Unmatch" "Enabled" (if (or copy (ast:cad-get 'repairable matching)) T nil))
@@ -345,6 +353,20 @@
             (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
               (ast:ui-put "Pitch" "Text" draft)
               (ast:ui-status "Face changed. Generate stitches to apply it."))))))))
+  (princ))
+
+(defun c:ASTUISTITCH (index text)
+  (if (not astui:*busy*)
+    (ast:ui-run '(lambda (/ result draft)
+      (if (ast:ui-ready)
+        (progn
+          (setq draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text")
+                result (ast:cad-set-stitch astui:*guide* (if (= index 1) -1 1)))
+          (if (ast:ui-result result)
+            (progn (ast:ui-adopt (ast:cad-read astui:*guide*))
+              (ast:ui-put "Pitch" "Text" draft)
+              (ast:ui-status "Stitch lean changed. Generate stitches to apply it."))
+            (ast:ui-fill)))))))
   (princ))
 
 (defun ast:ui-match-direction (settings source-total target-total station / start forward backward)
@@ -559,12 +581,13 @@
 
 (defun ast:ui-open (/ path loaded document state)
   (vl-catch-all-apply 'vl-cmdf (list "_OPENDCL"))
-  ;; Loading an existing project without ForceReload preserves its palette.
+  ;; Reload once per session when the control layout changes.
   ;; Querying an unloaded form first raises an OpenDCL modal runtime error.
   (setq path (findfile (strcat ast:*home* "/AUTOSTITCH.odcl")))
   (if path
     (progn
-      (setq loaded (vl-catch-all-apply 'dcl-Project-Load (list path nil "AUTOSTITCH")))
+      (setq loaded (vl-catch-all-apply 'dcl-Project-Load
+        (list path (not (equal 2 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
       (if (or (vl-catch-all-error-p loaded) (not loaded))
         (progn
           (setq loaded nil)
@@ -572,6 +595,7 @@
     (princ "\nAutostitch: AUTOSTITCH.odcl is missing beside AUTOSTITCH.lsp."))
   (if loaded
     (progn
+      (vl-bb-set 'ASTUI-PALETTE-VERSION 2)
       (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
       (if (not (equal astui:*document* document))
         (setq astui:*guide* nil ast:*unit-factor* nil))

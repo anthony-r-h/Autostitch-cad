@@ -6,6 +6,8 @@ The intent is to turn a drawn seam path into discrete, oriented openings that ac
 
 Source guides and their saved settings define the stitching. Generated openings, thread display and annotations are replaceable drawing output. Guides remain editable with native CAD tools; regeneration is explicit. Connected guides form one stitch line, and matched guides on other pattern pieces receive the source layout.
 
+Choose **Obverse** or **Reverse** under **Stitch lean** in the palette, then use **Generate stitches**. The choice applies to every guide in a connected stitch line; matched copies inherit it from their source. **Face** selects the material face shown, and **Reverse travel** changes guide traversal. Existing drawings default to obverse. Older connected output is marked for regeneration to apply the half-pitch junction rule; its geometry remains intact until generation succeeds.
+
 The current runtime requires Windows, BricsCAD V22 with .NET support and OpenDCL 10.1.2.2. Supported geometry and unresolved rules are documented in [Limits](docs/LIMITS.md).
 
 ## Code and runtime files

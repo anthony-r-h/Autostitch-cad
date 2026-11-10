@@ -9357,7 +9357,8 @@
         "bottomSteps": 4,
         "hWidth": 3,
         "hHeight": 3,
-        "leatherEdge": [[-21, 2.2], [2.2, 2.2], [2.2, -14.8], [-21, -14.8]]
+        "leatherEdgeOffset": 2.2,
+        "leatherCropLeft": -21
       },
       "assets": [
         {

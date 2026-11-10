@@ -61,7 +61,10 @@ function walletScene(diagonal=false) {
     diagonal?'Shared diagonal corner slit with a decorative H':'Top, right and bottom stitching with a decorative H',
     diagonal?'ILL-SELLIER-WALLET-DIAGONAL':'ILL-SELLIER-WALLET');
   const circles=g.decoration.map(column=>column.map(p=>hole(p,view)));
-  const base=[...leatherEdge(g.spec.leatherEdge,view),
+  const margin=g.spec.leatherEdgeOffset,edgeRight=g.right[0][0]+margin;
+  const edgeTop=g.top[0][1]+margin,edgeBottom=g.end[1]-margin;
+  const outline=[[g.spec.leatherCropLeft,edgeTop],[edgeRight,edgeTop],[edgeRight,edgeBottom],[g.spec.leatherCropLeft,edgeBottom]];
+  const base=[...leatherEdge(outline,view),
     worldLine(g.start,vertex,view),worldLine(vertex,g.right.at(-1),view),worldLine(g.bottom[0],g.end,view),
     ...routeMarks(project(g.start,view),project(g.end,view),[1,0],[-1,0]).map(e=>diagonal&&e.kind==='notation-start'?{...e,p:add(e.p,[0,8])}:e),
     notationText(add(project(g.joint,view),[18,-12]),'j','junction'),...circles.flat()];
@@ -169,8 +172,7 @@ function speedyScenes() {
         }
       }
       const point=project(solved?corner.joint:vertices[i],view),outward=add(point,[-300,-180]);
-      const labelOffset=mul(outward,34/Math.hypot(...outward));
-      if(i<2)labelOffset[0]+=i===0?-12:12;
+      const labelOffset=i<2?[i===0?-20:20,-8]:mul(outward,34/Math.hypot(...outward));
       result.push(notationText(add(point,labelOffset),'j','junction'));
     }
     const start=topRow[Math.floor(topRow.length/2)],index=path.indexOf(start),ordered=[...path.slice(index),...path.slice(0,index)];

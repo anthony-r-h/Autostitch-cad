@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Shared diagonal corner slit with a decorative H</title><desc id="description">Analytic illustration of ILL-SELLIER-WALLET-DIAGONAL. Static stitch diagram.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-34.148571428571415 136.6993664000969) scale(1.2571428571428571)">
-<polygon class="leather-fill" points="57,32.4 474.6,32.4 474.6,338.4 57,338.4" fill="#2D2F31" fill-opacity="1"/>
-<line class="leather-edge" x1="57" y1="32.4" x2="474.6" y2="32.4" stroke="#A6A9AE" stroke-width="1.2"/>
-<line class="leather-edge" x1="474.6" y1="32.4" x2="474.6" y2="338.4" stroke="#A6A9AE" stroke-width="1.2"/>
-<line class="leather-edge" x1="474.6" y1="338.4" x2="57" y2="338.4" stroke="#A6A9AE" stroke-width="1.2"/>
+<g transform="translate(-34.148571428571415 141.35079497152546) scale(1.2571428571428571)">
+<polygon class="leather-fill" points="57,13.380767287 474.6,13.380767287 474.6,358.333877076 57,358.333877076" fill="#3A3C3F" fill-opacity="1"/>
+<line class="leather-edge" x1="57" y1="13.380767287" x2="474.6" y2="13.380767287" stroke="#A6A9AE" stroke-width="1.2"/>
+<line class="leather-edge" x1="474.6" y1="13.380767287" x2="474.6" y2="358.333877076" stroke="#A6A9AE" stroke-width="1.2"/>
+<line class="leather-edge" x1="474.6" y1="358.333877076" x2="57" y2="358.333877076" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="guide" x1="165" y1="52.980767287" x2="435" y2="52.980767287" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="435" y1="52.980767287" x2="435" y2="214.980767287" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="331.246890211" y1="318.733877076" x2="169.246890211" y2="318.733877076" stroke="#797E87" stroke-width="1"/>

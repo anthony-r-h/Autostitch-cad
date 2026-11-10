@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Autostitch construction of the Speedy handle chape</title><desc id="description">Analytic illustration of ILL-LV-SPEEDY-CHAPE. Static stitch diagram.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-162.30427141630184 84.28363406561095) scale(1.55)">
-<polygon class="leather-fill" points="223.84,9.92 223.84,48 160,235.04 300,356 440,235.04 376.16,48 376.16,9.92" fill="#2D2F31" fill-opacity="1"/>
+<g transform="translate(-162.30427141630184 74.33100000000002) scale(1.55)">
+<polygon class="leather-fill" points="223.84,9.92 223.84,48 160,235.04 300,356 440,235.04 376.16,48 376.16,9.92" fill="#3A3C3F" fill-opacity="1"/>
 <line class="leather-edge" x1="223.84" y1="9.92" x2="223.84" y2="48" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="223.84" y1="48" x2="160" y2="235.04" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="160" y1="235.04" x2="300" y2="356" stroke="#A6A9AE" stroke-width="1.2"/>
@@ -52,7 +52,7 @@
 <line class="slit" x1="334.371289422" y1="53.399415921" x2="347.240836067" y2="42.600584079" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="335.206913315,54.395273697 348.076459959,43.596441855 346.405212174,41.604726303 333.53566553,52.403558145" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="336.477061632" y1="55.908977517" x2="332.265517213" y2="50.889854326" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="349.346608276" y1="45.110145674" x2="345.135063858" y2="40.091022483" stroke="#83BDFC" stroke-width="0.8"/>
-<rect class="label-background" x="215.87728855" y="-2.162108472" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="222.77728855" y="10.877891528" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
+<rect class="label-background" x="220.111289422" y="21.560584079" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="227.011289422" y="34.600584079" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <circle class="hole" cx="367.971289422" cy="53.399415921" r="2.8" fill="#A6A9AE"/>
 <line class="extension" x1="360.48" y1="48" x2="374.406062745" y2="48" stroke="#797E87" stroke-width="1" stroke-dasharray="4 4"/>
 <line class="virtual" x1="367.971289422" y1="53.399415921" x2="380.840836067" y2="42.600584079" stroke="#A6A9AE" stroke-width="1.5" stroke-dasharray="4 4"/>
@@ -68,7 +68,7 @@
 <line class="adjustment-mark" x1="395.373926088" y1="177.692161182" x2="398.803677148" y2="172.109553219" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="adjustment-mark" x1="409.688305481" y1="186.486394668" x2="413.118056541" y2="180.903786705" stroke="#83BDFC" stroke-width="0.8"/>
 <line class="slit" x1="407.714054556" y1="206.776616015" x2="422.028433949" y2="215.570849501" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="407.033548394,207.884276325 421.347927786,216.678509811 422.708940112,214.463189191 408.394560719,205.668955705" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="389.154305288" y="10.4038388" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="396.054305288" y="23.4438388" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
+<rect class="label-background" x="381.071289422" y="32.359415921" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="387.971289422" y="45.399415921" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <circle class="hole" cx="418.339307494" cy="238.65237483" r="2.8" fill="#A6A9AE"/>
 <line class="extension" x1="420.96" y1="229.44" x2="425.496497191" y2="243.049491572" stroke="#797E87" stroke-width="1" stroke-dasharray="4 4"/>
 <line class="virtual" x1="418.339307494" y1="238.65237483" x2="432.653686887" y2="247.446608315" stroke="#A6A9AE" stroke-width="1.5" stroke-dasharray="4 4"/>

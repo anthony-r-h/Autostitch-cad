@@ -179,6 +179,11 @@ for(const layout of [speedyReference,speedySolved]) {
   assert.equal(layout.final.filter(e=>e.kind==='notation-junction').length,5);
   assert.equal(layout.final.filter(e=>e.kind==='notation-start').length,1);
   assert(!layout.final.some(e=>e.kind==='notation-end'));
+  const junctionLabels=layout.final.filter(e=>e.kind==='notation-junction');
+  for(let i=0;i<2;i++) {
+    const joint=layout===speedySolved?spHoles[i].p:[sv.x+vertices[i][0]*sv.scale,sv.y-vertices[i][1]*sv.scale];
+    near(junctionLabels[i].p[0]-joint[0],i===0?-20:20);near(junctionLabels[i].p[1]-joint[1],-8);
+  }
   for(const p of points) {
     const incoming=p.type==='circle'?p.p:p.a,outgoing=p.type==='circle'?p.p:p.b;
     assert.equal(threads.filter(e=>distance(e.b,incoming)<1e-6).length,1);
@@ -311,15 +316,26 @@ for(const [i,[a,b]] of axes.entries()) {
 for(const [i,c] of centres.entries())for(const d of centres.slice(i+1))assert(distance(c,d)-.5>=.2);
 }
 
-// Piece surfaces remain behind the stitching and identical across comparisons and phases.
+// Wallet edges follow the guides at the same offset, even when a construction shifts a row.
+for(const layout of [wallet,diagonalWallet]) {
+  const edge=layout.final.filter(e=>e.kind==='leather-edge'),guide=layout.final.filter(e=>e.kind==='guide');
+  near((guide[0].a[1]-edge[0].a[1])/wv.scale,2.2);
+  near((edge[1].a[0]-guide[1].a[0])/wv.scale,2.2);
+  near((edge[2].a[1]-guide[2].a[1])/wv.scale,2.2);
+}
+const walletCanvases=portraitScenes(scenes).filter(s=>s.name.startsWith('sellier-wallet')).map(s=>s.canvas);
+near(walletCanvases[0].scale,walletCanvases[1].scale);
+// Piece surfaces remain behind the stitching and fixed through every phase.
 for(const [reference,solution] of [[2,1],[3,4],[5,6],[7,8]]) {
   const edge=scenes[reference].final.filter(e=>e.kind==='leather-edge');
   const fill=scenes[reference].final.filter(e=>e.kind==='leather-fill');
   assert(edge.length>0);
   assert.equal(fill.length,1);assert.equal(fill[0].color,'leather');
   assert.deepEqual(fill[0].points,[edge[0].a,...edge.map(e=>e.b)]);
-  assert.deepEqual(edge,scenes[solution].final.filter(e=>e.kind==='leather-edge'));
-  assert.deepEqual(fill,scenes[solution].final.filter(e=>e.kind==='leather-fill'));
+  if(reference!==2) {
+    assert.deepEqual(edge,scenes[solution].final.filter(e=>e.kind==='leather-edge'));
+    assert.deepEqual(fill,scenes[solution].final.filter(e=>e.kind==='leather-fill'));
+  }
   for(const name of Object.keys(colorConfig.themes)) {
     const theme=themeFor(name);
     assert.notEqual(theme.leather,theme.background);
@@ -328,6 +344,8 @@ for(const [reference,solution] of [[2,1],[3,4],[5,6],[7,8]]) {
   }
   for(const index of [reference,solution]) {
     const layout=scenes[index];
+    const edge=layout.final.filter(e=>e.kind==='leather-edge'),fill=layout.final.filter(e=>e.kind==='leather-fill');
+    assert.deepEqual(fill[0].points,[edge[0].a,...edge.map(e=>e.b)]);
     for(const f of [...layout.frames,{elements:layout.final}]) {
       assert.deepEqual(f.elements.filter(e=>e.kind==='leather-edge'),edge);
       assert.deepEqual(f.elements.filter(e=>e.kind==='leather-fill'),fill);
@@ -372,7 +390,7 @@ for(const s of scenes) {
   }
 }
 // Keep the published thread-length totals tied to the final drawn geometry.
-const exampleText=fs.readFileSync(new URL('docs/EXAMPLES_skeleton.md',root),'utf8');
+const exampleText=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 assert(!exampleText.includes('## Corner treatments'));
 const metricRows=exampleText.split('\n').filter(line=>/^\| (Reference|Autostitch) \|/.test(line));
 const documentOrder=[2,1,3,4,5,6,7,8];assert.equal(metricRows.length,documentOrder.length);

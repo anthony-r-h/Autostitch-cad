@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Speedy handle chape: five slit corners without mirrored runs</title><desc id="description">Analytic illustration of ILL-LV-SPEEDY-CHAPE. Static stitch diagram.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-162.30427141630184 84.28363406561095) scale(1.55)">
-<polygon class="leather-fill" points="223.84,9.92 223.84,48 160,235.04 300,356 440,235.04 376.16,48 376.16,9.92" fill="#2D2F31" fill-opacity="1"/>
+<g transform="translate(-162.30427141630184 74.33100000000002) scale(1.55)">
+<polygon class="leather-fill" points="223.84,9.92 223.84,48 160,235.04 300,356 440,235.04 376.16,48 376.16,9.92" fill="#3A3C3F" fill-opacity="1"/>
 <line class="leather-edge" x1="223.84" y1="9.92" x2="223.84" y2="48" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="223.84" y1="48" x2="160" y2="235.04" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="160" y1="235.04" x2="300" y2="356" stroke="#A6A9AE" stroke-width="1.2"/>
@@ -47,7 +47,7 @@
 <line class="slit" x1="263.325226678" y1="53.399415921" x2="276.194773322" y2="42.600584079" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="264.16085057,54.395273697 277.030397215,43.596441855 275.35914943,41.604726303 262.489602785,52.403558145" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="293.565226678" y1="53.399415921" x2="306.434773322" y2="42.600584079" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="294.40085057,54.395273697 307.270397215,43.596441855 305.59914943,41.604726303 292.729602785,52.403558145" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="323.805226678" y1="53.399415921" x2="336.674773322" y2="42.600584079" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="324.64085057,54.395273697 337.510397215,43.596441855 335.83914943,41.604726303 322.969602785,52.403558145" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="206.457610253" y="4.050022377" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="213.357610253" y="17.090022377" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
+<rect class="label-background" x="212.62" y="26.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="219.52" y="40" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <line class="slit" x1="352.102746409" y1="48.61775583" x2="368.857253591" y2="47.38224417" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="352.198351477,49.914235552 368.95285866,48.678723893 368.761648523,46.085764448 352.00714134,47.321276107" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="adjusted-gap" x1="360.48" y1="48" x2="370.56" y2="78.24" stroke="#83BDFC" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="370.56" y1="78.24" x2="380.64" y2="108.48" stroke="#83BDFC" stroke-width="2.2"/>
@@ -60,7 +60,7 @@
 <line class="slit" x1="383.562810304" y1="134.322883257" x2="397.877189696" y2="143.117116743" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="382.882304141,135.430543567 397.196683534,144.224777053 398.557695859,142.009456433 384.243316466,133.215222947" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="393.642810304" y1="164.562883257" x2="407.957189696" y2="173.357116743" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="392.962304141,165.670543567 407.276683534,174.464777053 408.637695859,172.249456433 394.323316466,163.455222947" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="403.722810304" y1="194.802883257" x2="418.037189696" y2="203.597116743" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="403.042304141,195.910543567 417.356683534,204.704777053 418.717695859,202.489456433 404.403316466,193.695222947" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="379.742389747" y="4.050022377" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="386.642389747" y="17.090022377" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
+<rect class="label-background" x="373.58" y="26.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="380.48" y="40" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <line class="slit" x1="417.527312988" y1="221.77340624" x2="424.392687012" y2="237.10659376" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="416.340816335,222.304655421 423.206190359,237.63784294 425.579183665,236.575344579 418.713809641,221.24215706" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="adjusted-gap" x1="420.96" y1="229.44" x2="396.768" y2="249.6" stroke="#83BDFC" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="396.768" y1="249.6" x2="372.576" y2="269.76" stroke="#83BDFC" stroke-width="2.2"/>

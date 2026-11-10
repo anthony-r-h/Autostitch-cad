@@ -201,7 +201,7 @@
 - Acute junction: the nearest pair overlaps; the next pair misses the required margin; farther pairs pass
 - Example: included angle $6^\circ$, slit width $w=0.3\,\mathrm{mm}$, margin $m=0.2\,\mathrm{mm}$
 
-![A10: clearance fails near the acute junction and passes farther along its arms](../examples/illustrated/assets/axiom-clearance.gif)
+![A10: clearance fails near the acute junction and passes farther along its arms](../examples/illustrated/assets/axiom-clearance.png)
 
 # Model and solution
 

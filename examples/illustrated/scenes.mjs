@@ -515,7 +515,6 @@ function clearanceScene() {
   const centre=(arm,step)=>mul(directions[arm],virtualStations[arm]+step);
   const base=directions.flatMap((d,i)=>[worldLine([0,0],centre(i,12),view),worldLine([0,0],centre(i,0),view,'extension',guideInk,1,true)]);
   const s=scene('axiom-clearance','Clearance fails near an acute junction and passes farther away','A10');
-  frame(s,base,90,'guides');
   const profiles=[],checks=[];
   const drawing=()=>[...base,...profiles,...checks];
   for(let n=input.steps.length-1;n>=0;n--) {
@@ -524,16 +523,14 @@ function clearanceScene() {
       const a=add(point,mul(u,-1)),b=add(point,u);
       profiles.push(worldLine(a,b,view,'slit',ink,input.width*view.scale));
     }
-    frame(s,drawing(),90,'approach-junction');
     const x=(project(centre(0,input.steps[n]),view)[0]+project(centre(1,input.steps[n]),view)[0])/2;
     const p=[x,275],gap=input.edgeClearances[n],valid=gap>=input.margin;
     if(valid)checks.push(line(add(p,[-5,0]),add(p,[-1,4]),'accepted',ink,1.4),line(add(p,[-1,4]),add(p,[6,-5]),'accepted',ink,1.4));
     else checks.push(line(add(p,[-4,-4]),add(p,[4,4]),'rejected',ink,1.4),line(add(p,[-4,4]),add(p,[4,-4]),'rejected',ink,1.4));
     checks.push(text([x,303],gap<0?'Overlap':gap.toFixed(2)));
-    frame(s,drawing(),150,valid?'clearance-pass':'clearance-fail');
   }
   const virtuals=directions.flatMap((d,i)=>opening(centre(i,0),alpha+(i===0?half:-half),view,{virtual:true}));
-  return finish(s,[...drawing(),...virtuals,hole(joint,view)]);
+  return {...s,final:[...drawing(),...virtuals,hole(joint,view)],staticGif:true};
 }
 
 function noFitScene() {

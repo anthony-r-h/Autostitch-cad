@@ -8854,11 +8854,12 @@
       "axioms": [
         "A10"
       ],
-      "animated": true,
+      "animated": false,
       "status": "Deliberately rejected acute-corner layout; outer pairs pass while inner pairs fail clearance.",
       "assets": [
         {
-          "path": "examples/illustrated/assets/axiom-clearance"
+          "path": "examples/illustrated/assets/axiom-clearance",
+          "staticGif": true
         }
       ],
       "inputs": {
@@ -8887,10 +8888,7 @@
       "terms": [
         "Overlap"
       ],
-      "threadReveal": {
-        "holdCentiseconds": 400,
-        "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
-      }
+      "display": "Static construction view; no thread or fading."
     },
     {
       "id": "ILL-NOFIT",

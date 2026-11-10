@@ -271,15 +271,11 @@ const clearanceVirtuals=slits('axiom-clearance',clearanceView,'virtual'),clearan
 clearanceVirtuals.forEach((v,i)=>{near(dist(v.b,clearanceJoint),0);near(dist(v.center,clearanceRows[i][0].center),3);});
 const clearanceScene=scenes.find(s=>s.name==='axiom-clearance');
 assert(clearanceScene.final.filter(e=>e.kind==='slit').every(e=>e.outline&&!e.round),'Clearance slits must use the same sharp rectangular outlines as other figures.');
-let fixedSlits=[];
-for(const frame of clearanceScene.frames) {
-  assert.deepEqual(frame.elements.filter(e=>e.kind==='notation-junction'),clearanceScene.final.filter(e=>e.kind==='notation-junction'));
-  const firstSlit=frame.elements.findIndex(e=>e.kind==='slit');
-  if(firstSlit>=0)assert(frame.elements.slice(firstSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
-  if(frame.stage==='reset')continue;
-  const current=frame.elements.filter(e=>e.kind==='slit');assert.deepEqual(current.slice(0,fixedSlits.length),fixedSlits);fixedSlits=current;
-}
-assert.deepEqual(clearanceScene.frames.filter(f=>['clearance-pass','clearance-fail'].includes(f.stage)).map(f=>f.stage),['clearance-pass','clearance-pass','clearance-fail','clearance-fail']);
+assert.equal(clearanceScene.frames.length,0);
+assert(!clearanceScene.final.some(e=>e.kind==='thread'));
+assert.deepEqual(displayElements(clearanceScene.final),clearanceScene.final,'Construction view must not fade');
+const firstClearanceSlit=clearanceScene.final.findIndex(e=>e.kind==='slit');
+assert(clearanceScene.final.slice(firstClearanceSlit).every(e=>!['guide','clearance-envelope'].includes(e.kind)), 'Construction must not obscure a physical overlap');
 
 assert.equal(selectFit({D:7,p:3}),null);
 const rejected=slits('fit-rejected',{x:160,y:190,scale:40});

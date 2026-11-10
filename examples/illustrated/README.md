@@ -16,7 +16,8 @@ Use **Build → Adjustment → Stitch**, in that order.
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
 - Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with four-second holds at both positions
 - Static stitched figures are the final Stitch state, including the same lightened measurements
-- Keep existing image paths working when changing animation to static. Vertex point exports a single-frame GIF alongside its PNG/SVG stills; the GIF contains no animation or loop
+- Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks
+- Keep existing image paths working when changing animation to static. Vertex point and Clearance export single-frame GIFs alongside their PNG/SVG stills; these GIFs contain no animation or loop
 - Use the same display rules in every example. Finer frame stages belong within these three phases; review the transitions and final still at $600\,\mathrm{px}$ width
 - Adjusted gaps turn blue on the guide between slit centres, following the curve on circular guides. Marks and dimensions also turn blue. During Stitch, dimensions fade to light blue; guide segments and marks retain blue. Nominal measurements stay grey, residuals and angle annotations stay red
 
@@ -127,9 +128,9 @@ Gap bounds, fixed neighbours, endpoint positions and opening clearance are check
 
 ### Check the whole layout: A10
 
-Two fixed arms meet at $6^\circ$. Stitching approaches the junction from the wide end: two pairs pass, the next leaves only $0.04\,\mathrm{mm}$ clearance, and the nearest pair overlaps. Checks and crosses identify the result; numbers use the model's conservative clearance calculation in millimetres. Slits use sharp rectangular outlines at the specified width. With $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$, the complete layout is invalid. `ILL-CLEARANCE`.
+Two fixed arms meet at $6^\circ$. Two outer pairs pass, the next leaves only $0.04\,\mathrm{mm}$ clearance, and the nearest pair overlaps. Checks and crosses identify the result; numbers use the model's conservative clearance calculation in millimetres. Static construction view with sharp rectangular slits, no thread and no fading. With $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$, the complete layout is invalid. `ILL-CLEARANCE`.
 
-![Pairs farther from the junction pass clearance; pairs near it fail](assets/axiom-clearance.gif)
+![Pairs farther from the junction pass clearance; pairs near it fail](assets/axiom-clearance.png)
 
 ## Further model examples
 

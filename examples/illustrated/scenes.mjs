@@ -438,14 +438,13 @@ function clearanceScene() {
   const base=directions.flatMap((d,i)=>[worldLine([0,0],centre(i,12),view),worldLine([0,0],centre(i,0),view,'extension',guideInk,1,true)]);
   const s=scene('axiom-clearance','Clearance fails near an acute junction and passes farther away','A10');
   frame(s,base,90,'guides');
-  const envelopes=[],profiles=[],checks=[];
-  const drawing=()=>[...envelopes,...base,...profiles,...checks];
+  const profiles=[],checks=[];
+  const drawing=()=>[...base,...profiles,...checks];
   for(let n=input.steps.length-1;n>=0;n--) {
     for(let arm=0;arm<2;arm++) {
       const point=centre(arm,input.steps[n]),u=mul(axis(alpha+(arm===0?half:-half)),h);
       const a=add(point,mul(u,-1)),b=add(point,u);
-      envelopes.push({...worldLine(a,b,view,'clearance-envelope','#E3E3E3',(input.width+input.margin)*view.scale),round:true});
-      profiles.push({...worldLine(a,b,view,'slit',ink,input.width*view.scale),round:true});
+      profiles.push(worldLine(a,b,view,'slit',ink,input.width*view.scale));
     }
     frame(s,drawing(),90,'approach-junction');
     const x=(project(centre(0,input.steps[n]),view)[0]+project(centre(1,input.steps[n]),view)[0])/2;

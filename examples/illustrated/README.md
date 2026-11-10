@@ -126,7 +126,7 @@ Gap bounds, fixed neighbours, endpoint positions and opening clearance are check
 
 ### Check the whole layout: A10
 
-Two fixed arms meet at $6^\circ$. Stitching approaches the junction from the wide end: two pairs pass, the next leaves only $0.04\,\mathrm{mm}$ clearance, and the nearest pair overlaps. Checks and crosses identify the result; numbers are edge-to-edge clearance in millimetres. Light envelopes show the required allowance. With $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$, the complete layout is invalid. `ILL-CLEARANCE`.
+Two fixed arms meet at $6^\circ$. Stitching approaches the junction from the wide end: two pairs pass, the next leaves only $0.04\,\mathrm{mm}$ clearance, and the nearest pair overlaps. Checks and crosses identify the result; numbers use the model's conservative clearance calculation in millimetres. Slits use sharp rectangular outlines at the specified width. With $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$, the complete layout is invalid. `ILL-CLEARANCE`.
 
 ![Pairs farther from the junction pass clearance; pairs near it fail](assets/axiom-clearance.gif)
 

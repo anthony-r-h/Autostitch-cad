@@ -215,7 +215,7 @@ for(const f of branchScene.frames.filter(f=>['free-spans','planning-revision','r
 const clearanceView={x:75,y:200,scale:35};
 const clearance=slits('axiom-clearance',clearanceView);assert.equal(clearance.length,8);
 const clearanceInput=catalog.illustrations.find(i=>i.id==='ILL-CLEARANCE').inputs;
-for(const s of clearance){near(+s.element['stroke-width']/35,.3);assert.equal(s.element['stroke-linecap'],'round');}
+for(const s of clearance){near(+s.element['stroke-width']/35,.3);assert.equal(s.element['stroke-linecap'],undefined);}
 // Independently measure finite axes from the exported SVG, including intersections.
 function pointSegmentDistance(p,a,b) {
   const d=[b[0]-a[0],b[1]-a[1]],t=Math.max(0,Math.min(1,((p[0]-a[0])*d[0]+(p[1]-a[1])*d[1])/(d[0]**2+d[1]**2)));
@@ -237,12 +237,22 @@ const edgeClearances=clearanceRows[0].map(a=>Math.min(...clearanceRows[1].map(b=
 edgeClearances.forEach((gap,i)=>near(gap,clearanceInput.edgeClearances[i]));
 assert(edgeClearances[0]<0);assert(edgeClearances[1]>0&&edgeClearances[1]<clearanceInput.margin);
 assert(edgeClearances.slice(2).every(g=>g>clearanceInput.margin));
+const rectangle=s=>{
+  const normal=[-Math.sin(s.angle)*clearanceInput.width/2,Math.cos(s.angle)*clearanceInput.width/2];
+  return [[s.a,1],[s.b,1],[s.b,-1],[s.a,-1]].map(([p,sign])=>p.map((v,i)=>v+sign*normal[i]));
+};
+const rectangleDistance=(a,b)=>Math.min(...a.flatMap((p,i)=>b.map((q,j)=>segmentDistance(p,a[(i+1)%4],q,b[(j+1)%4]))));
+const rectangularClearances=clearanceRows[0].map(a=>Math.min(...clearanceRows[1].map(b=>rectangleDistance(rectangle(a),rectangle(b)))));
+near(rectangularClearances[0],0);
+assert(rectangularClearances[1]>0&&rectangularClearances[1]<clearanceInput.margin);
+assert(rectangularClearances.slice(2).every(g=>g>clearanceInput.margin));
 const clearanceSvg=readSvg('axiom-clearance');
 assert.equal(clearanceSvg.elements.filter(e=>e.class==='rejected').length,4);
 assert.equal(clearanceSvg.elements.filter(e=>e.class==='accepted').length,4);
 const clearanceVirtuals=slits('axiom-clearance',clearanceView,'virtual'),clearanceJoint=circle('axiom-clearance',clearanceView);
 clearanceVirtuals.forEach((v,i)=>{near(dist(v.b,clearanceJoint),0);near(dist(v.center,clearanceRows[i][0].center),3);});
 const clearanceScene=scenes.find(s=>s.name==='axiom-clearance');
+assert(clearanceScene.final.filter(e=>e.kind==='slit').every(e=>e.outline&&!e.round),'Clearance slits must use the same sharp rectangular outlines as other figures.');
 let fixedSlits=[];
 for(const frame of clearanceScene.frames) {
   assert.deepEqual(frame.elements.filter(e=>e.kind==='notation-junction'),clearanceScene.final.filter(e=>e.kind==='notation-junction'));

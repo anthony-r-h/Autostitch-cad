@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Fix landmarks and junctions, then fit the free spans</title><desc id="description">Analytic illustration of ILL-MODEL-SOLUTION. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(21.36649607342764 120.68933478237003) scale(0.9506759161894678)">
+<g transform="translate(21.36649607342764 104.25452488124455) scale(0.9506759161894678)">
 <line class="guide" x1="44.792736554" y1="90" x2="380" y2="90" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="380" y1="90" x2="380" y2="305.705803249" stroke="#797E87" stroke-width="1"/>
 <line class="extension" x1="380" y1="90" x2="394.792736554" y2="90" stroke="#797E87" stroke-width="1" stroke-dasharray="4 4"/>
@@ -85,10 +85,6 @@
 <line class="guide" x1="518.022678569" y1="377.92615927" x2="520.47137007" y2="381.554871672" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="520.47137007" y1="381.554871672" x2="522.824683762" y2="385.246153079" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="522.824683762" y1="385.246153079" x2="525.081021782" y2="388.997497171" stroke="#797E87" stroke-width="1"/>
-<line class="landmark" x1="198.792736554" y1="101.2" x2="198.792736554" y2="78.8" stroke="#F5F3ED" stroke-width="2"/>
-<rect class="label-background" x="186.432736554" y="101.752" width="24.72" height="24.16" fill="#2D2F31"/><text class="notation-landmark" x="198.792736554" y="117" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED"><tspan x="196.020736554" y="117" font-size="14.4" font-style="italic">l</tspan><tspan x="201.384736554" y="120.6" font-size="10.08" font-style="normal">1</tspan></text>
-<line class="landmark" x1="210.981360437" y1="386.190965756" x2="195.258696291" y2="370.236097152" stroke="#F5F3ED" stroke-width="2"/>
-<rect class="label-background" x="165.760028364" y="350.965531454" width="24.72" height="24.16" fill="#2D2F31"/><text class="notation-landmark" x="178.120028364" y="366.213531454" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED"><tspan x="175.348028364" y="366.213531454" font-size="14.4" font-style="italic">l</tspan><tspan x="180.712028364" y="369.813531454" font-size="10.08" font-style="normal">2</tspan></text>
 <rect class="label-background" x="25.112736554" y="57.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="32.792736554" y="73" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="62.792736554" y1="90" x2="74.792736554" y2="90" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="74.792736554" y1="90" x2="68.792736554" y2="86.5" stroke="#CECECE" stroke-width="1.1"/>
@@ -97,6 +93,10 @@
 <rect class="label-background" x="529.401021782" y="388.749497171" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="537.081021782" y="403.997497171" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="399.849269902" y="95.709269902" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="406.749269902" y="108.749269902" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <rect class="label-background" x="373.1" y="269.665803249" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="380" y="282.705803249" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
+<line class="landmark" x1="198.792736554" y1="101.2" x2="198.792736554" y2="78.8" stroke="#F5F3ED" stroke-width="2"/>
+<rect class="label-background" x="186.432736554" y="101.752" width="24.72" height="24.16" fill="#2D2F31"/><text class="notation-landmark" x="198.792736554" y="117" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED"><tspan x="196.020736554" y="117" font-size="14.4" font-style="italic">l</tspan><tspan x="201.384736554" y="120.6" font-size="10.08" font-style="normal">1</tspan></text>
+<line class="landmark" x1="210.981360437" y1="386.190965756" x2="195.258696291" y2="370.236097152" stroke="#F5F3ED" stroke-width="2"/>
+<rect class="label-background" x="165.760028364" y="350.965531454" width="24.72" height="24.16" fill="#2D2F31"/><text class="notation-landmark" x="178.120028364" y="366.213531454" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED"><tspan x="175.348028364" y="366.213531454" font-size="14.4" font-style="italic">l</tspan><tspan x="180.712028364" y="369.813531454" font-size="10.08" font-style="normal">2</tspan></text>
 <line class="virtual" x1="386.749269902" y1="96.749269902" x2="402.836203207" y2="83.250730098" stroke="#A6A9AE" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="virtual" x1="373.250730098" y1="80.662336596" x2="386.749269902" y2="96.749269902" stroke="#A6A9AE" stroke-width="1.5" stroke-dasharray="4 4"/>
 <line class="thread" x1="52.836203207" y1="83.250730098" x2="78.749269902" y2="96.749269902" stroke="#F5F3ED" stroke-width="1.8"/>

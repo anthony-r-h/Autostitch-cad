@@ -835,8 +835,32 @@ for(const [i,s] of modelSlits.entries()) {
 }
 const branchPixel=modelScene.final.filter(e=>e.kind==='hole')[1].p;
 assert.equal(modelScene.final.filter(e=>e.kind==='thread'&&(dist(e.a,branchPixel)<1e-6||dist(e.b,branchPixel)<1e-6)).length,3,'Curved T needs three thread connections');
-assert(modelScene.frames.findIndex(f=>f.stage==='incoming-neighbour')<modelScene.frames.findIndex(f=>f.stage==='incoming-virtual'));
-assert(modelScene.frames.findIndex(f=>f.stage==='outgoing-neighbour')<modelScene.frames.findIndex(f=>f.stage==='shared-hole'));
+const modelStages=new Map([
+  ['guides','Mark landmarks'],['landmarks','Mark landmarks'],['fixed-features','Fixed landmark pairs'],
+  ['junction-neighbours','Junctions'],['junction-virtuals','Junctions'],['junction-holes','Junctions'],
+  ['free-spans','Free spans'],['residuals','Redistribute'],['adjustment-start','Redistribute'],['planning-revision','Redistribute']
+]);
+for(const f of modelScene.frames.filter(f=>modelStages.has(f.stage))) {
+  const labels=f.elements.filter(e=>e.kind==='term-label');
+  assert.equal(labels.length,1);assert.equal(labels[0].value,modelStages.get(f.stage));
+  assert.deepEqual(labels[0].p,[170,210],'Step captions must stay in one position');
+}
+const firstModelFrame=predicate=>modelScene.frames.findIndex(f=>f.elements.some(predicate));
+const modelStageIndex=stage=>modelScene.frames.findIndex(f=>f.stage===stage);
+for(const value of ['L1','L2'])assert.equal(firstModelFrame(e=>e.kind==='notation-landmark'&&e.value===value),modelStageIndex('landmarks'));
+for(const i of [3,4,15,16])assert.equal(firstModelFrame(e=>e.kind==='slit'&&dist(modelCenter(e),modelCenter(modelFinal[i]))<1e-6),modelStageIndex('fixed-features'));
+for(const i of [7,8,11,12,20])assert.equal(firstModelFrame(e=>e.kind==='slit'&&dist(modelCenter(e),modelCenter(modelFinal[i]))<1e-6),modelStageIndex('junction-neighbours'));
+for(const virtual of modelScene.final.filter(e=>e.kind==='virtual'))assert.equal(
+  firstModelFrame(e=>e.kind==='virtual'&&dist(modelCenter(e),modelCenter(virtual))<1e-6),modelStageIndex('junction-virtuals'));
+for(const hole of modelScene.final.filter(e=>e.kind==='hole'))assert.equal(
+  firstModelFrame(e=>e.kind==='hole'&&dist(e.p,hole.p)<1e-6),modelStageIndex('junction-holes'));
+assert(modelStageIndex('junction-neighbours')<modelStageIndex('junction-virtuals'));
+assert(modelStageIndex('junction-virtuals')<modelStageIndex('junction-holes'));
+assert.equal(modelScene.frames.find(f=>f.stage==='free-spans').elements.filter(e=>e.value==='9.50').length,6);
+for(const f of modelScene.frames.filter(f=>f.stage==='planning-revision')) {
+  const row=f.elements.filter(e=>e.kind==='slit');
+  for(const i of [2,6,10,14,18,22])assert(dist(modelCenter(row[i]),modelCenter(modelInitial[i]))>0,'Every span must redistribute in parallel');
+}
 assert.equal(modelScene.frames[0].delay,200);
 assert.equal(modelScene.frames.find(f=>f.stage==='planning-revision').delay,16);
 assert.equal(modelScene.frames.find(f=>f.stage==='residuals').delay,360);

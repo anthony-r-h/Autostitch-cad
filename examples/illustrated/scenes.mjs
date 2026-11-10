@@ -369,28 +369,30 @@ function modelSolutionScene() {
   const base=[worldLine(start,[0,0],view),worldLine([0,0],branch,view),
     worldLine([0,0],ci,view,'extension',guideInk,1,true),worldLine([0,0],co,view,'extension',guideInk,1,true),
     ...arcs.flatMap(a=>Array.from({length:40},(_,i)=>worldLine(a.point(a.end*i/40),a.point(a.end*(i+1)/40),view))),
-    worldLine([landmark,-.8],[landmark,.8],view,'landmark',ink,2),
-    notationText(add(project([landmark,0],view),[0,27]),'L1','landmark'),
-    worldLine(add(landmarkPoint,mul(normal,-.8)),add(landmarkPoint,mul(normal,.8)),view,'landmark',ink,2),
-    notationText(add(project(landmarkPoint,view),[-25,-12]),'L2','landmark'),
     ...routeMarks(project(start,view),project(arcs[0].point(arcs[0].end),view),[1,0],[-Math.cos(arcs[0].end),Math.sin(arcs[0].end)]),
     notationText(add(project(arcs[1].point(arcs[1].end),view),[12,15]),'e','end'),
     notationText(add(project(joint,view),[20,12]),'j','junction'),
     notationText(add(project(branch,view),[0,-23]),'j','junction')];
   const s=scene('model-solution','Fix landmarks and junctions, then fit the free spans',spec.id);
-  frame(s,base,100,'guides');
+  const step=label=>termLabel([170,210],label);
+  frame(s,[...base,...step('Mark landmarks')],100,'guides');
+  base.push(worldLine([landmark,-.8],[landmark,.8],view,'landmark',ink,2),
+    notationText(add(project([landmark,0],view),[0,27]),'L1','landmark'),
+    worldLine(add(landmarkPoint,mul(normal,-.8)),add(landmarkPoint,mul(normal,.8)),view,'landmark',ink,2),
+    notationText(add(project(landmarkPoint,view),[-25,-12]),'L2','landmark'));
+  frame(s,[...base,...step('Mark landmarks')],140,'landmarks');
   const fixed=[...base,...[start,left,right].flatMap(c=>opening(c,alpha,view)),
     ...opening(spans[3].b,spans[3].angle(D),view),...opening(spans[4].a,spans[4].angle(0),view),
     ...[4,5].flatMap(i=>opening(spans[i].b,spans[i].angle(D),view))];
-  frame(s,[...fixed,...termLabel([170,210],'Fixed pairs')],140,'fixed-features');
-  fixed.push(...opening(near,alpha,view));frame(s,[...fixed],60,'incoming-neighbour');
-  fixed.push(...opening(ci,alpha,view,{virtual:true}));frame(s,[...fixed],80,'incoming-virtual');
-  fixed.push(...opening(spans[2].a,alpha-Math.PI/2,view));frame(s,[...fixed],60,'outgoing-neighbour');
-  fixed.push(...opening(co,alpha-Math.PI/2,view,{virtual:true}),hole(joint,view));
-  frame(s,[...fixed,...termLabel([485,40],'Shared hole',project(joint,view),[485,50])],140,'shared-hole');
-  fixed.push(hole(branch,view),...opening(stem,alpha-Math.PI/2,view),
+  frame(s,[...fixed,...step('Fixed landmark pairs')],140,'fixed-features');
+  fixed.push(...opening(near,alpha,view),...opening(spans[2].a,alpha-Math.PI/2,view),
+    ...opening(stem,alpha-Math.PI/2,view),
     ...[3,5].flatMap(i=>opening(spans[i].a,spans[i].angle(0),view)));
-  frame(s,[...fixed,...termLabel(add(project(branch,view),[100,-35]),'Shared hole')],140,'branch-hole');
+  frame(s,[...fixed,...step('Junctions')],60,'junction-neighbours');
+  fixed.push(...opening(ci,alpha,view,{virtual:true}),...opening(co,alpha-Math.PI/2,view,{virtual:true}));
+  frame(s,[...fixed,...step('Junctions')],80,'junction-virtuals');
+  fixed.push(hole(joint,view),hole(branch,view));
+  frame(s,[...fixed,...step('Junctions')],140,'junction-holes');
   const spanDimensions=spans.flatMap((span,i)=>{
     if(!span.arc)return measure(span.a,span.b,D.toFixed(2),view,i===2?65:-55).map(e=>
       e.type==='text'&&i===2?{...e,p:add(e.p,[23,9])}:e);
@@ -405,7 +407,7 @@ function modelSolutionScene() {
     elements.push(text(add(project(point(origin+arc.sweep/2),view),[arc.sign*8,-12]),D.toFixed(2)));
     return elements;
   });
-  frame(s,[...fixed,...spanDimensions,...termLabel([170,210],'Free spans')],160,'free-spans');
+  frame(s,[...fixed,...spanDimensions,...step('Free spans')],160,'free-spans');
   const cornerHole=hole(joint,view),branchHole=hole(branch,view);
   const fixedConstruction=[...base,...opening(ci,alpha,view,{virtual:true}),...opening(co,alpha-Math.PI/2,view,{virtual:true}),cornerHole,branchHole];
   const draw=(t,residual=false)=>{
@@ -432,9 +434,9 @@ function modelSolutionScene() {
     return {elements,paths:[[...paths[0],...paths[1],cornerHole,...paths[2],branchHole,...paths[5]],
       [branchHole,...paths[3],...paths[4]]]};
   };
-  frame(s,draw(0,true).elements,180,'residuals');
-  frame(s,draw(0).elements,80,'adjustment-start');
-  for(let i=1;i<=30;i++)frame(s,draw(ease(i/30)).elements,8,'planning-revision');
+  frame(s,[...draw(0,true).elements,...step('Redistribute')],180,'residuals');
+  frame(s,[...draw(0).elements,...step('Redistribute')],80,'adjustment-start');
+  for(let i=1;i<=30;i++)frame(s,[...draw(ease(i/30)).elements,...step('Redistribute')],8,'planning-revision');
   const final=draw(1);
   s.threadPaths=final.paths;
   const result=slitOutlines(finishThread(finish(s,final.elements)));

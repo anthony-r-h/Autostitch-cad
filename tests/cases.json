@@ -9652,9 +9652,11 @@
         }
       ],
       "terms": [
-        "Fixed pairs",
-        "Shared hole",
-        "Free spans"
+        "Mark landmarks",
+        "Fixed landmark pairs",
+        "Junctions",
+        "Free spans",
+        "Redistribute"
       ],
       "notation": [
         "s",
@@ -9665,10 +9667,10 @@
         "direction"
       ],
       "reveal": [
-        "Establish the guide, endpoints and two landmark pairs.",
-        "Continue each corner neighbour to its virtual slit; share the hole where their tips meet.",
-        "Reserve nominal neighbours at the curved T junction; identify three straight and three circular free spans, each 9.5 mm long.",
-        "Show each span residual; fit straight gaps to 3.25 mm and curved chords to approximately 3.24 mm.",
+        "Label each major step in the same position. Mark both landmarks together, then fix both landmark pairs and endpoint slits together.",
+        "Construct both junctions together: reserve their neighbours, continue the corner neighbours to their virtual slits, then reveal both shared holes.",
+        "Identify all six free spans together: three straight and three circular spans, each 9.5 mm long.",
+        "Show all residuals together, then redistribute across all spans simultaneously; fit straight gaps to 3.25 mm and curved chords to approximately 3.24 mm.",
         "Keep fixed openings stationary, reveal thread and hold for eight seconds. Every frame runs at half speed."
       ],
       "threadReveal": {

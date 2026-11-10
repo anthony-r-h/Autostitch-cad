@@ -204,7 +204,6 @@
 
 ## NEW: Branching junctions
 
-- Odd-arm branching junctions use half pitch near straight-through alignment; otherwise use Vertex point. Even-arm branching junctions always use Vertex point
 - In the T study, near $180^\circ$, the two threads through a Vertex point read as one overlong stitch. As the arms turn apart, the bend makes them read as separate stitches
 - The choice controls that visible continuity while keeping one round hole at the guide intersection
 
@@ -232,22 +231,21 @@
 
 ![Reverse corner gives unequal connections around the T junction](../examples/illustrated/t-junctions/reverse.gif)
 
-### Proposed arm-count and angle rule
+### Proposed rules
 
-- Let $N\geq3$ be the number of arms at the branching junction
-- Let $\beta$ be the largest angle between any pair of outward arm tangents, measured from $0^\circ$ to $180^\circ$
-- Set the fixed distance $d_J$ from the shared hole centre to the first slit centre on every arm:
+- Keep one round hole at the guide intersection. Measure from its centre to each first slit centre; on curves, use chord distance
+- Ordinary slit-to-slit gaps retain their fitting bounds; both treatments must pass clearance and leave feasible free spans
 
-$$
-d_J=\begin{cases}
-p/2,&N\text{ odd and }170^\circ\leq\beta\leq180^\circ,\\
-p,&\text{otherwise}.
-\end{cases}
-$$
+#### Even number of arms: $4,6,8,\ldots$
 
-- This is a special junction distance; ordinary slit-to-slit gaps retain their fitting bounds
-- On curved arms, use the tangent at the junction to classify the angle and a chord for $d_J$
-- The $10^\circ$ band is a visual choice to review. Half pitch still has to pass opening clearance and leave feasible free spans
+- Always use Vertex point: the first slit on every arm is one pitch $p$ from the hole, regardless of angle
+
+#### Odd number of arms: $3,5,7,\ldots$
+
+- If any pair of arms is within $10^\circ$ of straight, use half pitch: the first slit on every arm is $p/2$ from the hole
+- Otherwise use Vertex point: the first slit on every arm is $p$ from the hole
+- For curved arms, measure the angle between their outward tangents at the junction
+- The $10^\circ$ cutoff is a visual choice to review
 
 ### X junctions
 

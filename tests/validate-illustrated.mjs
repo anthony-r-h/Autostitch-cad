@@ -329,6 +329,19 @@ for(const name of ['axiom-corner','corner-arc-line','corner-arc-arc','corner-sha
   assert.equal(junctionLabel.length,1);
   for(const f of s.frames)assert.deepEqual(f.elements.filter(e=>e.kind==='notation-junction'),junctionLabel,`${name}: junction notation must be visible from the start`);
   const center=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
+  const dimensions=s.final.filter(e=>e.kind==='dimension');
+  assert.equal(dimensions.length,5,`${name}: corner step needs two extension lines`);
+  const [bracket,,,extensionA,extensionB]=dimensions;
+  const measured= name==='corner-shallow'?virtuals[1]:virtuals[0];
+  const endpoints=[extensionA.a,extensionB.a];
+  assert(endpoints.some(p=>dist(p,center(measured))<1e-6),`${name}: dimension must attach to the virtual centre`);
+  assert(endpoints.some(p=>s.final.filter(e=>e.kind==='slit').some(e=>dist(p,center(e))<1e-6)),`${name}: dimension must attach to a real centre`);
+  near(dist(...endpoints),dist(bracket.a,bracket.b));
+  for(const [extension,end] of [[extensionA,bracket.a],[extensionB,bracket.b]]) {
+    const dx=bracket.b[0]-bracket.a[0],dy=bracket.b[1]-bracket.a[1];
+    near((end[0]-extension.a[0])*dx+(end[1]-extension.a[1])*dy,0);
+    near(dist(extension.a,end)+4,dist(extension.a,extension.b));
+  }
   let previousReal=[],previousVirtual=[];
   const lastDistance=[Infinity,Infinity];
   for(const f of s.frames.filter(f=>f.stage!=='reset')) {

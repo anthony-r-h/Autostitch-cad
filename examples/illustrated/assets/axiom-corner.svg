@@ -22,6 +22,8 @@
 <line class="dimension" x1="323.35897695" y1="73" x2="323.35897695" y2="65" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="dimension" x1="395.35897695" y1="73" x2="395.35897695" y2="65" stroke="#C4C4C4" stroke-width="0.8"/>
 <text class="measurement" x="359.35897695" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.00</text>
+<line class="dimension" x1="323.35897695" y1="105" x2="323.35897695" y2="65" stroke="#C4C4C4" stroke-width="0.6"/>
+<line class="dimension" x1="395.35897695" y1="105" x2="395.35897695" y2="65" stroke="#C4C4C4" stroke-width="0.6"/>
 <text class="notation-start" x="167.35897695" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="197.35897695" y1="105" x2="209.35897695" y2="105" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="209.35897695" y1="105" x2="203.35897695" y2="101.5" stroke="#8B8B8B" stroke-width="1.1"/>

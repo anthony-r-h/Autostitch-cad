@@ -160,6 +160,8 @@
 <line class="dimension" x1="275.815590919" y1="264.270703272" x2="273.003534021" y2="256.781221581" stroke="#C4C4C4" stroke-width="0.8"/>
 <line class="dimension" x1="338.981384062" y1="240.554001415" x2="336.169327164" y2="233.064519724" stroke="#C4C4C4" stroke-width="0.8"/>
 <text class="measurement" x="305.992459042" y="239.667611498" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#C4C4C4">3.21</text>
+<line class="dimension" x1="256.834206857" y1="213.716701856" x2="275.815590919" y2="264.270703272" stroke="#C4C4C4" stroke-width="0.6"/>
+<line class="dimension" x1="320" y1="190" x2="338.981384062" y2="240.554001415" stroke="#C4C4C4" stroke-width="0.6"/>
 <text class="notation-start" x="75.855434087" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#8B8B8B">s</text>
 <line class="direction" x1="105.855434087" y1="190" x2="117.855434087" y2="190" stroke="#8B8B8B" stroke-width="1.1"/>
 <line class="direction" x1="117.855434087" y1="190" x2="111.855434087" y2="186.5" stroke="#8B8B8B" stroke-width="1.1"/>

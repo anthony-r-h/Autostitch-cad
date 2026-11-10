@@ -29,13 +29,15 @@ function opening(center, angle, view, {virtual = false, proposed = false, marked
   return result;
 }
 const hole = (center, view) => ({type:'circle', p:project(center,view), radius:.25*view.scale, color:ink, kind:'hole'});
-function measure(a,b,value,view,offset=34) {
+function measure(a,b,value,view,offset=34,extensions=false) {
   if(/^-?\d+(\.\d+)?$/.test(value))value=Number(value).toFixed(2);
   const A=project(a,view),B=project(b,view);
   const dx=B[0]-A[0],dy=B[1]-A[1],norm=Math.hypot(dx,dy);
   const normal=[dy/norm*offset,-dx/norm*offset];
   const C=add(A,normal),D=add(B,normal),tick=[normal[0]/offset*4,normal[1]/offset*4];
-  return [line(C,D,'dimension',construction,.8),line(add(C,mul(tick,-1)),add(C,tick),'dimension',construction,.8),line(add(D,mul(tick,-1)),add(D,tick),'dimension',construction,.8),text(add(mul(add(C,D),.5),[0,-9]),value)];
+  const result=[line(C,D,'dimension',construction,.8),line(add(C,mul(tick,-1)),add(C,tick),'dimension',construction,.8),line(add(D,mul(tick,-1)),add(D,tick),'dimension',construction,.8),text(add(mul(add(C,D),.5),[0,-9]),value)];
+  if(extensions)for(const [origin,end] of [[A,C],[B,D]])result.push(line(origin,add(end,mul(normal,4/Math.abs(offset))),'dimension',construction,.6));
+  return result;
 }
 function straightBase(length, view) {
   const result=[worldLine([0,0],[length,0],view)];
@@ -310,7 +312,7 @@ function cornerScene() {
     {real:[3,2,1].map(i=>({center:[0,co[1]-i*3],angle:alpha-Math.PI/2})),virtual:{center:co,angle:alpha-Math.PI/2}}
   ];
   const result=approachCorner(s,base,arms,J,view);
-  result.push(...measure([ci[0]-3,0],ci,'3',view,36));
+  result.push(...measure([ci[0]-3,0],ci,'3',view,36,true));
   return finish(s,result);
 }
 
@@ -601,7 +603,7 @@ function curvedCornerScene(caseId,name,title) {
   const result=approachCorner(s,base,arms,joint,view);
   const selected=caseId==='J08'?1:0,g=primitives[selected],a=primitivePoint(g,virtual[selected]),b=primitivePoint(g,stations[selected][0]);
   const gap=Math.hypot(a[0]-b[0],a[1]-b[1]);
-  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:35));
+  result.push(...measure(a,b,gap.toFixed(2),view,caseId==='J08'?-50:-35,true));
   return finish(s,result);
 }
 

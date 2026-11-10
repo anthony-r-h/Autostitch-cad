@@ -27,7 +27,7 @@ const policies = [
 const fivePolicies = [
   { id: 'vertex', title: 'Full pitch on all arms' },
   { id: 'half', title: 'Half pitch on all arms' },
-  { id: 'pair', title: 'Half pitch on swinging pair' }
+  { id: 'pair', title: 'Half pitch within 20° of straight' }
 ];
 const theme = themeFor(process.argv[5] || undefined);
 const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
@@ -73,11 +73,20 @@ function fitArm(first, length = armLength) {
   return { ...fit, stations, gaps, residual: length - first - fit.n * p };
 }
 
+function qualifyingArms(directions) {
+  return directions.map((theta, index) => directions.some((other, j) => {
+    if (index === j) return false;
+    const angle = Math.abs(degrees(Math.atan2(Math.sin(theta - other), Math.cos(theta - other))));
+    return 180 - angle <= fiveStudy.inputs.halfPitchToleranceDegrees + epsilon;
+  }));
+}
+
 function construct(beta, policy, fiveArm = false) {
   const reversed = policy === 'reverse' || policy === 'reverse-half';
   const halfPitch = policy === 'half' || policy === 'reverse-half';
   const tilt = radians((180 - beta) / 2);
   const directions = [Math.PI - tilt, tilt, ...(fiveArm ? fiveStudy.inputs.fixedArmDegrees.map(radians) : [-Math.PI / 2])];
+  const qualifying = qualifyingArms(directions);
   const length = fiveArm ? fiveStudy.inputs.armLength : armLength;
   const names = fiveArm ? ['left', 'right', 'lower-left', 'branch', 'lower-right'] : ['left', 'right', 'branch'];
   const arms = directions.map((theta, i) => {
@@ -92,7 +101,7 @@ function construct(beta, policy, fiveArm = false) {
     ? { center: [0, 0], a: mul(sharedAxis, -h), b: mul(sharedAxis, h) } : null;
   for (const [index, arm] of arms.entries()) {
     arm.tip = centralSlit ? (dot(arm.e, sharedAxis) >= 0 ? centralSlit.b : centralSlit.a) : [0, 0];
-    arm.first = halfPitch || (policy === 'pair' && index < 2) ? p / 2 : p;
+    arm.first = halfPitch || (policy === 'pair' && qualifying[index]) ? p / 2 : p;
     assert.ok(arm.first > 0 && arm.first < length);
     arm.fit = fitArm(arm.first, length);
     arm.slits = arm.fit.stations.map(station => {
@@ -194,10 +203,10 @@ function draw(result) {
   label([300, 145], caption, 'text', 16, true, 'solution-label');
   if (result.fiveArm) {
     label([origin[0], origin[1] - 30], 'j', 'secondary', 14, true, 'notation-junction');
-    label([205, 650], 'Swinging arms', 'text', 15, true, 'distance-label');
-    label([390, 650], result.arms[0].first.toFixed(2), 'text', 16, true, 'measurement');
-    label([205, 678], 'Other arms', 'text', 15, true, 'distance-label');
-    label([390, 678], result.arms[2].first.toFixed(2), 'text', 16, true, 'measurement');
+    for (const [row, armIndex] of [0, 2, 3].entries()) {
+      label([205, 620 + row * 28], ['Upper pair', 'Lower outer pair', 'Lower centre'][row], 'text', 15, true, 'distance-label');
+      label([390, 620 + row * 28], result.arms[armIndex].first.toFixed(2), 'text', 16, true, 'measurement');
+    }
     label([300, 710], 'Hole-to-first-slit distance (mm)', 'secondary', 13, true, 'distance-label');
   }
   return displayElements(elements, 1, theme);
@@ -245,10 +254,10 @@ function sweepScenes(fiveArm = false) {
         const slits = elements.filter(element => element.kind === 'slit');
         let first = 0;
         for (const [armIndex, arm] of result.arms.entries()) {
-          const expected = result.policy === 'half' || (result.policy === 'pair' && armIndex < 2) ? p / 2 : p;
+          const expected = result.policy === 'half' || (result.policy === 'pair' && qualifyingArms(result.arms.map(a => a.theta))[armIndex]) ? p / 2 : p;
           const center = mul(add(slits[first].a, slits[first].b), 0.5);
           assert.ok(Math.abs(distance(center, view.origin) / view.scale - expected) < epsilon, 'First-slit distance must match the displayed treatment');
-          if (index > 0 && armIndex >= 2) {
+          if (index > 0 && armIndex >= 2 && result.policy !== 'pair') {
             const original = scenes[policyIndex].frames[0].elements.filter(e => e.kind === 'slit');
             assert.deepEqual(slits.slice(first, first + arm.slits.length), original.slice(first, first + arm.slits.length), 'Fixed-arm openings must not move');
           }
@@ -285,6 +294,17 @@ function sweepScenes(fiveArm = false) {
 }
 
 export function createScenes() {
+  // The upper pair stops qualifying below 160°. At 130°, each upper arm
+  // starts qualifying with the opposite lower outer arm. The centre never does.
+  const firstDistances = beta => construct(beta, 'pair', true).arms.map(arm => arm.first);
+  assert.deepEqual(firstDistances(180), [p / 2, p / 2, p, p, p]);
+  assert.deepEqual(firstDistances(160), [p / 2, p / 2, p, p, p]);
+  assert.deepEqual(firstDistances(159.99), [p, p, p, p, p]);
+  assert.deepEqual(firstDistances(130.01), [p, p, p, p, p]);
+  assert.deepEqual(firstDistances(130), [p / 2, p / 2, p / 2, p, p / 2]);
+  assert.deepEqual(firstDistances(120), [p / 2, p / 2, p / 2, p, p / 2]);
+  for (const angle of [160, 200]) assert.deepEqual(qualifyingArms([0, radians(angle)]), [true, true]);
+  for (const angle of [159.99, 200.01]) assert.deepEqual(qualifyingArms([0, radians(angle)]), [false, false]);
   return [...sweepScenes(), ...sweepScenes(true)];
 }
 
@@ -292,16 +312,28 @@ export function createScenes() {
 // paints every panel from one frame index in one animation callback.
 function browserData(scenes) {
   const rounded = values => values.map(value => Number(value.toFixed(2)));
-  return scenes.map(scene => ({
-    name: scene.name, title: scene.title, styles: scene.frames[0].elements,
-    frames: scene.frames.map(frame => frame.elements.map((element, index) => {
-      assert.equal(element.type, scene.frames[0].elements[index].type);
-      if (element.type === 'line') return rounded([...element.a, ...element.b]);
-      if (element.type === 'circle') return rounded(element.p);
-      const box = element.textBox;
-      return [...rounded(element.p), element.value, ...rounded([box.x, box.y, box.width, box.height])];
-    }))
-  }));
+  return scenes.map(scene => {
+    const templates = [], templateKeys = [], styleFrames = [];
+    const frames = scene.frames.map(frame => {
+      // A pitch change can add or remove openings. Cache each style layout,
+      // rather than assuming every frame has the initial opening count.
+      const styles = frame.elements.map(({ a, b, p, value, textBox, ...style }) => style);
+      const key = JSON.stringify(styles);
+      let template = templateKeys.indexOf(key);
+      if (template < 0) {
+        template = templates.length;
+        templates.push(styles); templateKeys.push(key);
+      }
+      styleFrames.push(template);
+      return frame.elements.map(element => {
+        if (element.type === 'line') return rounded([...element.a, ...element.b]);
+        if (element.type === 'circle') return rounded(element.p);
+        const box = element.textBox;
+        return [...rounded(element.p), element.value, ...rounded([box.x, box.y, box.width, box.height])];
+      });
+    });
+    return { name: scene.name, title: scene.title, templates, styleFrames, frames };
+  });
 }
 
 function writePage(scenes, output) {
@@ -309,13 +341,13 @@ function writePage(scenes, output) {
   const panel = scene => `<canvas width="600" height="750" aria-label="${scene.title}"><img src="${scene.name}.gif" width="600" height="750" alt="${scene.title}"></canvas>`;
   const page = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Branching junction comparisons</title><style>
   *{box-sizing:border-box}body{margin:0;padding:12px;background:${theme.background};color:${theme.text};font:16px ${colorConfig.typography.fontFamily}}h2{font-size:20px;font-weight:400}section{margin:0 auto 32px;max-width:2448px;overflow:auto}.panels{display:grid;grid-template-columns:repeat(4,minmax(280px,1fr));gap:12px}.five{grid-template-columns:repeat(3,minmax(360px,1fr));max-width:1836px}canvas{display:block;width:100%;height:auto;aspect-ratio:4/5}
-  </style><section><h2>T junction</h2><div class="panels">${scenes.filter(s=>s.source===study.id).map(panel).join('')}</div></section><section id="five-arms"><h2>Five arms, one shared hole</h2><p>The upper two arms swing; the lower three stay fixed. Compare first-slit placement while each treatment stays constant through the sweep.</p><div class="panels five">${scenes.filter(s=>s.source===fiveStudy.id).map(panel).join('')}</div></section><script>
+  </style><section><h2>T junction</h2><div class="panels">${scenes.filter(s=>s.source===study.id).map(panel).join('')}</div></section><section id="five-arms"><h2>Five arms, one shared hole</h2><p>The upper two arms swing; the lower three guides stay fixed. The third panel switches each arm to half pitch whenever it forms a 160°–200° angle with another arm. Outside that range it returns to full pitch.</p><div class="panels five">${scenes.filter(s=>s.source===fiveStudy.id).map(panel).join('')}</div></section><script>
   const panels=${data};
   const contexts=[...document.querySelectorAll('canvas')].map(canvas=>canvas.getContext('2d'));
   const duration=${timing.durationSeconds * 1000},frameCount=${timing.frameCount};
   function paint(context,panel,frame){
     context.fillStyle='${theme.background}';context.fillRect(0,0,600,750);
-    panel.styles.forEach((style,index)=>{
+    panel.templates[panel.styleFrames[frame]].forEach((style,index)=>{
       const position=panel.frames[frame][index];
       if(style.type==='line'){
         context.beginPath();context.strokeStyle=style.color;context.lineWidth=style.outline?style.outlineWidth:style.width;
@@ -356,10 +388,13 @@ function checkExports(scenes) {
   assert.ok(page.includes('id="five-arms"'));
   assert.equal((page.match(/<canvas /g) || []).length, scenes.length);
   const panels = JSON.parse(page.split('const panels=')[1].split(';\n  const contexts=')[0]);
+  assert.deepEqual(panels, browserData(scenes), 'The page must contain the current switching layouts');
+  new Function(page.split('<script>')[1].split('</script>')[0]);
   assert.deepEqual(panels.map(panel => panel.name), scenes.map(scene => scene.name));
   for (const panel of panels) {
     assert.equal(panel.frames.length, timing.frameCount);
-    assert.ok(panel.frames.every(frame => frame.length === panel.styles.length));
+    assert.equal(panel.styleFrames.length, timing.frameCount);
+    assert.ok(panel.frames.every((frame, index) => frame.length === panel.templates[panel.styleFrames[index]].length));
   }
   let expectedDelays;
   for (const scene of scenes) {

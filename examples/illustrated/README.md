@@ -170,12 +170,13 @@ Gap bounds, fixed neighbours, endpoint positions and opening clearance are check
 
 #### Five-arm comparison
 
-[Open the five-arm comparison](t-junctions/index.html#five-arms). Compare full pitch on every arm, half pitch on every arm, and half pitch on the swinging pair only. The three lower arms stay at $225^\circ$, $270^\circ$ and $315^\circ$; the two upper arms sweep from straight-through alignment to a $120^\circ$ included angle and back.
+[Open the five-arm comparison](t-junctions/index.html#five-arms). Compare full pitch on every arm, half pitch on every arm, and angle-dependent half pitch. The three lower guides stay at $225^\circ$, $270^\circ$ and $315^\circ$; the two upper arms sweep from straight-through alignment to a $120^\circ$ included angle and back.
 
 - All five threads meet the same round hole. Mixed placement changes the neighbouring slit distances, not the shared opening.
-- The figures state the hole-to-first-slit distances for the swinging pair and the other arms. No automatic angle cutoff switches the treatments during this comparison.
+- The third panel switches an arm to half pitch when any other arm lies within $20^\circ$ of its opposite direction, inclusive. At upper-pair angles from $180^\circ$ to $160^\circ$, only the upper pair qualifies. Below $160^\circ$ all arms use full pitch, until $130^\circ$, where each upper arm qualifies with a lower outer arm. The lower centre arm stays at full pitch.
+- Distances are shown for the upper pair, lower outer pair and lower centre. Layouts switch at the threshold, including any change in opening count; intermediate distances are not fitted solutions.
 - Each guide is $12.4\,\mathrm{mm}$ long, at the T study's pitch and tool profile. Endpoints stay at the same stations; the remaining gaps are fitted within the ordinary bounds. Blue marks show those adjustments.
-- `ILL-FIVE-ARM-STUDY` records the inputs. Checks cover the single shared hole, five incident threads, first-slit distances, stationary lower arms, fitting, clearance and framing throughout the sweep.
+- `ILL-FIVE-ARM-STUDY` records the inputs. Checks cover inclusive angle boundaries, the single shared hole, five incident threads, first-slit distances, stationary lower guides, fitting, clearance and framing throughout the sweep.
 
 ### Check the whole layout: A10
 

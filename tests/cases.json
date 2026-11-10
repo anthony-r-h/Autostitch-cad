@@ -8898,11 +8898,12 @@
       "leanDegrees": 40,
       "axioms": ["A2", "A3", "A9", "A10"],
       "animated": true,
-      "status": "Analytic comparison of full pitch, half pitch on all five arms, and half pitch on the two swinging arms only. Candidate constructions, not a selected branching rule or native CAD qualification.",
+      "status": "Analytic comparison of full pitch, half pitch on all five arms, and per-arm switching within 20 degrees of straight alignment with any other arm. Not native CAD qualification.",
       "inputs": {
         "sourceIllustration": "ILL-T-JUNCTION-STUDY",
         "armLength": 12.4,
         "fixedArmDegrees": [225, 270, 315],
+        "halfPitchToleranceDegrees": 20,
         "view": {"width": 600, "height": 750, "scale": 20, "origin": [300, 330]},
         "policies": ["vertex", "half", "pair"]
       },

@@ -114,7 +114,7 @@ node --input-type=module -e "import {createScenes,pitchComparisonMetrics} from '
 
 ### Follow the guide; keep the slit profile: A1-A3
 
-A slit follows the labelled local tangent without changing length or lean. The guide ends after five nominal $3\,\mathrm{mm}$ chords at radius $10\,\mathrm{mm}$; no adjusted gaps. Pitch is the direct chord between centres. `ILL-CURVE`, using the arc geometry from `A01`.
+A slit follows the labelled local tangent without changing length or lean. Tangent motion runs at half speed, with two-second reading holds at both ends. The guide ends after five nominal $3\,\mathrm{mm}$ chords at radius $10\,\mathrm{mm}$; no adjusted gaps. Pitch is the direct chord between centres. `ILL-CURVE`, using the arc geometry from `A01`.
 
 ![Slit orientation follows the curve; pitch is a chord](assets/axiom-curve.gif)
 

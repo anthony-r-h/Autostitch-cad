@@ -186,6 +186,10 @@ const curveOpenings=curveScene.final.filter(e=>e.kind==='slit');
 near(dist(curveGuides[0].a,curveScreen(curveOpenings[0])),0);
 near(dist(curveGuides.at(-1).b,curveScreen(curveOpenings.at(-1))),0);
 assert(!curveScene.final.some(e=>e.kind==='adjustment-mark'));
+const tangentFrames=curveScene.frames.filter(f=>f.stage==='local-tangent');
+assert.equal(tangentFrames.length,31);
+assert.equal(tangentFrames[0].delay,200);assert.equal(tangentFrames.at(-1).delay,200);
+assert(tangentFrames.slice(1,-1).every(f=>f.delay===12));
 for(const f of curveScene.frames) {
   const label=f.elements.find(e=>e.kind==='tangent-label');
   assert.equal(Boolean(label),f.stage==='local-tangent');

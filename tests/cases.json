@@ -8667,7 +8667,9 @@
         "connection": "Positive slit tip to next negative slit tip; round-hole centre. All segments appear together."
       },
       "inputs": {
-        "nominalGaps": 5
+        "nominalGaps": 5,
+        "tangentFrameCentiseconds": 12,
+        "tangentHoldCentiseconds": 200
       },
       "terms": [
         "Local tangent"

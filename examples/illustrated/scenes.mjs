@@ -290,7 +290,8 @@ function curveScene() {
     const direction=mul(axis(tangent),2.2);
     const label=add(project(center,view),[55*Math.cos(angle),-55*Math.sin(angle)]);
     frame(s,[...base,worldLine(add(center,mul(direction,-1)),add(center,direction),view,'tangent',ink,1,true),
-      {...text(label,'Local tangent'),kind:'tangent-label',color:ink},...opening(center,tangent+alpha,view,{proposed:true})],6,'local-tangent');
+      {...text(label,'Local tangent'),kind:'tangent-label',color:ink},...opening(center,tangent+alpha,view,{proposed:true})],
+      i===0||i===30?input.tangentHoldCentiseconds:input.tangentFrameCentiseconds,'local-tangent');
   }
   let result=[...base];
   for(const [i,angle] of angles.entries()) {

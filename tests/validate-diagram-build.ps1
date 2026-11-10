@@ -19,16 +19,17 @@ if(mode==='prepare') {
 }
 if(mode==='@FAIL@')throw new Error('Expected lifecycle-test failure');
 const elements=[{type:'line',kind:'guide',color:'guide',a:[100,100],b:[200,100],width:1}];
-writeSceneFiles([{name:'probe',title:'Scratch lifecycle check',source:'test',final:elements,
+writeSceneFiles([{name:'probe',title:'Scratch lifecycle check',source:'test',final:elements,exportStills:@STILLS@,
   frames:[{elements,delay:10,time:0},{elements,delay:10,time:.1}]}]);
 if(mode==='finish'&&'@FAIL@'==='empty')fs.writeFileSync(path.join(process.argv[3],'probe.gif'),'');
 '@
 $runs = @()
 try {
- foreach ($case in @('success','retained','frames','prepare','finish','empty')) {
+ foreach ($case in @('success','animation-only','retained','frames','prepare','finish','empty')) {
   $scriptPath = Join-Path $testRoot ($case + '.mjs')
   $failure = if ($case -in @('prepare','finish','empty')) { $case } else { 'none' }
-  [IO.File]::WriteAllText($scriptPath,$fixture.Replace('@MODULE@',$moduleUri).Replace('@FAIL@',$failure))
+  $stills = if ($case -eq 'animation-only') { 'false' } else { 'true' }
+  [IO.File]::WriteAllText($scriptPath,$fixture.Replace('@MODULE@',$moduleUri).Replace('@FAIL@',$failure).Replace('@STILLS@',$stills))
   $destination = Join-Path $testRoot ($case + '-assets')
   $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$renderer,'-SceneScript',$scriptPath,'-OutputDirectory',$destination)
   if ($case -eq 'retained') { $arguments += '-KeepScratch' }
@@ -42,12 +43,18 @@ try {
   $runs += $run
   $shouldFail = $case -in @('prepare','finish','empty')
   if (($code -ne 0) -ne $shouldFail) { throw "Unexpected exit code for ${case}: $log" }
-  if ((Test-Path -LiteralPath $run) -ne ($case -ne 'success')) { throw "Wrong retention for ${case}: $log" }
+  if ((Test-Path -LiteralPath $run) -ne ($case -notin @('success','animation-only'))) { throw "Wrong retention for ${case}: $log" }
   if (-not (Test-Path -LiteralPath $sentinel)) { throw 'Build removed unrelated scratch.' }
   if ($shouldFail -and ($log -notmatch 'scratch retained' -or -not (Test-Path -LiteralPath (Join-Path $run 'diagnostic.txt')))) { throw "Missing failure evidence: $log" }
   if (-not $shouldFail) {
-   foreach ($extension in @('svg','png','gif')) {
+   $extensions = if ($case -eq 'animation-only') { @('gif') } else { @('svg','png','gif') }
+   foreach ($extension in $extensions) {
     if ((Get-Item -LiteralPath (Join-Path $destination "probe.$extension")).Length -eq 0) { throw "Missing published $extension" }
+   }
+   if ($case -eq 'animation-only') {
+    foreach ($extension in @('svg','png')) {
+     if (Test-Path -LiteralPath (Join-Path $destination "probe.$extension")) { throw "Unexpected static export $extension" }
+    }
    }
   }
   if ($case -eq 'frames' -and -not (Test-Path -LiteralPath (Join-Path $run 'probe-0.png'))) { throw 'Requested review frame was lost.' }

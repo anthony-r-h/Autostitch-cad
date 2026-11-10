@@ -1251,7 +1251,7 @@ export function writeSceneFiles(scenes) {
   const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes,themeFor(process.argv[5]||undefined));
   if(mode==='prepare') {
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(displayed));
-    for(const scene of displayed)fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
+    for(const scene of displayed.filter(s=>s.exportStills!==false))fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {
     for(const scene of displayed.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
   } else throw new Error('Use prepare or finish');

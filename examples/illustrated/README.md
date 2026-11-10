@@ -41,6 +41,8 @@ Use **Build → Adjustment → Stitch**, in that order.
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
 - Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with half-second holds at both positions
 - Bridge motion runs $30\%$ slower: $2.14\,\mathrm{s}$ per direction and $5.28\,\mathrm{s}$ per loop, including both holds
+- T-junction comparisons retain the final Stitch styling while the arms rotate from $180^\circ$ to $120^\circ$ and back, five seconds each way; all four panels share one clock
+- The five-arm comparison uses the same sweep and clock. Only the upper two arms rotate; the lower three and the shared hole stay fixed. Each placement treatment remains constant through the sweep
 - Static stitched figures are the final Stitch state, including the same lightened measurements
 - New slits, virtual slits, round holes and thread receive a brief ink-coloured glow. `revealGlow` in `colors.json` controls its enable switch, duration, opacity and width in output pixels. The default is $0.24\,\mathrm{s}$, $12\,\mathrm{px}$ wide, at $68\%$ peak opacity; motion alone does not retrigger it. The pulse uses existing frame time, preserving the phase timing and final holds. Still exports have no glow
 - Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks
@@ -153,6 +155,28 @@ Gap bounds, fixed neighbours, endpoint positions and opening clearance are check
 
 ![Autostitch X junction with a curved arm](assets/axiom-junction-curved.gif)
 
+#### T-junction comparisons
+
+[Open the synchronized comparison](t-junctions/index.html). Vertex point, Vertex point at half pitch, Reverse corner and Reverse corner at half pitch sweep from $180^\circ$ to $120^\circ$ in five seconds, then reverse for five seconds before repeating. The page drives all four panels from one clock; individual GIFs have matching timing. This comparison exports animations only.
+
+- Every panel uses the same fixed camera, scale and $600\times750$ px canvas. The upper arms rotate symmetrically; the downward branch follows the external angle bisector.
+- Solution and integer junction angle share one label. Thread angles and lengths update beside each arm; lengths are in millimetres.
+- Each red angle measures the visible junction thread against its arm's inward guide direction, at the neighbouring slit tip. Vertex point remains $11.24^\circ$ and half pitch remains $27.52^\circ$ as the arms rotate. Reverse treatments vary on the upper arms; the fixed downward branch retains its angle. The title gives the separate angle between the upper arms.
+- Slit outlines and holes use the shared final-Stitch fade to `secondary`; thread stays `ink` and angles stay `angle`, from `colors.json`.
+- Pitch $3\,\mathrm{mm}$, slit length $1.5\,\mathrm{mm}$, lean $40^\circ$, slit width $0.2\,\mathrm{mm}$, hole diameter $0.5\,\mathrm{mm}$ and clearance margin $0.2\,\mathrm{mm}$. All arms extend $18.4\,\mathrm{mm}$ from the vertex.
+- Vertex treatments use a round hole. Reverse treatments use a shared $45^\circ$ slit and mirror the downward branch's lean. Half-pitch variants place the first neighbour at $p/2$; the other variants use $p$.
+- Reverse treatments attach the left arm and branch to the lower-left slit tip and the right arm to the upper-right tip. This is the specified T-junction comparison policy.
+- `ILL-T-JUNCTION-STUDY` records the inputs. These are analytic candidate treatments, not native CAD qualification.
+
+#### Five-arm comparison
+
+[Open the five-arm comparison](t-junctions/index.html#five-arms). Compare full pitch on every arm, half pitch on every arm, and half pitch on the swinging pair only. The three lower arms stay at $225^\circ$, $270^\circ$ and $315^\circ$; the two upper arms sweep from straight-through alignment to a $120^\circ$ included angle and back.
+
+- All five threads meet the same round hole. Mixed placement changes the neighbouring slit distances, not the shared opening.
+- The figures state the hole-to-first-slit distances for the swinging pair and the other arms. No automatic angle cutoff switches the treatments during this comparison.
+- Each guide is $12.4\,\mathrm{mm}$ long, at the T study's pitch and tool profile. Endpoints stay at the same stations; the remaining gaps are fitted within the ordinary bounds. Blue marks show those adjustments.
+- `ILL-FIVE-ARM-STUDY` records the inputs. Checks cover the single shared hole, five incident threads, first-slit distances, stationary lower arms, fitting, clearance and framing throughout the sweep.
+
 ### Check the whole layout: A10
 
 Two fixed arms meet at $6^\circ$. Two outer pairs pass, the next leaves only $0.04\,\mathrm{mm}$ clearance, and the nearest pair overlaps. Checks and crosses identify the result; numbers use the model's conservative clearance calculation in millimetres. Static construction view with sharp rectangular slits, no thread and no fading. With $w=0.3\,\mathrm{mm}$ and $m=0.2\,\mathrm{mm}$, the complete layout is invalid. `ILL-CLEARANCE`.
@@ -241,6 +265,18 @@ node tests/validate-cases.mjs
 - `build.ps1`: renders those elements and encodes the frames. A unique `output/scratch/` folder holds intermediates and is deleted after successful export checks. Failures, `-KeepScratch` and explicit `-FrameTimes` requests retain it and print its path. Remove retained scratch after review; see [cleanup rules](../../docs/REPO-CLEANUP.md).
 - `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state. Glossary figures (`terms-*`) use only SVG/PNG.
 - `tests/cases.json`: source cases and stable illustration IDs. The validator checks drawn geometry, constraints, GIF frame counts, delays and looping.
+
+### T and five-arm comparisons
+
+[t-junctions.mjs](t-junctions.mjs) uses the shared renderer, colours and label styles. The four T-junction GIFs, three five-arm GIFs and synchronized page live in [t-junctions/](t-junctions/). Its `exportStills: false` setting omits static SVG/PNG exports; other figures keep their existing exports.
+
+```powershell
+./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/t-junctions.mjs -OutputDirectory ./examples/illustrated/t-junctions
+node examples/illustrated/t-junctions.mjs check
+node tests/validate-cases.mjs
+```
+
+Checks cover fitting, clearance, matching guides, thread-angle measurements, shared fade colours, reverse-frame symmetry and continuity at both turnarounds. Each GIF contains 250 frames at four centiseconds, for a ten-second loop.
 
 ### Notation
 

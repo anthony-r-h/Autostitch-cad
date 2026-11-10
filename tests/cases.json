@@ -8862,6 +8862,57 @@
       }
     },
     {
+      "id": "ILL-T-JUNCTION-STUDY",
+      "source": "examples/illustrated/t-junctions.mjs",
+      "exportStills": false,
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": ["A2", "A3", "A9", "A10"],
+      "animated": true,
+      "status": "Synchronized analytic sweeps from 180 to 120 degrees and back, five seconds each way. Vertex point and Reverse corner, each at nominal and half pitch. Candidate policies, not native CAD qualification.",
+      "inputs": {
+        "sourceIllustration": "ILL-JUNCTION",
+        "animation": {"startDegrees": 180, "endDegrees": 120, "durationSeconds": 10, "frameCount": 250, "frameDelayCentiseconds": 4},
+        "armLength": 18.4,
+        "width": 0.2,
+        "margin": 0.2,
+        "sharedSlitDegrees": 45,
+        "view": {"width": 600, "height": 750, "scale": 44, "origin": [300, 270]},
+        "branch": "Downward external angle bisector",
+        "policies": ["vertex", "half", "reverse", "reverse-half"]
+      },
+      "assets": [
+        {"path": "examples/illustrated/t-junctions/vertex"},
+        {"path": "examples/illustrated/t-junctions/half"},
+        {"path": "examples/illustrated/t-junctions/reverse"},
+        {"path": "examples/illustrated/t-junctions/reverse-half"}
+      ]
+    },
+    {
+      "id": "ILL-FIVE-ARM-STUDY",
+      "source": "examples/illustrated/t-junctions.mjs",
+      "exportStills": false,
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": ["A2", "A3", "A9", "A10"],
+      "animated": true,
+      "status": "Analytic comparison of full pitch, half pitch on all five arms, and half pitch on the two swinging arms only. Candidate constructions, not a selected branching rule or native CAD qualification.",
+      "inputs": {
+        "sourceIllustration": "ILL-T-JUNCTION-STUDY",
+        "armLength": 12.4,
+        "fixedArmDegrees": [225, 270, 315],
+        "view": {"width": 600, "height": 750, "scale": 20, "origin": [300, 330]},
+        "policies": ["vertex", "half", "pair"]
+      },
+      "assets": [
+        {"path": "examples/illustrated/t-junctions/five-vertex"},
+        {"path": "examples/illustrated/t-junctions/five-half"},
+        {"path": "examples/illustrated/t-junctions/five-pair"}
+      ]
+    },
+    {
       "id": "ILL-CLEARANCE",
       "source": "examples/illustrated/scenes.mjs",
       "pitch": 3,

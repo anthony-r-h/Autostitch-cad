@@ -34,8 +34,12 @@ for(const illustration of catalog.illustrations||[]){
   if(illustration.case)assert(catalog.geometry.some(c=>c.id===illustration.case&&c.variants.some(v=>v.pitch===illustration.pitch)));
   else assert(illustration.axioms?.length&&illustration.inputs);
   assert(illustration.status&&illustration.assets.length);
-  for(const asset of illustration.assets)for(const extension of ((asset.animated??illustration.animated)||asset.staticGif)?['svg','png','gif']:['svg','png'])
-    assert(fs.existsSync(new URL(`${asset.path}.${extension}`,root)),`Missing illustration ${asset.path}.${extension}`);
+  for(const asset of illustration.assets){
+    const animated=asset.animated??illustration.animated;
+    if(illustration.exportStills===false)assert(animated,'Disabling still exports requires an animation');
+    const extensions=illustration.exportStills===false?['gif']:(animated||asset.staticGif)?['svg','png','gif']:['svg','png'];
+    for(const extension of extensions)assert(fs.existsSync(new URL(`${asset.path}.${extension}`,root)),`Missing illustration ${asset.path}.${extension}`);
+  }
 }
 for(const suite of catalog.suites){
   id(suite.id);assert(suite.setup&&suite.recipe&&suite.expected);

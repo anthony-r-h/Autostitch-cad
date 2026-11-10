@@ -183,7 +183,9 @@ function New-GifFrame($image,$palette) {
  return [Windows.Media.Imaging.BitmapFrame]::Create($indexed)
 }
 foreach($scene in $scenes) {
+ if($scene.exportStills -eq $false -and ($scene.staticGif -or $scene.frames.Count -eq 0)) { throw 'Disabling still exports requires an animation.' }
  $palette=if($scene.staticGif -or $scene.frames.Count){New-GifPalette $scene}else{$null}
+ if($scene.exportStills -ne $false) {
  $still=Draw-Frame $scene.final $scene.canvas
  try {
   $still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
@@ -198,6 +200,7 @@ foreach($scene in $scenes) {
   }
  }
  finally {$still.Dispose()}
+ }
  if($scene.frames.Count -eq 0) {
   Write-Output ($scene.name+': static SVG/PNG.')
   continue
@@ -225,7 +228,8 @@ foreach($scene in $scenes) {
  }
  $file=[IO.File]::Create((Join-Path $temporary ($scene.name+'.gif')))
  try {$encoder.Save($file)} finally {$file.Dispose()}
- Write-Output ($scene.name+': '+$scene.frames.Count+' frames; SVG/PNG final state.')
+ $stillMessage=if($scene.exportStills -eq $false){'GIF only.'}else{'SVG/PNG final state.'}
+ Write-Output ($scene.name+': '+$scene.frames.Count+' frames; '+$stillMessage)
  $encoder=$null
  [GC]::Collect()
 }
@@ -255,7 +259,7 @@ if($ContactSheet) {
  } finally {$brush.Dispose();$heading.Dispose();$font.Dispose();$g.Dispose();$sheet.Dispose()}
 }
 foreach ($scene in $scenes) {
- $extensions = @('.svg', '.png')
+ $extensions = if($scene.exportStills -eq $false){@()}else{@('.svg', '.png')}
  if ($scene.staticGif -or $scene.frames.Count) { $extensions += '.gif' }
  foreach ($extension in $extensions) {
   $asset = Get-Item -LiteralPath (Join-Path $OutputDirectory ($scene.name + $extension)) -ErrorAction Stop

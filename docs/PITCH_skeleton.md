@@ -97,12 +97,12 @@
 
 ### Bridge
 
-![Bridge moves between matching stitch length and balancing the corner angles](../examples/illustrated/assets/problem-corner-bridge.gif)
+![Bridge varies from 2 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.gif)
 
 - Thread bridges the last slit on each arm, bypassing the vertex
-- Move the vertical run to match the ordinary stitch length, or to balance the two thread angles
+- Move the vertical run to vary the visible bridge stitch from $2.00$ to $3.00\,\mathrm{mm}$; the red angles change with it
 - Both positions retain nominal arm spacing; the far endpoint moves with the row
-- The table uses the position that matches ordinary stitch length
+- The table uses the $2.00\,\mathrm{mm}$ position
 
 ### Shared diagonal slit with mirrored lean
 
@@ -125,7 +125,7 @@
 | Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
 | --- | ---: | ---: | ---: |
 | Vertex point | $2$ | $1.057$ | $0.259$ |
-| Bridge | $1$ | $0.041$ | $0.000$ |
+| Bridge | $1$ | $0.106$ | $0.087$ |
 | Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.407$ |
 | Autostitch | $3$ | $0.575$ | $0.516$ |
 

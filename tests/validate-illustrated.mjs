@@ -421,8 +421,11 @@ const cornerSolution=scenes.find(s=>s.name==='problem-corner-autostitch');
 const mirroredCorner=scenes.find(s=>s.name==='problem-corner-mirrored');
 const mirroredSlits=slits(mirroredCorner.name,problemView);
 assert.equal(mirroredSlits.length,2*count+1);
-assert.equal(mirroredCorner.frames[0].stage,'top-row');
-assert.equal(mirroredCorner.frames[0].elements.filter(e=>e.kind==='slit').length,count);
+assert.equal(mirroredCorner.frames[0].stage,'vertical-rear-style');
+assert.equal(mirroredCorner.frames[0].delay,5);
+assert.equal(mirroredCorner.frames[1].stage,'mirror-vertical');
+assert(!mirroredCorner.frames.some(f=>f.stage==='top-row'));
+assert.equal(mirroredCorner.frames[0].elements.filter(e=>e.kind==='slit').length,2*count);
 assert.equal(mirroredCorner.frames.filter(f=>f.stage==='mirror-vertical').length,30);
 for(const [i,e] of mirroredSlits.entries()) {
   near(e.angle,(i<count?-40:i<2*count?-50:-45)*Math.PI/180);
@@ -595,17 +598,14 @@ for(const s of scenes) {
   if(animated) {
     if(s.name==='problem-corner-bridge') {
       assert.equal(s.frames.length,62);
-      assert.deepEqual(s.frames.filter(f=>f.delay===400).map(f=>f.stage),['match-length','balance-angles']);
+      assert.deepEqual(s.frames.filter(f=>f.delay===400).map(f=>f.stage),['short-bridge','long-bridge']);
       const holds=s.frames.filter(f=>f.delay===400);
       const midpoint=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
       assert.deepEqual(holds[0].elements,s.final);
       assert.deepEqual(s.frames.at(-1).elements,s.final);
-      const ordinary=s.final.filter(e=>e.kind==='thread')[0];
-      const ordinaryLength=dist(ordinary.a,ordinary.b);
       for(const [i,f] of holds.entries()) {
         const t=f.elements.filter(e=>e.kind==='thread')[count-1];
-        if(i===0)near(dist(t.a,t.b),ordinaryLength);
-        else near(Math.abs(t.b[0]-t.a[0]),Math.abs(t.b[1]-t.a[1]));
+        near(dist(t.a,t.b)/problemView.scale,cornerInput.bridgeThreadLengths[i]);
       }
       for(const f of s.frames) {
         assert.equal(f.holeLightening,1);

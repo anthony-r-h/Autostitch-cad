@@ -105,7 +105,7 @@ function pitchScenes() {
   return scenes;
 }
 
-export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
+export function diagonalCornerScene(spec,{name,source,view,notation=true,startWithRows=false}) {
   const p=spec.pitch;
   const angles=spec.armAxisDegrees.map(a=>a*Math.PI/180);
   const lengths=spec.armLengths??[spec.armGaps*p,spec.armGaps*p];
@@ -118,13 +118,14 @@ export function diagonalCornerScene(spec,{name,source,view,notation=true}) {
     const adjusted=j=>j>=0&&j<positions[arm].length&&Math.abs(positions[arm][j]-(positions[arm][j+1]??0)-p)>1e-6;
     row.push(...opening(arm===0?[-station,0]:[0,-station],angles[arm],view,{marked:adjusted(i-1)||adjusted(i)}));
   }
-  result.push(...rows[0]);frame(s,[...result],100,'top-row');
+  result.push(...rows[0]);
+  if(!startWithRows)frame(s,[...result],100,'top-row');
   // Flip the vertical row across its guide. Horizontal foreshortening makes
   // the reflection visible; centres and the already-punched top row stay fixed.
   const mirrored=t=>rows[1].map(e=>({...e,
     a:[view.x+(e.a[0]-view.x)*(2*t-1),e.a[1]],
     b:[view.x+(e.b[0]-view.x)*(2*t-1),e.b[1]]}));
-  frame(s,[...result,...mirrored(0)],100,'vertical-rear-style');
+  frame(s,[...result,...mirrored(0)],startWithRows?5:100,'vertical-rear-style');
   for(let i=1;i<=30;i++) {
     const t=i/30;
     frame(s,[...result,...mirrored(t*t*(3-2*t))],8,'mirror-vertical');
@@ -207,7 +208,7 @@ function cornerProblemScenes() {
   // The diagonal treatment keeps ordinary rows nominal; only the final
   // gap from each row into the fixed vertex slit absorbs its residual.
   const mirrored=diagonalCornerScene({...diagonalInput,pitch:3,armGaps:input.armIntervals,armLengths:lengths},
-    {name:'problem-corner-mirrored',source:'ILL-CORNER-PROBLEM',view,notation:false});
+    {name:'problem-corner-mirrored',source:'ILL-CORNER-PROBLEM',view,notation:false,startWithRows:true});
   return [...comparisons,mirrored,finish(s,result)];
 }
 
@@ -751,8 +752,7 @@ function bridgeComparison(s) {
   const slits=s.final.filter(e=>e.kind==='slit'),incoming=slits.slice(0,count),outgoing=slits.slice(count);
   const scale=Math.hypot(...add(incoming[0].b,mul(incoming[0].a,-1)))/profile.slitLength;
   const from=incoming.at(-1).b,to=outgoing.at(-1).a,dx=to[0]-from[0],dy=to[1]-from[1];
-  const ordinary=Math.hypot(...add(incoming[1].a,mul(incoming[0].b,-1)));
-  const shifts=[dy-Math.sqrt(ordinary*ordinary-dx*dx),dy-dx];
+  const shifts=profile.inputs.bridgeThreadLengths.map(length=>dy-Math.sqrt((length*scale)**2-dx*dx));
   const draw=shift=>{
     const row=outgoing.map(e=>({...e,a:add(e.a,[0,-shift]),b:add(e.b,[0,-shift])}));
     const path=[...incoming,...row.toReversed()];
@@ -761,7 +761,7 @@ function bridgeComparison(s) {
     return {elements:[...base,...incoming,...row,...threads,...cornerThreadAngles(s,threads),...cornerThreadLengths(s,threads)],path};
   };
   const first=draw(shifts[0]),frames=[];
-  for(const [a,b,stage] of [[0,1,'match-length'],[1,0,'balance-angles']]) {
+  for(const [a,b,stage] of [[0,1,'short-bridge'],[1,0,'long-bridge']]) {
     frames.push({elements:draw(shifts[a]).elements,delay:400,stage,holeLightening:1});
     for(let i=1;i<=30;i++)frames.push({elements:draw(lerp(shifts[a],shifts[b],ease(i/30))).elements,
       delay:5,stage:'compare-bridge',holeLightening:1});

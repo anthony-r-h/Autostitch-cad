@@ -9222,10 +9222,11 @@
         "A6"
       ],
       "animated": true,
-      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 redistributes within the arms. Bridge translates the whole vertical row between matching ordinary visible thread length and balancing the two thread angles; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and four-second endpoint holds. Its still and table use the length-matched state. Analytic illustration, not native qualification.",
+      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison starts with both rows present and immediately mirrors the vertical row. It omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 redistributes within the arms. Bridge translates the whole vertical row between visible bridge thread lengths of 2 and 3 mm; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and four-second endpoint holds. Its still and table use the 2 mm state. Analytic illustration, not native qualification.",
       "inputs": {
         "diagonalCase": "ILL-SELLIER-CORNER",
-        "armIntervals": 8
+        "armIntervals": 8,
+        "bridgeThreadLengths": [2, 3]
       },
       "assets": [
         {

@@ -418,25 +418,42 @@ $$
 
 # Pattern workflow
 
-- Editable guides and generated stitching stay in the same CAD drawing
+- The guides and saved settings define the stitch layout; generated blocks are replaceable output
+- Draw, constrain, generate, review and revise within the same CAD drawing
 
 ## Design intent
 
-- Draw the seam with native CAD tools; connect guides belonging to one stitch line
-- Set pitch, extent, direction, landmarks and junctions
+- Draw the pattern and stitch guides with native lines, arcs and polylines
+- Open Autostitch and select a guide. Use **Connect guides** where separate guides meet or cross and should share an opening
+- Set pitch to match the intended iron. **Set start** and **Set end** choose the portion to stitch; a closed loop needs only a start
+- **Reverse** changes the layout direction. **Front face / Back face** chooses which side of the holes the pattern shows
+- **Add landmark** by snapping to an existing pattern reference; the solver reserves the nominal pair around it
+- The designer chooses the seam path and fixed features; the solver chooses the remaining opening positions
 
 ## Geometric layout
 
-- Resolve the position and orientation of every opening, including shared openings and closure
-- Generate stitch blocks with opening geometry, adjustment marks and gap measurements
-- Edit the source guides and regenerate
+- **Generate stitches** resolves the connected guides together, fits the free spans and checks opening clearance
+- Each stitch line produces a named block containing openings, visible thread and notation
+- Review the start, end, junctions and landmark pairs first. Then check the locations and dimensions of adjusted gaps
+- If a fit fails, change the guide or its constraints and generate again
+- Revise the source guides with native CAD tools. Generate again to replace the output; guide edits do not automatically regenerate stitching
+
+### Revising the worked example
+
+- Extend the outer end of one $9.50\,\mathrm{mm}$ free span by $3\,\mathrm{mm}$, leaving its landmark or corner fixed
+- Generate again at the same $3\,\mathrm{mm}$ pitch
+- The new $12.50\,\mathrm{mm}$ span has four gaps: two nominal and two at $3.25\,\mathrm{mm}$. The adjustment block is now exactly centred
+- The other free spans retain their constraints and fits
 
 ## Physical execution
 
-- Follow the resolved positions and local spacing instructions
-- Punching accuracy and stitching technique remain physical skills
-- Variable-pitch equipment provides placement freedom; the layout still has to determine where that freedom is used
-- Explicit geometry communicates those decisions between designer and maker, and across production runs
+- Print the pattern at full scale and verify a known dimension before transferring the openings
+- Use the nominal-pitch iron along nominal runs. At an adjusted gap, use the marked positions and dimensions with an awl or single tooth
+- The `I` marks identify adjusted intervals even on a monochrome print
+- Dashed virtual slits locate the shared round hole; punch the hole, leaving the virtual slits as construction
+- Variable-pitch equipment follows the same resolved positions; the layout already specifies where spacing changes
+- Opening positions and adjustment instructions travel with the pattern, so another maker can reproduce the layout
+- Accurate punching, tool alignment and stitching technique still determine the finished seam
 
 # Can you really?
 

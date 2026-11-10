@@ -5485,6 +5485,31 @@
           "id": "GEO-082",
           "expected": "Curved construction beyond the ten-percent contraction boundary is rejected",
           "sourceSymbol": "ast:g-test-shallow-curves"
+        },
+        {
+          "id": "STITCH-G-01",
+          "expected": "Stitch lean and material face independently determine the slit axis",
+          "sourceSymbol": "ast:g-test-stitch-hand"
+        },
+        {
+          "id": "STITCH-G-02",
+          "expected": "Travel reversal preserves the physical slit axis for both stitch leans and faces",
+          "sourceSymbol": "ast:g-test-stitch-hand"
+        },
+        {
+          "id": "STITCH-G-03",
+          "expected": "Both stitch leans preserve fitting and corner construction on lines curves and closed loops",
+          "sourceSymbol": "ast:g-test-stitch-hand"
+        },
+        {
+          "id": "STITCH-G-04",
+          "expected": "Invalid stitch lean is rejected before solving",
+          "sourceSymbol": "ast:g-test-stitch-hand"
+        },
+        {
+          "id": "STITCH-G-05",
+          "expected": "Legacy settings without stitch lean retain obverse geometry",
+          "sourceSymbol": "ast:g-test-stitch-hand"
         }
       ],
       "matrices": [
@@ -5904,6 +5929,16 @@
           "id": "NET-054",
           "expected": "A tangent guide outside the endpoint tolerance does not acquire a connection",
           "sourceSymbol": "ast:n-test-curved-link"
+        },
+        {
+          "id": "STITCH-NET-01",
+          "expected": "Reverse stitch T junctions retain fixed half-pitch neighbours",
+          "sourceSymbol": "ast:n-test-stitch-hand"
+        },
+        {
+          "id": "STITCH-NET-02",
+          "expected": "Connected guides with different stitch leans reject before creating partial output",
+          "sourceSymbol": "ast:n-test-stitch-hand"
         }
       ],
       "matrices": [
@@ -6439,6 +6474,51 @@
           "id": "MATCH-031",
           "expected": "Matching IDs skip an existing unrelated block name without replacing it",
           "sourceSymbol": "ast:match-name-tests"
+        },
+        {
+          "id": "STITCH-CAD-01",
+          "expected": "Changing stitch lean preserves material faces and output while marking the matching family stale",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-02",
+          "expected": "One Undo restores the source stitch lean",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-03",
+          "expected": "Redo restores the reverse stitch choice",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-04",
+          "expected": "A reflected matching copy inherits reverse stitch lean and the exact source layout",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-05",
+          "expected": "A matching copy rejects an independent stitch lean edit without changing metadata",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-06",
+          "expected": "Failed generation after a stitch lean edit retains the previous output and pending choice",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-07",
+          "expected": "Legacy obverse settings connect to explicit obverse settings",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-CAD-08",
+          "expected": "Changing stitch lean through a secondary guide updates and regenerates the entire connected line",
+          "sourceSymbol": "ast:match-stitch-tests"
+        },
+        {
+          "id": "STITCH-REOPEN-01",
+          "expected": "Save and reopen preserve reverse stitch lean independently of the matching faces",
+          "sourceSymbol": "ast:match-reopen-tests"
         }
       ]
     },
@@ -6984,6 +7064,21 @@
           "id": "CONNECT-027",
           "expected": "Connected members share one ST-number and a complete copied set receives another",
           "sourceSymbol": "ast:cad-connected-tests"
+        },
+        {
+          "id": "JUNCTION-UPGRADE-01",
+          "expected": "Connected output predating the half-pitch rule is marked stale without changing its geometry",
+          "sourceSymbol": "ast:cad-test-junction-upgrade"
+        },
+        {
+          "id": "JUNCTION-UPGRADE-02",
+          "expected": "Failed junction migration retains the prior output and its regeneration requirement",
+          "sourceSymbol": "ast:cad-test-junction-upgrade"
+        },
+        {
+          "id": "JUNCTION-UPGRADE-03",
+          "expected": "Successful regeneration records the half-pitch junction rule and clears stale output",
+          "sourceSymbol": "ast:cad-test-junction-upgrade"
         }
       ]
     },
@@ -7919,6 +8014,16 @@
         {
           "id": "UI-041",
           "expected": "A child guide moved out of plane leaves its valid source selectable and both outputs intact",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "STITCH-UI-01",
+          "expected": "The palette changes stitch lean independently of face travel and the unsaved pitch draft",
+          "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "STITCH-UI-02",
+          "expected": "A matching copy displays inherited stitch lean and disables its independent selector",
           "sourceSymbol": "ast:ui-test-matching"
         }
       ]

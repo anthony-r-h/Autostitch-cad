@@ -2,6 +2,16 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Obverse/reverse stitch lean: 2026-11-10
+
+- All 19 native suites passed 2,096 checks. Coverage includes independent stitch lean, face and travel choices; matched-copy inheritance; input Undo/Redo; legacy defaults; and atomic connected-output migration. Report: `output/native/pitch-method-suites.txt`.
+- Reverse-stitch T, five-arm and curved junction checks preserve half-pitch reservations. Older connected output is marked stale until successful regeneration records the junction rule version.
+- Save/reopen passed eight matching checks, including reverse lean on both material faces. Report: `output/native/pitch-method-reopen-check.txt`.
+- Native edit events passed 61 checks in a fresh drawing, including STRETCH Undo/Redo and callback rollback: `output/native/events-eddb66803a.txt`. An earlier run in the populated full-suite drawing failed STRETCH Undo: `output/native/events-7cd64484de.txt`. The failure did not recur in the fresh drawing; its cause remains unconfirmed.
+- A disposable copy of the canonical emblem regenerated all 24 blocks with 1,076 unchanged openings. Three connected blocks required migration. Report: `output/native/pitch-method-emblem.txt`. The 600 px native export and rebuilt palette were visually inspected.
+- The first palette run failed because OpenDCL retained the older control layout. Versioned loading now replaces that cached palette; the complete suite passed afterward. Initial report: `output/native/pitch-method-first-suites.txt`.
+- Catalog validation passed with 630 stable IDs; the independent fit oracle passed 8,215 comparisons. The palette rebuilt. The normal build could not overwrite the loaded, unchanged event DLL; compilation to scratch passed.
+
 ## Half-pitch branching: 2026-11-10
 
 - All 19 native suites passed 2,046 checks; native editing events and Undo/Redo passed 61 checks.

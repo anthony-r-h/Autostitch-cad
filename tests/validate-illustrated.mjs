@@ -542,9 +542,10 @@ for(const treatment of ['vertex-point','bridge']) {
   for(const arm of [0,1]) {
     const row=openings.slice(arm*count,(arm+1)*count);
     const shift=arm===0?0:treatment==='bridge'?scenes.find(s=>s.name===name).bridgeShifts[0]:armLengths[1]-armLengths[0];
-    near(dist(row[0].center,arm===0?[-armLengths[0],0]:[0,-armLengths[1]+shift]),0);
+    near(dist(row[0].center,arm===0?[-armLengths[0]+(treatment==='bridge'?cornerInput.bridgeIncomingAdvance:0),0]:[0,-armLengths[1]+shift]),0);
     const last=armLengths[arm]-3*(count-1);
-    near(dist(row.at(-1).center,arm===0?[-last,0]:[0,-last+shift]),0);
+    const advance=treatment==='bridge'?cornerInput.bridgeIncomingAdvance:0;
+    near(dist(row.at(-1).center,arm===0?[-last+advance,0]:[0,-last+shift]),0);
     const gaps=row.slice(1).map((e,i)=>dist(e.center,row[i].center));bounded(gaps);
     const changed=gaps.filter(g=>Math.abs(g-3)>1e-6);
     assert.equal(changed.length,0);
@@ -838,11 +839,16 @@ for(const s of scenes) {
     const tempo=s.name==='model-solution'?modelSpec.inputs.durationScale:1;
     if(s.name==='problem-corner-bridge') {
       assert.equal(s.frames.length,62);
-      assert.deepEqual(s.frames.filter(f=>f.delay===400).map(f=>f.stage),['short-bridge','long-bridge']);
-      const holds=s.frames.filter(f=>f.delay===400);
+      assert.deepEqual(s.frames.filter(f=>f.delay===50).map(f=>f.stage),['short-bridge','long-bridge']);
+      const holds=s.frames.filter(f=>f.delay===50);
       const midpoint=e=>[(e.a[0]+e.b[0])/2,(e.a[1]+e.b[1])/2];
       assert.deepEqual(holds[0].elements,s.final);
-      assert.deepEqual(s.frames.at(-1).elements,s.final);
+      assert.equal(s.frames.reduce((sum,f)=>sum+f.delay,0),400,'Bridge loop must last four seconds');
+      const lengths=s.frames.map(f=>{const t=f.elements.filter(e=>e.kind==='thread')[count-1];return dist(t.a,t.b)/problemView.scale;});
+      for(let i=1;i<=31;i++)assert(lengths[i]>lengths[i-1]);
+      for(let i=32;i<62;i++)assert(lengths[i]<lengths[i-1]);
+      assert(lengths.at(-1)-lengths[0]<.01,'Loop must return smoothly to the short hold');
+      assert(s.frames.every(f=>f.delay===50||f.delay===5));
       for(const [i,f] of holds.entries()) {
         const t=f.elements.filter(e=>e.kind==='thread')[count-1];
         near(dist(t.a,t.b)/problemView.scale,cornerInput.bridgeThreadLengths[i]);

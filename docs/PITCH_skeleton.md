@@ -98,10 +98,10 @@
 
 ### Bridge
 
-![Bridge varies from 2 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.gif)
+![Bridge varies from 1 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.gif)
 
 - Thread bridges the last slit on each arm, bypassing the vertex
-- Move the vertical run to vary the visible bridge stitch from $2.00$ to $3.00\,\mathrm{mm}$; the red angles change with it
+- Move the vertical run to vary the visible bridge stitch from $1.00$ to $3.00\,\mathrm{mm}$; the red angles change with it
 - Both positions retain nominal arm spacing; the far endpoint moves with the row
 
 ### Shared diagonal slit with mirrored lean

@@ -9237,11 +9237,13 @@
         "A6"
       ],
       "animated": true,
-      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison starts with both rows present and immediately mirrors the vertical row. It omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 carries the complete outgoing row sideways with the incoming virtual slit's lower tip until the row reaches its guide, creating the incoming residual; it then fits both arms to their endpoint targets, with no arm gap dimensions; only corner thread lengths and red angles appear in its stitched phase. Bridge translates the whole vertical row between visible bridge thread lengths of 2 and 3 mm; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and four-second endpoint holds. Its still and analysis totals use the 2 mm state. Analytic illustration, not native qualification.",
+      "status": "Eight nominal intervals per arm. Shared diagonal slit retains the outer endpoints. Vertex point shifts its complete vertical row to balance the two corner thread angles and lengths while keeping the hole fixed; its far endpoint moves and arm gaps remain nominal. Both vertex treatments absorb residual in their final connections. The mirrored-slit comparison starts with both rows present and immediately mirrors the vertical row. It omits repeated arm pitch dimensions and annotates only the two corner thread lengths and angles in its stitched phase. A6 carries the complete outgoing row sideways with the incoming virtual slit's lower tip until the row reaches its guide, creating the incoming residual; it then fits both arms to their endpoint targets, with no arm gap dimensions; only corner thread lengths and red angles appear in its stitched phase. Bridge advances its nominal incoming row by 0.5 mm, then translates the whole vertical row between visible bridge thread lengths of 1 and 3 mm; its far endpoint moves and arm pitch stays nominal. Bridge is a final-phase comparison with faded slits, live dimensions, and half-second endpoint holds. Expansion and contraction each take 1.5 seconds, with no reset. Its still and analysis totals use the 1 mm state. Analytic illustration, not native qualification.",
       "inputs": {
         "diagonalCase": "ILL-SELLIER-CORNER",
         "armIntervals": 8,
-        "bridgeThreadLengths": [2, 3]
+        "bridgeThreadLengths": [1, 3],
+        "bridgeIncomingAdvance": 0.5,
+        "bridgeHoldCentiseconds": 50
       },
       "assets": [
         {

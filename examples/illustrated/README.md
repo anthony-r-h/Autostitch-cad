@@ -36,7 +36,7 @@ Use **Build → Adjustment → Stitch**, in that order.
 
 - Continue from the previous example's established layout; do not replay Build unnecessarily
 - Skip Adjustment when nothing changes; do not invent corrections to fill a phase
-- Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with four-second holds at both positions
+- Bridge is an explicit final-phase comparison: retain faded slits and visible thread throughout movement; update length and red angles live, with half-second holds at both positions
 - Static stitched figures are the final Stitch state, including the same lightened measurements
 - Clearance is a static construction view: no thread, no fade; retain the slit outlines, measurements and pass/fail marks
 - Keep existing image paths working when changing animation to static. Vertex point and Clearance export single-frame GIFs alongside their PNG/SVG stills; these GIFs contain no animation or loop
@@ -83,7 +83,7 @@ The common arm lengths are $L_i=np-c_i/2$, with $n=8$ and $c_i$ the signed shift
 
 Vertex point translates its vertical row upward by $0.4821\,\mathrm{mm}$. The fixed vertex hole then joins two equal $1.9574\,\mathrm{mm}$ visible stitches at $14.3^\circ$ to their respective arms. The final gaps into the hole are both $2.4717\,\mathrm{mm}$; internal arm gaps remain nominal. Move the outgoing virtual slit and end marker with the row. The still and compatibility GIF use this balanced layout.
 
-Bridge translates the vertical run between visible thread lengths of $2.00\,\mathrm{mm}$ and $3.00\,\mathrm{mm}$. The corresponding angle pairs are $45.0^\circ/45.0^\circ$ and $61.9^\circ/28.1^\circ$. Hold each for four seconds and interpolate over $1.5\,\mathrm{s}$ each way. The still uses the $2.00\,\mathrm{mm}$ position. The whole row and its end marker move; guides and incoming row stay fixed. Length targets are stored in the test catalog.
+Bridge advances the incoming row by $0.50\,\mathrm{mm}$ along its guide, preserving nominal pitch, so a $1.00\,\mathrm{mm}$ bridge is reachable. The vertical row then moves between $1.00$ and $3.00\,\mathrm{mm}$ of visible thread. Expand for $1.5\,\mathrm{s}$, hold for $0.5\,\mathrm{s}$, contract for $1.5\,\mathrm{s}$ and hold for $0.5\,\mathrm{s}$. Ease into each hold; omit duplicate endpoint frames and reset frames. Slits remain faded and thread stays visible throughout. The still uses the $1.00\,\mathrm{mm}$ position. Range, initial advance and endpoint hold are stored in the test catalog.
 
 The mirrored treatment reuses `diagonalCornerScene` with the Sellier construction parameters from `ILL-SELLIER-CORNER`, extended to the common arm lengths. Its rows stay nominal from the outer endpoints; only the final gaps into the vertex slit absorb the residuals. These are approximately $2.472\,\mathrm{mm}$ and $2.954\,\mathrm{mm}$; the first is below the Autostitch gap bound. Total absolute adjustment matches A6, but the adjusted-gap count does not. Both rows are present in the first frame; the vertical row immediately mirrors in place before the shared diagonal slit appears. Omit arm gap dimensions. Show only the two visible corner-thread lengths and red thread angles when the thread appears; length dimensions lighten with the slits.
 

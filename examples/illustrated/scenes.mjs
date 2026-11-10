@@ -945,21 +945,33 @@ function threadPaths(s) {
 }
 function bridgeComparison(s) {
   const profile=catalog.illustrations.find(i=>i.id===s.source),count=profile.inputs.armIntervals;
-  const slits=s.final.filter(e=>e.kind==='slit'),incoming=slits.slice(0,count),outgoing=slits.slice(count);
-  const scale=Math.hypot(...add(incoming[0].b,mul(incoming[0].a,-1)))/profile.slitLength;
+  const slits=s.final.filter(e=>e.kind==='slit'),outgoing=slits.slice(count);
+  const scale=Math.hypot(...add(slits[0].b,mul(slits[0].a,-1)))/profile.slitLength;
+  const advance=profile.inputs.bridgeIncomingAdvance*scale;
+  const incoming=slits.slice(0,count).map(e=>({...e,a:add(e.a,[advance,0]),b:add(e.b,[advance,0])}));
   const from=incoming.at(-1).b,to=outgoing.at(-1).a,dx=to[0]-from[0],dy=to[1]-from[1];
-  const shifts=profile.inputs.bridgeThreadLengths.map(length=>dy-Math.sqrt((length*scale)**2-dx*dx));
+  const shiftFor=length=>{
+    if(length*scale<Math.abs(dx))throw new Error('Bridge length is shorter than its horizontal separation.');
+    return dy-Math.sqrt((length*scale)**2-dx*dx);
+  };
+  const shifts=profile.inputs.bridgeThreadLengths.map(shiftFor);
   const draw=shift=>{
     const row=outgoing.map(e=>({...e,a:add(e.a,[0,-shift]),b:add(e.b,[0,-shift])}));
     const path=[...incoming,...row.toReversed()];
     const threads=path.slice(1).map((next,i)=>line(path[i].b,next.a,'thread',ink,1.8));
-    const base=s.final.filter(e=>e.kind!=='slit').map(e=>e.kind==='notation-end'?{...e,p:add(e.p,[0,-shift])}:e);
+    const base=s.final.filter(e=>e.kind!=='slit').map(e=>{
+      if(e.kind==='notation-end')return {...e,p:add(e.p,[0,-shift])};
+      if(e.kind==='notation-start')return {...e,p:add(e.p,[advance,0])};
+      if(e.kind==='direction')return {...e,a:add(e.a,[advance,0]),b:add(e.b,[advance,0])};
+      return e;
+    });
     return {elements:[...base,...incoming,...row,...threads,...cornerThreadAngles(s,threads),...cornerThreadLengths(s,threads)],path};
   };
   const first=draw(shifts[0]),frames=[];
   for(const [a,b,stage] of [[0,1,'short-bridge'],[1,0,'long-bridge']]) {
-    frames.push({elements:draw(shifts[a]).elements,delay:400,stage,holeLightening:1});
-    for(let i=1;i<=30;i++)frames.push({elements:draw(lerp(shifts[a],shifts[b],ease(i/30))).elements,
+    frames.push({elements:draw(shifts[a]).elements,delay:profile.inputs.bridgeHoldCentiseconds,stage,holeLightening:1});
+    // Endpoint holds belong to the next leg, including the GIF loop boundary.
+    for(let i=1;i<=30;i++)frames.push({elements:draw(shiftFor(lerp(profile.inputs.bridgeThreadLengths[a],profile.inputs.bridgeThreadLengths[b],ease(i/31)))).elements,
       delay:5,stage:'compare-bridge',holeLightening:1});
   }
   return {...s,final:first.elements,frames,threadPaths:[first.path],bridgeShifts:shifts.map(v=>v/scale)};
@@ -1008,6 +1020,8 @@ function cornerThreadLengths(s,threads) {
     const dimensions=measure([thread.a[0],-thread.a[1]],[thread.b[0],-thread.b[1]],value,{x:0,y:0,scale:1},arm===0?-36:38).map(e=>
       ({...e,kind:e.type==='text'?'thread-length-value':'thread-length-dimension',color:ink,
         ...(arm===1&&e.type==='text'?{p:add(e.p,[20,9])}:{})}));
+    // Put the bridge value below its bracket so the long position clears the incoming thread.
+    if(s.name==='problem-corner-bridge')return dimensions.map(e=>e.type==='text'?{...e,p:add(e.p,[0,18])}:e);
     // Keep the incoming dimension clear of the outgoing row at the diagonal slit.
     return s.name==='problem-corner-mirrored'&&arm===0?dimensions.map(e=>e.type==='line'?
       {...e,a:add(e.a,[-45,0]),b:add(e.b,[-45,0])}:{...e,p:add(e.p,[-45,0])}):dimensions;

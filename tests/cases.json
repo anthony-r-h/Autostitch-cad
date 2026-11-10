@@ -8835,7 +8835,7 @@
       ],
       "reveal": [
         "Show guides and s/e/j notation.",
-        "Stitch inward along the first, second and third arms in turn.",
+        "Reveal one slit on each of the three arms together, progressing inward toward the junction.",
         "Identify the shared round hole after all three arms arrive.",
         "Keep endpoints and nominal junction neighbours fixed; split each 0.4 mm residual across two adjusted gaps."
       ],

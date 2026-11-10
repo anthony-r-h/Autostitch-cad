@@ -413,11 +413,14 @@ function junctionScene() {
   const s=scene('axiom-junction','Three arms share one round hole','A9');
   frame(s,base,100,'arms');
   const result=[...base];
-  for(const [index,arm] of arms.entries()) {
-    for(const [i,station] of arm.initial.entries()) {
+  const revealSteps=Math.max(...arms.map(arm=>arm.initial.length));
+  for(let i=0;i<revealSteps;i++) {
+    for(const arm of arms) {
+      const station=arm.initial[i];
+      if(station===undefined)continue;
       result.push(...opening(mul(arm.end,station/arm.distance),arm.angle,view));
-      frame(s,[...result],i===arm.initial.length-1?140:70,`arm-${index}-stitch`);
     }
+    frame(s,[...result],i===revealSteps-1?140:70,'arms-stitch');
   }
   result.push(hole(center,view));frame(s,[...result],170,'shared-hole');
   const draw=t=>[...base,hole(center,view),...arms.flatMap(arm=>drawArm(arm,arm.initial.map((v,i)=>lerp(v,arm.fitted[i],t)),true))];

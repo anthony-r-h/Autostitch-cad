@@ -199,19 +199,26 @@ const branchDistances=[Infinity,Infinity,Infinity],branchCounts=[0,0,0];
 for(const f of branchScene.frames) {
   assert.deepEqual(f.elements.filter(e=>e.kind==='notation-junction'),branchLabel);
   if(f.stage==='reset')continue;
-  const real=f.elements.filter(e=>e.kind==='slit'),arm=f.stage.match(/^arm-(\d)-stitch$/);
-  if(['arms','shared-hole'].includes(f.stage)||arm)assert.deepEqual(real.slice(0,branchReal.length),branchReal);
-  if(arm) {
-    const index=+arm[1];assert.equal(real.length,branchReal.length+1);
-    const slit=real.at(-1),center=[(slit.a[0]+slit.b[0])/2,(slit.a[1]+slit.b[1])/2];
-    const distance=dist(center,[junctionView.x,junctionView.y]);
-    assert(distance<branchDistances[index],'Branch stitching must approach the junction');
-    branchDistances[index]=distance;branchCounts[index]++;
+  const real=f.elements.filter(e=>e.kind==='slit');
+  if(['arms','shared-hole','arms-stitch'].includes(f.stage))assert.deepEqual(real.slice(0,branchReal.length),branchReal);
+  if(f.stage==='arms-stitch') {
+    assert.equal(real.length,branchReal.length+3,'All three arms must gain a slit together');
+    for(const [index,slit] of real.slice(-3).entries()) {
+      const center=[(slit.a[0]+slit.b[0])/2,(slit.a[1]+slit.b[1])/2];
+      const distance=dist(center,[junctionView.x,junctionView.y]);
+      assert(distance<branchDistances[index],'Branch stitching must approach the junction');
+      const end=junctionInput.arms[index],norm=Math.hypot(...end);
+      near((center[0]-junctionView.x)/distance,end[0]/norm);
+      near((junctionView.y-center[1])/distance,end[1]/norm);
+      branchDistances[index]=distance;branchCounts[index]++;
+    }
+    assert(branchCounts.every(count=>count===branchCounts[0]));
   }
   assert.equal(f.elements.filter(e=>e.kind==='hole').length,['shared-hole','free-spans','planning-revision','result','thread-fade','thread-reveal'].includes(f.stage)?1:0);
   branchReal=real;
 }
 assert.deepEqual(branchCounts,[4,4,4]);
+assert.equal(branchScene.frames.filter(f=>f.stage==='arms-stitch').length,4);
 branchDistances.forEach(d=>near(d/junctionView.scale,3));
 for(const f of branchScene.frames.filter(f=>['free-spans','planning-revision','result'].includes(f.stage))) {
   const real=f.elements.filter(e=>e.kind==='slit');

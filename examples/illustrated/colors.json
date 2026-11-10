@@ -2,9 +2,9 @@
   "documentationTheme": "graphite",
   "revealGlow": {
     "enabled": true,
-    "durationCentiseconds": 16,
-    "opacity": 0.28,
-    "width": 7
+    "durationCentiseconds": 24,
+    "opacity": 0.68,
+    "width": 12
   },
   "typography": {
     "fontFamily": "Arial",

@@ -45,16 +45,16 @@ const presented=portraitScenes(scenes);
 // A reveal pulse borrows frame time; existing layouts and movement must not flash.
 const glowSlit={type:'line',kind:'slit',a:[10,10],b:[20,20],color:'ink',width:2.6};
 const glowInput=[{stage:'guides',delay:20,elements:[]},
-  {stage:'reveal',delay:25,elements:[glowSlit]},
+  {stage:'reveal',delay:40,elements:[glowSlit]},
   {stage:'move',delay:25,elements:[{...glowSlit,a:[12,10],b:[22,20]}]},
   {stage:'reset',delay:20,elements:[]}];
 const glowFrames=revealGlowFrames(glowInput);
-assert.equal(glowFrames.reduce((n,f)=>n+f.delay,0),90);
+assert.equal(glowFrames.reduce((n,f)=>n+f.delay,0),105);
 assert.equal(revealGlowFrames([glowInput[1]])[0].elements[0].glow,undefined,'Initial layout must not flash');
 assert(glowFrames.filter(f=>f.elements.some(e=>e.glow)).every(f=>f.stage==='reveal'&&f.delay>=2));
 const glowOpacity=glowFrames.filter(f=>f.elements.some(e=>e.glow)).map(f=>f.elements[0].glow.opacity);
-assert.equal(glowOpacity.length,4);
-glowOpacity.forEach((opacity,i)=>assert(Math.abs(opacity-[.28,.21,.14,.07][i])<1e-9));
+assert.equal(glowOpacity.length,6);
+glowOpacity.forEach((opacity,i)=>assert(Math.abs(opacity-.68*(1-i/6))<1e-9));
 assert(glowFrames.filter(f=>f.stage==='move').every(f=>f.elements.every(e=>!e.glow)));
 assert.deepEqual(glowFrames.findLast(f=>f.stage==='reveal').elements,[glowSlit]);
 const savedGlow=colorConfig.revealGlow.enabled;

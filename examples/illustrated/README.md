@@ -238,7 +238,7 @@ node tests/validate-cases.mjs
 ```
 
 - `scenes.mjs`: catalog inputs, analytic constructions, diagram elements and reveal timing.
-- `build.ps1`: renders those elements and encodes the frames. Temporary files stay under `output/illustrated/`.
+- `build.ps1`: renders those elements and encodes the frames. A unique `output/scratch/` folder holds intermediates and is deleted after successful export checks. Failures, `-KeepScratch` and explicit `-FrameTimes` requests retain it and print its path. Remove retained scratch after review; see [cleanup rules](../../docs/REPO-CLEANUP.md).
 - `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state. Glossary figures (`terms-*`) use only SVG/PNG.
 - `tests/cases.json`: source cases and stable illustration IDs. The validator checks drawn geometry, constraints, GIF frame counts, delays and looping.
 

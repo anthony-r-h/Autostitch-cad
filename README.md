@@ -35,6 +35,7 @@ The current runtime requires Windows, BricsCAD V22 with .NET support and OpenDCL
 | [docs/JUNCTIONS.md](docs/JUNCTIONS.md) | Corner and junction construction. |
 | [docs/LIMITS.md](docs/LIMITS.md) | Geometric limits, unresolved rules and runtime dependencies. |
 | [docs/FILLS.md](docs/FILLS.md) | Fill generation and solving. |
+| [docs/REPO-CLEANUP.md](docs/REPO-CLEANUP.md) | Artifact locations, build cleanup and retention rules. |
 | [docs/WHY-THIS-EXISTS.md](docs/WHY-THIS-EXISTS.md) | Broader problem statement and project rationale. |
 | [docs/PITCH_skeleton.md](docs/PITCH_skeleton.md), [docs/PITCH_authored.md](docs/PITCH_authored.md) | Long-form explanation outline and prose. |
 
@@ -45,6 +46,6 @@ The current runtime requires Windows, BricsCAD V22 with .NET support and OpenDCL
 - [examples/illustrated/](examples/illustrated/README.md) contains explanatory diagrams, storyboards, generators and rendered assets.
 - [tests/cases.json](tests/cases.json) is the canonical test catalog and source of reusable example geometry. `tests/` contains executable checks, an independent fitting oracle, fixtures and runners.
 - [tests/QUALIFICATION.md](tests/QUALIFICATION.md) documents validation commands and evidence requirements; [tests/AXIOM_AUDIT.md](tests/AXIOM_AUDIT.md) maps axiom coverage.
-- `output/` holds ignored generated evidence, local drawings and release packages. It may also contain user work.
+- `output/` holds ignored local artifacts: disposable build scratch, native test evidence, recovery files, backups and releases. Follow the [cleanup rules](docs/REPO-CLEANUP.md); diagram builds remove their scratch on success.
 
 Repository working instructions are in [AGENTS.md](AGENTS.md).

@@ -60,6 +60,7 @@ for(const recipe of catalog.fillRecipes||[]){
   if(recipe.drawing){assert(fs.existsSync(new URL(recipe.drawing,root)),`Missing fill drawing ${recipe.drawing}`);assert(recipe.view);}
 }
 if(catalog.fillChecks){source(catalog.fillChecks.source);assert(catalog.fillChecks.command&&catalog.fillChecks.coverage.length);}
+if(catalog.buildChecks){id(catalog.buildChecks.id);source(catalog.buildChecks.source);assert(catalog.buildChecks.command&&catalog.buildChecks.expected&&catalog.buildChecks.coverage.length);}
 id(catalog.oracle.id);source(catalog.oracle.source);source(catalog.oracle.nativeSource);
 assert(catalog.oracle.expected&&catalog.oracle.native.lengths.length&&catalog.oracle.exhaustive.lengthCount>0);
 console.log(`Catalog valid: ${catalog.geometry.length} geometry recipes, ${catalog.geometry.reduce((n,c)=>n+c.variants.length,0)} pitch variants, ${catalog.suites.length} suites, ${ids.size} stable IDs.`);

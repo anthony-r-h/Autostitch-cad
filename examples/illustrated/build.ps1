@@ -4,6 +4,8 @@ param(
  [string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'),
  [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs'),
  [string]$Theme,
+ [double[]]$FrameTimes = @(),
+ [switch]$KeepScratch,
  [switch]$ContactSheet
 )
 $ErrorActionPreference = 'Stop'
@@ -38,7 +40,12 @@ public static class AutostitchDiagramPixels {
 }
 $OutputDirectory = [IO.Path]::GetFullPath($OutputDirectory)
 $SceneScript = [IO.Path]::GetFullPath($SceneScript)
-$temporary = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ('../../output/'+(Split-Path (Split-Path $SceneScript -Parent) -Leaf))))
+$scratchRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../output/scratch'))
+$buildName = (Split-Path (Split-Path $SceneScript -Parent) -Leaf) + '-' + [IO.Path]::GetFileNameWithoutExtension($SceneScript)
+$temporary = Join-Path $scratchRoot ($buildName + '-' + [Guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $temporary -Force | Out-Null
+Write-Output "Build scratch: $temporary"
+try {
 & node $SceneScript prepare $OutputDirectory $temporary $Theme
 if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
 $scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -200,6 +207,11 @@ foreach($scene in $scenes) {
   $bitmap=Draw-Frame $frame.elements $scene.canvas
   $stream=[IO.MemoryStream]::new()
   try {
+   foreach($time in $FrameTimes) {
+    if($null -ne $frame.time -and $time -ge $frame.time -and $time -lt ($frame.time+$frame.delay/100.0)) {
+     $bitmap.Save((Join-Path $temporary ($scene.name+'-'+$time.ToString('0.##',[Globalization.CultureInfo]::InvariantCulture)+'.png')),[Drawing.Imaging.ImageFormat]::Png)
+    }
+   }
    $bitmap.Save($stream,[Drawing.Imaging.ImageFormat]::Png)
    $stream.Position=0
    $image=[Windows.Media.Imaging.BitmapImage]::new()
@@ -241,4 +253,27 @@ if($ContactSheet) {
   }
   $sheet.Save((Join-Path $OutputDirectory 'contact-sheet.png'),[Drawing.Imaging.ImageFormat]::Png)
  } finally {$brush.Dispose();$heading.Dispose();$font.Dispose();$g.Dispose();$sheet.Dispose()}
+}
+foreach ($scene in $scenes) {
+ $extensions = @('.svg', '.png')
+ if ($scene.staticGif -or $scene.frames.Count) { $extensions += '.gif' }
+ foreach ($extension in $extensions) {
+  $asset = Get-Item -LiteralPath (Join-Path $OutputDirectory ($scene.name + $extension)) -ErrorAction Stop
+  if ($asset.Length -eq 0) { throw "Empty diagram export: $($asset.FullName)" }
+ }
+}
+if ($KeepScratch -or $FrameTimes.Count -gt 0) {
+ Write-Output "Kept build scratch for review: $temporary"
+} else {
+ $target = Get-Item -LiteralPath $temporary -ErrorAction Stop
+ if ($target.Parent.FullName -ne $scratchRoot) { throw "Unexpected scratch cleanup target: $temporary" }
+ if (@($target) + @(Get-ChildItem -LiteralPath $temporary -Recurse -Force) | Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }) {
+  throw "Refusing to clean scratch containing a filesystem link: $temporary"
+ }
+ Remove-Item -LiteralPath $target.FullName -Recurse -Force -ErrorAction Stop
+ Write-Output 'Build scratch removed.'
+}
+} catch {
+ Write-Warning "Build failed; scratch retained at $temporary"
+ throw
 }

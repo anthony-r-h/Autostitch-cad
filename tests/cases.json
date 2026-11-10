@@ -4791,6 +4791,20 @@
       ]
     }
   ],
+  "buildChecks": {
+    "id": "BUILD-DIAGRAM-LIFECYCLE",
+    "source": "tests/validate-diagram-build.ps1",
+    "command": "./tests/validate-diagram-build.ps1",
+    "expected": "Successful diagram builds remove only their own scratch; explicit review requests and failures retain diagnostics.",
+    "coverage": [
+      "Unique scratch paths and sibling preservation",
+      "Successful SVG, PNG and GIF exports survive scratch cleanup",
+      "KeepScratch retains intermediates",
+      "FrameTimes retains requested review images",
+      "Prepare and finish failures retain diagnostic files",
+      "Empty exports fail validation and retain scratch"
+    ]
+  },
   "oracle": {
     "id": "FIT-ORACLE",
     "title": "Central correction selection against exhaustive enumeration",

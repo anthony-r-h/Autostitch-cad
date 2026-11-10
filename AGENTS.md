@@ -28,7 +28,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `examples/fills.lsp`, `docs/FILLS.md` | Native fill generation and solving; samples in `tests/cases.json` |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
-| `output/` | Ignored generated evidence, local drawings and release packages |
+| `output/` | Ignored local artifacts with explicit lifetimes; see [repository cleanup](docs/REPO-CLEANUP.md) |
 
 ## Working defaults
 
@@ -93,6 +93,17 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Illustrated explanations are embedded, animated figures on a fixed 600 by 750 px (4:5 portrait) canvas, with SVG/PNG still fallbacks. Keep headings and explanatory prose in the surrounding document; do not turn figures into standalone infographics. Keep inputs identical across comparisons and distinguish feasible alternatives from invalid layouts.
 - Reuse catalog geometry. Identify whether an illustration is analytic or actual native output; never present a storyboard or arithmetic check as native qualification. Keep source, command and evidence status beside the assets.
 - For documentation-only changes, check references and consistency without driving CAD. For diagram changes, check geometry and inspect the rendered result at its intended size.
+
+## Artifact storage and cleanup
+
+- Follow [docs/REPO-CLEANUP.md](docs/REPO-CLEANUP.md) before creating or removing artifacts.
+- Put temporary probes, intermediate renders and review captures in a unique `output/scratch/<task-or-build-id>/` folder. Do not add loose files or new top-level output categories.
+- Delete successful runs' scratch after validation. Keep failed-run diagnostics or explicitly requested review frames only until they have been investigated.
+- The diagram renderer cleans its own scratch on success; use `-KeepScratch` for debugging. `-FrameTimes` also retains scratch for review.
+- Reusable sources belong in `source/`, `examples/` or `tests/`; documentation belongs in `docs/`. Never make a committed recipe depend on an ignored scratch file.
+- Verify ignore behaviour with `git check-ignore -v -- <path>`: scratch must be ignored and canonical source/assets must not be ignored. Check `git status --short` before staging.
+- Use Git for revisions. Keep one canonical asset path; remove obsolete copies and repair their references.
+- Preserve other agents' active folders, native drawings, recovery files, backups and cited evidence. Never blanket-delete `output/` or run `git clean -fdx`.
 
 ## Native validation
 

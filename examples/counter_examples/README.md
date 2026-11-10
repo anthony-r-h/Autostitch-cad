@@ -36,7 +36,7 @@ node tests/validate-counter-examples.mjs
 node tests/validate-cases.mjs
 ```
 
-Outputs: `examples/counter_examples/assets/`. Temporary frames: `output/counter_examples/`. Uses the existing Windows renderer and Node; no packages or CAD session.
+Outputs: `examples/counter_examples/assets/`. Each build uses a unique `output/scratch/` folder and removes it after successful export checks. Use `-KeepScratch` to retain intermediates; failures retain them automatically and print the path. Uses the existing Windows renderer and Node; no packages or CAD session. See [cleanup rules](../../docs/REPO-CLEANUP.md).
 
 ## Geometry
 

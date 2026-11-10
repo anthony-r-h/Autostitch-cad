@@ -204,8 +204,8 @@
 
 ## NEW: Branching junctions
 
-- Proposal for review: use half pitch near a straight-through junction; retain Vertex point elsewhere
-- Near $180^\circ$, the two threads through a Vertex point read as one overlong stitch. As the arms turn apart, the bend makes them read as separate stitches
+- Odd-arm branching junctions use half pitch near straight-through alignment; otherwise use Vertex point. Even-arm branching junctions always use Vertex point
+- In the T study, near $180^\circ$, the two threads through a Vertex point read as one overlong stitch. As the arms turn apart, the bend makes them read as separate stitches
 - The choice controls that visible continuity while keeping one round hole at the guide intersection
 
 ### T junction: four treatments
@@ -237,15 +237,16 @@
 
 ![Half pitch does not balance the Reverse corner connections](../examples/illustrated/t-junctions/reverse-half.gif)
 
-### Proposed angle rule
+### Proposed arm-count and angle rule
 
+- Let $N\geq3$ be the number of arms at the branching junction
 - Let $\beta$ be the largest angle between any pair of outward arm tangents, measured from $0^\circ$ to $180^\circ$
 - Set the fixed distance $d_J$ from the shared hole centre to the first slit centre on every arm:
 
 $$
 d_J=\begin{cases}
-p/2,&170^\circ\leq\beta\leq180^\circ,\\
-p,&\beta<170^\circ.
+p/2,&N\text{ odd and }170^\circ\leq\beta\leq180^\circ,\\
+p,&\text{otherwise}.
 \end{cases}
 $$
 
@@ -255,15 +256,14 @@ $$
 
 ### X junctions
 
-- Extend the same rule to four arms: a nearly straight pair selects half pitch on all four arms; otherwise use Vertex point
-- Two nearly straight opposing pairs should each read as an ordinary stitch through the hole
-- Review the mixed case: only one pair is nearly straight. Compare halving all four arms with halving only the qualifying pair before settling the rule
+- An X has four arms, so it always uses Vertex point: one shared round hole with each first slit centre one pitch away
+- The rule holds regardless of whether one, both or neither opposing pair is nearly straight
 - Include an X with a curved arm to check how curvature changes the local thread angles
 
 ### Follow-through after the decision
 
 - Revise A9, the junction construction, glossary and model; implement the selected fixed neighbour distances before fitting the remaining spans
-- Test both sides of the $170^\circ$ boundary, mixed X junctions, curved arms, clearance and short spans
+- Test odd and even arm counts, both sides of the $170^\circ$ boundary for odd-arm junctions, curved arms, clearance and short spans
 - Replace the current T/X illustrations and junction glossary figure; rebuild the rounded-A solution and affected connected fill/demo examples
 
 ## Clearance

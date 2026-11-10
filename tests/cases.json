@@ -8706,9 +8706,12 @@
         "Move bounded corrections from span ends into their central adjustment blocks while all fixed openings remain stationary."
       ],
       "inputs": {
-        "length": 28,
-        "landmark": 14,
+        "length": 40,
+        "landmark": 20,
+        "scale": 12,
         "initialGaps": [
+          3,
+          3,
           3,
           3,
           3.25,

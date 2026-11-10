@@ -145,7 +145,7 @@
 - The landmark gap is protected from adjustment
 - Absorb each free span's residual in its unprotected gaps, within $0.9p\leq g\leq1.1p$
 - Centre the adjustments within each span; the two sides can require different corrections
-- Example: five slits on each side, with two central $3.25\,\mathrm{mm}$ gaps per span; the landmark pair stays $3\,\mathrm{mm}$ apart
+- Example: seven slits on each side, with two central $3.25\,\mathrm{mm}$ gaps per span; the landmark pair stays $3\,\mathrm{mm}$ apart
 
 ![A4, A5 and A7: keep the landmark pair fixed while distributing bounded adjustments within each free span](../examples/illustrated/assets/axiom-landmark.gif)
 

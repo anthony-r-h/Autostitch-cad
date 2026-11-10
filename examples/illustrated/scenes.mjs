@@ -218,7 +218,8 @@ function cornerProblemScenes() {
 
 function landmarkScene(layout) {
   const v=variant('F02'),length=layout?.length??v.route.primitives[0].b[0],reference=layout?.landmark??v.landmarks[0].station;
-  const view={x:(600-length*16)/2,y:187.5,scale:16},left=reference-1.5,right=reference+1.5;
+  const scale=layout?.scale??16;
+  const view={x:(600-length*scale)/2,y:187.5,scale},left=reference-1.5,right=reference+1.5;
   const base=straightBase(length,view),p=project([reference,0],view);
   base.push(line([p[0],p[1]-55],[p[0],p[1]+55],'landmark',ink,1.4),text([p[0],p[1]-67],'L1'));
   const s=scene('axiom-landmark','Fixed landmark pair; bounded adjustments within each free span',layout?'ILL-LANDMARK':'F02');

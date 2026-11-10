@@ -117,23 +117,26 @@ for(const f of curveScene.frames) {
 }
 
 const landmarkInput=catalog.illustrations.find(i=>i.id==='ILL-LANDMARK').inputs;
-const landmarkView={x:(600-landmarkInput.length*16)/2,y:187.5,scale:16};
+const landmarkView={x:(600-landmarkInput.length*landmarkInput.scale)/2,y:187.5,scale:landmarkInput.scale};
 const leftFixed=landmarkInput.landmark-1.5,rightFixed=landmarkInput.landmark+1.5;
 const landmark=slits('axiom-landmark',landmarkView).map(s=>s.center).sort((a,b)=>a[0]-b[0]);
-assert.equal(landmark.length,10);assert(has(landmark,[leftFixed,0])&&has(landmark,[rightFixed,0]));
+assert.equal(landmark.length,14);assert(has(landmark,[leftFixed,0])&&has(landmark,[rightFixed,0]));
 assert(!has(landmark,[landmarkInput.landmark,0]));near((leftFixed+rightFixed)/2,landmarkInput.landmark);
-bounded(landmark.slice(1).map((p,i)=>dist(p,landmark[i])));
+const landmarkGaps=landmark.slice(1).map((p,i)=>dist(p,landmark[i]));
+bounded(landmarkGaps);
+assert.equal(landmarkGaps.filter(g=>Math.abs(g-3)<1e-6).length,9);
+near(landmarkGaps.reduce((sum,g)=>sum+g-3,0),1);
 for(const frame of scenes.find(s=>s.name==='axiom-landmark').frames.filter(f=>!['reference','reset'].includes(f.stage))) {
   const xs=frame.elements.filter(e=>e.kind==='slit').map(e=>(e.a[0]+e.b[0])/2);
-  for(const station of [0,leftFixed,rightFixed,landmarkInput.length])assert(xs.some(x=>Math.abs(x-(landmarkView.x+station*16))<1e-6),'Fixed opening moved during fitting');
-  if(xs.length===10) {
-    const points=xs.map(x=>(x-landmarkView.x)/16).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
-    bounded(gaps);near(gaps[4],3);
+  for(const station of [0,leftFixed,rightFixed,landmarkInput.length])assert(xs.some(x=>Math.abs(x-(landmarkView.x+station*landmarkView.scale))<1e-6),'Fixed opening moved during fitting');
+  if(xs.length===14) {
+    const points=xs.map(x=>(x-landmarkView.x)/landmarkView.scale).sort((a,b)=>a-b),gaps=points.slice(1).map((p,i)=>p-points[i]);
+    bounded(gaps);near(gaps[6],3);
     const labels=frame.elements.filter(e=>e.kind==='gap-value');
-    const adjustable=gaps.filter((g,i)=>i!==4);assert.equal(labels.length,adjustable.length);
+    const adjustable=gaps.filter((g,i)=>i!==6);assert.equal(labels.length,adjustable.length);
     labels.forEach((label,i)=>near(+label.value,adjustable[i],.00501));
-    near(gaps.slice(0,4).reduce((a,b)=>a+b,0),leftFixed);
-    near(gaps.slice(5).reduce((a,b)=>a+b,0),landmarkInput.length-rightFixed);
+    near(gaps.slice(0,6).reduce((a,b)=>a+b,0),leftFixed);
+    near(gaps.slice(7).reduce((a,b)=>a+b,0),landmarkInput.length-rightFixed);
     points.forEach((x,i)=>near(x+points.at(-1-i),landmarkInput.length));
   }
 }

@@ -96,7 +96,7 @@ A slit follows the labelled local tangent without changing length or lean. The g
 
 ### Reserve a landmark pair: A4, A5, A7
 
-Five slits on each side of the central landmark. Each free span has two central $3.25\,\mathrm{mm}$ gaps, with nominal gaps at its ends; the protected landmark gap remains $3\,\mathrm{mm}$. The animation moves the adjustments away from the feature while maintaining mirrored positions and fixed openings. `ILL-LANDMARK`: $28\,\mathrm{mm}$ guide, L1 at $14\,\mathrm{mm}$.
+Seven slits on each side of the central landmark. Extending the guide preserves the $0.50\,\mathrm{mm}$ residual per span while adding nominal runs around each adjustment block. Each free span has two central $3.25\,\mathrm{mm}$ gaps, with nominal gaps at its ends; the protected landmark gap remains $3\,\mathrm{mm}$. The animation moves the adjustments away from the feature while maintaining mirrored positions and fixed openings. `ILL-LANDMARK`: $40\,\mathrm{mm}$ guide, L1 at $20\,\mathrm{mm}$.
 
 ![Adjustments move into the free spans while endpoints and the landmark pair stay fixed](assets/axiom-landmark.gif)
 

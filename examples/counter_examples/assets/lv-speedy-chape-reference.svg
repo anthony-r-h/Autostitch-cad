@@ -95,7 +95,7 @@
 <line class="slit" x1="222.447481711" y1="116.292007212" x2="216.272518289" y2="100.667992788" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="223.656482827,115.814182662 217.481519405,100.190168237 215.063517173,101.145817338 221.238480595,116.769831763" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="232.527481711" y1="86.052007212" x2="226.352518289" y2="70.427992788" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="233.736482827,85.574182662 227.561519405,69.950168237 225.143517173,70.905817338 231.318480595,86.529831763" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <rect class="label-background" x="140.667426158" y="229.263790102" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="147.567426158" y="242.303790102" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
-<rect class="label-background" x="281.1" y="17.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="288" y="31" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="280.32" y="15.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="288" y="31" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="318" y1="48" x2="330" y2="48" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="330" y1="48" x2="324" y2="44.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="330" y1="48" x2="324" y2="51.5" stroke="#CECECE" stroke-width="1.1"/>

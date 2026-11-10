@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">One solved layout, one reflected copy</title><desc id="description">Analytic illustration of S02. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(3.3707865168539684 189.6067415730337) scale(0.9887640449438202)">
+<g transform="translate(6.013363028953165 191.25835189309575) scale(0.979955456570156)">
 <line class="guide" x1="60" y1="115" x2="502.25" y2="115" stroke="#797E87" stroke-width="1"/>
 <line class="fixed-end" x1="60" y1="93" x2="60" y2="137" stroke="#CECECE" stroke-width="0.8"/>
 <line class="fixed-end" x1="502.25" y1="93" x2="502.25" y2="137" stroke="#CECECE" stroke-width="0.8"/>
@@ -65,16 +65,16 @@
 <line class="slit" x1="193.080733319" y1="266.990315255" x2="176.419266681" y2="253.009684745" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="193.916357212,265.994457479 177.254890574,252.013826969 175.583642788,254.005542521 192.245109426,267.986173031" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="149.580733319" y1="266.990315255" x2="132.919266681" y2="253.009684745" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="150.416357212,265.994457479 133.754890574,252.013826969 132.083642788,254.005542521 148.745109426,267.986173031" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="106.080733319" y1="266.990315255" x2="89.419266681" y2="253.009684745" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="106.916357212,265.994457479 90.254890574,252.013826969 88.583642788,254.005542521 105.245109426,267.986173031" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
-<rect class="label-background" x="41.1" y="84.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="48" y="98" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="40.32" y="82.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="48" y="98" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="78" y1="115" x2="90" y2="115" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="90" y1="115" x2="84" y2="111.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="90" y1="115" x2="84" y2="118.5" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="507.35" y="84.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="514.25" y="98" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
-<rect class="label-background" x="545.1" y="263.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="552" y="277" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="506.57" y="82.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="514.25" y="98" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
+<rect class="label-background" x="544.32" y="261.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="552" y="277" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="522" y1="260" x2="510" y2="260" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="510" y1="260" x2="516" y2="263.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="510" y1="260" x2="516" y2="256.5" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="78.85" y="263.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="85.75" y="277" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="78.07" y="261.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="85.75" y="277" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <line class="id-box" x1="42" y1="138" x2="78" y2="138" stroke="#CECECE" stroke-width="0.7"/>
 <line class="id-box" x1="78" y1="138" x2="78" y2="154" stroke="#CECECE" stroke-width="0.7"/>
 <line class="id-box" x1="78" y1="154" x2="42" y2="154" stroke="#CECECE" stroke-width="0.7"/>

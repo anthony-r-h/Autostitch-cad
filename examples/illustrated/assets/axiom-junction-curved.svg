@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Autostitch X junction with a curved arm</title><desc id="description">Analytic illustration of ILL-JUNCTION-COMPARISON. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-177.4671764357953 102.38685999809854) scale(1.55)">
+<g transform="translate(-177.4671764357953 102.3868599980986) scale(1.55)">
 <line class="guide" x1="300" y1="185" x2="302.76476775" y2="182.191299021" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="302.76476775" y1="182.191299021" x2="305.484915161" y2="179.339362843" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="305.484915161" y1="179.339362843" x2="308.159766211" y2="176.44490024" stroke="#797E87" stroke-width="1"/>
@@ -45,16 +45,16 @@
 <line class="guide" x1="300" y1="185" x2="191.282332393" y2="293.717667607" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="300" y1="185" x2="400.762716319" y2="285.762716319" stroke="#797E87" stroke-width="1"/>
 <rect class="label-background" x="313.1" y="167.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="320" y="181" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
-<rect class="label-background" x="381.980634978" y="24.495126063" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="388.880634978" y="37.535126063" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="381.200634978" y="22.287126063" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="388.880634978" y="37.535126063" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="367.458276424" y1="64.555165923" x2="365.608014904" y2="76.411663395" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="365.608014904" y1="76.411663395" x2="369.99129076" y2="71.023074269" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="365.608014904" y1="76.411663395" x2="363.075000568" y2="69.943755049" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="187.917866299" y="301.183764262" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="194.817866299" y="314.223764262" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
-<rect class="label-background" x="194.546992372" y="49.365361812" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="201.446992372" y="62.405361812" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="187.137866299" y="298.975764262" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="194.817866299" y="314.223764262" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
+<rect class="label-background" x="193.766992372" y="47.157361812" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="201.446992372" y="62.405361812" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="210.639380528" y1="95.639380528" x2="219.124661902" y2="104.124661902" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="219.124661902" y1="104.124661902" x2="217.356894949" y2="97.407147481" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="219.124661902" y1="104.124661902" x2="212.407147481" y2="102.356894949" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="414.368812973" y="269.187182413" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="421.268812973" y="282.227182413" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="413.588812973" y="266.979182413" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="421.268812973" y="282.227182413" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <line class="thread" x1="375.080408637" y1="54.795364389" x2="357.073770476" y2="78.14313996" stroke="#F5F3ED" stroke-width="1.8"/>
 <line class="thread" x1="363.996662988" y1="95.568295893" x2="342.396545352" y2="115.637988468" stroke="#F5F3ED" stroke-width="1.8"/>
 <line class="thread" x1="346.360449129" y1="133.964198301" x2="323.864023304" y2="147.212965268" stroke="#F5F3ED" stroke-width="1.8"/>

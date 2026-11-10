@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Shared diagonal slit with mirrored lean</title><desc id="description">Analytic illustration of ILL-SELLIER-CORNER. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-92.92500000000001 73.52499999999998) scale(1.55)">
+<g transform="translate(-91.06500000000005 72.75) scale(1.55)">
 <line class="guide" x1="135" y1="85" x2="360" y2="85" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="360" y1="85" x2="360" y2="310" stroke="#797E87" stroke-width="1"/>
-<rect class="label-background" x="116.1" y="54.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="123" y="68" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="115.32" y="52.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="123" y="68" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="153" y1="85" x2="165" y2="85" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="165" y1="85" x2="159" y2="81.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="165" y1="85" x2="159" y2="88.5" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="370.1" y="308.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="377" y="322" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="369.32" y="306.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="377" y="322" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="377.1" y="53.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="384" y="67" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <line class="thread" x1="149.363333308" y1="97.052267682" x2="195.636666692" y2="72.947732318" stroke="#F5F3ED" stroke-width="1.8"/>
 <line class="thread" x1="224.363333308" y1="97.052267682" x2="270.636666692" y2="72.947732318" stroke="#F5F3ED" stroke-width="1.8"/>

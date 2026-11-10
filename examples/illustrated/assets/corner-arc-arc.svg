@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Two curved arms share one corner hole</title><desc id="description">Analytic illustration of A04. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-126.8097068555848 141.84323405576586) scale(1.55)">
+<g transform="translate(-124.9497068555848 139.9832340557659) scale(1.55)">
 <line class="guide" x1="172.842769472" y1="170.327654215" x2="175.362810832" y2="167.808073832" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="175.362810832" y1="167.808073832" x2="177.915886245" y2="165.321972527" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="177.915886245" y1="165.321972527" x2="180.501550977" y2="162.869783371" stroke="#797E87" stroke-width="1"/>
@@ -180,11 +180,11 @@
 <rect class="label-background" x="333.307647229" y="35.325141644" width="39.8" height="18.95" fill="#2D2F31"/><text class="measurement" x="353.207647229" y="49.285141644" text-anchor="middle" font-family="Arial" font-size="13" fill="#A6A9AE">3.00</text>
 <line class="dimension" x1="395.043660225" y1="91.676727658" x2="393.520530436" y2="52.706481628" stroke="#A6A9AE" stroke-width="0.6"/>
 <line class="dimension" x1="314.105456932" y1="94.840151067" x2="312.582327143" y2="55.869905037" stroke="#A6A9AE" stroke-width="0.6"/>
-<rect class="label-background" x="145.414098848" y="153.885642689" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="152.314098848" y="166.925642689" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="144.634098848" y="151.677642689" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="152.314098848" y="166.925642689" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="185.487592524" y1="157.51717218" x2="193.917474559" y2="148.976850823" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="193.917474559" y1="148.976850823" x2="187.211606479" y2="150.788295908" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="193.917474559" y1="148.976850823" x2="192.193460604" y2="155.705727095" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="305.572637618" y="243.422298285" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="312.472637618" y="256.462298285" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="304.792637618" y="241.214298285" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="312.472637618" y="256.462298285" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="389.279216904" y="107.84623485" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="396.179216904" y="120.88623485" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 </g>
 </svg>

@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Top, right and bottom stitching with a decorative H</title><desc id="description">Analytic illustration of ILL-SELLIER-WALLET. Static stitch diagram.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-34.148571428571415 134.92727726629005) scale(1.2571428571428571)">
+<g transform="translate(-34.148571428571415 133.41870583771865) scale(1.2571428571428571)">
 <line class="leather-edge" x1="57" y1="32.4" x2="474.6" y2="32.4" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="474.6" y1="32.4" x2="474.6" y2="338.4" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="474.6" y1="338.4" x2="57" y2="338.4" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="guide" x1="166.663967251" y1="72" x2="435" y2="72" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="435" y1="72" x2="435" y2="214.980767287" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="357.667016976" y1="318.733877076" x2="195.667016976" y2="318.733877076" stroke="#797E87" stroke-width="1"/>
-<rect class="label-background" x="147.763967251" y="41.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="154.663967251" y="55" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="146.983967251" y="39.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="154.663967251" y="55" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="184.663967251" y1="72" x2="196.663967251" y2="72" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="196.663967251" y1="72" x2="190.663967251" y2="68.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="196.663967251" y1="72" x2="190.663967251" y2="75.5" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="176.767016976" y="322.693877076" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="183.667016976" y="335.733877076" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="175.987016976" y="320.485877076" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="183.667016976" y="335.733877076" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="437.422367269" y="38.282367269" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="444.322367269" y="51.322367269" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <line class="thread" x1="177.005567233" y1="80.677632731" x2="210.322367269" y2="63.322367269" stroke="#F5F3ED" stroke-width="1.8"/>
 <line class="thread" x1="231.005567233" y1="80.677632731" x2="264.322367269" y2="63.322367269" stroke="#F5F3ED" stroke-width="1.8"/>

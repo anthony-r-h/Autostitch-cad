@@ -101,15 +101,21 @@ function Draw-Frame($elements,$canvas) {
       try {$g.FillRectangle($labelBrush,[single]$box.x,[single]$box.y,[single]$box.width,[single]$box.height)}
       finally {$labelBrush.Dispose()}
      }
-     $fontStyle=if($element.bold){[Drawing.FontStyle]::Bold}else{[Drawing.FontStyle]::Regular}
-     $font=[Drawing.Font]::new($element.fontFamily,[single]$element.size,$fontStyle,[Drawing.GraphicsUnit]::Pixel)
      $brush=[Drawing.SolidBrush]::new($color)
      $format=[Drawing.StringFormat]::GenericTypographic.Clone()
      try {
       $format.Alignment=[Drawing.StringAlignment]::Center
-      $ascent=$font.FontFamily.GetCellAscent($fontStyle)*$element.size/$font.FontFamily.GetEmHeight($fontStyle)
-      $g.DrawString($element.value,$font,$brush,[Drawing.PointF]::new($element.p[0],($element.p[1]-$ascent)),$format)
-     } finally {$format.Dispose();$brush.Dispose();$font.Dispose()}
+      $runs=if($element.textRuns){$element.textRuns}else{@([pscustomobject]@{value=$element.value;x=$element.p[0];y=$element.p[1];size=$element.size;italic=$element.fontItalic})}
+      foreach($run in $runs) {
+       $fontStyle=if($element.bold){[Drawing.FontStyle]::Bold}else{[Drawing.FontStyle]::Regular}
+       if($run.italic){$fontStyle=$fontStyle -bor [Drawing.FontStyle]::Italic}
+       $font=[Drawing.Font]::new($element.fontFamily,[single]$run.size,$fontStyle,[Drawing.GraphicsUnit]::Pixel)
+       try {
+        $ascent=$font.FontFamily.GetCellAscent($fontStyle)*$run.size/$font.FontFamily.GetEmHeight($fontStyle)
+        $g.DrawString($run.value,$font,$brush,[Drawing.PointF]::new($run.x,($run.y-$ascent)),$format)
+       } finally {$font.Dispose()}
+      }
+     } finally {$format.Dispose();$brush.Dispose()}
     }
     default {throw ('Unknown diagram element: '+$element.type)}
    }

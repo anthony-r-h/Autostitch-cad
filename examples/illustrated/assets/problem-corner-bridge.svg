@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Bridge</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-78.6999168744805 170.33749480333458) scale(1.170407315045719)">
+<g transform="translate(-75.29882586406484 170.02348788524188) scale(1.16421365966595)">
 <line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="410" y1="40" x2="410" y2="330.853684306" stroke="#797E87" stroke-width="1"/>
-<rect class="label-background" x="106.1" y="9.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="105.32" y="7.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="143" y1="40" x2="155" y2="40" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="155" y1="40" x2="149" y2="36.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="155" y1="40" x2="149" y2="43.5" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="420.1" y="312.2319741" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="427" y="325.2719741" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="419.32" y="310.0239741" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="427" y="325.2719741" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="427.1" y="8.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="434" y="22" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <line class="slit" x1="118.023850698" y1="45.853684306" x2="131.976149302" y2="34.146315694" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="118.859474591,46.849542082 132.811773194,35.14217347 131.140525409,33.150457918 117.188226806,44.85782653" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="slit" x1="154.450715299" y1="45.853684306" x2="168.403013902" y2="34.146315694" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="155.286339191,46.849542082 169.238637795,35.14217347 167.56739001,33.150457918 153.615091406,44.85782653" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>

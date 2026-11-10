@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Aligned straight runs compress equally into a vertex hole</title><desc id="description">Analytic illustration of ILL-FAGLIANO-TIP. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-165 66.35546127316366) scale(1.55)">
+<g transform="translate(-165 64.4954612731637) scale(1.55)">
 <line class="leather-edge" x1="203.948399571" y1="370.3" x2="203.948399571" y2="265" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="203.948399571" y1="265" x2="203.976422448" y2="260.607624145" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="leather-edge" x1="203.976422448" y1="260.607624145" x2="204.060486517" y2="256.215963393" stroke="#A6A9AE" stroke-width="1.2"/>
@@ -125,11 +125,11 @@
 <line class="leather-edge" x1="396.051600429" y1="265" x2="396.051600429" y2="370.3" stroke="#A6A9AE" stroke-width="1.2"/>
 <line class="guide" x1="224.198399571" y1="346" x2="224.198399571" y2="265" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="375.801600429" y1="265" x2="375.801600429" y2="346" stroke="#797E87" stroke-width="1"/>
-<rect class="label-background" x="200.298399571" y="344.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="207.198399571" y="358" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="199.518399571" y="342.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="207.198399571" y="358" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="224.198399571" y1="328" x2="224.198399571" y2="316" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="224.198399571" y1="316" x2="220.698399571" y2="322" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="224.198399571" y1="316" x2="227.698399571" y2="322" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="385.901600429" y="344.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="392.801600429" y="358" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="385.121600429" y="342.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="392.801600429" y="358" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="333.1" y="29.696814462" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="340" y="42.736814462" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <line class="guide" x1="224.198399571" y1="265" x2="224.220331777" y2="261.23017388" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="224.220331777" y1="261.23017388" x2="224.286125428" y2="257.460858135" stroke="#797E87" stroke-width="1"/>

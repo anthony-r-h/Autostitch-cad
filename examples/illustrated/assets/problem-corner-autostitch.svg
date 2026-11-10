@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">Autostitch</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Final state of the accompanying animation.</desc>
 <rect width="100%" height="100%" fill="#202225"/>
-<g transform="translate(-78.6999168744805 170.33749480333458) scale(1.170407315045719)">
+<g transform="translate(-75.29882586406484 170.02348788524188) scale(1.16421365966595)">
 <line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#797E87" stroke-width="1"/>
 <line class="guide" x1="410" y1="40" x2="410" y2="330.853684306" stroke="#797E87" stroke-width="1"/>
 <line class="extension" x1="410" y1="40" x2="422.829833608" y2="40" stroke="#797E87" stroke-width="1" stroke-dasharray="4 4"/>
@@ -53,11 +53,11 @@
 <line class="slit" x1="404.146315694" y1="68.328250303" x2="415.853684306" y2="82.280548907" stroke="#202225" stroke-width="2.6"/><polygon class="slit-outline" points="403.150457918,69.163874196 414.85782653,83.116172799 416.849542082,81.444925014 405.14217347,67.49262641" fill="#202225" stroke="#A6A9AE" stroke-width="0.8"/>
 <line class="virtual" x1="404.146315694" y1="31.901385703" x2="415.853684306" y2="45.853684306" stroke="#A6A9AE" stroke-width="1.5" stroke-dasharray="4 4"/>
 <circle class="hole" cx="415.853684306" cy="45.853684306" r="3.03557205" fill="#A6A9AE"/>
-<rect class="label-background" x="106.1" y="9.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">s</text>
+<rect class="label-background" x="105.32" y="7.752" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">s</text>
 <line class="direction" x1="143" y1="40" x2="155" y2="40" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="155" y1="40" x2="149" y2="36.5" stroke="#CECECE" stroke-width="1.1"/>
 <line class="direction" x1="155" y1="40" x2="149" y2="43.5" stroke="#CECECE" stroke-width="1.1"/>
-<rect class="label-background" x="420.1" y="329.813684306" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-end" x="427" y="342.853684306" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">e</text>
+<rect class="label-background" x="419.32" y="327.605684306" width="15.36" height="20.56" fill="#2D2F31"/><text class="notation-end" x="427" y="342.853684306" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#F5F3ED">e</text>
 <rect class="label-background" x="427.1" y="8.96" width="13.8" height="17.8" fill="#2D2F31"/><text class="notation-junction" x="434" y="22" text-anchor="middle" font-family="Arial" font-size="12" fill="#F5F3ED">j</text>
 <polygon class="angle-wedge" points="393.379118309,34.146315694 411.379118309,34.146315694 411.371010805,34.686504936 411.346695596,35.226207557 411.306194587,35.764937375 411.249544261,36.302209084 411.176795652,36.837538692 411.088014293,37.370443955 410.983280163,37.900444814 410.862687608,38.427063827 410.726345264,38.949826597 410.574375951,39.468262202 410.406916569,39.981903618 410.224117971,40.490288139 410.026144829,40.992957796 409.813175482,41.489459766 409.585401781,41.979346783 409.343028912,42.462177542" fill="#FF968C" fill-opacity="0.22"/>
 <line class="angle-reference" x1="393.379118309" y1="34.146315694" x2="421.379118309" y2="34.146315694" stroke="#FF968C" stroke-width="0.8" stroke-dasharray="4 4"/>

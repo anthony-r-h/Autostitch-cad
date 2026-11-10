@@ -12,19 +12,28 @@ const scenes = createScenes();
 const theme=themeFor();
 assert.throws(()=>themeFor('missing-theme'),/Unknown diagram theme/);
 assert.throws(()=>displayElements([{type:'text',kind:'measurement',color:'missing-role'}]),/Unknown diagram colour role/);
+const numberedLandmark=displayElements([{type:'text',kind:'notation-landmark',p:[100,100],value:'L12',size:12,color:'construction'}],0)[0];
+assert.deepEqual(numberedLandmark.textRuns.map(run=>run.value),['l','12']);
 for(const name of ['graphite','porcelain']) {
   const selected=themeFor(name);
   for(const s of scenes)for(const f of [...s.frames,{elements:s.final}]) {
     const shown=displayElements(f.elements,f.holeLightening,selected);
     shown.forEach((e,i)=>{
       const raw=f.elements[i];
-      const {color,fontFamily,textBackground,textBox,size,...shape}=e;
+      const {color,fontFamily,fontItalic,textRuns,textBackground,textBox,size,...shape}=e;
       const {color:role,size:rawSize,...originalShape}=raw;
       assert.deepEqual(shape,originalShape,'Theme must preserve diagram geometry');
       assert(/^#[0-9A-F]{6}$/i.test(color));
       if(e.type==='text') {
-        assert.equal(size,rawSize*colorConfig.typography.sizeScale);
-        assert.equal(fontFamily,colorConfig.typography.fontFamily);
+        const landmark=raw.value.match(/^L(\d+)$/),math=Boolean(landmark)||['notation-start','notation-end'].includes(raw.kind);
+        assert.equal(size,rawSize*colorConfig.typography.sizeScale*(math?colorConfig.typography.notationSizeScale:1));
+        assert.equal(fontFamily,math?colorConfig.typography.notationFontFamily:colorConfig.typography.fontFamily);
+        assert.equal(Boolean(fontItalic),math);
+        if(landmark) {
+          assert.deepEqual(textRuns.map(r=>r.value),['l',landmark[1]]);
+          assert(textRuns[0].italic&&!textRuns[1].italic);
+          assert(textRuns[1].size<textRuns[0].size&&textRuns[1].y>textRuns[0].y);
+        }
         assert.equal(textBackground,colorConfig.typography.background?selected.textBackground:null);
         assert(textBox.width>0&&textBox.height>0);
       }

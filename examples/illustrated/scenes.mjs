@@ -1103,11 +1103,21 @@ export function displayElements(elements,amount=elements.some(e=>e.kind==='threa
     const start=theme[e.type==='text'&&!['angle','adjusted'].includes(e.color)?'text':e.color];
     let shown={...e,color:start};
     if(e.type==='text') {
-      const font=colorConfig.typography,size=e.size*font.sizeScale;
+      const font=colorConfig.typography,landmark=e.value.match(/^L(\d+)$/);
+      const math=Boolean(landmark)||['notation-start','notation-end'].includes(e.kind);
+      const size=e.size*font.sizeScale*(math?font.notationSizeScale:1);
       // Conservative em boxes keep labels clear in both renderers, without a font dependency.
-      const width=e.value.length*size*.65+2*font.paddingX,height=size*1.15+2*font.paddingY;
-      shown={...shown,size,fontFamily:font.fontFamily,textBackground:font.background?theme.textBackground:null,
+      const width=e.value.length*size*.65+2*font.paddingX,height=size*(landmark?1.4:1.15)+2*font.paddingY;
+      shown={...shown,size,fontFamily:math?font.notationFontFamily:font.fontFamily,textBackground:font.background?theme.textBackground:null,
         textBox:{x:e.p[0]-width/2,y:e.p[1]-size*.92-font.paddingY,width,height}};
+      if(math)shown.fontItalic=true;
+      if(landmark) {
+        const baseWidth=size*.36,subWidth=landmark[1].length*size*.7*.55,left=e.p[0]-(baseWidth+subWidth)/2;
+        shown.textRuns=[
+          {value:'l',x:left+baseWidth/2,y:e.p[1],size,italic:true},
+          {value:landmark[1],x:left+baseWidth+subWidth/2,y:e.p[1]+size*.25,size:size*.7,italic:false}
+        ];
+      }
     }
     if(!amount||!['slit','proposal','hole','virtual','measurement','dimension','gap-value','gap-dimension','span-label','span-dimension','thread-length-value','thread-length-dimension'].includes(e.kind))return shown;
     const target=e.adjusted?theme.adjustedSecondary:theme.secondary;
@@ -1122,7 +1132,8 @@ export function portraitScenes(scenes,theme=themeFor()) {
     const box=bounds.get(s.source)??[Infinity,Infinity,-Infinity,-Infinity];
     for(const elements of [s.final,...s.frames.map(f=>f.elements)])for(const e of elements) {
       const points=e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p];
-      const pad=e.type==='text'?Math.max(e.size,e.value.length*e.size*.325)*colorConfig.typography.sizeScale+Math.max(colorConfig.typography.paddingX,colorConfig.typography.paddingY):(e.radius??e.width??0);
+      const math=e.type==='text'&&(/^L\d+$/.test(e.value)||['notation-start','notation-end'].includes(e.kind));
+      const pad=e.type==='text'?Math.max(e.size,e.value.length*e.size*.325)*colorConfig.typography.sizeScale*(math?colorConfig.typography.notationSizeScale:1)+Math.max(colorConfig.typography.paddingX,colorConfig.typography.paddingY):(e.radius??e.width??0);
       for(const p of points){box[0]=Math.min(box[0],p[0]-pad);box[1]=Math.min(box[1],p[1]-pad);box[2]=Math.max(box[2],p[0]+pad);box[3]=Math.max(box[3],p[1]+pad);}
     }
     bounds.set(s.source,box);
@@ -1145,7 +1156,8 @@ export function svg(scene) {
     if(e.type==='polygon')return `<polygon class="${e.kind}" points="${e.points.map(p=>p.map(n).join(',')).join(' ')}" fill="${e.color}" fill-opacity="${e.opacity??1}"/>`;
     const box=e.textBox;
     const background=e.textBackground?`<rect class="label-background" x="${n(box.x)}" y="${n(box.y)}" width="${n(box.width)}" height="${n(box.height)}" fill="${e.textBackground}"/>`:'';
-    return background+`<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="${escape(e.fontFamily)}" font-size="${e.size}"${e.bold?' font-weight="bold"':''} fill="${e.color}">${escape(e.value)}</text>`;
+    const content=e.textRuns?e.textRuns.map(run=>`<tspan x="${n(run.x)}" y="${n(run.y)}" font-size="${n(run.size)}" font-style="${run.italic?'italic':'normal'}">${escape(run.value)}</tspan>`).join(''):escape(e.value);
+    return background+`<text class="${e.kind}" x="${n(e.p[0])}" y="${n(e.p[1])}" text-anchor="middle" font-family="${escape(e.fontFamily)}" font-size="${e.size}"${e.fontItalic?' font-style="italic"':''}${e.bold?' font-weight="bold"':''} fill="${e.color}">${content}</text>`;
   });
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}" role="img" aria-labelledby="title description"><title id="title">${escape(scene.title)}</title><desc id="description">Analytic illustration of ${scene.source}. ${scene.frames.length?'Final state of the accompanying animation.':scene.threadPaths?'Static stitch diagram.':'Static terminology figure.'}</desc>\n<rect width="100%" height="100%" fill="${canvas.background}"/>\n<g transform="translate(${canvas.x} ${canvas.y}) scale(${canvas.scale})">\n${elements.join('\n')}\n</g>\n</svg>\n`;
 }

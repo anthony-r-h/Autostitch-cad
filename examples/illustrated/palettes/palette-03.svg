@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750" role="img" aria-labelledby="title description"><title id="title">03 / Glacier</title><desc id="description">Analytic illustration of ILL-CORNER-PROBLEM. Static stitch diagram.</desc>
 <rect width="100%" height="100%" fill="#EDF5FA"/>
-<g transform="translate(-78.6999168744805 170.33749480333458) scale(1.170407315045719)">
+<g transform="translate(-75.29882586406484 170.02348788524188) scale(1.16421365966595)">
 <line class="adjusted-gap" x1="410" y1="70.011947796" x2="410" y2="40" stroke="#145D9A" stroke-width="2.2"/>
 <line class="adjusted-gap" x1="379.988052204" y1="40" x2="410" y2="40" stroke="#145D9A" stroke-width="2.2"/>
 <line class="guide" x1="125" y1="40" x2="410" y2="40" stroke="#859BAA" stroke-width="1"/>
@@ -44,11 +44,11 @@
 <line class="adjustment-mark" x1="413.132986079" y1="79.271033978" x2="418.574382534" y2="74.705160219" stroke="#145D9A" stroke-width="0.8"/>
 <line class="virtual" x1="404.146315694" y1="26.608933894" x2="415.853684306" y2="40.561232498" stroke="#5B6D7C" stroke-width="1.5" stroke-dasharray="4 4"/>
 <circle class="hole" cx="410" cy="40" r="3.03557205" fill="#5B6D7C"/>
-<rect class="label-background" x="106.1" y="9.96" width="13.8" height="17.8" fill="#EDF5FA"/><text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Arial" font-size="12" fill="#16394E">s</text>
+<rect class="label-background" x="105.32" y="7.752" width="15.36" height="20.56" fill="#EDF5FA"/><text class="notation-start" x="113" y="23" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#16394E">s</text>
 <line class="direction" x1="143" y1="40" x2="155" y2="40" stroke="#395365" stroke-width="1.1"/>
 <line class="direction" x1="155" y1="40" x2="149" y2="36.5" stroke="#395365" stroke-width="1.1"/>
 <line class="direction" x1="155" y1="40" x2="149" y2="43.5" stroke="#395365" stroke-width="1.1"/>
-<rect class="label-background" x="420.1" y="323.96" width="13.8" height="17.8" fill="#EDF5FA"/><text class="notation-end" x="427" y="337" text-anchor="middle" font-family="Arial" font-size="12" fill="#16394E">e</text>
+<rect class="label-background" x="419.32" y="321.752" width="15.36" height="20.56" fill="#EDF5FA"/><text class="notation-end" x="427" y="337" text-anchor="middle" font-family="Cambria" font-size="14.399999999999999" font-style="italic" fill="#16394E">e</text>
 <rect class="label-background" x="427.1" y="8.96" width="13.8" height="17.8" fill="#EDF5FA"/><text class="notation-junction" x="434" y="22" text-anchor="middle" font-family="Arial" font-size="12" fill="#16394E">j</text>
 <polygon class="angle-wedge" points="386.964201505,34.146315694 404.964201505,34.146315694 404.962024531,34.426255582 404.955494134,34.706127758 404.944611895,34.985864522 404.929380445,35.265398211 404.909803468,35.54466121 404.885885702,35.823585969 404.857632929,36.102105019 404.825051985,36.380150991 404.788150751,36.65765663 404.746938152,36.93455481 404.701424157,37.210778554 404.651619775,37.486261047 404.597537053,37.760935654 404.539189074,38.034735935 404.47658995,38.307595661 404.409754824,38.579448832" fill="#B12E48" fill-opacity="0.22"/>
 <line class="angle-reference" x1="386.964201505" y1="34.146315694" x2="414.964201505" y2="34.146315694" stroke="#B12E48" stroke-width="0.8" stroke-dasharray="4 4"/>

@@ -2,6 +2,8 @@
   "documentationTheme": "graphite",
   "typography": {
     "fontFamily": "Arial",
+    "notationFontFamily": "Cambria",
+    "notationSizeScale": 1.2,
     "sizeScale": 1,
     "background": true,
     "paddingX": 3,

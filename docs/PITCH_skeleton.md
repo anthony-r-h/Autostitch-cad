@@ -102,7 +102,6 @@
 - Thread bridges the last slit on each arm, bypassing the vertex
 - Move the vertical run to vary the visible bridge stitch from $2.00$ to $3.00\,\mathrm{mm}$; the red angles change with it
 - Both positions retain nominal arm spacing; the far endpoint moves with the row
-- The table uses the $2.00\,\mathrm{mm}$ position
 
 ### Shared diagonal slit with mirrored lean
 
@@ -123,20 +122,11 @@
 - The vertical guide fixes the outgoing arm's direction. With nominal corner steps, the entering and leaving thread both meet their guides at $27.5^\circ$
 - Keep slit lean consistent and absorb the residual within the arm spans; the shared hole sits off the guide vertex
 
-| Treatment | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Vertex point | $2$ | $1.057$ | $0.259$ |
-| Bridge | $1$ | $0.106$ | $0.087$ |
-| Shared diagonal slit with mirrored lean | $2$ | $0.575$ | $0.407$ |
-| Autostitch | $3$ | $0.575$ | $0.516$ |
-
-- Totals include out-of-bound gaps in the vertex treatments
-
 ### Corner tradeoffs
 
 - Keeping the opening at the vertex, keeping slit lean consistent and keeping the arm gaps nominal lead to different corner treatments
 - Shared diagonal slit with mirrored lean gives less visible thread-length deviation here; Autostitch keeps consistent lean and bounded gaps, with an offset corner hole
-- Autostitch ties the diagonal slit on total adjustment but changes more gaps. The choice depends on which geometric and manufacturing rules the pattern must preserve
+- The choice depends on which geometric and manufacturing rules the pattern must preserve
 
 # Why CAD
 

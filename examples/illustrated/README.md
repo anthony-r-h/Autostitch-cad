@@ -76,9 +76,9 @@ Motion shows planning revisions, not physical punching order; the analytic const
 - Gap values sit beneath their dimension brackets; numeric lengths use two decimals and regular 13 px text
 - Residuals use a thick red line on the guide, without end ticks; their numbers are red and sit beside the gap values
 - Static diagrams use the same final appearance; glossary figures without thread retain their contrast
-- The corner table in the pitch uses `pitchComparisonMetrics`; `tests/validate-illustrated.mjs` checks the published totals
+- `pitchComparisonMetrics` calculates comparison totals for analysis; the pitch uses the diagrams and their corner measurements
 - Spacing treatments share the initial residual, including the unfitted nominal row. The bridge uses its direct endpoint span rather than the abandoned path through the vertex. Autostitch corner steps are nominal and use virtual centres for pitch accounting
-- Comparison totals include out-of-bound final gaps in the vertex treatments. The Bridge totals and still use its $2.00\,\mathrm{mm}$ position. Visible thread-length deviation includes the actual connections to the Autostitch round hole
+- Comparison totals include out-of-bound final gaps in the vertex treatments. The Bridge analysis totals and still use its $2.00\,\mathrm{mm}$ position. Visible thread-length deviation includes the actual connections to the Autostitch round hole
 
 Recalculate totals from the repository root:
 

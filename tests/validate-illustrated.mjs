@@ -514,7 +514,6 @@ near(previousX,problemView.x);
 
 const pitchDoc=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 for(const [,link] of pitchDoc.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g))assert(fs.existsSync(new URL(link,new URL('docs/PITCH_skeleton.md',root))),`Missing pitch figure: ${link}`);
-const comparisonRows=pitchDoc.split('\n').filter(line=>/^\| (Even spacing|End adjustment|Autostitch|Vertex point|Bridge|Shared diagonal slit)/.test(line));
 const comparisons=scenes.filter(s=>(s.name.startsWith('pitch-')&&s.name!=='pitch-problem')||s.name.startsWith('problem-corner-'));
 for(const s of comparisons.filter(s=>s.name.startsWith('problem-corner-'))) {
   const threads=s.final.filter(e=>e.kind==='thread');
@@ -553,13 +552,7 @@ for(const key of ['absoluteAdjustment','absoluteResidual'])near(balancedMirror[k
 assert.equal(balancedMirror.adjustedGaps,2);
 assert.equal(balancedAuto.adjustedGaps,3);
 near(balancedAuto.absoluteResidual,cornerShifts.reduce((sum,c)=>sum+c/2,0));
-const publishedComparisons=['vertex-point','bridge','mirrored','autostitch'].map(t=>scenes.find(s=>s.name===`problem-corner-${t}`));
-assert.equal(comparisonRows.length,publishedComparisons.length);
-for(const [i,s] of publishedComparisons.entries()) {
-  const metrics=pitchComparisonMetrics(s);
-  const values=[metrics.adjustedGaps,metrics.absoluteAdjustment,metrics.stitchLengthDeviation].map(v=>Number(v.toFixed(3)));
-  const published=[...comparisonRows[i].matchAll(/\$([\d.]+)/g)].map(m=>Number(m[1]));
-  assert.deepEqual(published,values,s.name);
+for(const s of comparisons) {
   for(const f of [...s.frames,{elements:s.final}])for(const e of f.elements) {
     if(e.type==='text'&&['gap-value','residual-value'].includes(e.kind)){assert.equal(e.size,13);assert.equal(e.bold,false);}
     if(e.kind==='residual-dimension'){assert.equal(e.color,'#C62828');assert.equal(e.width,3);}

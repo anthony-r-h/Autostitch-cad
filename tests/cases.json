@@ -9921,7 +9921,7 @@
     },
     {
       "id": "ILL-EMBLEM-SQUARE",
-      "measurementPolicy": "Retain solid white slits and fine thread at native line widths, with thin guides, virtual slits, direction marks and landmarks, blue adjusted gaps and slit marks, and red thread-angle arcs. No dimension numbers or unresolved residuals in the completed layout.",
+      "measurementPolicy": "Retain solid white slits with 1.2 px strokes and thread with 0.9 px strokes for thumbnail visibility, with thin guides, virtual slits, direction marks and landmarks, blue adjusted gaps and slit marks, and red thread-angle arcs. No dimension numbers or unresolved residuals in the completed layout.",
       "source": "examples/illustrated/emblem-square.mjs",
       "pitch": 2.7,
       "slitLength": 1.5,

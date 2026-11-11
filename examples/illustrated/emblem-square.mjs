@@ -16,9 +16,10 @@ export function createSquareEmblem(model=loadEmblem(),theme=themeFor()) {
   const book={...storyboard,views:{square:{center,height:750/scale}},camera:[{at:0,view:'square'}],
     guides:[{target:'all',from:0,until:100}],commentary:[],actions:storyboard.actions.filter(a=>a.action!=='fade-openings')};
   const elements=frameAt(40,book,model,theme).elements.map(e=>{
-    // Preserve the native square's solid slits and fine thread, rather than animation fading.
-    if(e.kind==='slit')return {...e,outline:false,width:.3*scale,color:theme.ink,round:true};
-    if(e.kind==='thread'||e.kind==='virtual')return {...e,width:.09*scale,color:theme.ink,round:true};
+    // Keep strokes visible when the 600 px export is reduced to a roughly 300 px thumbnail.
+    if(e.kind==='slit')return {...e,outline:false,width:1.2,color:theme.ink,round:true};
+    if(e.kind==='thread')return {...e,width:.9,color:theme.ink,round:true};
+    if(e.kind==='virtual')return {...e,width:.09*scale,color:theme.ink,round:true};
     if(e.kind==='hole')return {...e,color:theme.ink};
     if(e.kind==='guide')return {...e,width:.2};
     return e;

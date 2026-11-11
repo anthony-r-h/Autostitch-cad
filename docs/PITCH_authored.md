@@ -128,7 +128,7 @@ On the same guides, the Autostitch layout uses round holes at both corners and k
 
 ![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.png)
 
-| Construction | # of adjusted gaps | Absolute adjustment | Absolute stitch deviation |
+| Method | # adj. gaps | Abso. adj. | Abs. stitch deviation |
 | --- | ---: | ---: | ---: |
 | Reference | $3$ | $0.90\,\mathrm{mm}$ | $1.40\,\mathrm{mm}$ |
 | Autostitch | $1$ | $0.25\,\mathrm{mm}$ | $0.22\,\mathrm{mm}$ |
@@ -143,7 +143,7 @@ The Autostitch layout places applies the corner solution and fits each interveni
 
 ![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
-| Construction | # of adjusted gaps | Absolute of adjustment | Absolute stitch deviation |
+| Method | # adj. gaps | Abso. adj. | Abs. stitch deviation |
 | --- | ---: | ---: | ---: |
 | Reference | $26$ | $4.93\,\mathrm{mm}$ | $6.61\,\mathrm{mm}$ |
 | Autostitch | $6$ | $0.92\,\mathrm{mm}$ | $0.82\,\mathrm{mm}$ |
@@ -158,7 +158,7 @@ The Autostitch layout keeps the same guides and aligned straight rows, but the v
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
-| Construction | # of adjusted gaps | Absolute adjustment | Absolute stitch deviation |
+| Method | # adj. gaps | Abso. adj. | Abs. stitch deviation |
 | --- | ---: | ---: | ---: |
 | Reference | $10$ | $2.51\,\mathrm{mm}$ | $2.03\,\mathrm{mm}$ |
 | Autostitch | $5$ | $1.34\,\mathrm{mm}$ | $1.17\,\mathrm{mm}$ |

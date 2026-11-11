@@ -206,8 +206,16 @@ assert.equal(square.canvas.supersampling,3,'Match the original native preview ra
 const squareSlits=squareElements.filter(e=>e.kind==='slit'),squareThreads=squareElements.filter(e=>e.kind==='thread');
 assert(squareSlits.every(e=>!e.outline&&e.round),'Keep the original solid, round-ended slits');
 assert(squareSlits.every(e=>e.color===squareThreads[0].color),'Slits and thread retain the same unfaded ink');
-almost(squareSlits[0].width/squareThreads[0].width,.3/.09);
-almost(squareThreads[0].width,.09*600/(465*256/600));
+assert(squareThreads.every(e=>e.width*292/600>=.4),'Thread must survive reduction to the blog thumbnail size');
+assert(squareSlits.every(e=>e.width>squareThreads[0].width),'Slits must remain heavier than thread');
+const squareScale=600/(465*256/600);
+const squareProject=p=>[300+(p[0]-(333+292.5*256/600))*squareScale,
+  375-(p[1]-(135.0709751266425-300.5*256/600))*squareScale];
+threads.forEach((t,i)=>{point(squareThreads[i].a,squareProject(t.a));point(squareThreads[i].b,squareProject(t.b));});
+for(const o of model.openings.filter(o=>o.type==='slit')) {
+  const e=squareSlits.find(e=>e.id===o.id);
+  point(e.a,squareProject(o.a));point(e.b,squareProject(o.b));
+}
 assert.equal(squareElements.filter(e=>e.id&&['slit','hole'].includes(e.kind)).length,model.openings.length);
 assert.equal(squareElements.filter(e=>e.kind==='thread').length,model.threads.length);
 assert.equal(squareElements.filter(e=>e.kind==='virtual').length,model.extras.filter(e=>e.kind==='virtual').length);

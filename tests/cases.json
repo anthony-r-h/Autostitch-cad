@@ -9918,7 +9918,7 @@
     },
     {
       "id": "ILL-EMBLEM-SQUARE",
-      "measurementPolicy": "Show guides, slit outlines, virtual slits, start/end and direction marks, landmarks, junction labels, blue adjusted gaps and slit marks, and red thread-angle arcs. No dimension numbers or unresolved residuals in the completed layout.",
+      "measurementPolicy": "Retain solid white slits and fine thread at native line widths, with thin guides, virtual slits, direction marks and landmarks, blue adjusted gaps and slit marks, and red thread-angle arcs. No dimension numbers or unresolved residuals in the completed layout.",
       "source": "examples/illustrated/emblem-square.mjs",
       "pitch": 2.7,
       "slitLength": 1.5,
@@ -9931,6 +9931,7 @@
         "guides": "examples/emblem.lsp",
         "nativeViewBox": [60, 68, 465, 465],
         "canvas": [600, 600],
+        "supersampling": 3,
         "openingsIncludingDot": 1077
       },
       "assets": [{"path": "examples/demos/emblem", "label": "Square emblem with construction notation"}]

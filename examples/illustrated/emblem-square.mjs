@@ -15,7 +15,14 @@ export function createSquareEmblem(model=loadEmblem(),theme=themeFor()) {
   const project=p=>[view.x+p[0]*scale,view.y-p[1]*scale];
   const book={...storyboard,views:{square:{center,height:750/scale}},camera:[{at:0,view:'square'}],
     guides:[{target:'all',from:0,until:100}],commentary:[],actions:storyboard.actions.filter(a=>a.action!=='fade-openings')};
-  const elements=frameAt(40,book,model,theme).elements;
+  const elements=frameAt(40,book,model,theme).elements.map(e=>{
+    // Preserve the native square's solid slits and fine thread, rather than animation fading.
+    if(e.kind==='slit')return {...e,outline:false,width:.3*scale,color:theme.ink,round:true};
+    if(e.kind==='thread'||e.kind==='virtual')return {...e,width:.09*scale,color:theme.ink,round:true};
+    if(e.kind==='hole')return {...e,color:theme.ink};
+    if(e.kind==='guide')return {...e,width:.2};
+    return e;
+  });
   const annotations=[];
   const label=(point,value,kind)=>annotations.push({...notationText(point,value,kind),size:10});
   const line=(a,b,kind,color,width=.7)=>annotations.push({type:'line',a,b,kind,color,width});
@@ -24,14 +31,7 @@ export function createSquareEmblem(model=loadEmblem(),theme=themeFor()) {
       const first=group.primitives[route.first],last=group.primitives[route.last];
       const tangent=p=>[Math.cos(p),-Math.sin(p)];
       const marks=routeMarks(project(first.a),project(last.b),tangent(first.angle(0)),tangent(last.angle(last.length)));
-      annotations.push(...marks.filter(e=>!route.closed||e.kind!=='notation-end').map(e=>e.type==='text'?{...e,size:10}:e));
-    }
-    if(group.radius) {
-      const incoming=new Set(group.threads.map(t=>t.to)),outgoing=new Set(group.threads.map(t=>t.from));
-      for(const o of group.openings) {
-        if(!incoming.has(o.id))label(add(project(o.center),[-9,-10]),'s','start');
-        if(!outgoing.has(o.id))label(add(project(o.center),[9,12]),'e','end');
-      }
+      annotations.push(...marks.filter(e=>e.type!=='text'));
     }
     for(const [i,landmark] of (group.landmarks??[]).entries()) {
       const p=group.primitives[landmark.primitive],at=p.point(landmark.station),angle=p.angle(landmark.station);
@@ -40,7 +40,6 @@ export function createSquareEmblem(model=loadEmblem(),theme=themeFor()) {
       label(add(project(add(at,mul(normal,i===0?4:-4))),[10,0]),`L${i+1}`,'landmark');
     }
     for(const o of group.openings.filter(o=>o.type==='circle'&&o.radius<=1)) {
-      label(add(project(o.center),[8,-8]),'j','junction');
       // Each corner connection is compared with its adjoining guide tangent.
       for(const thread of group.threads.filter(t=>t.from===o.id||t.to===o.id)) {
         const other=group.openings.find(n=>n.id===(thread.from===o.id?thread.to:thread.from));
@@ -59,7 +58,7 @@ export function createSquareEmblem(model=loadEmblem(),theme=themeFor()) {
   elements.push(...displayElements(annotations,0,theme));
   // Crop the shared frame's portrait origin to the square viewport.
   return {name:'emblem',title:'Autostitch emblem with construction notation',source:'ILL-EMBLEM-SQUARE',displayed:true,
-    canvas:{width:600,height:600,x:0,y:-75,scale:1,background:theme.background},final:elements,frames:[]};
+    canvas:{width:600,height:600,x:0,y:-75,scale:1,supersampling:3,background:theme.background},final:elements,frames:[]};
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {

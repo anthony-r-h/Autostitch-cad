@@ -202,12 +202,20 @@ assert.deepEqual(delays,scene.frames.map(f=>f.delay));
 assert(gif.includes(Buffer.from('NETSCAPE2.0')));
 const square=createSquareEmblem(model),squareElements=square.final;
 assert.equal(square.canvas.width,600);assert.equal(square.canvas.height,600);
+assert.equal(square.canvas.supersampling,3,'Match the original native preview raster quality');
+const squareSlits=squareElements.filter(e=>e.kind==='slit'),squareThreads=squareElements.filter(e=>e.kind==='thread');
+assert(squareSlits.every(e=>!e.outline&&e.round),'Keep the original solid, round-ended slits');
+assert(squareSlits.every(e=>e.color===squareThreads[0].color),'Slits and thread retain the same unfaded ink');
+almost(squareSlits[0].width/squareThreads[0].width,.3/.09);
+almost(squareThreads[0].width,.09*600/(465*256/600));
 assert.equal(squareElements.filter(e=>e.id&&['slit','hole'].includes(e.kind)).length,model.openings.length);
 assert.equal(squareElements.filter(e=>e.kind==='thread').length,model.threads.length);
 assert.equal(squareElements.filter(e=>e.kind==='virtual').length,model.extras.filter(e=>e.kind==='virtual').length);
-for(const kind of ['guide','adjusted-gap','adjustment-mark','angle','notation-start','notation-end','notation-junction','notation-landmark']) {
+for(const kind of ['guide','adjusted-gap','adjustment-mark','angle','notation-landmark']) {
   assert(squareElements.some(e=>e.kind===kind),`Square emblem needs ${kind}`);
 }
+assert(!squareElements.some(e=>['notation-start','notation-end','notation-junction'].includes(e.kind)),
+  'The square omits s, e and j labels');
 assert(!squareElements.some(e=>e.dimensionId||e.kind==='residual'||e.type==='text'&&/^[-+]?\d/.test(e.value)),
   'The completed square has no dimension numbers or unresolved residuals');
 const squareSvg=fs.readFileSync(new URL('../examples/demos/emblem.svg',import.meta.url),'utf8');

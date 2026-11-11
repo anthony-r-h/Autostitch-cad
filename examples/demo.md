@@ -43,7 +43,7 @@ Preview colours use `documentationTheme` in [illustrated/colors.json](illustrate
 ./examples/render-demos.ps1 -SvgPath examples/demos/can-you-really.svg -OutputBase examples/demos/can-you-really
 ```
 
-The square emblem is a 600 by 600 px annotated preview. It shows guides, slits, virtual slits, start/end and direction marks, landmarks, junction labels, blue adjustment marks and red thread-angle arcs. Dimension numbers are omitted. Its builder uses the shared theme and the native drawing geometry, retained verbatim in the SVG's `native-emblem` metadata. The animation reads that preserved export and keeps its existing presentation. Run `node tests/validate-emblem-storyboard.mjs` to check both views.
+The square emblem is a 600 by 600 px annotated preview. It preserves the native preview's solid white slits, fine thread widths and 3x supersampling. Thin guides, virtual slits, direction marks and landmarks, blue adjustment marks and red thread-angle arcs supply the notation. Dimension numbers are omitted. Its builder uses the shared theme and the native drawing geometry, retained verbatim in the SVG's `native-emblem` metadata. The animation reads that preserved export and keeps its existing presentation. Run `node tests/validate-emblem-storyboard.mjs` to check both views.
 
 The square emblem retains the crop `60,68,465,465` in the original 600 px native SVG coordinates, clipping the outer ring while retaining both words. After a geometry change, first render the new native export with the bounds below at 600 by 600 px, then run the square builder above and rebuild the animation. Use the square builder for subsequent notation or colour changes; `render-demos.ps1 -SvgPath` is for unannotated native previews.
 

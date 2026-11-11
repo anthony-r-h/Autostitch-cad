@@ -51,13 +51,14 @@ if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
 $scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 
 function Draw-Frame($elements,$canvas) {
- $large=[Drawing.Bitmap]::new(($canvas.width*2),($canvas.height*2))
+ $supersampling=if($null -ne $canvas.supersampling){[int]$canvas.supersampling}else{2}
+ $large=[Drawing.Bitmap]::new(($canvas.width*$supersampling),($canvas.height*$supersampling))
  $g=[Drawing.Graphics]::FromImage($large)
  $small=[Drawing.Bitmap]::new($canvas.width,$canvas.height)
  try {
   $background=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($canvas.background))
   $g.Clear($background.Color)
-  $g.ScaleTransform(2,2)
+  $g.ScaleTransform($supersampling,$supersampling)
   $g.TranslateTransform([single]$canvas.x,[single]$canvas.y)
   $g.ScaleTransform([single]$canvas.scale,[single]$canvas.scale)
   $g.SmoothingMode=[Drawing.Drawing2D.SmoothingMode]::AntiAlias

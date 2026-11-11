@@ -2,6 +2,48 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {gifBlocks} from '../examples/illustrated/scenes.mjs';
+import {animatedSvg} from '../examples/illustrated/animated-svg.mjs';
+
+// Independently read the emitted groups and SMIL tracks for a small reorder case.
+function lineFrames(source,times) {
+  const root={attributes:{},children:[],animations:[]},stack=[root];
+  for(const match of source.matchAll(/<(\/?)(g|line|animate|animateTransform)\b([^>]*?)(\/?)>/g)) {
+    const [,close,tag,body,selfClosing]=match;
+    if(close){stack.pop();continue;}
+    const attributes=Object.fromEntries([...body.matchAll(/([\w-]+)="([^"]*)"/g)].map(m=>[m[1],m[2]]));
+    const parent=stack.at(-1);
+    if(tag==='animate'||tag==='animateTransform'){parent.animations.push(attributes);continue;}
+    const node={tag,attributes,children:[],animations:[]};
+    parent.children.push(node);
+    if(!selfClosing)stack.push(node);
+  }
+  return times.map(time=>{
+    const lines=[];
+    const visit=(node,inherited={})=>{
+      const attributes={...inherited,...node.attributes};
+      for(const track of node.animations) {
+        const keys=track.keyTimes.split(';').map(Number),values=track.values.split(';');
+        const fraction=time/parseFloat(track.dur);
+        attributes[track.attributeName]=values[keys.findLastIndex(key=>key<=fraction)];
+      }
+      if(node.tag==='line'&&attributes.visibility!=='hidden')lines.push([attributes.x1,attributes.stroke,attributes['stroke-width']]);
+      for(const child of node.children)visit(child,attributes);
+    };
+    visit(root);
+    return lines;
+  });
+}
+const mark=id=>({id,type:'line',kind:'guide',a:[id,0],b:[id,10],width:1,color:'#fff'});
+const order=[[1,2],[3,1,2],[2,3,1],[1,2]];
+const fixture={title:'Track identity and painter order',source:'BUILD-ANIMATED-SVG',
+  canvas:{width:600,height:750,x:0,y:0,scale:1,background:'#000'},
+  frames:order.map((ids,index)=>({delay:25,elements:ids.map(id=>({...mark(id),width:index+1}))}))};
+const emitted=animatedSvg(fixture);
+assert.deepEqual(lineFrames(emitted,[.125,.375,.625,.875]),
+  order.map((ids,index)=>ids.map(id=>[String(id),'#fff',String(index+1)])),
+  'Inserted, removed and reordered shapes must preserve visible order and inherited styling');
+assert(!emitted.includes('attributeName="x1"'),'Stable shapes should not acquire coordinate animation');
+console.log('SVG optimization valid: stable geometry, insertions, removals, painter order and inherited styling.');
 
 const root=new URL('../',import.meta.url);
 const directories=['examples/illustrated/assets/','examples/illustrated/t-junctions/',

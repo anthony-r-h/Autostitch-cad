@@ -65,6 +65,89 @@ function animation(attribute,values,times,duration,transform=false) {
   return `<${name} ${target} calcMode="discrete" dur="${number(duration)}s" repeatCount="indefinite" keyTimes="${changes.map(change=>number(change.time)).join(';')}" values="${changes.map(change=>escape(change.value)).join(';')}"/>`;
 }
 
+function elementTracks(frames) {
+  let ordered=[];
+  const latest=new Map();
+  frames.forEach((frame,frameIndex)=>{
+    const positions=new Map(ordered.map((track,index)=>[track,index])),occurrences=new Map();
+    const entries=frame.elements.map(element=>{
+      const identity=JSON.stringify([element.type,element.kind,element.group,element.id]);
+      const occurrence=occurrences.get(identity)??0;
+      occurrences.set(identity,occurrence+1);
+      const key=identity+':'+occurrence;
+      return {key,element,track:latest.get(key)};
+    });
+    // Reuse the longest ordered sequence. Reordered shapes get a new track so
+    // their painter order stays correct even when earlier shapes disappear.
+    const tails=[],previous=[];
+    entries.forEach((entry,index)=>{
+      if(!entry.track)return;
+      const position=positions.get(entry.track);
+      let low=0,high=tails.length;
+      while(low<high){const middle=(low+high)>>1;if(positions.get(entries[tails[middle]].track)<position)low=middle+1;else high=middle;}
+      previous[index]=low?tails[low-1]:-1;
+      tails[low]=index;
+    });
+    const retained=new Set();
+    for(let index=tails.at(-1);index!==undefined&&index!==-1;index=previous[index])retained.add(index);
+    const merged=[];
+    let cursor=0;
+    entries.forEach((entry,index)=>{
+      let track;
+      if(retained.has(index)) {
+        const position=positions.get(entry.track);
+        while(cursor<=position)merged.push(ordered[cursor++]);
+        track=entry.track;
+      } else {
+        track={frames:new Map()};
+        merged.push(track);
+      }
+      track.frames.set(frameIndex,entry.element);
+      latest.set(entry.key,track);
+    });
+    ordered=merged.concat(ordered.slice(cursor));
+  });
+  return ordered;
+}
+
+// Share inherited properties only between adjacent shapes. Opacity stays on each
+// shape because group opacity would change the compositing of overlapping marks.
+function shapeMarkup(shapes,names=['stroke-width','stroke','fill','stroke-linecap','stroke-dasharray','visibility','font-family','font-size','font-style','font-weight','text-anchor']) {
+  let best,savings=0;
+  for(const name of names) {
+    let saved=0,previous,count=0;
+    for(const shape of shapes) {
+      const signature=shape.properties.get(name);
+      if(signature&&signature===previous)count++;
+      else {
+        if(count>1)saved+=(count-1)*previous.length-7;
+        previous=signature;count=signature?1:0;
+      }
+    }
+    if(count>1)saved+=(count-1)*previous.length-7;
+    if(saved>savings){best=name;savings=saved;}
+  }
+  if(!best)return shapes.map(shape=>{
+    const attributes=[],animations=[];
+    for(const property of shape.properties.values()) {const [attribute,animation]=JSON.parse(property);attributes.push(attribute);animations.push(animation);}
+    return `<${shape.tag} ${attributes.join(' ')}>${escape(shape.text)}${animations.join('')}</${shape.tag}>`;
+  }).join('\n');
+  const remaining=names.filter(name=>name!==best),groups=[];
+  for(let start=0;start<shapes.length;) {
+    const signature=shapes[start].properties.get(best);
+    let end=start+1;
+    while(end<shapes.length&&shapes[end].properties.get(best)===signature)end++;
+    const group=shapes.slice(start,end);
+    if(signature&&group.length>1) {
+      const [attribute,animation]=JSON.parse(signature);
+      for(const shape of group)shape.properties.delete(best);
+      groups.push(`<g ${attribute}>${animation}\n${shapeMarkup(group,remaining)}\n</g>`);
+    } else groups.push(shapeMarkup(group,remaining));
+    start=end;
+  }
+  return groups.join('\n');
+}
+
 export function animatedSvg(scene) {
   if(scene.frames.length<2||!scene.frames.every(frame=>Number.isInteger(frame.delay)&&frame.delay>0))throw new Error('Expected an animated scene with positive frame delays');
   const {canvas}=scene;
@@ -72,26 +155,27 @@ export function animatedSvg(scene) {
   let elapsed=0;
   for(const frame of scene.frames){times.push(elapsed/duration);elapsed+=frame.delay;}
   const cameras=scene.frames.map(cameraFor),slots=[];
-  scene.frames.forEach((frame,frameIndex)=>frame.elements.forEach((element,slot)=>{
-    slots[slot]??=new Map();
-    for(const primitive of primitives(element,cameras[frameIndex],canvas)) {
+  for(const elementTrack of elementTracks(scene.frames)) {
+    const slot=new Map();
+    for(const [frameIndex,element] of elementTrack.frames)for(const primitive of primitives(element,cameras[frameIndex],canvas)) {
       const key=JSON.stringify([primitive.part,primitive.tag,primitive.text]);
-      if(!slots[slot].has(key))slots[slot].set(key,{...primitive,frames:new Map()});
-      slots[slot].get(key).frames.set(frameIndex,primitive.attributes);
+      if(!slot.has(key))slot.set(key,{...primitive,frames:new Map()});
+      slot.get(key).frames.set(frameIndex,primitive.attributes);
     }
-  }));
+    slots.push(slot);
+  }
   const shapes=[];
   for(const slot of slots)for(const track of [...slot.values()].sort((a,b)=>a.part-b.part)) {
     const first=track.frames.values().next().value;
     const visibility=scene.frames.map((_,index)=>track.frames.has(index)?'visible':'hidden');
     const attributes={...first,visibility:visibility[0]};
-    const animations=[animation('visibility',visibility,times,duration/100)];
+    const animations={visibility:animation('visibility',visibility,times,duration/100)};
     for(const name of Object.keys(first)) {
       let current=first[name];
       const values=scene.frames.map((_,index)=>{if(track.frames.has(index))current=track.frames.get(index)[name];return current;});
-      animations.push(animation(name,values,times,duration/100));
+      animations[name]=animation(name,values,times,duration/100);
     }
-    shapes.push(`<${track.tag} ${Object.entries(attributes).map(([name,value])=>`${name}="${escape(value)}"`).join(' ')}>${escape(track.text)}${animations.join('')}</${track.tag}>`);
+    shapes.push({tag:track.tag,text:track.text,properties:new Map(Object.entries(attributes).map(([name,value])=>[name,JSON.stringify([`${name}="${escape(value)}"`,animations[name]])]))});
   }
   const translations=cameras.map(camera=>`${number(canvas.x+camera.x*canvas.scale)} ${number(canvas.y+camera.y*canvas.scale)}`),scales=cameras.map(camera=>number(camera.scale*canvas.scale));
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}" role="img" aria-labelledby="title description">
@@ -100,6 +184,6 @@ export function animatedSvg(scene) {
 <rect width="${canvas.width}" height="${canvas.height}" fill="${canvas.background}"/>
 <g transform="translate(${translations[0]})">${animation('translate',translations,times,duration/100,true)}
 <g transform="scale(${scales[0]})">${animation('scale',scales,times,duration/100,true)}
-${shapes.join('\n')}
+${shapeMarkup(shapes)}
 </g></g></svg>\n`;
 }

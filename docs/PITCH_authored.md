@@ -163,7 +163,7 @@ The Autostitch layout keeps the same guides and aligned straight rows, but the v
 | Reference | $10$ | $2.51\,\mathrm{mm}$ | $2.03\,\mathrm{mm}$ |
 | Autostitch | $5$ | $1.34\,\mathrm{mm}$ | $1.17\,\mathrm{mm}$ |
 
-An [alternative supported Autostitch solution](../examples/counter_examples/assets/fagliano-tip-mirrored.png) uses a mirrored corner with a Vertex point. Obverse stitching on one side and reverse stitching on the other produce fully symmetric spacing, slit orientations and visible thread, with both rows meeting at the round hole at the vertex.
+An [alternative Autostitch solution](../examples/counter_examples/assets/fagliano-tip-mirrored.png) uses a mirrored corner with a Vertex point. Obverse stitching on one side and reverse stitching on the other produce fully symmetric spacing, slit orientations and visible thread, with both rows meeting at the round hole at the vertex.
 
 ## Hermès Sellier Wallet
 

@@ -46,7 +46,7 @@ A **junction** is where **arms** meet. Each arm extends away from the junction: 
 
 Corner construction uses a **virtual slit**, whose tip locates a corner hole. The virtual slit is not punched. Its centre lies a **corner step** away from the centre of its neighbouring slit.
 
-![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.png)
+![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.svg)
 
 # Stitch Layout Problems
 
@@ -86,7 +86,7 @@ Vertex point puts a round hole at the corner and stitches into it from both rows
 
 In this example, moving the vertical row balances the two corner stitches. Its far endpoint moves with it.
 
-![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.png)
+![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.svg)
 
 ### Bridge
 
@@ -122,11 +122,11 @@ Consistent spacing and visible thread lengths give stitching its regular rhythm.
 
 On the [Loewe Mini Feather hanger](../examples/counter_examples/loewe_mini_feather.png), the rectangular strap below the swivel hook carries stitching up the left side, across the top and down the right. The reference layout uses a shared diagonal slit at the left corner and Vertex point at the right. The two top slits have opposing lean, placing the thread between them on a horizontal line.
 
-![Loewe: Shared diagonal slit on the left, Vertex point on the right, horizontal middle thread](../examples/counter_examples/assets/loewe-hanger-reference.png)
+![Loewe: Shared diagonal slit on the left, Vertex point on the right, horizontal middle thread](../examples/counter_examples/assets/loewe-hanger-reference.svg)
 
 On the same guides, the Autostitch layout uses round holes at both corners and keeps the slit lean consistent. One adjusted gap fits the short top span, reducing the number of adjusted gaps from three to one. The start and end positions shift along the vertical guides so that both side rows retain nominal spacing.
 
-![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.png)
+![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.svg)
 
 | Measure | Reference | Autostitch |
 | --- | ---: | ---: |
@@ -138,11 +138,11 @@ On the same guides, the Autostitch layout uses round holes at both corners and k
 
 The [Speedy example](../examples/counter_examples/lv_speedy.png) follows the left handle chape, the leather tab attaching the handle hardware to the bag. Its closed pentagonal stitch line maintains one handedness through five corners and back to its starting opening. In the reference layout, each corner uses a shared diagonal slit, and each side is equally spaced between its corner slits. Each side therefore takes the pitch needed to fit its length.
 
-![Speedy: five shared diagonal slit corners with consistent lean](../examples/counter_examples/assets/lv-speedy-chape-reference.png)
+![Speedy: five shared diagonal slit corners with consistent lean](../examples/counter_examples/assets/lv-speedy-chape-reference.svg)
 
 The Autostitch layout places applies the corner solution and fits each intervening span with the fewest adjusted gaps allowed by the pitch bounds. The loop closes at its starting opening, and most gaps redistribute to the iron's nominal pitch. Adjusted gaps fall from twenty-six to six, reducing the individual placement required to make the closed seam.
 
-![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
+![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.svg)
 
 | Measure | Reference | Autostitch |
 | --- | ---: | ---: |
@@ -154,11 +154,11 @@ The Autostitch layout places applies the corner solution and fits each interveni
 
 At the pointed end of the right [Jaeger-LeCoultre Casa Fagliano Watch Strap](../examples/counter_examples/jaeger_lecoultre_fagliano.png), two straight rows begin at matching heights and continue towards the tip with one handedness throughout. The reference layout joins the symmetric curves at a Vertex point hole. Each curve shares its residual equally across five gaps, preserving the aligned straight rows and giving both sides a matching spacing pattern.
 
-![Fagliano: Vertex point with equal compression along both curves](../examples/counter_examples/assets/fagliano-tip-compression.png)
+![Fagliano: Vertex point with equal compression along both curves](../examples/counter_examples/assets/fagliano-tip-compression.svg)
 
 The Autostitch layout keeps the same guides and aligned straight rows, but the virtual slit tips place the shared hole to the right of the vertex. The offset creates unequal spans within the symmetric outline: the left needs one adjusted gap and the right needs four. The number of gaps requiring individual placement is halved, while the two sides lose their matching spacing pattern.
 
-![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
+![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.svg)
 
 | Measure | Reference | Autostitch |
 | --- | ---: | ---: |
@@ -172,13 +172,13 @@ An [alternative Autostitch solution](../examples/counter_examples/assets/faglian
 
 The [Sellier example](../examples/counter_examples/hermies_sellier.png) follows the top corner and the decorative H below the right-hand run. Reverse corner joins an obverse row to a reverse row, allowing the stitches entering the H to balance around the detail. Six round holes represent the H, linking the vertical stitching to the bottom row. The corner treatment is an effective design choice: the change of lean supports the composition of the H and its adjoining rows.
 
-![Sellier: Reverse corner](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
+![Sellier: Reverse corner](../examples/counter_examples/assets/sellier-wallet-diagonal.svg)
 
 The Autostitch layout keeps the lean consistent through the turn and locates a round corner hole where the virtual slit tips meet. The H retains its shape and nominal approaches, while its position and the bottom row move to accommodate the changed slit lean. Both layouts keep nominal gaps throughout; the choice changes the corner position and thread geometry.
 
 Reverse corner works particularly well for this design. Its limitation appears when extending the construction to junctions with three or more arms, where the shared diagonal slit produces an imbalance between the connecting threads. Autostitch uses a round hole at those junctions so each arm can meet it without a preferred slit orientation.
 
-![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.png)
+![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.svg)
 
 | Measure | Reference | Autostitch |
 | --- | ---: | ---: |
@@ -279,7 +279,7 @@ Separate openings must neither touch nor overlap, and their edges must remain at
 
 The acute-junction example has an included angle of $6^\circ$, slit width $w=0.3\,\mathrm{mm}$ and clearance margin $m=0.2\,\mathrm{mm}$. The nearest pair of openings overlaps, the next pair falls below the margin, and farther pairs have enough separation. All openings must pass for the layout to be valid.
 
-![Near the acute junction, openings overlap or fall below the required clearance; farther pairs have enough separation](../examples/illustrated/assets/axiom-clearance.png)
+![Near the acute junction, openings overlap or fall below the required clearance; farther pairs have enough separation](../examples/illustrated/assets/axiom-clearance.svg)
 
 # Solution Method
 
@@ -379,7 +379,7 @@ Some straight free spans cannot be filled while keeping both end openings fixed 
 
 The diagram shows a $7\,\mathrm{mm}$ span with a nominal pitch of $3\,\mathrm{mm}$. Each gap must stay between $2.7\,\mathrm{mm}$ and $3.3\,\mathrm{mm}$. Dividing the span into two equal gaps makes each one $3.5\,\mathrm{mm}$, above the maximum. Three equal gaps make each approximately $2.33\,\mathrm{mm}$, below the minimum. Unequal spacing cannot solve the problem either: even at their maximum length, two gaps cover only $6.6\,\mathrm{mm}$; even at their minimum length, three require $8.1\,\mathrm{mm}$. Fewer gaps reach less far, and more gaps require still more room.
 
-![Two gaps are too long; three gaps are too short for the same fixed span](../examples/illustrated/assets/fit-rejected.png)
+![Two gaps are too long; three gaps are too short for the same fixed span](../examples/illustrated/assets/fit-rejected.svg)
 
 This span is therefore infeasible at the chosen pitch and adjustment limits. To fit it at that pitch, the guide or its fixed features must change so that the free span has a different length. Redistributing the spacing alone cannot produce a valid layout.
 
@@ -393,7 +393,7 @@ Computational layout raises that limit. It makes a degree of precision and consi
 
 One _can_ do that by hand but...
 
-![Perfection can be done by hand, but is often not feasible](../examples/demos/can-you-really.png)
+![Perfection can be done by hand, but is often not feasible](../examples/demos/can-you-really.svg)
 
 That possibility matters for a single bespoke piece as much as for production. A complex design becomes easier to explore and revise, and its resolved layout can guide handwork, pass between makers or be executed by CNC equipment. The care invested in the pattern carries through to each piece without requiring someone to solve the placement again.
 

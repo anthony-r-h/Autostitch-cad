@@ -79,7 +79,7 @@
 
 ### Even spacing
 
-![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.gif)
+![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.animated.svg)
 
 - Five equal $3.06\,\mathrm{mm}$ gaps
 - Spacing is uniform along the line, but its pitch depends on the line's length and gap count
@@ -88,7 +88,7 @@
 
 ### End adjustment
 
-![End adjustment absorbs the residual in the last gap](../examples/illustrated/assets/pitch-end.gif)
+![End adjustment absorbs the residual in the last gap](../examples/illustrated/assets/pitch-end.animated.svg)
 
 - Four nominal gaps; one $3.30\,\mathrm{mm}$ gap at the end
 - The last stitch takes the entire residual, making it longer or shorter than the rest
@@ -96,7 +96,7 @@
 
 ### Autostitch solution
 
-![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.gif)
+![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.animated.svg)
 
 - Keep four nominal gaps and place one $3.30\,\mathrm{mm}$ gap in the centre
 - Set limits on each spacing change, then use the fewest adjusted gaps needed
@@ -121,7 +121,7 @@
 
 ### Bridge
 
-![Bridge varies from 1 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.gif)
+![Bridge varies from 1 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.animated.svg)
 
 - Join the last slit on each arm directly with thread, bypassing the vertex
 - Move the vertical row to vary the visible bridge stitch from $1.00$ to $3.00\,\mathrm{mm}$
@@ -130,7 +130,7 @@
 
 ### Reverse corner
 
-![Reverse corner joins obverse and reverse rows through a shared diagonal slit](../examples/illustrated/assets/problem-corner-mirrored.gif)
+![Reverse corner joins obverse and reverse rows through a shared diagonal slit](../examples/illustrated/assets/problem-corner-mirrored.animated.svg)
 
 - Add a shared diagonal slit at the vertex, joining an obverse row to a reverse row
 - This brings the outgoing corner stitch closer to the usual thread direction along that row
@@ -139,7 +139,7 @@
 
 ### Autostitch
 
-![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
+![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.animated.svg)
 
 - Refine Vertex point by placing the round hole off the vertex, with consistent slit lean on both arms
 - Extend each row to a virtual slit; their selected tips meet at the shared hole
@@ -286,7 +286,7 @@
 - Nominal pitch is the straight-line distance between consecutive opening centres; on a circle, it is a chord
 - Connections at corners and branching junctions follow the rules below
 
-![Slits turn with the curved guide while keeping the same lean; gaps are measured straight between their centres](../examples/illustrated/assets/axiom-curve.gif)
+![Slits turn with the curved guide while keeping the same lean; gaps are measured straight between their centres](../examples/illustrated/assets/axiom-curve.animated.svg)
 
 ## Fixed features
 
@@ -298,20 +298,20 @@
 - Each free span must fit between its fixed openings
 - In this example, each side has seven slits and two central $3.25\,\mathrm{mm}$ gaps; the landmark pair stays $3\,\mathrm{mm}$ apart
 
-![The landmark pair stays fixed at nominal spacing while adjusted gaps fit the spans on either side](../examples/illustrated/assets/axiom-landmark.gif)
+![The landmark pair stays fixed at nominal spacing while adjusted gaps fit the spans on either side](../examples/illustrated/assets/axiom-landmark.animated.svg)
 
 ## Shared openings
 
 - A smooth change of curvature shares one slit at the common tangent
 - Connected portions use the shared opening only once; its centre, type and slit axis must agree
 
-![A straight and curved guide share one slit where they meet with the same tangent](../examples/illustrated/assets/axiom-smooth.gif)
+![A straight and curved guide share one slit where they meet with the same tangent](../examples/illustrated/assets/axiom-smooth.animated.svg)
 
 - A closed loop must return to its starting opening and use that opening only once
 - In this example, two opposite landmarks fix nominal pairs of slits
 - Each half is fitted separately, giving matching adjustment blocks
 
-![Adjusted gaps allow the loop to close at its starting opening while preserving the landmark pairs](../examples/illustrated/assets/axiom-closure.gif)
+![Adjusted gaps allow the loop to close at its starting opening while preserving the landmark pairs](../examples/illustrated/assets/axiom-closure.animated.svg)
 
 ## Two-arm corners
 
@@ -319,16 +319,16 @@
 - The selected virtual slit tips meet at one shared round hole
 - The virtual slits are not punched
 
-![Two virtual slit tips meet at the shared round hole, locating it off the guide vertex](../examples/illustrated/assets/axiom-corner.gif)
+![Two virtual slit tips meet at the shared round hole, locating it off the guide vertex](../examples/illustrated/assets/axiom-corner.animated.svg)
 
 - The last real slit on each arm stays on its guide
 - The distance between its centre and the virtual slit centre is the corner step $q$, within $0.9p\leq q\leq1.1p$
 - The virtual tips locate the hole; the corner steps set the positions of its neighbouring real slits
 - The same construction applies to straight and circular arms
 
-![A straight arm and a curved arm share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-line.gif)
+![A straight arm and a curved arm share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-line.animated.svg)
 
-![Two curved arms share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-arc.gif)
+![Two curved arms share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-arc.animated.svg)
 
 ## Branching junctions
 
@@ -345,7 +345,7 @@
 - As two arms approach a straight line, their connections through the hole appear as one overlong stitch
 - The thread angles also differ from those along the ordinary rows
 
-![With full-pitch spacing from the hole, two junction stitches appear overlong as their arms approach a straight line](../examples/illustrated/t-junctions/vertex.gif)
+![With full-pitch spacing from the hole, two junction stitches appear overlong as their arms approach a straight line](../examples/illustrated/t-junctions/vertex.animated.svg)
 
 #### Vertex point, half pitch
 
@@ -355,7 +355,7 @@
 - This is why the junction uses half pitch: opposite straight arms with matching pitch and lean read as one ordinary stitch through the hole
 - Each straight arm keeps that same relationship to the hole as its angle changes, so the rule applies to every arm without choosing a preferred pair
 
-![Half-pitch spacing preserves the ordinary thread direction on each straight arm; opposite arms read as one ordinary stitch](../examples/illustrated/t-junctions/half.gif)
+![Half-pitch spacing preserves the ordinary thread direction on each straight arm; opposite arms read as one ordinary stitch](../examples/illustrated/t-junctions/half.animated.svg)
 
 - For a straight arm, let $\mathbf e$ be the outward unit tangent and $\mathbf u$ the unit vector along the slit axis. With slit length $\ell$, the thread vector from the hole to the near slit tip is
 
@@ -373,7 +373,7 @@ $$
 - Half-pitch connections are part of the junction geometry; they are excluded from ordinary gap adjustment limits and counts
 - Bringing the neighbours closer to the hole also brings them closer to one another, so their openings must still pass clearance
 
-![The T junction's hole and half-pitch neighbours stay fixed while the remaining spans are fitted](../examples/illustrated/assets/axiom-junction.gif)
+![The T junction's hole and half-pitch neighbours stay fixed while the remaining spans are fitted](../examples/illustrated/assets/axiom-junction.animated.svg)
 
 ### X junction with a curved arm
 
@@ -381,7 +381,7 @@ $$
 - On the circular arm, half pitch is measured along the chord, while slit lean follows the guide's local direction
 - The guide turns between the hole and the slit, so half-pitch spacing no longer guarantees the ordinary straight-row thread direction or half its visible length
 
-![Four arms share one hole, with each first slit centre half a pitch away; the curved arm uses the same straight-line measurement](../examples/illustrated/assets/axiom-junction-curved.gif)
+![Four arms share one hole, with each first slit centre half a pitch away; the curved arm uses the same straight-line measurement](../examples/illustrated/assets/axiom-junction-curved.animated.svg)
 
 ## Clearance
 
@@ -409,7 +409,7 @@ $$
 - Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
 - These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
 
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.animated.svg)
 
 - Example: the emblem's outlined A, then the complete lettering and rings; $p=2.7\,\mathrm{mm}$
 - Crown landmarks establish symmetry. Protected pairs and shared corner openings bound the free spans
@@ -432,7 +432,7 @@ $$
 - A shallow turn requires an adjusted corner step of approximately $3.21\,\mathrm{mm}$ in this example
 - Usable angles depend on pitch, slit geometry, hole diameter, clearance and available arm geometry
 
-![An adjusted corner step keeps the neighbouring real slit on its curved guide at a shallow turn](../examples/illustrated/assets/corner-shallow.gif)
+![An adjusted corner step keeps the neighbouring real slit on its curved guide at a shallow turn](../examples/illustrated/assets/corner-shallow.animated.svg)
 
 ## Straight-span fitting
 

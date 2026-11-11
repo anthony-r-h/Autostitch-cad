@@ -3,6 +3,12 @@
 # Retention and cleanup: docs/REPO-CLEANUP.md
 /output/
 
+# Optional animation exports; SVGs are the published format.
+/examples/illustrated/**/*.gif
+/examples/illustrated/**/*.mp4
+/examples/counter_examples/assets/*.gif
+/examples/counter_examples/assets/*.mp4
+
 # BricsCAD drawing locks
 *.dwl
 *.dwl2

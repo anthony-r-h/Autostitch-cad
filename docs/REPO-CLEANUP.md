@@ -31,7 +31,7 @@ Target layout for the example cleanup:
 ## Diagram builds
 
 - The shared renderer creates a unique folder under `output/scratch/` for each build. Concurrent builds do not share intermediates.
-- Successful export checks remove that folder. Finished SVG/PNG/GIF files remain at the requested output destination in `examples/`.
+- Successful export checks remove that folder. Finished SVG/PNG files remain at the requested output destination in `examples/`. GIF/MP4 exports require `-Gif`/`-Mp4` and are ignored by Git.
 - Generate and retain PNG/SVG exports only when used as published figures, still fallbacks or editable masters. For animation-only examples, set `exportStills: false` in the recipe and catalog, remove unused static exports and update their references and checks. Keep temporary review frames in scratch and delete them after review.
 - A failed build retains its scratch folder and prints the path. Retention does not mean the published files passed validation.
 - Use `-KeepScratch` to retain intermediates for debugging. `-FrameTimes` also retains scratch because its review frames were explicitly requested.

@@ -4,7 +4,7 @@ Autostitch lays out stitching holes and slits on leatherwork patterns in BricsCA
 
 You can connect guides into one stitch line and copy its layout to matching guides on other pattern pieces, including mirrored pieces.
 
-![Emblem construction from guides through spacing adjustments to the completed stitching](examples/illustrated/emblem/emblem-construction.gif)
+![Emblem construction from guides through spacing adjustments to the completed stitching](examples/illustrated/emblem/emblem-construction.animated.svg)
 
 ## Requirements
 

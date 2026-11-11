@@ -1,4 +1,4 @@
-// Inspect the emitted figures and GIF structure against their geometric claims.
+// Inspect emitted figures and optional GIF exports against their geometric claims.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -103,7 +103,7 @@ for(const s of presented) {
   const c=s.canvas;
   assert.equal(c.width/c.height,4/5);
   for(const peer of presented.filter(p=>p.source===s.source))assert.deepEqual(peer.canvas,c,'Comparisons need one fixed camera');
-  assert.equal(fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.svg`,root),'utf8'),svg(s),'Stale portrait SVG');
+  assert.equal(fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.svg`,root),'utf8').replaceAll('\r\n','\n'),svg(s),'Stale portrait SVG');
   for(const elements of [s.final,...s.frames.map(f=>f.elements)])for(const e of elements) {
     for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p]) {
       const x=p[0]*c.scale+c.x,y=p[1]*c.scale+c.y;
@@ -132,7 +132,7 @@ try {
 } finally {Object.assign(font,savedFont);}
 for(const s of paletteScenes()) {
   const base=new URL(`examples/illustrated/palettes/${s.name}`,root);
-  assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8'),svg(s));
+  assert.equal(fs.readFileSync(new URL(base.href+'.svg'),'utf8').replaceAll('\r\n','\n'),svg(s));
   const png=fs.readFileSync(new URL(base.href+'.png'));
   assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),750);
 }
@@ -944,18 +944,24 @@ for(const s of scenes) {
       near(dist([(points[0][0]+points[3][0])/2,(points[0][1]+points[3][1])/2],slit.a),0);
       near(dist([(points[1][0]+points[2][0])/2,(points[1][1]+points[2][1])/2],slit.b),0);
     });
-    const gif=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.gif`,root));
+    const renderedFrames=presented.find(p=>p.name===s.name).frames;
+    const animated=fs.readFileSync(new URL(`examples/illustrated/assets/${s.name}.animated.svg`,root),'utf8');
+    const timing=JSON.parse(animated.match(/<metadata id="animation-timing">([^<]+)<\/metadata>/)[1]);
+    assert.deepEqual(timing.frameDelays,renderedFrames.map(f=>f.delay));
+    const gifPath=new URL(`examples/illustrated/assets/${s.name}.gif`,root);
+    if(fs.existsSync(gifPath)) {
+    const gif=fs.readFileSync(gifPath);
     // Check the encoded stream, including holds and reset; dispatch is not proof of motion.
     const blocks=gifBlocks(gif).blocks,images=blocks.filter(b=>b.kind==='image'),controls=blocks.filter(b=>b.kind==='control');
-    const renderedFrames=presented.find(p=>p.name===s.name).frames;
     assert.equal(images.length,renderedFrames.length);assert.equal(controls.length,images.length);
     assert.deepEqual(controls.map(b=>b.bytes.readUInt16LE(4)),renderedFrames.map(f=>f.delay));
     assert(gif.includes(Buffer.from([0x21,0xff,11,...Buffer.from('NETSCAPE2.0'),3,1,0,0,0])));
     assert(new Set(images.map(b=>crypto.createHash('sha256').update(b.bytes).digest('hex'))).size>=5);
     near(gif.readUInt16LE(6),600);near(gif.readUInt16LE(8),750);
+    }
   } else {
     const gifPath=new URL(`examples/illustrated/assets/${s.name}.gif`,root);
-    if(asset.staticGif) {
+    if(asset.staticGif&&fs.existsSync(gifPath)) {
       assert(s.staticGif);
       const gif=fs.readFileSync(gifPath);
       assert.equal(gifBlocks(gif).blocks.filter(b=>b.kind==='image').length,1,'Static GIF must contain exactly the final still');
@@ -995,4 +1001,4 @@ for(const s of scenes) {
     for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=(s.name==='fit-rejected'?600:375),`${s.name} clips an element`);
   }
 }
-console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} moving GIFs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);
+console.log(`Illustrations valid: ${scenes.filter(s=>s.frames.length).length} animated SVGs, ${scenes.filter(s=>!s.frames.length).length} static figures, geometry, fixed constraints, corner construction, shared openings, clearance pass/fail, loop timing and still exports.`);

@@ -4798,7 +4798,8 @@
     "expected": "Successful diagram builds remove only their own scratch; explicit review requests and failures retain diagnostics.",
     "coverage": [
       "Unique scratch paths and sibling preservation",
-      "Successful static SVG, animated SVG, PNG, GIF and MP4 exports survive scratch cleanup",
+      "Default builds write static SVG, animated SVG and PNG without GIF, MP4 or FFmpeg",
+      "Independent optional GIF and MP4 exports preserve timing and survive scratch cleanup",
       "Static figures do not produce animated SVGs",
       "Animations export H.264 yuv420p MP4s from full-colour source frames at twice the GIF dimensions; static compatibility GIFs do not produce MP4s",
       "MP4 frame timestamps, frame counts and final holds match variable GIF delays; videos decode successfully",
@@ -4813,12 +4814,12 @@
     "id": "BUILD-ANIMATED-SVG",
     "source": "tests/validate-animated-svg.mjs",
     "command": "node tests/validate-animated-svg.mjs",
-    "expected": "Animated SVGs preserve GIF frame timing and loop as self-contained vectors; authored pitch animation links resolve.",
+    "expected": "Animated SVGs preserve authored scene timing and loop as self-contained vectors; authored pitch animation links resolve.",
     "coverage": [
-      "Every animated GIF has an SVG with identical frame delays and loop duration",
+      "Every animated scene has an SVG with identical frame delays and loop duration; optional GIFs match when present",
       "SMIL tracks have increasing times, matching values and no scripts or raster images",
       "Stable geometry is reused across insertions, removals and reordering while preserving painter order and inherited styling",
-      "Static GIFs have no animated SVG export",
+      "Static scenes have no animated SVG export",
       "PITCH_authored embeds animated SVGs instead of GIFs"
     ]
   },

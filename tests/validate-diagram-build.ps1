@@ -28,17 +28,33 @@ writeSceneFiles([{name:'probe',title:'Scratch lifecycle check',source:'test',fin
 if(mode==='finish'&&'@FAIL@'==='empty')fs.writeFileSync(path.join(process.argv[3],'probe.gif'),'');
 '@
 $runs = @()
+$gifCheck = @'
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {gifBlocks} from '@MODULE@';
+const gif=fs.readFileSync(process.argv[1]),blocks=gifBlocks(gif).blocks;
+const isStatic=process.argv[2]==='True';
+assert.equal(blocks.filter(b=>b.kind==='image').length,isStatic?1:3);
+if(!isStatic)assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),[10,30,70]);
+assert.equal(gif.includes(Buffer.from('NETSCAPE2.0')),!isStatic);
+'@
+$gifCheck = $gifCheck.Replace('@MODULE@',$moduleUri)
 try {
- foreach ($case in @('success','animation-only','static','retained','frames','prepare','finish','empty','encoder')) {
+ foreach ($case in @('default','default-static','svg-only','gif-only','mp4-only','success','animation-only','static','retained','frames','prepare','finish','empty','encoder')) {
   $scriptPath = Join-Path $testRoot ($case + '.mjs')
   $failure = if ($case -in @('prepare','finish','empty')) { $case } else { 'none' }
-  $stills = if ($case -eq 'animation-only') { 'false' } else { 'true' }
-  $static = if ($case -eq 'static') { 'true' } else { 'false' }
-  $frames = if ($case -eq 'static') { '[]' } else { '[{elements,delay:10,time:0},{elements,delay:30,time:.1},{elements,delay:70,time:.4}]' }
+  $stills = if ($case -in @('animation-only','svg-only')) { 'false' } else { 'true' }
+  $isStatic = $case -in @('static','default-static')
+  $static = if ($isStatic) { 'true' } else { 'false' }
+  $frames = if ($isStatic) { '[]' } else { '[{elements,delay:10,time:0},{elements,delay:30,time:.1},{elements,delay:70,time:.4}]' }
   [IO.File]::WriteAllText($scriptPath,$fixture.Replace('@MODULE@',$moduleUri).Replace('@FAIL@',$failure).Replace('@STILLS@',$stills).Replace('@STATIC@',$static).Replace('@FRAMES@',$frames))
   $destination = Join-Path $testRoot ($case + '-assets')
   $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$renderer,'-SceneScript',$scriptPath,'-OutputDirectory',$destination)
-  $encoder = if ($case -eq 'encoder') { Join-Path $testRoot 'missing-ffmpeg.exe' } else { $FfmpegPath }
+  $exportGif = $case -notin @('default','default-static','svg-only','mp4-only','frames')
+  $exportMp4 = $case -notin @('default','default-static','svg-only','gif-only','frames')
+  if ($exportGif) { $arguments += '-Gif' }
+  if ($exportMp4) { $arguments += '-Mp4' }
+  $encoder = if ($case -eq 'encoder' -or -not $exportMp4) { Join-Path $testRoot 'missing-ffmpeg.exe' } else { $FfmpegPath }
   $arguments += @('-FfmpegPath',$encoder)
   if ($case -eq 'encoder') {
    New-Item -ItemType Directory -Path $destination | Out-Null
@@ -55,18 +71,36 @@ try {
   $runs += $run
   $shouldFail = $case -in @('prepare','finish','empty','encoder')
   if (($code -ne 0) -ne $shouldFail) { throw "Unexpected exit code for ${case}: $log" }
-  if ((Test-Path -LiteralPath $run) -ne ($case -notin @('success','animation-only','static'))) { throw "Wrong retention for ${case}: $log" }
+  if ((Test-Path -LiteralPath $run) -ne ($case -notin @('default','default-static','svg-only','gif-only','mp4-only','success','animation-only','static'))) { throw "Wrong retention for ${case}: $log" }
   if (-not (Test-Path -LiteralPath $sentinel)) { throw 'Build removed unrelated scratch.' }
   if ($shouldFail -and ($log -notmatch 'scratch retained' -or -not (Test-Path -LiteralPath (Join-Path $run 'diagnostic.txt')))) { throw "Missing failure evidence: $log" }
   if (-not $shouldFail) {
-   $extensions = if ($case -eq 'animation-only') { @('gif','mp4','animated.svg') } elseif ($case -eq 'static') { @('svg','png','gif') } else { @('svg','png','gif','mp4','animated.svg') }
+   $extensions = @(if ($case -notin @('animation-only','svg-only')) { 'svg'; 'png' })
+   if (-not $isStatic) { $extensions += 'animated.svg' }
+   if ($exportGif) { $extensions += 'gif' }
+   if ($exportMp4 -and -not $isStatic) { $extensions += 'mp4' }
    foreach ($extension in $extensions) {
     if ((Get-Item -LiteralPath (Join-Path $destination "probe.$extension")).Length -eq 0) { throw "Missing published $extension" }
    }
    $mp4 = Join-Path $destination 'probe.mp4'
-   if ($case -eq 'static') {
+   $gif = Join-Path $destination 'probe.gif'
+   if ($exportGif) {
+    & node --input-type=module -e $gifCheck $gif $isStatic
+    if ($LASTEXITCODE -ne 0) { throw 'GIF frame timing or loop validation failed.' }
+   } elseif (Test-Path -LiteralPath $gif) { throw 'Unrequested GIF was exported.' }
+   if ($case -eq 'frames' -and -not (Test-Path -LiteralPath (Join-Path $run 'probe-0.png'))) { throw 'Requested review frame was lost.' }
+   if ($isStatic) {
     if (Test-Path -LiteralPath $mp4) { throw 'Static GIF must not produce an MP4.' }
     if (Test-Path -LiteralPath (Join-Path $destination 'probe.animated.svg')) { throw 'Static figure must not produce an animated SVG.' }
+    continue
+   }
+   if (-not $exportMp4) {
+    if (Test-Path -LiteralPath $mp4) { throw 'Unrequested MP4 was exported.' }
+    if ($case -eq 'svg-only') {
+     foreach ($extension in @('svg','png')) {
+      if (Test-Path -LiteralPath (Join-Path $destination "probe.$extension")) { throw "Unexpected static export $extension" }
+     }
+    }
     continue
    }
    $metadata = & $FfprobePath -v error -show_entries stream=codec_name,pix_fmt,width,height,nb_frames,duration -of json $mp4
@@ -106,7 +140,7 @@ try {
   if ((Split-Path $target -Parent) -ne $scratchRoot) { throw "Unsafe test cleanup target: $target" }
   if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }
  }
- Write-Output 'Diagram build lifecycle valid: animated GIF/MP4 pairs, 2x H.264 video, frame timing and holds, no static MP4s, decoding, unique scratch, success cleanup, explicit retention, review frames, failure preservation and sibling preservation.'
+ Write-Output 'Diagram build lifecycle valid: SVG/PNG defaults, independent optional GIF/MP4 exports, GIF timing, 2x H.264 video, frame timing and holds, static exclusions, decoding, scratch cleanup and failure preservation.'
 } catch {
  Write-Warning "Lifecycle test failed; evidence retained under $testRoot and the reported build paths."
  throw

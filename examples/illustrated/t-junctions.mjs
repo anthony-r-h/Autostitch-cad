@@ -344,7 +344,7 @@ function browserData(scenes) {
 
 function writePage(scenes, output) {
   const data = JSON.stringify(browserData(scenes.filter(s => s.frames.length))).replaceAll('<', '\\u003c');
-  const panel = scene => `<canvas width="600" height="750" aria-label="${scene.title}"><img src="${scene.name}.gif" width="600" height="750" alt="${scene.title}"></canvas>`;
+  const panel = scene => `<canvas width="600" height="750" aria-label="${scene.title}"><img src="${scene.name}.animated.svg" width="600" height="750" alt="${scene.title}"></canvas>`;
   const page = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Branching junction comparisons</title><style>
   *{box-sizing:border-box}body{margin:0;padding:12px;background:${theme.background};color:${theme.text};font:16px ${colorConfig.typography.fontFamily}}h2{font-size:20px;font-weight:400}section{margin:0 auto 32px;max-width:2448px;overflow:auto}.panels{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:12px}.five{max-width:600px;margin:auto}.five img{width:100%;height:auto}canvas{display:block;width:100%;height:auto;aspect-ratio:4/5}
   </style><section><h2>T junction</h2><div class="panels">${scenes.filter(s=>s.source===study.id).map(panel).join('')}</div></section><section id="five-arms"><h2>Five arms, one shared hole</h2><div class="five"><img src="five-half.png" width="600" height="750" alt="Five arms with half-pitch neighbours around one shared hole"></div></section><script>
@@ -390,7 +390,7 @@ function writePage(scenes, output) {
 
 function checkExports(scenes) {
   const assets = path.join(directory, 't-junctions');
-  const page = fs.readFileSync(path.join(assets, 'index.html'), 'utf8');
+  const page = fs.readFileSync(path.join(assets, 'index.html'), 'utf8').replaceAll('\r\n','\n');
   assert.ok(page.includes('id="five-arms"'));
   assert.equal((page.match(/<canvas /g) || []).length, 2);
   assert.ok(page.includes('src="five-half.png"'));
@@ -406,18 +406,22 @@ function checkExports(scenes) {
   }
   let expectedDelays;
   for (const scene of moving) {
-    const data = fs.readFileSync(path.join(assets, `${scene.name}.gif`));
-    assert.equal(data.readUInt16LE(6), 600);
-    assert.equal(data.readUInt16LE(8), 750);
-    const blocks = gifBlocks(data).blocks;
-    const delays = blocks.filter(block => block.kind === 'control').map(block => block.bytes.readUInt16LE(4));
+    const animated = fs.readFileSync(path.join(assets, `${scene.name}.animated.svg`),'utf8');
+    const delays = JSON.parse(animated.match(/<metadata id="animation-timing">([^<]+)<\/metadata>/)[1]).frameDelays;
+    assert.deepEqual(delays,scene.frames.map(frame=>frame.delay));
     assert.equal(delays.length, timing.frameCount);
     assert.equal(delays.reduce((sum, value) => sum + value, 0), timing.durationSeconds * 100);
     assert.ok(delays.every(delay => delay === timing.frameDelayCentiseconds));
     if (expectedDelays) assert.deepEqual(delays, expectedDelays);
     else expectedDelays = delays;
-    assert.equal(blocks.filter(block => block.kind === 'image').length, timing.frameCount);
-    assert.ok(data.includes(Buffer.from('NETSCAPE2.0')));
+    const gifPath=path.join(assets,`${scene.name}.gif`);
+    if(fs.existsSync(gifPath)) {
+      const data=fs.readFileSync(gifPath),blocks=gifBlocks(data).blocks;
+      assert.equal(data.readUInt16LE(6),600);assert.equal(data.readUInt16LE(8),750);
+      assert.deepEqual(blocks.filter(block=>block.kind==='control').map(block=>block.bytes.readUInt16LE(4)),delays);
+      assert.equal(blocks.filter(block=>block.kind==='image').length,timing.frameCount);
+      assert.ok(data.includes(Buffer.from('NETSCAPE2.0')));
+    }
     for (const extension of ['png', 'svg']) assert.ok(!fs.existsSync(path.join(assets, `${scene.name}.${extension}`)), `Unexpected static export: ${scene.name}.${extension}`);
   }
   const five = scenes.find(s => s.name === 'five-half');

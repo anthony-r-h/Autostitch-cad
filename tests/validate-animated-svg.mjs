@@ -1,7 +1,10 @@
-// Match the vector animation exports to the independently encoded GIF timing.
+// Match vector animation exports to the authored scene timing.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {gifBlocks} from '../examples/illustrated/scenes.mjs';
+import {gifBlocks,createScenes,portraitScenes} from '../examples/illustrated/scenes.mjs';
+import {createScenes as junctionScenes} from '../examples/illustrated/t-junctions.mjs';
+import {createScenes as counterScenes} from '../examples/counter_examples/scenes.mjs';
+import {createEmblemScene} from '../examples/illustrated/emblem.mjs';
 import {animatedSvg} from '../examples/illustrated/animated-svg.mjs';
 
 // Independently read the emitted groups and SMIL tracks for a small reorder case.
@@ -46,21 +49,26 @@ assert(!emitted.includes('attributeName="x1"'),'Stable shapes should not acquire
 console.log('SVG optimization valid: stable geometry, insertions, removals, painter order and inherited styling.');
 
 const root=new URL('../',import.meta.url);
-const directories=['examples/illustrated/assets/','examples/illustrated/t-junctions/',
-  'examples/illustrated/emblem/','examples/counter_examples/assets/'];
+const groups=[['examples/illustrated/assets/',portraitScenes(createScenes())],
+  ['examples/illustrated/t-junctions/',junctionScenes()],['examples/illustrated/emblem/',[createEmblemScene()]],
+  ['examples/counter_examples/assets/',portraitScenes(counterScenes())]];
 let count=0,frames=0;
-for(const directory of directories)for(const name of fs.readdirSync(new URL(directory,root)).filter(name=>name.endsWith('.gif'))){
-  const gif=fs.readFileSync(new URL(directory+name,root)),blocks=gifBlocks(gif).blocks;
-  const svgPath=new URL(directory+name.replace(/\.gif$/,'.animated.svg'),root);
-  const images=blocks.filter(block=>block.kind==='image');
-  if(images.length<2){assert(!fs.existsSync(svgPath),`Static GIF has an animated SVG: ${name}`);continue;}
+for(const [directory,scenes] of groups)for(const scene of scenes){
+  const name=scene.name,svgPath=new URL(directory+name+'.animated.svg',root);
+  if(scene.frames.length<2){assert(!fs.existsSync(svgPath),`Static figure has an animated SVG: ${name}`);continue;}
   const svg=fs.readFileSync(svgPath,'utf8');
   assert(svg.includes('viewBox="0 0 600 750"'));
   assert(!/<(?:script|image|foreignObject)\b|\bon\w+=|\b(?:href|xlink:href)=/i.test(svg),'Expected self-contained vector animation');
   assert(!/NaN|Infinity|undefined/.test(svg),`Invalid value: ${name}`);
   const timing=JSON.parse(svg.match(/<metadata id="animation-timing">([^<]+)<\/metadata>/)[1]);
-  const delays=blocks.filter(block=>block.kind==='control').map(block=>block.bytes.readUInt16LE(4));
-  assert.deepEqual(timing.frameDelays,delays,`SVG/GIF timing differs: ${name}`);
+  const delays=scene.frames.map(frame=>frame.delay);
+  assert.deepEqual(timing.frameDelays,delays,`SVG/scene timing differs: ${name}`);
+  const gifPath=new URL(directory+name+'.gif',root);
+  if(fs.existsSync(gifPath)) {
+    const blocks=gifBlocks(fs.readFileSync(gifPath)).blocks;
+    assert.equal(blocks.filter(block=>block.kind==='image').length,delays.length);
+    assert.deepEqual(blocks.filter(block=>block.kind==='control').map(block=>block.bytes.readUInt16LE(4)),delays);
+  }
   assert.equal(timing.durationCentiseconds,delays.reduce((sum,delay)=>sum+delay,0));
   const animations=[...svg.matchAll(/<(animate(?:Transform)?) ([^>]+)\/>/g)];
   assert(animations.length,`Missing animation: ${name}`);
@@ -72,10 +80,10 @@ for(const directory of directories)for(const name of fs.readdirSync(new URL(dire
     assert.equal(attributes.dur,`${timing.durationCentiseconds/100}s`);
     assert.equal(attributes.repeatCount,'indefinite');assert.equal(attributes.calcMode,'discrete');
   }
-  count++;frames+=images.length;
+  count++;frames+=scene.frames.length;
 }
 const pitch=fs.readFileSync(new URL('docs/PITCH_authored.md',root),'utf8');
 const embeds=[...pitch.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)].map(match=>match[1]);
 assert(!embeds.some(src=>src.endsWith('.gif')),'Authored pitch still embeds GIFs');
 for(const src of embeds.filter(src=>src.endsWith('.animated.svg')))assert(fs.existsSync(new URL(src,new URL('docs/PITCH_authored.md',root))),`Missing pitch animation: ${src}`);
-console.log(`Animated SVGs valid: ${count} files, ${frames} frames, exact GIF delays, looping tracks, static exclusions and authored pitch references.`);
+console.log(`Animated SVGs valid: ${count} files, ${frames} frames, authored delays, looping tracks, static exclusions and authored pitch references.`);

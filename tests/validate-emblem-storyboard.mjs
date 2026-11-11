@@ -194,18 +194,21 @@ assert(scene.frames.every(f=>f.delay>0));
 for(const frame of scene.frames)for(const e of frame.elements) {
   for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p.every(Number.isFinite));
 }
-const gif=fs.readFileSync(new URL('../examples/illustrated/emblem/emblem-construction.gif',import.meta.url));
+const delays=scene.frames.map(f=>f.delay);
+const gifPath=new URL('../examples/illustrated/emblem/emblem-construction.gif',import.meta.url);
+if(fs.existsSync(gifPath)) {
+const gif=fs.readFileSync(gifPath);
 assert.equal(gif.readUInt16LE(6),600);assert.equal(gif.readUInt16LE(8),750);
 const {blocks}=gifBlocks(gif);
 assert.equal(blocks.filter(b=>b.kind==='image').length,scene.frames.length);
-const delays=blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4));
-assert.deepEqual(delays,scene.frames.map(f=>f.delay));
+assert.deepEqual(blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4)),delays);
 assert(gif.includes(Buffer.from('NETSCAPE2.0')));
+}
 const animatedSvg=fs.readFileSync(new URL('../examples/illustrated/emblem/emblem-construction.animated.svg',import.meta.url),'utf8');
 assert.equal(animatedSvg,renderAnimatedSvg(scene),'Animated SVG is stale');
 assert(!/<(?:script|image|foreignObject)\b|\bon\w+=|\b(?:href|xlink:href)=/i.test(animatedSvg),'SVG trial must be self-contained vector animation without scripts');
 const animationTiming=JSON.parse(animatedSvg.match(/<metadata id="animation-timing">([^<]+)<\/metadata>/)[1]);
-assert.deepEqual(animationTiming.frameDelays,delays,'SVG/GIF frame delays differ');
+assert.deepEqual(animationTiming.frameDelays,delays,'SVG/scene frame delays differ');
 assert.equal(animationTiming.durationCentiseconds,book.duration*100);
 for(const match of animatedSvg.matchAll(/<(animate(?:Transform)?) ([^>]+)\/>/g)){
   const attributes=Object.fromEntries([...match[2].matchAll(/([\w-]+)="([^"]*)"/g)].map(m=>[m[1],m[2]]));
@@ -216,7 +219,7 @@ for(const match of animatedSvg.matchAll(/<(animate(?:Transform)?) ([^>]+)\/>/g))
   assert.equal(attributes.dur,`${book.duration}s`);assert.equal(attributes.repeatCount,'indefinite');
   assert.equal(attributes.calcMode,'discrete','Preserve authored frame holds');
 }
-console.log('Animated SVG valid: self-contained vectors, current scene geometry, exact GIF timing and looping SMIL tracks.');
+console.log('Animated SVG valid: self-contained vectors, current scene geometry, authored timing and looping SMIL tracks.');
 const square=createSquareEmblem(model),squareElements=square.final;
 assert.equal(square.canvas.width,600);assert.equal(square.canvas.height,600);
 assert.equal(square.canvas.supersampling,3,'Match the original native preview raster quality');

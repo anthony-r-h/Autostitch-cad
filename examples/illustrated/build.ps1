@@ -1,9 +1,11 @@
-# Generate embedded diagrams and looping animations. MP4 export requires FFmpeg with libx264.
+# Generate SVG animations and SVG/PNG stills. Optional MP4 export requires FFmpeg with libx264.
 [CmdletBinding()]
 param(
  [string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'),
  [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs'),
  [string]$Theme,
+ [switch]$Gif,
+ [switch]$Mp4,
  [string]$FfmpegPath = 'ffmpeg',
  [double[]]$FrameTimes = @(),
  [switch]$KeepScratch,
@@ -188,13 +190,13 @@ function New-GifFrame($image,$palette) {
 }
 foreach($scene in $scenes) {
  if($scene.exportStills -eq $false -and ($scene.staticGif -or $scene.frames.Count -eq 0)) { throw 'Disabling still exports requires an animation.' }
- $palette=if($scene.staticGif -or $scene.frames.Count){New-GifPalette $scene}else{$null}
+ $palette=if($Gif -and ($scene.staticGif -or $scene.frames.Count)){New-GifPalette $scene}else{$null}
  if($scene.exportStills -ne $false) {
  $still=Draw-Frame $scene.final $scene.canvas
  try {
   $still.Save((Join-Path $OutputDirectory ($scene.name+'.png')),[Drawing.Imaging.ImageFormat]::Png)
   # Preserve existing embed paths when an animation becomes a static figure.
-  if($scene.staticGif){
+  if($Gif -and $scene.staticGif){
    $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
    $uri=[Uri]::new((Join-Path $OutputDirectory ($scene.name+'.png')))
    $image=[Windows.Media.Imaging.BitmapFrame]::Create($uri,[Windows.Media.Imaging.BitmapCreateOptions]::PreservePixelFormat,[Windows.Media.Imaging.BitmapCacheOption]::OnLoad)
@@ -209,10 +211,11 @@ foreach($scene in $scenes) {
   Write-Output ($scene.name+': static SVG/PNG.')
   continue
  }
- $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
+ if(-not $Gif -and -not $Mp4 -and $FrameTimes.Count -eq 0) { continue }
+ $encoder=if($Gif){[Windows.Media.Imaging.GifBitmapEncoder]::new()}else{$null}
  $frameIndex=0
  foreach($frame in $scene.frames) {
-  $videoFramePath=if($scene.frames.Count -gt 1){Join-Path $temporary ($scene.name+'-video-'+$frameIndex+'.png')}else{$null}
+  $videoFramePath=if($Mp4 -and $scene.frames.Count -gt 1){Join-Path $temporary ($scene.name+'-video-'+$frameIndex+'.png')}else{$null}
   $bitmap=Draw-Frame $frame.elements $scene.canvas $videoFramePath
   $frameIndex++
   $stream=[IO.MemoryStream]::new()
@@ -222,6 +225,7 @@ foreach($scene in $scenes) {
      $bitmap.Save((Join-Path $temporary ($scene.name+'-'+$time.ToString('0.##',[Globalization.CultureInfo]::InvariantCulture)+'.png')),[Drawing.Imaging.ImageFormat]::Png)
     }
    }
+   if($Gif) {
    $bitmap.Save($stream,[Drawing.Imaging.ImageFormat]::Png)
    $stream.Position=0
    $image=[Windows.Media.Imaging.BitmapImage]::new()
@@ -231,21 +235,26 @@ foreach($scene in $scenes) {
    $image.EndInit()
    $image.Freeze()
    $encoder.Frames.Add((New-GifFrame $image $palette))
+   }
   } finally {$stream.Dispose();$bitmap.Dispose()}
  }
- $file=[IO.File]::Create((Join-Path $temporary ($scene.name+'.gif')))
- try {$encoder.Save($file)} finally {$file.Dispose()}
- $stillMessage=if($scene.exportStills -eq $false){'GIF/MP4 only.'}else{'SVG/PNG final state.'}
+ if($Gif) {
+  $file=[IO.File]::Create((Join-Path $temporary ($scene.name+'.gif')))
+  try {$encoder.Save($file)} finally {$file.Dispose()}
+ }
+ $stillMessage=if($scene.exportStills -eq $false){'Animation only.'}else{'SVG/PNG final state.'}
  Write-Output ($scene.name+': '+$scene.frames.Count+' frames; '+$stillMessage)
  $encoder=$null
  [GC]::Collect()
 }
-& node $SceneScript finish $OutputDirectory $temporary $Theme
-if ($LASTEXITCODE -ne 0) { throw 'Animation timing export failed.' }
-if (@($scenes | Where-Object { $_.frames.Count -gt 1 }).Count) {
+if($Gif) {
+ & node $SceneScript finish $OutputDirectory $temporary $Theme
+ if ($LASTEXITCODE -ne 0) { throw 'Animation timing export failed.' }
+}
+if ($Mp4 -and @($scenes | Where-Object { $_.frames.Count -gt 1 }).Count) {
  & (Join-Path $PSScriptRoot 'export-mp4.ps1') -ScenePath (Join-Path $temporary 'scenes.json') -OutputDirectory $OutputDirectory -ScratchDirectory $temporary -FfmpegPath $FfmpegPath
 }
-Write-Output 'GIFs and matching MP4s written with explicit reveal timing and result holds.'
+Write-Output 'SVG animations written; GIF and MP4 exports require their respective switches.'
 if($ContactSheet) {
  $chrome=(Get-Content (Join-Path $PSScriptRoot 'colors.json') -Raw | ConvertFrom-Json).gallery
  $sheet=[Drawing.Bitmap]::new(1280,1720)
@@ -270,8 +279,11 @@ if($ContactSheet) {
 }
 foreach ($scene in $scenes) {
  $extensions = @(if($scene.exportStills -ne $false){'.svg'; '.png'})
- if ($scene.staticGif -or $scene.frames.Count) { $extensions += '.gif' }
- if ($scene.frames.Count -gt 1) { $extensions += @('.mp4', '.animated.svg') }
+ if ($Gif -and ($scene.staticGif -or $scene.frames.Count)) { $extensions += '.gif' }
+ if ($scene.frames.Count -gt 1) {
+  $extensions += '.animated.svg'
+  if($Mp4) { $extensions += '.mp4' }
+ }
  foreach ($extension in $extensions) {
   $asset = Get-Item -LiteralPath (Join-Path $OutputDirectory ($scene.name + $extension)) -ErrorAction Stop
   if ($asset.Length -eq 0) { throw "Empty diagram export: $($asset.FullName)" }

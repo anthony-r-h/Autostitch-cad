@@ -38,7 +38,7 @@ for(const illustration of catalog.illustrations||[]){
   for(const asset of illustration.assets){
     const animated=asset.animated??illustration.animated;
     if(illustration.exportStills===false)assert(animated,'Disabling still exports requires an animation');
-    const extensions=illustration.exportStills===false?['gif']:(animated||asset.staticGif)?['svg','png','gif']:['svg','png'];
+    const extensions=illustration.exportStills===false?['animated.svg']:animated?['svg','png','animated.svg']:['svg','png'];
     for(const extension of extensions)assert(fs.existsSync(new URL(`${asset.path}.${extension}`,root)),`Missing illustration ${asset.path}.${extension}`);
   }
 }

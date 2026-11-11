@@ -128,7 +128,7 @@ On the same guides, the Autostitch layout uses round holes at both corners and k
 
 ![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment | Absolute stitch-length deviation |
+| Construction | # of adjusted gaps | Absolute adjustment | Absolute stitch deviation |
 | --- | ---: | ---: | ---: |
 | Reference | $3$ | $0.90\,\mathrm{mm}$ | $1.40\,\mathrm{mm}$ |
 | Autostitch | $1$ | $0.25\,\mathrm{mm}$ | $0.22\,\mathrm{mm}$ |
@@ -143,7 +143,7 @@ The Autostitch layout places applies the corner solution and fits each interveni
 
 ![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment | Absolute stitch-length deviation |
+| Construction | # of adjusted gaps | Absolute of adjustment | Absolute stitch deviation |
 | --- | ---: | ---: | ---: |
 | Reference | $26$ | $4.93\,\mathrm{mm}$ | $6.61\,\mathrm{mm}$ |
 | Autostitch | $6$ | $0.92\,\mathrm{mm}$ | $0.82\,\mathrm{mm}$ |
@@ -158,7 +158,7 @@ The Autostitch layout keeps the same guides and aligned straight rows, but the v
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment | Absolute stitch-length deviation |
+| Construction | # of adjusted gaps | Absolute adjustment | Absolute stitch deviation |
 | --- | ---: | ---: | ---: |
 | Reference | $10$ | $2.51\,\mathrm{mm}$ | $2.03\,\mathrm{mm}$ |
 | Autostitch | $5$ | $1.34\,\mathrm{mm}$ | $1.17\,\mathrm{mm}$ |
@@ -371,28 +371,26 @@ A layout is accepted only when the openings neither touch nor overlap and their 
 
 ## Infeasible Layouts
 
-An empty range of feasible gap counts means that the span cannot fit within the spacing bounds. The shortest possible straight span is $0.9p$, and every length $D\geq4.5p$ has a spacing fit. Below that threshold, some lengths fall between the ranges covered by successive gap counts.
+Some straight free spans cannot be filled while keeping both end openings fixed and every gap within the allowed spacing bounds. Adding or removing an opening changes the number of gaps, but there may be no whole-number count that fits.
 
-At $p=3\,\mathrm{mm}$, every length from $13.5\,\mathrm{mm}$ fits the spacing bounds. A $7\,\mathrm{mm}$ span fails because two gaps can reach only $6.6\,\mathrm{mm}$, while three need at least $8.1\,\mathrm{mm}$. Changing the count cannot solve that span; the guide or its fixed features must change. Any resulting fit must still pass clearance.
+The diagram shows a $7\,\mathrm{mm}$ span with a nominal pitch of $3\,\mathrm{mm}$. Each gap must stay between $2.7\,\mathrm{mm}$ and $3.3\,\mathrm{mm}$. Dividing the span into two equal gaps makes each one $3.5\,\mathrm{mm}$, above the maximum. Three equal gaps make each approximately $2.33\,\mathrm{mm}$, below the minimum. Unequal spacing cannot solve the problem either: even at their maximum length, two gaps cover only $6.6\,\mathrm{mm}$; even at their minimum length, three require $8.1\,\mathrm{mm}$. Fewer gaps reach less far, and more gaps require still more room.
 
 ![Two gaps are too long; three gaps are too short for the same fixed span](../examples/illustrated/assets/fit-rejected.png)
 
+This span is therefore infeasible at the chosen pitch and adjustment limits. To fit it at that pitch, the guide or its fixed features must change so that the free span has a different length. Redistributing the spacing alone cannot produce a valid layout.
+
+These spacing failures occur on short spans. For a straight free span with no protected gaps inside, the shortest possible length is $0.9p$, and every length $D\geq4.5p$ has a spacing fit. At $p=3\,\mathrm{mm}$, that means every span of $13.5\,\mathrm{mm}$ or longer can meet the spacing bounds. Shorter spans may fit, but some lengths fall between the ranges covered by successive gap counts, as the diagram shows. Every spacing fit must still pass the separate clearance check.
+
 # Conclusion
 
-The wallet, hanger, handle chape and strap tip show that corner and spacing treatments vary even among goods sold at luxury price points. A high price does not imply a consistent geometric treatment. A skilled craftsperson can resolve those choices by hand, but repeating the spacing calculations takes attention after the design decisions are settled. Automating that work leaves more time for the composition and its execution.
+Stitch layout places a practical limit on what a maker can achieve. As a design becomes more intricate, the effort required to keep its stitching precise and coherent grows. Even an expert has limited time and attention to devote to placing individual openings and reconsidering them after every revision. That cost influences which designs are attempted and which compromises are accepted.
 
-Layout effort grows with the number of interacting constraints. A seam with several corners and short spans can require more fitting than a long uninterrupted run, and revisions require earlier decisions to be checked again. The lettering and decorative patterns shown here were developed to push the boundaries of stitching. They bring many of those constraints together, exploring designs whose manual layout would demand substantial effort. Applying explicit rules makes that complexity easier to develop and revise, even for a single piece.
+Computational layout raises that limit. It makes a degree of precision and consistency practical across designs whose manual preparation would demand exceptional effort. Every maker benefits because experience no longer sets the ceiling on the geometry they can resolve. The gain extends from better execution of familiar patterns to elaborate lettering and decorative work that would otherwise be impractical to develop.
 
 One _can_ do that by hand but...
 
 ![Perfection can be done by hand, but is often not feasible](../examples/demos/can-you-really.png)
 
-The benefit changes with the maker's experience. A beginner can use a resolved layout before developing the judgement needed to balance spacing and corners unaided. For an intermediate maker, explicit bounds and fixed features provide a consistent basis for decisions across seams. The maker still chooses whether the treatment suits the design, while the layout supplies precise positions for its execution.
+That possibility matters for a single bespoke piece as much as for production. A complex design becomes easier to explore and revise, and its resolved layout can guide handwork, pass between makers or be executed by CNC equipment. The care invested in the pattern carries through to each piece without requiring someone to solve the placement again.
 
-Advanced and expert makers spend less time repeating familiar calculations and correcting layouts after revisions. That saving matters in bespoke work, where a custom shape must be resolved even when only one piece is made. A chosen treatment can be carried through a complex pattern, leaving more attention for accurate punching, thread tension and control of the finished stitch.
-
-The same recorded decisions support repeated production. A resolved pattern gives the location and size of every adjustment before work begins, helping the pattern designer communicate the treatment to the person making the openings. In manual and semi-automated work, fewer placement decisions remain with the operator. Small batches can follow the same layout across makers and production runs without each person independently deciding where to adjust spacing.
-
-CNC equipment can place each opening precisely, making rule-based stitch placement directly executable. The layout still has to balance the stitching across the design: spacing each run evenly would give runs of different lengths different stitch pitches. An algorithm can preserve a common nominal pitch and choose where adjustments belong, carrying the selected treatment through corners and junctions. The machine then executes those placement decisions.
-
-Towels, tablecloths and disposable fashion rarely call for this degree of control over individual stitches. Where the article itself is a work of art, stitch placement becomes part of its composition. Explicit rules preserve regularity and symmetry, making a carefully balanced layout easier to achieve. This raises the standard makers can reach without repeatedly solving every placement by hand, making exceptional stitching more accessible.
+Towels, tablecloths and disposable fashion rarely call for this degree of control over individual stitches. Where the article itself is a work of art, stitch placement becomes part of its composition. Explicit rules make regularity and symmetry easier to control, bringing carefully resolved layouts within reach of more makers and allowing accomplished craftspeople to push further. The result is a higher standard of stitching and greater freedom in what can be designed and made.

@@ -4798,7 +4798,10 @@
     "expected": "Successful diagram builds remove only their own scratch; explicit review requests and failures retain diagnostics.",
     "coverage": [
       "Unique scratch paths and sibling preservation",
-      "Successful SVG, PNG and GIF exports survive scratch cleanup",
+      "Successful SVG, PNG, GIF and MP4 exports survive scratch cleanup",
+      "Animations export H.264 yuv420p MP4s from full-colour source frames at twice the GIF dimensions; static compatibility GIFs do not produce MP4s",
+      "MP4 frame timestamps, frame counts and final holds match variable GIF delays; videos decode successfully",
+      "Missing MP4 encoder fails the build, retains diagnostics and preserves existing MP4 output",
       "KeepScratch retains intermediates",
       "FrameTimes retains requested review images",
       "Prepare and finish failures retain diagnostic files",

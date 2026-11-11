@@ -1,9 +1,10 @@
-# Generate embedded diagrams and looping animations. No CAD session or packages.
+# Generate embedded diagrams and looping animations. MP4 export requires FFmpeg with libx264.
 [CmdletBinding()]
 param(
  [string]$OutputDirectory = (Join-Path $PSScriptRoot 'assets'),
  [string]$SceneScript = (Join-Path $PSScriptRoot 'scenes.mjs'),
  [string]$Theme,
+ [string]$FfmpegPath = 'ffmpeg',
  [double[]]$FrameTimes = @(),
  [switch]$KeepScratch,
  [switch]$ContactSheet
@@ -50,7 +51,7 @@ try {
 if ($LASTEXITCODE -ne 0) { throw 'Scene construction failed.' }
 $scenes = Get-Content (Join-Path $temporary 'scenes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 
-function Draw-Frame($elements,$canvas) {
+function Draw-Frame($elements,$canvas,$videoFramePath) {
  $supersampling=if($null -ne $canvas.supersampling){[int]$canvas.supersampling}else{2}
  $large=[Drawing.Bitmap]::new(($canvas.width*$supersampling),($canvas.height*$supersampling))
  $g=[Drawing.Graphics]::FromImage($large)
@@ -138,6 +139,8 @@ function Draw-Frame($elements,$canvas) {
     default {throw ('Unknown diagram element: '+$element.type)}
    }
   }
+  # Preserve the original full-colour drawing before GIF downsampling and palette conversion.
+  if ($videoFramePath) { $large.Save($videoFramePath,[Drawing.Imaging.ImageFormat]::Png) }
   $finish=[Drawing.Graphics]::FromImage($small)
   try {
    $finish.InterpolationMode=[Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
@@ -207,8 +210,11 @@ foreach($scene in $scenes) {
   continue
  }
  $encoder=[Windows.Media.Imaging.GifBitmapEncoder]::new()
+ $frameIndex=0
  foreach($frame in $scene.frames) {
-  $bitmap=Draw-Frame $frame.elements $scene.canvas
+  $videoFramePath=if($scene.frames.Count -gt 1){Join-Path $temporary ($scene.name+'-video-'+$frameIndex+'.png')}else{$null}
+  $bitmap=Draw-Frame $frame.elements $scene.canvas $videoFramePath
+  $frameIndex++
   $stream=[IO.MemoryStream]::new()
   try {
    foreach($time in $FrameTimes) {
@@ -229,14 +235,17 @@ foreach($scene in $scenes) {
  }
  $file=[IO.File]::Create((Join-Path $temporary ($scene.name+'.gif')))
  try {$encoder.Save($file)} finally {$file.Dispose()}
- $stillMessage=if($scene.exportStills -eq $false){'GIF only.'}else{'SVG/PNG final state.'}
+ $stillMessage=if($scene.exportStills -eq $false){'GIF/MP4 only.'}else{'SVG/PNG final state.'}
  Write-Output ($scene.name+': '+$scene.frames.Count+' frames; '+$stillMessage)
  $encoder=$null
  [GC]::Collect()
 }
 & node $SceneScript finish $OutputDirectory $temporary $Theme
 if ($LASTEXITCODE -ne 0) { throw 'Animation timing export failed.' }
-Write-Output 'Looping GIFs written with explicit reveal timing and result holds.'
+if (@($scenes | Where-Object { $_.frames.Count -gt 1 }).Count) {
+ & (Join-Path $PSScriptRoot 'export-mp4.ps1') -ScenePath (Join-Path $temporary 'scenes.json') -OutputDirectory $OutputDirectory -ScratchDirectory $temporary -FfmpegPath $FfmpegPath
+}
+Write-Output 'GIFs and matching MP4s written with explicit reveal timing and result holds.'
 if($ContactSheet) {
  $chrome=(Get-Content (Join-Path $PSScriptRoot 'colors.json') -Raw | ConvertFrom-Json).gallery
  $sheet=[Drawing.Bitmap]::new(1280,1720)
@@ -260,8 +269,9 @@ if($ContactSheet) {
  } finally {$brush.Dispose();$heading.Dispose();$font.Dispose();$g.Dispose();$sheet.Dispose()}
 }
 foreach ($scene in $scenes) {
- $extensions = if($scene.exportStills -eq $false){@()}else{@('.svg', '.png')}
+ $extensions = @(if($scene.exportStills -ne $false){'.svg'; '.png'})
  if ($scene.staticGif -or $scene.frames.Count) { $extensions += '.gif' }
+ if ($scene.frames.Count -gt 1) { $extensions += '.mp4' }
  foreach ($extension in $extensions) {
   $asset = Get-Item -LiteralPath (Join-Path $OutputDirectory ($scene.name + $extension)) -ErrorAction Stop
   if ($asset.Length -eq 0) { throw "Empty diagram export: $($asset.FullName)" }

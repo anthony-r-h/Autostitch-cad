@@ -1,4 +1,4 @@
-;;; Stitched banner with flow inside YOU and a loose diamond background.
+;;; Stitched banner with flow inside YOU and a diamond background.
 ;;; Load examples/demo.lsp, then ASTBANNERDEMO.
 (defun ast:banner-settings ()
   (ast:cad-put 'pitch 2.7 (ast:cad-default-settings)))
@@ -261,7 +261,7 @@
       (if (= 'corrected (ast:cad-get 'kind gap)) (setq adjusted (1+ adjusted)))))
   (list (cons 'background-guides guide-count) (cons 'background-blocks (length plans))
     (cons 'background-openings (length openings)) (cons 'background-junctions crossings)
-    (cons 'background-adjusted-gaps adjusted) '(background-crossing-spacing . 27.0)
+    (cons 'background-adjusted-gaps adjusted) '(background-crossing-spacing . 13.5)
     '(text-perimeter . 6.0) '(frame-contained . T)))
 (defun ast:banner-background (letters foreground frame / mask packets bounds center diagonal direction normal k anchor run guides plans report)
   (setq mask (ast:banner-mask letters) packets (ast:emblem-opening-packets foreground)
@@ -269,9 +269,9 @@
     diagonal (/ 1.0 (sqrt 2.0)))
   (ast:show-layer "BANNER_DIAMONDS" 8 nil)
   (foreach direction (list (list diagonal diagonal) (list (- diagonal) diagonal))
-    (setq normal (ast:g-left direction) k -6)
-    (repeat 13
-      (setq anchor (ast:g-add center (ast:g-mul normal (* k 27.0))))
+    (setq normal (ast:g-left direction) k -12)
+    (repeat 25
+      (setq anchor (ast:g-add center (ast:g-mul normal (* k 13.5))))
       (foreach run (ast:banner-diamond-runs anchor direction bounds mask packets)
         ;; Inset both free ends by half a pitch, retaining at least three gaps.
         (if (>= (- (cadr run) (car run)) 4)
@@ -310,8 +310,8 @@
   (ast:cad-require (and (= 19 (length lettering)) (= 104 (length guides))
     (= 404 (ast:cad-get 'openings report)) (= 612 (ast:cad-get 'lettering-openings text-report))
     (= 16 (ast:cad-get 'lettering-sources text-report))) "The banner geometry or hole count has changed.")
-  (ast:cad-require (and (= 24 (length background)) (= 204 (ast:cad-get 'background-openings background-report))
-    (= 13 (ast:cad-get 'background-blocks background-report)) (= 11 (ast:cad-get 'background-junctions background-report)))
+  (ast:cad-require (and (= 42 (length background)) (= 432 (ast:cad-get 'background-openings background-report))
+    (= 11 (ast:cad-get 'background-blocks background-report)) (= 36 (ast:cad-get 'background-junctions background-report)))
     "The background geometry or hole count has changed.")
   (append report text-report background-report))
 

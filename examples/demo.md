@@ -28,7 +28,7 @@ The banner clips one field of translated flow arcs across all three YOU letters.
 
 Branching junctions reserve half-pitch neighbours on every arm. The h rising stroke, l approaches and y lead-in leave enough room for the remaining ordinary gaps.
 
-The diamond background has crossings $27\,\mathrm{mm}$ apart, giving diamonds about $38.2\,\mathrm{mm}$ wide. It stays $6\,\mathrm{mm}$ from the text holes and stops inside the outer frame. Closed letter interiors remain empty of background stitching; fragments shorter than three nominal gaps are omitted. Free ends stop half a pitch inside the clipped runs, keeping their phase consistent with the junction neighbours. The frame is a clipping boundary.
+The diamond background has crossings $13.5\,\mathrm{mm}$ apart, giving diamonds about $19.1\,\mathrm{mm}$ wide. It stays $6\,\mathrm{mm}$ from the text holes and stops inside the outer frame. Closed letter interiors remain empty of background stitching; fragments shorter than three nominal gaps are omitted. Free ends stop half a pitch inside the clipped runs, keeping their phase consistent with the junction neighbours. The frame is a clipping boundary.
 
 Use the saved DWGs for routine review; generating connected stitch blocks can take a minute or more. Close each test drawing after checking it.
 
@@ -43,7 +43,9 @@ Preview colours use `documentationTheme` in [illustrated/colors.json](illustrate
 ./examples/render-demos.ps1 -SvgPath examples/demos/can-you-really.svg -OutputBase examples/demos/can-you-really
 ```
 
-The square emblem SVG comes from the native drawing. The emblem animation reads that SVG for its final stitch geometry; both use the shared theme file. Changing geometry requires a new native export and animation rebuild. Recolouring the square preview leaves the animation geometry unchanged.
+The square emblem SVG comes from the native drawing. The emblem animation reads that SVG for its final stitch geometry; both use the shared theme file. Changing geometry requires a new native export and animation rebuild. Recolouring or cropping the square preview leaves the animation geometry unchanged.
+
+The square emblem uses `-ViewBox 60,68,465,465` to enlarge the lettering for thumbnails, clipping the outer ring while retaining both words. ViewBox values are `x,y,width,height` in the original SVG pixel coordinates. Include this option when rebuilding from a native export with the bounds below; `-SvgPath` preserves the saved viewport automatically. All stitch coordinates remain in the SVG for the animation.
 
 Example for the portrait lettering preview:
 

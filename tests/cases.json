@@ -8516,7 +8516,8 @@
       "views": [
         {
           "name": "EMBLEM",
-          "description": "Lettering with three stitched rings and a blank border"
+          "description": "Tight square preview with complete lettering and cropped outer ring",
+          "viewBox": [60, 68, 465, 465]
         }
       ],
       "coverage": [
@@ -8575,7 +8576,7 @@
         "Closed letter interiors and counters remain free of background stitches",
         "Sloping e spine, l loops without low entry strokes, closer question mark; can unchanged"
       ],
-      "expected": "19 lettering guides in 16 blocks with 612 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 24 guides in 13 blocks with 204 openings, 11 shared junctions and no adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
+      "expected": "19 lettering guides in 16 blocks with 612 openings; 104 flow guides with 404 openings; one round dot. Diamond background: 42 guides in 11 blocks with 432 openings, 36 shared junctions and no adjusted gaps. All use 2.7 mm pitch. Lettering-to-flow clearance 3 mm; text-to-background clearance 6 mm; all background holes inside the frame.",
       "parameters": {
         "pageWidth": 160,
         "pageHeight": 200,
@@ -8602,7 +8603,7 @@
         "fillToLetteringClearance": 3,
         "scriptScale": 0.84,
         "aBowlRadius": 10.08,
-        "backgroundCrossingSpacing": 27,
+        "backgroundCrossingSpacing": 13.5,
         "backgroundTextPerimeter": 6,
         "backgroundMinimumFragmentGaps": 3,
         "frameMode": "stop-inside",
@@ -8612,7 +8613,7 @@
         {
           "source": "examples/banner.lsp",
           "entrypoint": "ast:banner-check",
-          "expected": "135 current blocks, 1227 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
+          "expected": "131 current blocks, 1449 openings including the dot. Round a bowls, shared script size, pitch, flow geometry, both clear perimeters, combined clearance and frame containment pass."
         }
       ]
     }
@@ -9620,7 +9621,7 @@
         "slitLength": 1.5,
         "leanDegrees": 40,
         "topSteps": 5,
-        "rightSteps": 4,
+        "rightSteps": 5,
         "bottomSteps": 4,
         "hWidth": 3,
         "hHeight": 3,

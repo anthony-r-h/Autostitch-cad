@@ -47,7 +47,7 @@ export function walletGeometry(diagonal=false) {
 }
 
 function walletScene(diagonal=false) {
-  const g=walletGeometry(diagonal),view={x:435,y:72,scale:18};
+  const g=walletGeometry(diagonal),view={x:435,y:72,scale:16};
   let vertex=[0,0];
   const reference=input('ILL-SELLIER-CORNER');
   if(diagonal) {

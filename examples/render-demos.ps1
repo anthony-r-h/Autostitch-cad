@@ -7,6 +7,8 @@ param(
  [Parameter(Mandatory=$true,ParameterSetName='Drawing')][double[]]$Bounds,
  [Parameter(ParameterSetName='Drawing')][int]$Width=600,
  [Parameter(ParameterSetName='Drawing')][int]$Height=600,
+ [Parameter(ParameterSetName='Drawing')]
+ [Parameter(ParameterSetName='Preview')][double[]]$ViewBox,
  [Parameter(Mandatory=$true,ParameterSetName='Library')][switch]$FillLibrary,
  [string]$Theme
 )
@@ -54,6 +56,7 @@ if($SvgPath){
  # Reuse their pixel geometry when changing appearance; no CAD export is needed.
  [xml]$preview=Get-Content -LiteralPath $SvgPath -Raw
  $Width=[int]$preview.svg.width;$Height=[int]$preview.svg.height
+ if(-not $ViewBox){$ViewBox=@($preview.svg.viewBox -split '\s+' | ForEach-Object { [double]::Parse($_,[Globalization.CultureInfo]::InvariantCulture) })}
  $Bounds=@(0,-$Height,$Width,0)
  $entities=@(foreach($element in $preview.svg.ChildNodes){
   switch($element.LocalName){
@@ -68,6 +71,8 @@ if($SvgPath){
  $entities=@(foreach($line in [IO.File]::ReadLines((Resolve-Path $InputPath))){ ,($line | ConvertFrom-Json) })
 }
 if($Bounds.Count -ne 4 -or $Bounds[2] -le $Bounds[0] -or $Bounds[3] -le $Bounds[1]){throw 'Bounds must be xmin,ymin,xmax,ymax.'}
+if(-not $ViewBox){$ViewBox=@(0,0,$Width,$Height)}
+if($ViewBox.Count -ne 4 -or $ViewBox[2] -le 0 -or $ViewBox[3] -le 0){throw 'ViewBox must be x,y,width,height with positive dimensions.'}
 $xmin,$ymin,$xmax,$ymax=$Bounds
 $scale=[Math]::Min($Width/($xmax-$xmin),$Height/($ymax-$ymin))
 $cx=($xmin+$xmax)/2;$cy=($ymin+$ymax)/2
@@ -75,11 +80,16 @@ $bitmap=[Drawing.Bitmap]::new($Width*3,$Height*3)
 $g=[Drawing.Graphics]::FromImage($bitmap)
 $g.SmoothingMode=[Drawing.Drawing2D.SmoothingMode]::AntiAlias
 $g.Clear([Drawing.ColorTranslator]::FromHtml($background));$g.ScaleTransform(3,3)
+ # Crop the viewport while retaining SVG coordinates used by the emblem animation.
+ $viewScale=[Math]::Min($Width/$ViewBox[2],$Height/$ViewBox[3])
+ $g.TranslateTransform([single](($Width-$ViewBox[2]*$viewScale)/2),[single](($Height-$ViewBox[3]*$viewScale)/2))
+ $g.ScaleTransform([single]$viewScale,[single]$viewScale)
+ $g.TranslateTransform([single](-$ViewBox[0]),[single](-$ViewBox[1]))
 $ink=[Drawing.ColorTranslator]::FromHtml($foreground);$brush=[Drawing.SolidBrush]::new($ink)
 $svg=[Collections.Generic.List[string]]::new()
-$svg.Add('<svg xmlns="http://www.w3.org/2000/svg" width="'+$Width+'" height="'+$Height+'" viewBox="0 0 '+$Width+' '+$Height+'">')
-$svg.Add('<title>Actual Autostitch output</title><rect width="100%" height="100%" fill="'+$background+'"/>')
 function Number([double]$v){$v.ToString('0.#####',[Globalization.CultureInfo]::InvariantCulture)}
+$svg.Add('<svg xmlns="http://www.w3.org/2000/svg" width="'+$Width+'" height="'+$Height+'" viewBox="'+(($ViewBox | ForEach-Object { Number $_ }) -join ' ')+'">')
+$svg.Add('<title>Actual Autostitch output</title><rect x="'+(Number $ViewBox[0])+'" y="'+(Number $ViewBox[1])+'" width="'+(Number $ViewBox[2])+'" height="'+(Number $ViewBox[3])+'" fill="'+$background+'"/>')
 foreach($s in $entities) {
  $x=[double]$s[2];$y=[double]$s[3]
  $px=($x-$cx)*$scale+$Width/2;$py=($cy-$y)*$scale+$Height/2
@@ -105,5 +115,5 @@ $finish.Clear([Drawing.ColorTranslator]::FromHtml($background))
 $finish.InterpolationMode=[Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
 $finish.DrawImage($bitmap,0,0,$Width,$Height);$small.Save(($OutputBase+'.png'),[Drawing.Imaging.ImageFormat]::Png)
 $finish.Dispose();$small.Dispose();$brush.Dispose();$g.Dispose();$bitmap.Dispose()
-if($SvgPath){Write-Output "$OutputBase recoloured at $Width x $Height using $Theme."}
+if($SvgPath){Write-Output "$OutputBase rendered at $Width x $Height using $Theme; viewBox $($ViewBox -join ',')."}
 else{Write-Output "$OutputBase exported at $Width x $Height; $scale pixels/mm; theme $Theme."}

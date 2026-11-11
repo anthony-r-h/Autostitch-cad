@@ -2,6 +2,12 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Denser banner quilt: 2026-11-10
+
+- Crossings are 13.5 mm apart; the 6 mm text perimeter is unchanged. Background: 42 guides, 11 blocks, 432 openings and 36 shared junctions; no adjusted gaps.
+- Empty-drawing generation and `ast:banner-check` after save/reopen passed, including combined clearance, letter exclusion and frame containment. The 600 by 750 px native export was visually inspected.
+- Evidence: `output/native/quilt-density-20261110-build.txt` and `output/native/quilt-density-20261110-reopen.txt`. Production plugin code is unchanged; full plugin suites were not rerun.
+
 ## Obverse/reverse stitch lean: 2026-11-10
 
 - All 19 native suites passed 2,096 checks. Coverage includes independent stitch lean, face and travel choices; matched-copy inheritance; input Undo/Redo; legacy defaults; and atomic connected-output migration. Report: `output/native/pitch-method-suites.txt`.
@@ -137,6 +143,10 @@ Retained evidence from the preceding implementation; these were not repeated for
 - The 18-control palette and curved-guide boxed label were inspected in BricsCAD.
 
 ## Run
+
+Choose checks using [the testing rules](../AGENTS.md#process). The commands below include full-suite runs; they are not required for every change. Use scripts for native checks and read their completed reports.
+
+Emblem and "can you really?" are excluded from routine and release plugin testing. Their earlier checks above are historical evidence, not requirements to repeat. Check those artworks only when changing them or explicitly asked.
 
 Catalog and independent arithmetic:
 

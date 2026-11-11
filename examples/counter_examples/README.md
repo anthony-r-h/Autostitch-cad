@@ -11,7 +11,7 @@ Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.p
 | Figure | Catalog ID | Construction |
 | --- | --- | --- |
 | `sellier-diagonal-corner` | `ILL-SELLIER-CORNER` | Top row already punched; vertical row flips from rear-style to front-style across its guide, then the shared diagonal slit and complete thread appear. The two adjacent thread segments have extra weight. |
-| `sellier-wallet-autostitch` | `ILL-SELLIER-WALLET` | Static detail: five top slits, three side slits and four bottom slits; shared corner hole and six H circles. |
+| `sellier-wallet-autostitch` | `ILL-SELLIER-WALLET` | Static detail: five top slits, four side slits and four bottom slits; shared corner hole and six H circles. |
 | `sellier-wallet-diagonal` | `ILL-SELLIER-WALLET-DIAGONAL` | Static comparison: the same ordinary slit counts and H, with one shared diagonal slit at the top corner. |
 | `loewe-hanger-reference` | `ILL-LOEWE-HANGER` | Static reference: left shared slit, right round hole, and a horizontal middle thread. |
 | `loewe-hanger-autostitch` | `ILL-LOEWE-HANGER` | Same three guides with two A6 corner holes and a fitted top span. |
@@ -69,3 +69,14 @@ Absolute stitch-length deviation uses the drawn thread endpoints, including corn
 ```powershell
 node --input-type=module -e "import {createScenes,absoluteStitchLengthDeviation} from './examples/counter_examples/scenes.mjs'; for(const s of createScenes()) console.log(s.name,absoluteStitchLengthDeviation(s).toFixed(3));"
 ```
+
+## License exclusions
+
+The following reference photographs are excluded from the repository's [MIT License](../../LICENSE). Copyright remains with their respective owners; no rights to these photographs are granted by this repository.
+
+- `hermies_sellier.png`
+- `loewe_mini_feather.png`
+- `lv_speedy.png`
+- `jaeger_lecoultre_fagliano.png`
+
+The example code and generated diagrams remain covered by the MIT License.

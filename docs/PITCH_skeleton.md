@@ -1,51 +1,77 @@
 # Introduction
 
-## From design to execution
+## Stitch layout and fabrication
 
-- Design sets the seam path and its intended appearance; making it requires discrete, oriented openings
-- Geometric layout is a constrained placement problem: choose opening positions, orientations and gap counts while preserving the intended seam
+- Design sets the seam path and its intended appearance; making it requires a sequence of openings
+- Opening positions must resolve spacing at endpoints and corners; rows that meet or are sewn together must align
+- The layout specifies where each stitch is made
 - Physical execution produces those openings; craft judgement connects the design, geometric layout and tool use
 
-## Pricking irons and nominal pitch
+## Tool geometry and spacing constraints
 
-- Round holes are rotationally symmetric; slits have length, width and orientation that shape the visible thread
-- A multi-tooth iron fixes the spacing between openings, but seam lengths rarely divide into whole nominal gaps
-- Where and how much spacing changes affects both appearance and tool use
+- Round holes are rotationally symmetric; slits have length, width and orientation that affect how thread crosses them and appears on the surface
+- As a seam turns, slit orientation must be considered alongside position
+- A multi-tooth iron fixes the spacing between openings, but distances between fixed features rarely divide into whole nominal gaps
+- The maker decides where spacing departs from nominal pitch, by how much, and whether the intended tool can produce the layout
 - Adjusted gaps can require individual placement with an awl or single tooth
 
-## From manual judgement to explicit rules
+## Craft judgement and computational methods
 
-- Digital arrays create many objects; fitting and revising the seam requires manual edits
-- Physical layout relies on judgement developed through practice, repeated for each pattern
-- Encode that judgement in repeatable placement instructions: preserve nominal spacing where possible and identify every adjustment
-- Make the placement choices explicit so the same rules can be reapplied when the pattern changes
-- Reject layouts that cannot satisfy the rules so the design can be revised
-- Ground the axioms in manufacturability with the intended tools, visual balance through consistent lean and deliberate adjustments, and precision through explicit constraints and reproducible geometry
+- A craftsperson develops an eye for a balanced seam and adapts a regular stitch pattern to the shape of a piece
+- Digital arrays produce rows of openings; fitting those rows around fixed features still requires manual corrections
+- Moving an endpoint or changing a curve can invalidate earlier corrections; layout judgements recur whenever the pattern changes
+- Physical layout relies on the same judgement, although its decisions may remain unrecorded
+- Describe that judgement through explicit constraints and priorities: which features stay fixed, how closely spacing follows the tool, and where adjustments are least conspicuous
+- Judgement establishes what makes a layout good; computational search evaluates candidate placements against those priorities
+- Search can consider combinations that would be impractical to compare by hand
+- Explicit rules make placement decisions repeatable when the pattern changes
 
-# Terms
+## Autostitch
 
-- **Guide and stitch line:** the guide carries the slit centres; one stitch line can follow several connected guides
-- **Slit and lean:** a slit has length, width and an axis between its tips. Lean is the angle of that axis to the guide's local tangent
-- **Obverse and reverse stitch:** obverse uses the reference slit lean; reverse mirrors that lean. Travel direction and material face are separate choices
-- **Gap and pitch:** a gap is the direct distance between consecutive opening centres; pitch $p$ is the target. On a curve, the gap is a chord, while arc length follows the guide
-- **Nominal, adjusted and protected gaps:** nominal gaps equal $p$; adjusted gaps depart from $p$ within the fitting bounds; protected gaps stay nominal
-- Blue guide segments identify adjusted gaps between opening centres; red segments identify residuals
-- **Landmark and free span:** a landmark fixes a nominally spaced pair of slits around a reference position, with no opening at the reference itself. Endpoints, landmarks and junctions bound the free spans where the remaining openings are fitted
-- **Junction and arms:** a junction is where stitch lines meet. Each direction away from it is an arm: two at a corner, three at a T, four at an X. A through-line contributes two arms. Three or more arms form a branching junction
-- **Virtual slit:** an unpunched construction slit toward which an arm is laid out. In an Autostitch corner, the terminal virtual slit tips meet at the shared hole
-- **Clearance:** the shortest edge-to-edge distance between separate openings, accounting for slit width and hole diameter. The margin is the minimum allowed clearance
-- **Residual and adjustment:** residual is the length left over or missing before fitting; adjustment is the change made to a gap. Absolute adjustment sums gap changes, counting compression and extension positively. On curves, residual uses arc length and adjustment uses chord length
-- **Absolute stitch-length deviation:** total absolute difference between visible thread lengths and nominal straight-row stitches. It captures changes from spacing, curvature and corner treatment; it does not measure thread direction
+- Autostitch applies geometric constraints and computational search to stitch layout for hand stitching with pricking irons
+- Implemented in AutoLISP with an OpenDCL interface for CAD platforms such as BricsCAD and AutoCAD
+- Given those guides and a tool profile, it places openings, resolves corners and junctions, and fits spacing between fixed features
+- The aim is to preserve the intended seam and nominal tool pitch while making necessary adjustments explicit and controlled
+- The result is a geometric layout specifying opening positions and orientations, shared openings and adjusted gaps, ready to guide physical execution
+
+
+# Terminology
+
+## Guides and openings
+
+- **Guide:** the path followed by the slit centres
+- **Stitch line:** a row of stitching along one or more connected guides
+- **Opening:** a slit or round hole for the thread
+- **Slit and lean:** a slit has length, width and orientation. Lean is its angle to the guide's local direction
+- **Obverse and reverse stitch:** obverse uses the reference lean; reverse mirrors it. These are separate from travel direction and material face
+
+## Spacing
+
+- **Gap and pitch:** a gap is the straight-line distance between opening centres; pitch $p$ is the tool's target spacing
+- **Nominal gap:** equals $p$
+- **Adjusted gap:** a slit-to-slit gap made longer or shorter within the allowed limits
+- **Protected gap:** stays at nominal pitch during fitting
+- **Residual and adjustment:** residual is the length left over or missing before fitting; adjustment is the change made to a gap
+- **Adjustment block:** a group of consecutive, equal adjusted gaps
+
+## Fixed features and connections
+
+- **Landmark:** a reference position halfway between two slits at nominal spacing. It fixes both slits, with no opening at the reference itself
+- **Free span:** the space between fixed features where the remaining openings are fitted
+- **Junction and arms:** a junction is where arms meet. Each arm extends away from it: two at a corner, three at a T and four at an X
+- **Branching junction:** a junction with three or more arms
+- **Virtual slit:** a construction slit whose tip locates a corner hole. It is not punched
+- **Corner step:** the distance between the centres of a virtual slit and its neighbouring real slit
 
 ![Guide, slit, gaps, landmark and free span](../examples/illustrated/assets/terms-layout.png)
 
-# Two layout problems
+# Stitch layout problems
 
 - Spacing: fit a seam whose length is not a whole number of nominal gaps
 - Corners: join rows of oriented slits while controlling the opening and thread at the turn
 - Compare how each solution uses the iron, where adjustments occur, and what changes in the visible stitching
 
-## The spacing problem
+## Spacing between fixed endpoints
 
 - Six slits on a $15.3\,\mathrm{mm}$ guide, at $3\,\mathrm{mm}$ nominal pitch
 - Both endpoints must be met; the nominal row leaves a $0.30\,\mathrm{mm}$ residual
@@ -56,10 +82,9 @@
 ![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.gif)
 
 - Five equal $3.06\,\mathrm{mm}$ gaps
-- A fit-to-length CAD pattern: divide the line equally between the chosen openings
-- Each stitch line gets its own pitch, determined by its length and gap count
-- Spacing is uniform within each line; different lines generally have different pitches
-- The chosen iron cannot place those runs at their new pitches; every gap needs individual placement
+- Spacing is uniform along the line, but its pitch depends on the line's length and gap count
+- Different lines generally require different pitches
+- The $3\,\mathrm{mm}$ iron cannot place the row at this spacing; every gap needs individual placement
 
 ### End adjustment
 
@@ -67,25 +92,21 @@
 
 - Four nominal gaps; one $3.30\,\mathrm{mm}$ gap at the end
 - The last stitch takes the entire residual, making it longer or shorter than the rest
-- Sharing the residual across more gaps makes each change smaller and easier to blend into the run, at the cost of more individual placements
+- Sharing the residual across more gaps would reduce each change, but require more individual placements
 
-### Autostitch
+### Autostitch solution
 
 ![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.gif)
 
-- Four nominal gaps; one $3.30\,\mathrm{mm}$ gap in the centre
-- Formalizes those decisions: bound each pitch change, use the fewest adjusted gaps needed, and centre them within the available span
-- Share the residual equally across those gaps; keep the remaining runs at the tool pitch
+- Keep four nominal gaps and place one $3.30\,\mathrm{mm}$ gap in the centre
+- Set limits on each spacing change, then use the fewest adjusted gaps needed
+- Share the residual equally across those gaps and centre the adjustment block within the span
+- This combines equal spacing within the adjustment block with nominal spacing in the remaining runs
+- The correction sits away from the endpoints; here, it requires the same number of individual placements as end adjustment
 
-### Spacing tradeoffs
+## Corner construction
 
-- Even spacing solves the visual pattern; it gives up the common tool pitch across stitch lines
-- End adjustment preserves the tool pitch through most of the line, but leaves one visibly longer or shorter stitch at the endpoint
-- Autostitch borrows equal spacing for a selected adjustment block. The remaining runs keep the tool pitch; the correction sits away from fixed features
-
-## The corner problem
-
-- At a corner, two rows of angled slits must join into one continuous seam
+- At a corner, two rows of slits must join into one continuous seam
 - How those rows meet determines where the thread turns, whether slit lean stays consistent, and the length and angle of the adjoining stitches
 - Red angles measure the entering and leaving thread against their respective guides, showing how each stitch approaches or leaves the corner
 
@@ -93,268 +114,44 @@
 
 ![Nominal rows joined by a round hole at the vertex](../examples/illustrated/assets/problem-corner-vertex-point.png)
 
-- Keep the round hole at the vertex and move the vertical run to balance the adjoining stitches
-- Both angles are $14.3^\circ$; both visible stitch lengths are $1.96\,\mathrm{mm}$
-- Arm spacing stays nominal; the far endpoint moves with the vertical run
-- The two final gaps into the hole absorb the spacing change
+- Put a round hole at the corner and stitch into it from both rows
+- Keep nominal spacing along each row; the final gaps into the hole take up the spacing difference
+- The last slit on each arm determines the length and angle of the thread entering the hole
+- In this example, move the vertical row to balance the two corner stitches; its far endpoint moves with it
 
 ### Bridge
 
 ![Bridge varies from 1 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.gif)
 
-- Thread bridges the last slit on each arm, bypassing the vertex
-- Move the vertical run to vary the visible bridge stitch from $1.00$ to $3.00\,\mathrm{mm}$; the red angles change with it
-- Both positions retain nominal arm spacing; the far endpoint moves with the row
+- Join the last slit on each arm directly with thread, bypassing the vertex
+- Move the vertical row to vary the visible bridge stitch from $1.00$ to $3.00\,\mathrm{mm}$
+- The thread angles change with the bridge length
+- Gaps within each row stay nominal; the far endpoint moves with the row
 
 ### Reverse corner
 
 ![Reverse corner joins obverse and reverse rows through a shared diagonal slit](../examples/illustrated/assets/problem-corner-mirrored.gif)
 
-- Refines Bridge: add a shared diagonal slit at the vertex and mirror the outgoing row, joining obverse and reverse stitches
-- Mirroring brings the outgoing corner stitch closer to the ordinary thread direction along that row
-- Arm spacing stays nominal; the final gaps into the shared slit absorb the residual
-- Length brackets show the two visible corner stitches; red angles show how they meet the arms
+- Add a shared diagonal slit at the vertex, joining an obverse row to a reverse row
+- This brings the outgoing corner stitch closer to the usual thread direction along that row
+- Gaps within each row stay nominal
+- The final connections to the shared slit take up the spacing difference
 
 ### Autostitch
 
 ![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
 
-- Refines Vertex point at this right-angle corner: derive the shared hole from the two slit rows, keeping their lean consistent
-- The horizontal row's terminal virtual slit locates the vertical row through its lower tip
-- Slide that virtual slit and its preceding real slit until the vertical row lines up with its guide; the whole vertical row follows sideways
-- That movement creates the horizontal residual. Distribute it within the arm while keeping the corner construction fixed
-- The vertical guide fixes the outgoing arm's direction. With nominal corner steps, the entering and leaving thread both meet their guides at $27.5^\circ$
-- Slit lean, slit length and corner angle determine the hole's offset from the vertex; changing the tool profile changes that placement
-- The corner step measures from the last real slit centre to the virtual slit centre; the round hole is where the two virtual tips meet
-
-### Corner tradeoffs
-
-- Keeping the opening at the vertex, keeping slit lean consistent and keeping the arm gaps nominal lead to different corner treatments
-- Reverse corner keeps the turn at the vertex and gives less visible thread-length deviation here; Autostitch preserves lean with an offset hole
+- Refine Vertex point by placing the round hole off the vertex, with consistent slit lean on both arms
+- Extend each row to a virtual slit; their selected tips meet at the shared hole
+- Slit lean, slit length and corner angle determine the hole's offset
+- In this example, fitting the corner to the guides creates a residual on the horizontal arm
+- Distribute that residual within the arm while keeping the corner construction fixed
+- With nominal corner steps, both corner stitches meet their guides at $27.5^\circ$
+- Reverse corner keeps the opening at the vertex and gives less stitch-length deviation here; Autostitch preserves lean with an offset hole
 - Autostitch resolves the corner first, then fits the remaining spans around it. Endpoints, landmark pairs, gap bounds and clearance apply together
 - The rules determine a repeatable layout; the maker judges whether its thread angles, lengths and corner position suit the design
 
-# Axioms
 
-- These examples use $3\,\mathrm{mm}$ nominal pitch
-
-## Guide, slit and pitch
-
-- Real slit centres lie on the guide
-- Slit length, width and lean remain fixed relative to the local tangent
-- Pitch is direct centre-to-centre distance; on a circle, it is a chord
-
-![A1 to A3: fixed slit geometry follows the guide; pitch is a chord](../examples/illustrated/assets/axiom-curve.gif)
-
-## Fixed features
-
-- Chosen endpoints, landmark pairs and junction neighbours stay fixed during fitting
-- A landmark sits midway between a nominally spaced pair of slits
-- The landmark gap is protected from adjustment
-- Absorb each free span's residual in its unprotected gaps, within $0.9p\leq g\leq1.1p$
-- Centre the adjustments within each span; the two sides can require different corrections
-- Example: seven slits on each side, with two central $3.25\,\mathrm{mm}$ gaps per span; the landmark pair stays $3\,\mathrm{mm}$ apart
-
-![A4, A5 and A7: keep the landmark pair fixed while distributing bounded adjustments within each free span](../examples/illustrated/assets/axiom-landmark.gif)
-
-## Shared openings
-
-- A smooth change of curvature shares one slit at the common tangent
-- Connected portions reuse a shared opening with the same centre, type and axis
-
-![A8: a straight and curved portion share one compatible slit](../examples/illustrated/assets/axiom-smooth.gif)
-
-- Nominal spacing can miss the start of a closed loop; distribute the residual so the loop reuses its start opening
-- A diameter marks two opposite landmarks. Protect their nominal pairs and fit each half separately to place equal adjustment blocks symmetrically
-
-![A8: close the loop without duplicating its start opening](../examples/illustrated/assets/axiom-closure.gif)
-
-## Two-arm corners
-
-- Continue each arm's slit row towards the corner, ending in a virtual slit with the same lean
-- The virtual slits meet tip-to-tip; one round hole replaces them both
-
-![A6: stitching approaches the corner along each arm, ending at virtual slits whose tips share one hole](../examples/illustrated/assets/axiom-corner.gif)
-
-- The last real slit on each arm stays on its guide
-- Its centre is one corner step $q$ from the virtual slit's centre, within $0.9p\leq q\leq1.1p$
-- The virtual tips determine the hole position; the corner step controls the approach from each real row
-
-- The same construction applies to straight and circular arms
-
-![A6: the selected tips meet at an arc-to-line corner](../examples/illustrated/assets/corner-arc-line.gif)
-
-![A6: the selected tips meet between two curved arms](../examples/illustrated/assets/corner-arc-arc.gif)
-
-## Branching junctions
-
-- A through-line contributes two arms; a T has three and an X four
-- Three or more arms share one round hole at the guide intersection
-- Fix the first slit centre on every arm at half-pitch chord distance $p/2$ from the hole centre
-- Keep those neighbours fixed; fit the remaining slit-to-slit spans with bounded, centred adjustments
-
-### Why half pitch?
-
-#### Vertex point
-
-- First slit centres are one pitch from the hole
-- Near straight-through alignment, the two connections read as one overlong stitch; their thread angles differ from the ordinary rows
-
-![Vertex point as the T junction opens and closes](../examples/illustrated/t-junctions/vertex.gif)
-
-#### Vertex point, half pitch
-
-- Move each first slit centre to $p/2$ from the shared hole
-- On straight arms, each connection has the ordinary thread direction and half its visible length
-- Opposite arms read as one ordinary stitch; other arms meet the hole with the same treatment
-- Use half pitch on every arm, at every angle
-
-![Half-pitch neighbours preserve ordinary thread direction at the T junction](../examples/illustrated/t-junctions/half.gif)
-
-### Fit the remaining spans
-
-- Half-pitch connections are fixed junction geometry; they do not consume the adjustment allowance
-- Endpoints and junction neighbours bound the free spans. Distribute each span's residual without moving those boundaries
-- The first neighbours sit closer together than at full pitch, so all openings must still pass clearance
-
-![A9: a T junction reserves one hole and half-pitch neighbours before fitting the remaining spans](../examples/illustrated/assets/axiom-junction.gif)
-
-### X junction with a curved arm
-
-- Four arms share one hole; each first slit centre is a half-pitch chord away
-- The circular arm follows the same centre-distance rule; its local tangent sets the slit lean
-
-![Autostitch X junction with half-pitch neighbours, including a curved arm](../examples/illustrated/assets/axiom-junction-curved.gif)
-
-### Five arms
-
-- The same construction applies to all five arms, with one shared hole and half-pitch neighbours
-
-![Five arms with one shared hole and half-pitch neighbours](../examples/illustrated/t-junctions/five-half.png)
-
-## Clearance
-
-- Distinct openings must remain disjoint and retain the required edge-to-edge margin
-- Check all openings together, including separate guides and closure
-- Acute junction: the nearest pair overlaps; the next pair misses the required margin; farther pairs pass
-- Example: included angle $6^\circ$, slit width $w=0.3\,\mathrm{mm}$, margin $m=0.2\,\mathrm{mm}$
-
-![A10: clearance fails near the acute junction and passes farther along its arms](../examples/illustrated/assets/axiom-clearance.png)
-
-# Model and solution
-
-- Given a guide and tool profile, find the opening positions that satisfy the axioms
-- Resolve the fixed features first; fit the gaps between them without undoing those choices
-- Check the complete layout for clearance. A valid corner construction can still leave an impossible span or colliding openings
-
-## Establish the fixed openings
-
-- Inputs: guide geometry, start and end, direction, landmarks, junctions and pitch $p$
-- Tool profile: slit length $\ell$, width $w$, lean $\alpha$, round-hole diameter $d$ and clearance margin $m$
-- Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
-- These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
-
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
-
-- Example: the emblem's outlined A, then the complete lettering and rings; $p=2.7\,\mathrm{mm}$
-- Crown landmarks establish symmetry. Protected pairs and shared corner openings bound the free spans
-- Redistribute residuals within those spans while keeping their boundary openings fixed
-
-## Reserve branching neighbours
-
-- Put the shared hole at the guide intersection $P$. On each arm, fix the first slit centre $C$ so that $\lVert C-P\rVert=p/2$
-- For a straight arm with outward unit tangent $\mathbf e$ and slit axis $\mathbf u$, the thread from the hole to the near slit tip is
-
-$$
-\mathbf v=\frac p2\mathbf e-\frac\ell2\mathbf u
-=\frac12\left(p\mathbf e-\ell\mathbf u\right).
-$$
-
-- The term in parentheses is the ordinary straight-row thread vector: half pitch preserves its direction and halves its visible length
-- On a circular arm of radius $R$, reserve angular advance $2\arcsin\left(p/(4R)\right)$. Curvature changes the thread direction; use the actual slit tips
-- A straight run of length $L$ between two branching holes leaves $D=L-p$ between its reserved slit centres. One branching end reserves only $p/2$
-- If the two reserved centres coincide, reuse their slit when its axis agrees. Overlapping reservations have no solution
-- Fit the remaining spans. The fixed half-pitch connections are excluded from ordinary gap counts and adjustments
-
-## Solve one straight span
-
-- Let $D>0$ be the distance between its fixed end openings, with no protected gaps inside
-- Choose an integer number of gaps $n\geq1$. There are $n+1$ openings, including both ends
-- Every gap must lie within $0.9p\leq g\leq1.1p$, so the possible counts are
-
-$$
-\max\left\{1,\left\lceil\frac{D}{1.1p}\right\rceil\right\}
-\leq n\leq
-\left\lfloor\frac{D}{0.9p}\right\rfloor.
-$$
-
-- For each count, the residual is $r=D-np$: positive means lengthen gaps; negative means shorten them
-- Each adjusted gap can absorb at most $0.1p$. The smallest number of adjusted gaps for that count is
-
-$$
-k(n)=\left\lceil\frac{|r|}{0.1p}\right\rceil.
-$$
-
-- If $r=0$, all gaps stay nominal. Otherwise require $k\leq n$ and give those $k$ gaps equal spacing
-
-$$
-g=p+\frac{r}{k}.
-$$
-
-- The bound on $k$ ensures $|g-p|\leq0.1p$. The gaps reach the fixed endpoint exactly because
-
-$$
-(n-k)p+kg=np+r=D.
-$$
-
-## Choose where the adjustments go
-
-- Among feasible counts, minimize $k$, the number of adjusted gaps
-- Break ties by exact centring, then smaller fractional pitch change, then fewer gaps
-- Put the adjusted gaps together in one block, as close to the span's centre as possible
-- Exact centring is possible when $n-k$ is even; otherwise place the block half a gap towards the end
-- Fixed openings and protected gaps do not move to improve that ranking
-
-## Apply the same fit to curves
-
-- On a circular guide of radius $R$, a gap is a chord. Its angular advance is
-
-$$
-a(g)=2\arcsin\left(\frac{g}{2R}\right).
-$$
-
-- Require $p\leq2R$ and use the minor chord. Fit the total sweep $T=|\Delta\phi|$ using angular advances
-- Nominal advance is $a=a(p)$; the limits are $a_-=a(0.9p)$ and $a_+=a(\min\{1.1p,2R\})$
-- Test integer counts with $na_-\leq T\leq na_+$
-- The residual is now angular: $r=T-na$. Each gap can absorb $a_+-a$ when extending, or $a-a_-$ when contracting
-- If $r=0$, keep nominal gaps. Otherwise divide $|r|$ by the applicable capacity and round up to obtain $k$; reject that count if the capacity is zero or $k>n$
-- Use $a'=a+r/k$ for the adjusted gaps. Convert back to chord spacing with $g=2R\sin(a'/2)$
-- Equal adjusted chords and a centred block follow from equal angular advances on the same circle
-
-## Check the complete layout
-
-- The span equations establish spacing and endpoint agreement. They do not establish clearance
-- Check every pair of distinct real openings, including openings on different arms or guides; count shared openings once
-- Accept only when openings remain disjoint and satisfy the margin $m$. Virtual slits locate corner holes and are not punched
-
-## When a corner step must change
-
-- Prefer nominal corner steps; adjust only as needed to keep a neighbour on its finite arm, within $0.9p\leq q\leq1.1p$
-- Fix those neighbours before solving their adjoining free spans
-- A shallow turn can require an adjusted corner step: approximately $3.21\,\mathrm{mm}$ here
-- Usable angles depend on pitch, slit geometry, hole diameter, clearance and available arm geometry
-
-![A6: bounded corner adjustment brings a shallow curved neighbour onto its finite guide](../examples/illustrated/assets/corner-shallow.gif)
-
-## Reject impossible fits
-
-- If the feasible count range is empty, the span cannot be fitted within the bounds
-- Shortest possible straight span: $0.9p$. Every length $D\geq4.5p$ fits the spacing bounds; shorter lengths have gaps between feasible ranges
-- Clearance remains a separate check
-- At $p=3\,\mathrm{mm}$, every length from $13.5\,\mathrm{mm}$ fits; $7\,\mathrm{mm}$ fails because $2\times3.3<7<3\times2.7$
-- Change the guide or its fixed features
-
-![Two gaps are too long; three gaps are too short for the same fixed span](../examples/illustrated/assets/fit-rejected.png)
 
 # Even Big Fashion Gets It Wrong
 
@@ -364,7 +161,7 @@ $$
 
 ## Hermès Sellier wallet
 
-<img src="../examples/counter_examples/hermies_sellier.png" width="300" alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
+<img src="../examples/counter_examples/hermies_sellier.png"  alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
 
 - Focus: the top corner and the decorative H below the right-hand run
 - The H is represented by six round holes
@@ -392,7 +189,7 @@ $$
 
 ## Loewe Mini Feather hanger
 
-<img src="../examples/counter_examples/loewe_mini_feather.png" width="300" alt="Loewe Mini Feather with a rectangular stitched strap below the swivel hook">
+<img src="../examples/counter_examples/loewe_mini_feather.png"  alt="Loewe Mini Feather with a rectangular stitched strap below the swivel hook">
 
 - Focus: the rectangular strap below the swivel hook
 - The stitch line goes up the left side, across the top and down the right side
@@ -419,7 +216,7 @@ $$
 
 ## Louis Vuitton Speedy handle chape
 
-<img src="../examples/counter_examples/lv_speedy.png" width="300" alt="Louis Vuitton Speedy with stitched leather handle chapes">
+<img src="../examples/counter_examples/lv_speedy.png"  alt="Louis Vuitton Speedy with stitched leather handle chapes">
 
 - Focus: the left [handle chape](https://us.louisvuitton.com/eng-us/products/nano-speedy-g81-nvprod7890132v/M29781), the leather tab attaching the handle hardware to the bag
 - Closed pentagonal stitch line; one handedness throughout
@@ -447,7 +244,7 @@ $$
 
 ## Jaeger-LeCoultre / Casa Fagliano strap tip
 
-<img src="../examples/counter_examples/jaeger_lecoultre_fagliano.png" width="300" alt="Jaeger-LeCoultre Casa Fagliano straps with a pointed tip on the right strap">
+<img src="../examples/counter_examples/jaeger_lecoultre_fagliano.png"  alt="Jaeger-LeCoultre Casa Fagliano straps with a pointed tip on the right strap">
 
 - Focus: the pointed end of the right strap
 - Both straight rows start at matching heights, with one handedness throughout
@@ -475,60 +272,279 @@ $$
 
 [Sources, geometry and reproduction](../examples/counter_examples/README.md)
 
-# Can you really?
 
-## Craft judgement and repeatability
+# Geometric rules
 
-- In bespoke leatherwork, the maker judges where spacing can change, how a corner should turn and which irregularities will be visible
-- A skilled practitioner can resolve an individual seam by eye. Maintaining those decisions across many short runs, shared openings and later revisions takes repeated attention
-- Explicit rules carry a chosen treatment through the whole pattern. Nominal pitch, fixed features and permitted adjustments remain consistent wherever the same conditions occur
-- Less experienced makers can use that geometric judgement without having to develop every placement rule themselves. Experienced makers can spend less attention recalculating layouts they already understand
-- The maker still chooses the composition, tool profile and corner treatment. Accurate punching, thread tension and the finished stitch remain matters of execution
+- These rules define a valid stitch layout
+- All rules must be satisfied together
+- The examples use a nominal pitch of $p=3\,\mathrm{mm}$
 
-## Complexity and layout effort
+## Guide, slit and pitch
 
-- Layout effort depends on how many constraints interact: a long uninterrupted seam can need less fitting than a short letter with several corners
-- Repetition multiplies that work. Each clipped curve or crossing introduces another place where the openings must agree with the surrounding pattern
-- Changing a letter's size or moving an intersection changes the lengths available for fitting. A repeatable solution makes these revisions practical without preserving every earlier manual correction
-- For a one-off piece, this matters before there is any benefit from repeated production: the layout work is concentrated in a single object
-- More elaborate stitching still requires more physical work. The geometric contribution is to make the placement decisions explicit and consistent at that level of detail
+- Slit centres lie on the guide
+- Slit length, width and lean stay fixed; lean is measured against the guide's local direction
+- Nominal pitch is the straight-line distance between consecutive opening centres; on a circle, it is a chord
+- Connections at corners and branching junctions follow the rules below
 
-![Stitched emblem with interrupted concentric rings](../examples/demos/emblem.png)
+![Slits turn with the curved guide while keeping the same lean; gaps are measured straight between their centres](../examples/illustrated/assets/axiom-curve.gif)
 
-![Can YOU really banner with stitched lettering, flow fill and diamond background](../examples/demos/can-you-really.png)
+## Fixed features
+
+- Chosen endpoints, landmark pairs and junction neighbours stay fixed during fitting
+- A landmark sits halfway along the guide between two nominally spaced slits
+- There is no opening at the landmark itself; the gap between its two slits is protected
+- Protected gaps stay at nominal pitch
+- Unprotected slit-to-slit gaps may change within $0.9p\leq g\leq1.1p$
+- Each free span must fit between its fixed openings
+- In this example, each side has seven slits and two central $3.25\,\mathrm{mm}$ gaps; the landmark pair stays $3\,\mathrm{mm}$ apart
+
+![The landmark pair stays fixed at nominal spacing while adjusted gaps fit the spans on either side](../examples/illustrated/assets/axiom-landmark.gif)
+
+## Shared openings
+
+- A smooth change of curvature shares one slit at the common tangent
+- Connected portions use the shared opening only once; its centre, type and slit axis must agree
+
+![A straight and curved guide share one slit where they meet with the same tangent](../examples/illustrated/assets/axiom-smooth.gif)
+
+- A closed loop must return to its starting opening and use that opening only once
+- In this example, two opposite landmarks fix nominal pairs of slits
+- Each half is fitted separately, giving matching adjustment blocks
+
+![Adjusted gaps allow the loop to close at its starting opening while preserving the landmark pairs](../examples/illustrated/assets/axiom-closure.gif)
+
+## Two-arm corners
+
+- Continue each arm's slit row towards the corner, ending in a virtual slit with the same lean
+- The selected virtual slit tips meet at one shared round hole
+- The virtual slits are not punched
+
+![Two virtual slit tips meet at the shared round hole, locating it off the guide vertex](../examples/illustrated/assets/axiom-corner.gif)
+
+- The last real slit on each arm stays on its guide
+- The distance between its centre and the virtual slit centre is the corner step $q$, within $0.9p\leq q\leq1.1p$
+- The virtual tips locate the hole; the corner steps set the positions of its neighbouring real slits
+- The same construction applies to straight and circular arms
+
+![A straight arm and a curved arm share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-line.gif)
+
+![Two curved arms share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-arc.gif)
+
+## Branching junctions
+
+- A through-line contributes two arms; a T has three and an X has four
+- Three or more arms share one round hole at the guide intersection
+- The round hole gives every arm a common meeting point without imposing a slit lean at the centre
+- The first slit centre on every arm is a straight-line distance of $p/2$ from the hole centre
+
+### Why half pitch?
+
+#### Vertex point
+
+- With the first slit centres one pitch from the hole, opposite neighbours are two pitches apart
+- As two arms approach a straight line, their connections through the hole appear as one overlong stitch
+- The thread angles also differ from those along the ordinary rows
+
+![With full-pitch spacing from the hole, two junction stitches appear overlong as their arms approach a straight line](../examples/illustrated/t-junctions/vertex.gif)
+
+#### Vertex point, half pitch
+
+- Consider one ordinary straight-row stitch between matching slits whose centres are one pitch apart
+- A round hole halfway between those centres also lies halfway along the visible thread
+- Each slit centre is then $p/2$ from the hole; each connection keeps the ordinary thread direction and has half its visible length
+- This is why the junction uses half pitch: opposite straight arms with matching pitch and lean read as one ordinary stitch through the hole
+- Each straight arm keeps that same relationship to the hole as its angle changes, so the rule applies to every arm without choosing a preferred pair
+
+![Half-pitch spacing preserves the ordinary thread direction on each straight arm; opposite arms read as one ordinary stitch](../examples/illustrated/t-junctions/half.gif)
+
+- For a straight arm, let $\mathbf e$ be the outward unit tangent and $\mathbf u$ the unit vector along the slit axis. With slit length $\ell$, the thread vector from the hole to the near slit tip is
+
+$$
+\mathbf v=\frac p2\mathbf e-\frac\ell2\mathbf u
+=\frac12\left(p\mathbf e-\ell\mathbf u\right).
+$$
+
+- The term in parentheses is the ordinary straight-row thread vector; multiplying it by one half preserves its direction and halves its length
+
+### Fit the remaining spans
+
+- Moving the junction neighbours to absorb a residual would change the thread lengths and angles established at the hole
+- Keep those neighbours fixed and fit the free spans between them and the other fixed features
+- Half-pitch connections are part of the junction geometry; they are excluded from ordinary gap adjustment limits and counts
+- Bringing the neighbours closer to the hole also brings them closer to one another, so their openings must still pass clearance
+
+![The T junction's hole and half-pitch neighbours stay fixed while the remaining spans are fitted](../examples/illustrated/assets/axiom-junction.gif)
+
+### X junction with a curved arm
+
+- Four arms use the same shared hole and half-pitch rule
+- On the circular arm, half pitch is measured along the chord, while slit lean follows the guide's local direction
+- The guide turns between the hole and the slit, so half-pitch spacing no longer guarantees the ordinary straight-row thread direction or half its visible length
+
+![Four arms share one hole, with each first slit centre half a pitch away; the curved arm uses the same straight-line measurement](../examples/illustrated/assets/axiom-junction-curved.gif)
+
+## Clearance
+
+- Separate real openings must not touch or overlap
+- Their edges must remain at least the required margin apart
+- This applies across the whole layout, including openings on different guides and around closed loops
+- Virtual slits are construction geometry and are excluded
+- In this acute-junction example, the nearest pair overlaps, the next pair falls below the margin, and farther pairs pass
+- Example: included angle $6^\circ$, slit width $w=0.3\,\mathrm{mm}$ and margin $m=0.2\,\mathrm{mm}$
+
+![Near the acute junction, openings overlap or fall below the required clearance; farther pairs have enough separation](../examples/illustrated/assets/axiom-clearance.png)
+
+
+# Solution method
+
+- Given a guide and tool profile, find opening positions that satisfy the geometric rules
+- Fixed openings divide the layout into free spans, each with its own spacing problem
+- Fit those spans without moving their boundaries, then check the complete layout for clearance
+- A valid corner or span can still leave openings that collide elsewhere in the layout
+
+## Inputs and fixed openings
+
+- Inputs: guide geometry, start and end, direction, landmarks, junctions and pitch $p$
+- Tool profile: slit length $\ell$, width $w$, lean $\alpha$, round-hole diameter $d$ and clearance margin $m$
+- Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
+- These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
+
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
+
+- Example: the emblem's outlined A, then the complete lettering and rings; $p=2.7\,\mathrm{mm}$
+- Crown landmarks establish symmetry. Protected pairs and shared corner openings bound the free spans
+- Redistribute residuals within those spans while keeping their boundary openings fixed
+
+## Branching junction spacing
+
+- Each branching end reserves a half-pitch connection between the shared hole and its first slit centre
+- A straight run of length $L$ between two branching holes at the same pitch leaves $D=L-p$ between its reserved slit centres
+- With one branching end and a fixed endpoint slit, the remaining span is $D=L-p/2$
+- On a circular arm of radius $R$, a half-pitch chord reserves an angular advance of $2\arcsin\left(p/(4R)\right)$
+- If two reserved centres coincide, reuse their slit when its axis agrees. Overlapping reservations have no solution
+- Fit the remaining slit-to-slit spans; fixed half-pitch connections are excluded from ordinary gap counts and adjustments
+
+## Corner-step adjustment
+
+- A nominal corner step can put a neighbouring real slit beyond the end of its arm
+- Prefer nominal steps; adjust only as needed to keep that neighbour on the arm, within $0.9p\leq q\leq1.1p$
+- Fix the resulting neighbours before fitting their adjoining free spans
+- A shallow turn requires an adjusted corner step of approximately $3.21\,\mathrm{mm}$ in this example
+- Usable angles depend on pitch, slit geometry, hole diameter, clearance and available arm geometry
+
+![An adjusted corner step keeps the neighbouring real slit on its curved guide at a shallow turn](../examples/illustrated/assets/corner-shallow.gif)
+
+## Straight-span fitting
+
+- Let $D>0$ be the distance between its fixed end openings, with no protected gaps inside
+- Choose an integer number of gaps $n\geq1$. There are $n+1$ openings, including both ends
+- Every gap must lie within $0.9p\leq g\leq1.1p$, so the possible counts are
+
+$$
+\max\left\{1,\left\lceil\frac{D}{1.1p}\right\rceil\right\}
+\leq n\leq
+\left\lfloor\frac{D}{0.9p}\right\rfloor.
+$$
+
+- For each count, the residual is $r=D-np$: positive means lengthen gaps; negative means shorten them
+- Each adjusted gap can absorb at most $0.1p$. The smallest number of adjusted gaps for that count is
+
+$$
+k(n)=\left\lceil\frac{\lvert r\rvert}{0.1p}\right\rceil.
+$$
+
+- If $r=0$, all gaps stay nominal. Otherwise require $k\leq n$ and give those $k$ gaps equal spacing
+
+$$
+g=p+\frac{r}{k}.
+$$
+
+- Each adjusted gap stays within $\lvert g-p\rvert\leq0.1p$, and the gaps fill the span exactly: $(n-k)p+kg=D$
+
+## Selection of the preferred fit
+
+- Fewer adjusted gaps reduce individual placement with an awl or single tooth
+- Grouping the adjustments in a central block keeps nominal runs beside the fixed features
+- Smaller changes keep the adjusted spacing closer to the tool pitch
+- Rank feasible fits by fewest adjusted gaps, then exact centring, then smaller fractional pitch change, then fewer gaps
+- Put the adjusted gaps together in one block, as close to the span's centre as possible; for a nominal fit, no block is needed
+- Exact centring is possible when $n-k$ is even; otherwise place the block half a gap towards the end
+- Fixed openings and protected gaps do not move to improve that ranking
+
+## Circular-span fitting
+
+- Openings advance along an arc, but their gaps are measured straight across chords
+- Convert each chord gap into an angle so the fitting calculation can cover the guide's total sweep
+- On a circular guide of radius $R$, a gap $g$ has angular advance
+
+$$
+a(g)=2\arcsin\left(\frac{g}{2R}\right).
+$$
+
+- Require $p\leq2R$ and use the minor chord. Fit the total sweep $T=\lvert\Delta\phi\rvert$ using angular advances
+- Nominal advance is $a=a(p)$; the limits are $a_-=a(0.9p)$ and $a_+=a(\min\{1.1p,2R\})$
+- Test integer counts with $na_-\leq T\leq na_+$
+- The residual is now angular: $r=T-na$. Each gap can absorb $a_+-a$ when extending, or $a-a_-$ when contracting
+- If $r=0$, keep nominal gaps. Otherwise divide $\lvert r\rvert$ by the applicable capacity and round up to obtain $k$; reject that count if the capacity is zero or $k>n$
+- Use $a'=a+r/k$ for the adjusted gaps. Convert back to chord spacing with $g=2R\sin(a'/2)$
+- Equal adjusted chords and a centred block follow from equal angular advances on the same circle
+
+## Layout validation
+
+- The span equations establish spacing and endpoint agreement; the complete layout must also pass clearance
+- Check every pair of distinct real openings, including openings on different arms or guides; count shared openings once
+- Accept only when openings neither touch nor overlap and their edges remain at least the margin $m$ apart
+- Virtual slits locate corner holes and are excluded from clearance checks
+
+## Infeasible layouts
+
+- If the feasible count range is empty, the span cannot be fitted within the bounds
+- Shortest possible straight span: $0.9p$. Every length $D\geq4.5p$ fits the spacing bounds; shorter lengths have gaps between feasible ranges
+- Clearance remains a separate check
+- At $p=3\,\mathrm{mm}$, every length from $13.5\,\mathrm{mm}$ fits the spacing bounds
+- A $7\,\mathrm{mm}$ span fails: two gaps can reach only $6.6\,\mathrm{mm}$, while three need at least $8.1\,\mathrm{mm}$
+- Change the guide or its fixed features
+
+![Two gaps are too long; three gaps are too short for the same fixed span](../examples/illustrated/assets/fit-rejected.png)
 
 # Who it helps
 
-## Craft and pattern design
+## Layout effort and design complexity
 
-- Make spacing and corner judgement available as reusable instructions
-- Reduce layout effort while keeping control of the pattern
-- More consistent layout across makers; physical execution still depends on skill
+- The product examples show different corner and spacing treatments, even at luxury price points; price alone does not imply a consistent geometric treatment
+- A skilled craftsperson can resolve these layouts by hand, but repeating the calculations takes attention after the design choices are settled
+- Layout effort grows with interacting constraints: a short letter with several corners can require more fitting than a long uninterrupted seam
+- Each corner, crossing and short span adds placement decisions; revisions require those decisions to be checked again
+- At sufficient complexity, manual layout can make an otherwise achievable piece impractical to undertake
+- Applying explicit rules automatically reduces the work needed to develop and revise the pattern
+- This can make elaborate designs practical even for a single piece, before repeated production offers any benefit
 
-| Experience | Main benefit |
-| --- | --- |
-| Beginner | Usable geometric layouts with less prior layout experience |
-| Intermediate | More precise, consistent placement decisions |
-| Advanced | Fewer manual adjustments and easier revision |
-| Expert | Efficiency, repeatability and standardization |
+![Perfection can be done by hand, but is often not feasible](../examples/demos/can-you-really.png)
 
-## Manufacturing
+## Benefits across experience levels
 
-- Identify, quantify and locate nonstandard gaps before production
-- Manual and semi-automated work: fewer spacing decisions left to the operator; clearer instructions for controlled placement
-- Repeated production: the same design carries the same placement decisions across operators and runs
-- CNC planning: resolved openings can supply placement geometry; variable spacing may add little execution effort when the equipment supports it
+- Beginners can use a resolved layout before developing the judgement needed to balance spacing and corners unaided
+- Intermediate makers gain explicit bounds and fixed features that keep placement decisions consistent across seams
+- Advanced and expert makers spend less time repeating familiar calculations and correcting layouts after revisions
+- A chosen treatment can be carried through a complex pattern and reproduced on later pieces
+- The maker still judges whether the treatment suits the design
+- Time saved in layout can go towards composition and execution, including accurate punching, thread tension and control of the finished stitch
+
+## Manufacturing applications
+
+- A resolved pattern records the intended spacing and the location and size of every adjustment before production begins
+- Manual and semi-automated work leaves fewer placement decisions to the operator
+- Explicit opening positions help communicate the chosen treatment between the pattern designer and the person making the openings
+- Different operators and production runs can use the same layout decisions; physical results still depend on execution
+- CNC equipment that supports variable spacing may place adjusted gaps with little extra effort, reducing the importance of minimizing their number
+- The layout still supplies opening positions and orientations through corners, intersections and closure
 - Equipment integration and achievable tolerances depend on the production process
 
 ## Value by application
 
-- Additional precision matters when stitch appearance or opening placement affects the product
-
-| Context | Expected value |
-| --- | --- |
-| Ordinary industrial textiles | Limited: existing tolerances often suffice |
-| Precision leather goods | Regularity and symmetry |
-| Small-batch luxury production | Repeatability; less manual layout |
-| Bespoke leathercraft | Precise layout on custom shapes |
-| Fully automated production (CNC) | Automatic stitch distribution |
-| Footwear and technical textiles | Precise stitch and perforation placement |
+- Precision leather goods: stitch regularity and symmetry contribute directly to the visible result
+- Bespoke work: reducing layout effort has value for a custom shape, even when only one piece is made
+- Small-batch production: the chosen treatment can be repeated without each maker deciding independently where to adjust spacing
+- Ordinary industrial textiles: existing tolerances may already be sufficient, leaving little benefit from finer control of individual openings
+- Footwear and technical textiles: value depends on whether the application requires precise stitch or perforation placement
+- The benefit depends on how much opening placement affects the product and the effort needed to make, communicate and repeat those decisions

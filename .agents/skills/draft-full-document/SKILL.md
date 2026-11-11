@@ -41,7 +41,16 @@ Follow all applicable `AGENTS.md` instructions.
 
 - Put clarity first. When editorial goals compete, choose the clearest accurate
   formulation that preserves the source meaning.
+- State supported claims directly. Do not hedge them with vague qualifiers or
+  repeatedly soften them after making the point.
+- Do not argue against the document's own claims by inventing objections,
+  anticipating hypothetical critics, or adding defensive disclaimers. Explain
+  substantive tradeoffs where they belong in the argument.
+- Avoid pedantic detours and unnecessary distinctions. Include qualifications
+  when they change the meaning, scope or interpretation of a claim.
 - Convert point-form material into connected prose.
+- Let sentences build on one another, making the relationships between ideas
+  clear where needed. Use paragraph structure that suits the material.
 - Preserve the existing argument, heading order, and hierarchy.
 - Use paragraphs of varied length. Do not mechanically create one paragraph
   for every bullet.
@@ -52,13 +61,19 @@ Follow all applicable `AGENTS.md` instructions.
   Use short sentences for emphasis or clarity, not as the default cadence.
   "Direct" means removing filler and imprecision, not shortening every thought.
 - Keep the document direct, technical, and readable in plain language.
-- Introduce physical meaning, intuition and context before equations.
+- Explain why a construction or calculation is needed before describing its
+  steps. Introduce physical meaning, intuition and context before equations.
+- After key equations, explain what the result means for the subject rather
+  than simply reading the symbols back in words.
 - Define symbols where they first appear.
 - Preserve equations, units, figures, links, citations, numerical values, and
   tables unless a source correction is explicitly requested.
-- Preserve uncertainty and unresolved choices.
+- State substantive uncertainty and unresolved choices directly and specifically.
 - Do not invent evidence, citations, simulation results, causal explanations,
   or design conclusions.
+- Make relationships supported by the sources explicit, including those
+  spread across several bullets. If the sources leave a gap in the reasoning,
+  keep it visible rather than supplying an unsupported explanation.
 - Do not perform new research or analysis.
 - Do not add generic introductions, summaries, transitions, or conclusions
   merely to make sections appear complete.
@@ -91,10 +106,15 @@ Follow all applicable `AGENTS.md` instructions.
 - Remove repeated summaries and conclusions that restate nearby material
   without advancing the argument.
 
-## Whole-document cohesion
+## Whole-document editorial review
 
-- Read the assembled document from beginning to end as one argument. Do not
-  review sections only in isolation.
+- After drafting and the source and formatting checks, read the complete
+  document from beginning to end as a reader would. Review the actual prose,
+  not just the heading map, excerpts or diff.
+- Check whether the prose develops the ideas clearly, whether explanations
+  give enough reasoning, and whether technical passages need more room.
+- Remove habitual hedging, self-rebuttal and pedantic asides; retain limitations
+  that materially affect the argument.
 - Check that each section follows from what precedes it and prepares the ideas
   needed by later sections.
 - Integrate breakout sections with the surrounding document. Check both the
@@ -104,6 +124,8 @@ Follow all applicable `AGENTS.md` instructions.
 - Introduce concepts before they are used and keep cross-references accurate.
 - Remove unintended repetition and surface contradictions. Do not add filler
   transitions merely to join sections.
+- Revise passages that interrupt the argument or leave connections unclear,
+  then read the revisions in context with the surrounding text.
 
 ## Conflicts and gaps
 
@@ -134,11 +156,12 @@ If an unresolved matter does not block drafting, keep it visible in the prose.
    support one another.
 3. Draft the document section by section in the order established by the
    outline.
-4. Re-read the complete assembled document from beginning to end.
-5. Perform the whole-document cohesion pass.
-6. Verify factual and mathematical fidelity against the sources.
-7. Perform the LLM prose-pattern review.
-8. Validate formatting.
+4. Verify factual and mathematical fidelity against the sources.
+5. Perform the LLM prose-pattern review.
+6. Validate formatting.
+7. Read the complete document and perform the whole-document editorial review
+   before reporting completion. Recheck facts or formatting affected by edits
+   made during that review.
 
 ## Validation
 

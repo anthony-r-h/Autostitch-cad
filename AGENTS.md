@@ -28,6 +28,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 | `examples/fills.lsp`, `docs/FILLS.md` | Native fill generation and solving; samples in `tests/cases.json` |
 | `tests/cases.json` | Canonical test catalog and reusable gallery inputs |
 | `tests/` | Executable checks, independent oracle, fixtures and runners |
+| [tests/QUALIFICATION.md](tests/QUALIFICATION.md), [tests/AXIOM_AUDIT.md](tests/AXIOM_AUDIT.md) | Validation commands, evidence requirements and axiom coverage |
 | `output/` | Ignored local artifacts with explicit lifetimes; see [repository cleanup](docs/REPO-CLEANUP.md) |
 
 ## Working defaults
@@ -97,13 +98,14 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 ## Process
 
 1. Identify the narrowest files and functions. State material assumptions.
-2. Run the smallest relevant check, then the affected native suites. Use the relevant canonical drawing under `examples/demos/` for routine visual review. Run the full suite when the scope warrants it; see `tests/QUALIFICATION.md` for commands.
+2. Run only checks affected by the change, starting with the smallest. Run the full plugin suite for releases or changes spanning multiple subsystems. Stop after the required checks pass unless new changes or failures require another run. See `tests/QUALIFICATION.md` for commands.
 3. Report failed commands plainly. Do not invent causes or count historical evidence as a new run.
 4. Review documentation for concise, neutral language and consistency with the implementation.
 5. Summarize changes, validation, risks and anything unverified.
 
 ## Examples and illustrations
 
+- Emblem and "can you really?" are artwork examples, excluded from routine and release plugin testing. Do not regenerate, reopen, render or visually inspect them unless changing the artwork itself or explicitly asked. Turn any plugin bug found in artwork into a small test fixture.
 - Read the canonical [animation phases and display rules](examples/illustrated/README.md#animation-phases) before planning, creating or editing illustrated scenes. Use Build, Adjustment and Stitch, with optional Finishing touches. Apply the same rules during review and to static final views; keep the detailed rules in that README.
 - Keep diagram colours, font and label backgrounds in `examples/illustrated/colors.json`. Scene recipes use named colour roles; the shared renderer resolves the selected theme through every phase.
 - Keep artwork recipes, reproduction instructions and current assets under `examples/`. Start with its README; use `demo.lsp` to load native recipes in dependency order.
@@ -126,6 +128,10 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 
 ## Native validation
 
+- Run scripted checks through the existing PowerShell/COM runners. Do not use mouse clicks or screenshots to run checks that scripts can perform.
+- Validate geometry with numerical assertions against the production LISP. Geometry checks do not need drawing entities. Keep drawing writes for tests of CAD output, persistence and editing behavior.
+- Use visual interaction only for affected appearance or picking behavior, or a failure that needs it. Do not render the gallery for routine numerical checks.
+- Read completion counts and failures; keep detailed logs in report files. Keep cheap numerical checks, boundary cases and known regressions unless redundant coverage is demonstrated.
 - Only one agent or process may drive BricsCAD at a time.
 - Use the existing visible instance and a disposable drawing under `output/native/`.
 - Keep one agent-owned test drawing open at a time. Close it after saving and verifying the result; do not accumulate test tabs.

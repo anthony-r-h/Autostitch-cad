@@ -395,6 +395,6 @@ One _can_ do that by hand but...
 
 ![Perfection can be done by hand, but is often not feasible](../examples/demos/can-you-really.svg)
 
-That possibility matters for a single bespoke piece as much as for production. A complex design becomes easier to explore and revise, and its resolved layout can guide handwork, pass between makers or be executed by CNC equipment. The care invested in the pattern carries through to each piece without requiring someone to solve the placement again.
+That possibility matters for a single bespoke piece as much as for production. A complex design becomes easier to explore and revise, and its resolved layout can guide handwork, pass between makers or be executed by CNC equipment. CNC takes the spirit of the hand tool to its fullest expression: every opening, every cut, every pattern piece placed with intent. The craftsperson decides exactly where things belong. Machine precision carries that intention into the material.
 
 Towels, tablecloths and disposable fashion rarely call for this degree of control over individual stitches. Where the article itself is a work of art, stitch placement becomes part of its composition. Explicit rules make regularity and symmetry easier to control, bringing carefully resolved layouts within reach of more makers and allowing accomplished craftspeople to push further. The result is a higher standard of stitching and greater freedom in what can be designed and made.

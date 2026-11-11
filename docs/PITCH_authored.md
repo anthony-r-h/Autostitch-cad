@@ -250,15 +250,6 @@ Half pitch therefore lets opposite straight arms with matching pitch and lean re
 
 ![Half-pitch spacing preserves the ordinary thread direction on each straight arm; opposite arms read as one ordinary stitch](../examples/illustrated/t-junctions/half.animated.svg)
 
-The geometry can be written using the outward unit tangent $\mathbf e$ along a straight arm and the unit vector $\mathbf u$ along its slit axis. For slit length $\ell$, the thread vector $\mathbf v$ from the hole to the near slit tip is
-
-$$
-\mathbf v=\frac p2\mathbf e-\frac\ell2\mathbf u
-=\frac12\left(p\mathbf e-\ell\mathbf u\right).
-$$
-
-The expression in parentheses is the ordinary straight-row thread vector. Multiplying it by one half preserves its direction and halves its length, giving each arm the required connection to the hole.
-
 ### Fit the Remaining Spans
 
 The junction neighbours must stay fixed to preserve those thread lengths and angles. Absorbing a residual by moving them would change the connection at the hole, so fitting begins with the free spans between those neighbours and the other fixed features. The half-pitch connections belong to the junction geometry and are excluded from ordinary gap adjustment limits and counts.

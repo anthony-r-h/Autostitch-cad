@@ -4798,7 +4798,8 @@
     "expected": "Successful diagram builds remove only their own scratch; explicit review requests and failures retain diagnostics.",
     "coverage": [
       "Unique scratch paths and sibling preservation",
-      "Successful SVG, PNG, GIF and MP4 exports survive scratch cleanup",
+      "Successful static SVG, animated SVG, PNG, GIF and MP4 exports survive scratch cleanup",
+      "Static figures do not produce animated SVGs",
       "Animations export H.264 yuv420p MP4s from full-colour source frames at twice the GIF dimensions; static compatibility GIFs do not produce MP4s",
       "MP4 frame timestamps, frame counts and final holds match variable GIF delays; videos decode successfully",
       "Missing MP4 encoder fails the build, retains diagnostics and preserves existing MP4 output",
@@ -4806,6 +4807,18 @@
       "FrameTimes retains requested review images",
       "Prepare and finish failures retain diagnostic files",
       "Empty exports fail validation and retain scratch"
+    ]
+  },
+  "animatedSvgChecks": {
+    "id": "BUILD-ANIMATED-SVG",
+    "source": "tests/validate-animated-svg.mjs",
+    "command": "node tests/validate-animated-svg.mjs",
+    "expected": "Animated SVGs preserve GIF frame timing and loop as self-contained vectors; authored pitch animation links resolve.",
+    "coverage": [
+      "Every animated GIF has an SVG with identical frame delays and loop duration",
+      "SMIL tracks have increasing times, matching values and no scripts or raster images",
+      "Static GIFs have no animated SVG export",
+      "PITCH_authored embeds animated SVGs instead of GIFs"
     ]
   },
   "oracle": {
@@ -9951,6 +9964,8 @@
       "status": "Constructed presentation of the native 2.7 mm emblem, with half-pitch neighbours at all three branching holes. Lettering uses analytic planning motion between fixed run endpoints, landmark pairs and round holes; animation is not a solver execution trace. Used in PITCH's Model and solution section.",
       "inputs": {
         "storyboard": "examples/illustrated/emblem.storyboard.json",
+        "animatedSvgTrial": "examples/illustrated/emblem/emblem-construction.animated.svg",
+        "animatedSvgCommand": "node examples/illustrated/emblem.mjs animated-svg examples/illustrated/emblem",
         "geometry": "examples/demos/emblem.svg",
         "guides": "examples/emblem.lsp",
         "durationSeconds": 40,

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { selectFit } from '../../tests/fit-oracle.mjs';
+import { animatedSvg } from './animated-svg.mjs';
 
 const root = new URL('../../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('tests/cases.json', root), 'utf8'));
@@ -1168,15 +1169,24 @@ function finalizeGif(raw,scene) {
   return Buffer.concat(output);
 }
 export function writeSceneFiles(scenes) {
-  const mode=process.argv[2],output=path.resolve(process.argv[3]),temporary=path.resolve(process.argv[4]);
-  fs.mkdirSync(output,{recursive:true});fs.mkdirSync(temporary,{recursive:true});
+  const mode=process.argv[2],output=path.resolve(process.argv[3]);
+  fs.mkdirSync(output,{recursive:true});
   const displayed=scenes.every(s=>s.canvas)?scenes:portraitScenes(scenes,themeFor(process.argv[5]||undefined));
+  if(mode==='prepare'||mode==='animated-svg') {
+    for(const scene of displayed.filter(s=>s.frames.length>1))fs.writeFileSync(path.join(output,scene.name+'.animated.svg'),animatedSvg(scene));
+    if(mode==='animated-svg') {
+      console.log(`Animated SVGs written: ${displayed.filter(s=>s.frames.length>1).length} in ${output}`);
+      return;
+    }
+  }
+  const temporary=path.resolve(process.argv[4]);
+  fs.mkdirSync(temporary,{recursive:true});
   if(mode==='prepare') {
     fs.writeFileSync(path.join(temporary,'scenes.json'),JSON.stringify(displayed));
     for(const scene of displayed.filter(s=>s.exportStills!==false))fs.writeFileSync(path.join(output,scene.name+'.svg'),svg(scene));
   } else if(mode==='finish') {
     for(const scene of displayed.filter(s=>s.frames.length))fs.writeFileSync(path.join(output,scene.name+'.gif'),finalizeGif(fs.readFileSync(path.join(temporary,scene.name+'.gif')),scene));
-  } else throw new Error('Use prepare or finish');
+  } else throw new Error('Use prepare, finish or animated-svg');
 }
 export {add,mul,axis,project,line,text,worldLine,opening,hole,measure,representativeGapIndices,scene,frame,finish,routeMarks,notationText,termLabel,finishThread,slitOutlines,adjustmentStyle,highlightGap};
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

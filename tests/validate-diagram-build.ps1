@@ -59,13 +59,14 @@ try {
   if (-not (Test-Path -LiteralPath $sentinel)) { throw 'Build removed unrelated scratch.' }
   if ($shouldFail -and ($log -notmatch 'scratch retained' -or -not (Test-Path -LiteralPath (Join-Path $run 'diagnostic.txt')))) { throw "Missing failure evidence: $log" }
   if (-not $shouldFail) {
-   $extensions = if ($case -eq 'animation-only') { @('gif','mp4') } elseif ($case -eq 'static') { @('svg','png','gif') } else { @('svg','png','gif','mp4') }
+   $extensions = if ($case -eq 'animation-only') { @('gif','mp4','animated.svg') } elseif ($case -eq 'static') { @('svg','png','gif') } else { @('svg','png','gif','mp4','animated.svg') }
    foreach ($extension in $extensions) {
     if ((Get-Item -LiteralPath (Join-Path $destination "probe.$extension")).Length -eq 0) { throw "Missing published $extension" }
    }
    $mp4 = Join-Path $destination 'probe.mp4'
    if ($case -eq 'static') {
     if (Test-Path -LiteralPath $mp4) { throw 'Static GIF must not produce an MP4.' }
+    if (Test-Path -LiteralPath (Join-Path $destination 'probe.animated.svg')) { throw 'Static figure must not produce an animated SVG.' }
     continue
    }
    $metadata = & $FfprobePath -v error -show_entries stream=codec_name,pix_fmt,width,height,nb_frames,duration -of json $mp4

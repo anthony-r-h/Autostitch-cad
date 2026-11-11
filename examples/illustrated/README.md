@@ -344,7 +344,8 @@ node tests/validate-cases.mjs
 
 - `scenes.mjs`: catalog inputs, analytic constructions, diagram elements and reveal timing.
 - `build.ps1`: renders those elements and encodes the frames. A unique `output/scratch/` folder holds intermediates and is deleted after successful export checks. Failures, `-KeepScratch` and explicit `-FrameTimes` requests retain it and print its path. Remove retained scratch after review; see [cleanup rules](../../docs/REPO-CLEANUP.md).
-- `assets/<name>.gif`: looping illustration. Matching `.svg` and `.png` files contain the final state. Glossary figures (`terms-*`) use only SVG/PNG.
+- `assets/<name>.animated.svg`: self-contained looping vector illustration used in `PITCH_authored.md`. The normal build also writes GIF/MP4 versions. Matching `.svg` and `.png` files contain the final state; static figures do not get animated SVGs.
+- Rebuild only the animated SVGs with `node examples/illustrated/scenes.mjs animated-svg examples/illustrated/assets`. Use the corresponding scene script and output directory for `t-junctions`, `emblem` and `counter_examples`. Check all exports and pitch links with `node tests/validate-animated-svg.mjs`.
 - `tests/cases.json`: source cases and stable illustration IDs. The validator checks drawn geometry, constraints, GIF frame counts, delays and looping.
 
 ### Notation

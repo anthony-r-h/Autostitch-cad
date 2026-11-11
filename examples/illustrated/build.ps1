@@ -271,7 +271,7 @@ if($ContactSheet) {
 foreach ($scene in $scenes) {
  $extensions = @(if($scene.exportStills -ne $false){'.svg'; '.png'})
  if ($scene.staticGif -or $scene.frames.Count) { $extensions += '.gif' }
- if ($scene.frames.Count -gt 1) { $extensions += '.mp4' }
+ if ($scene.frames.Count -gt 1) { $extensions += @('.mp4', '.animated.svg') }
  foreach ($extension in $extensions) {
   $asset = Get-Item -LiteralPath (Join-Path $OutputDirectory ($scene.name + $extension)) -ErrorAction Stop
   if ($asset.Length -eq 0) { throw "Empty diagram export: $($asset.FullName)" }

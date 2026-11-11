@@ -20,7 +20,7 @@ That judgement can be expressed through geometric constraints and priorities: wh
 
 Autostitch applies geometric constraints and computational search to stitch layout for hand stitching with pricking irons. It is implemented in AutoLISP with an OpenDCL interface, using the extension technologies shared by CAD platforms such as BricsCAD and AutoCAD.
 
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.animated.svg)
 
 Given seam guides and a tool profile, Autostitch places openings, resolves corners and junctions, and fits the spacing between fixed features. Its purpose is to preserve the intended seam and nominal tool pitch while making necessary adjustments explicit and controlled. The result is a geometric layout specifying opening positions and orientations, shared openings and adjusted gaps, ready to guide physical execution.
 
@@ -60,13 +60,13 @@ Consider six slits on a $15.3\,\mathrm{mm}$ guide, with a nominal pitch of $3\,\
 
 Dividing the length equally gives five $3.06\,\mathrm{mm}$ gaps. Spacing is uniform along the line, but the resulting pitch depends on the line's length and gap count. Different lines generally receive different pitches, so a common tool no longer fits them all. Here the $3\,\mathrm{mm}$ iron cannot place the row at its new spacing; every gap needs individual placement.
 
-![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.gif)
+![Even spacing distributes the residual across all five gaps](../examples/illustrated/assets/pitch-spread.animated.svg)
 
 ### End Adjustment
 
 Keeping four nominal gaps puts the full residual into a final $3.30\,\mathrm{mm}$ gap. Most of the row remains at the tool pitch, while the last stitch takes the entire change. In this example it becomes longer; a row that overruns its endpoint would need a shorter final gap. Sharing the residual across more gaps reduces each change, at the cost of more individual placements.
 
-![End adjustment absorbs the residual in the last gap](../examples/illustrated/assets/pitch-end.gif)
+![End adjustment absorbs the residual in the last gap](../examples/illustrated/assets/pitch-end.animated.svg)
 
 ### Autostitch Solution
 
@@ -74,7 +74,7 @@ Autostitch limits the change allowed in each gap, then uses the fewest adjusted 
 
 Here one $3.30\,\mathrm{mm}$ gap is sufficient, leaving four nominal gaps. Moving that adjusted gap to the centre puts the correction away from both endpoints while requiring the same number of individual placements as end adjustment. Equal spacing is retained within the adjustment block, and the nominal runs on either side remain compatible with the iron.
 
-![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.gif)
+![Autostitch absorbs the residual between nominal runs](../examples/illustrated/assets/pitch-autostitch.animated.svg)
 
 ## Corner Construction
 
@@ -92,13 +92,13 @@ In this example, moving the vertical row balances the two corner stitches. Its f
 
 Bridge joins the last slit on each arm directly with thread, bypassing the vertex. Moving the vertical row varies the visible bridge stitch from $1.00\,\mathrm{mm}$ to $3.00\,\mathrm{mm}$ and changes the thread angles with it. Gaps within each row stay nominal, while the far endpoint follows the moving row.
 
-![Bridge varies from 1 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.gif)
+![Bridge varies from 1 to 3 mm of visible thread while the corner angles change](../examples/illustrated/assets/problem-corner-bridge.animated.svg)
 
 ### Reverse Corner
 
 Reverse corner adds a shared diagonal slit at the vertex, joining an obverse row to a reverse row. This brings the outgoing corner stitch closer to the usual thread direction along that row. Gaps within both rows remain nominal, and the final connections to the shared slit take up the spacing difference.
 
-![Reverse corner joins obverse and reverse rows through a shared diagonal slit](../examples/illustrated/assets/problem-corner-mirrored.gif)
+![Reverse corner joins obverse and reverse rows through a shared diagonal slit](../examples/illustrated/assets/problem-corner-mirrored.animated.svg)
 
 ### Autostitch Solution
 
@@ -106,7 +106,7 @@ Autostitch refines Vertex point by placing the round hole off the vertex, with c
 
 In the illustrated corner, fitting this construction to the guides creates a residual on the horizontal arm. Once the corner is fixed, that residual is distributed within the arm. With nominal corner steps, both corner stitches meet their guides at $27.5^\circ$.
 
-![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.gif)
+![Autostitch aligns virtual slit tips and fits the remaining arm spans](../examples/illustrated/assets/problem-corner-autostitch.animated.svg)
 
 Reverse corner keeps the opening at the vertex and gives less stitch-length deviation in this example; Autostitch preserves lean with an offset hole. That choice establishes the corner geometry before the remaining spans are fitted. Endpoints, landmark pairs, gap bounds and the required separation between openings must all be respected. The construction makes the layout repeatable, while the maker judges whether its thread angles, stitch lengths and corner position suit the design.
 
@@ -128,10 +128,11 @@ On the same guides, the Autostitch layout uses round holes at both corners and k
 
 ![Loewe construction with two Autostitch corners](../examples/counter_examples/assets/loewe-hanger-autostitch.png)
 
-| Method | # adj. gaps | Abso. adj. | Abs. stitch deviation |
-| --- | ---: | ---: | ---: |
-| Reference | $3$ | $0.90\,\mathrm{mm}$ | $1.40\,\mathrm{mm}$ |
-| Autostitch | $1$ | $0.25\,\mathrm{mm}$ | $0.22\,\mathrm{mm}$ |
+| Measure | Reference | Autostitch |
+| --- | ---: | ---: |
+| Adjusted gaps | $3$ | $1$ |
+| Absolute adjustment | $0.90\,\mathrm{mm}$ | $0.25\,\mathrm{mm}$ |
+| Absolute stitch-length deviation | $1.40\,\mathrm{mm}$ | $0.22\,\mathrm{mm}$ |
 
 ## Louis Vuitton Speedy Handle Chape
 
@@ -143,10 +144,11 @@ The Autostitch layout places applies the corner solution and fits each interveni
 
 ![Speedy construction with five Autostitch corners](../examples/counter_examples/assets/lv-speedy-chape-autostitch.png)
 
-| Method | # adj. gaps | Abso. adj. | Abs. stitch deviation |
-| --- | ---: | ---: | ---: |
-| Reference | $26$ | $4.93\,\mathrm{mm}$ | $6.61\,\mathrm{mm}$ |
-| Autostitch | $6$ | $0.92\,\mathrm{mm}$ | $0.82\,\mathrm{mm}$ |
+| Measure | Reference | Autostitch |
+| --- | ---: | ---: |
+| Adjusted gaps | $26$ | $6$ |
+| Absolute adjustment | $4.93\,\mathrm{mm}$ | $0.92\,\mathrm{mm}$ |
+| Absolute stitch-length deviation | $6.61\,\mathrm{mm}$ | $0.82\,\mathrm{mm}$ |
 
 ## Jaeger-LeCoultre Casa Fagliano Watch Strap
 
@@ -158,10 +160,11 @@ The Autostitch layout keeps the same guides and aligned straight rows, but the v
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
-| Method | # adj. gaps | Abso. adj. | Abs. stitch deviation |
-| --- | ---: | ---: | ---: |
-| Reference | $10$ | $2.51\,\mathrm{mm}$ | $2.03\,\mathrm{mm}$ |
-| Autostitch | $5$ | $1.34\,\mathrm{mm}$ | $1.17\,\mathrm{mm}$ |
+| Measure | Reference | Autostitch |
+| --- | ---: | ---: |
+| Adjusted gaps | $10$ | $5$ |
+| Absolute adjustment | $2.51\,\mathrm{mm}$ | $1.34\,\mathrm{mm}$ |
+| Absolute stitch-length deviation | $2.03\,\mathrm{mm}$ | $1.17\,\mathrm{mm}$ |
 
 An [alternative Autostitch solution](../examples/counter_examples/assets/fagliano-tip-mirrored.png) uses a mirrored corner with a Vertex point. Obverse stitching on one side and reverse stitching on the other produce fully symmetric spacing, slit orientations and visible thread, with both rows meeting at the round hole at the vertex.
 
@@ -177,10 +180,11 @@ Reverse corner works particularly well for this design. Its limitation appears w
 
 ![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment | Absolute stitch-length deviation |
-| --- | ---: | ---: | ---: |
-| Reference | $0$ | $0.00\,\mathrm{mm}$ | $1.21\,\mathrm{mm}$ |
-| Autostitch | $0$ | $0.00\,\mathrm{mm}$ | $1.09\,\mathrm{mm}$ |
+| Measure | Reference | Autostitch |
+| --- | ---: | ---: |
+| Adjusted gaps | $0$ | $0$ |
+| Absolute adjustment | $0.00\,\mathrm{mm}$ | $0.00\,\mathrm{mm}$ |
+| Absolute stitch-length deviation | $1.21\,\mathrm{mm}$ | $1.09\,\mathrm{mm}$ |
 
 # Geometric Rules
 
@@ -192,7 +196,7 @@ Slit centres lie on the guide, and slit length, width and lean stay fixed. As th
 
 Nominal pitch is measured straight between consecutive opening centres. On a circular guide, that distance is a chord rather than the arc followed by the guide. Connections at corners and branching junctions use the constructions described below.
 
-![Slits turn with the curved guide while keeping the same lean; gaps are measured straight between their centres](../examples/illustrated/assets/axiom-curve.gif)
+![Slits turn with the curved guide while keeping the same lean; gaps are measured straight between their centres](../examples/illustrated/assets/axiom-curve.animated.svg)
 
 ## Fixed Features
 
@@ -200,31 +204,31 @@ Chosen endpoints, landmark pairs and junction neighbours stay fixed during fitti
 
 Each free span must fit between its fixed openings. An unprotected slit-to-slit gap $g$ may change within $0.9p\leq g\leq1.1p$, while protected gaps remain nominal. In the example, each side contains seven slits and two central $3.25\,\mathrm{mm}$ gaps; the landmark pair stays $3\,\mathrm{mm}$ apart.
 
-![The landmark pair stays fixed at nominal spacing while adjusted gaps fit the spans on either side](../examples/illustrated/assets/axiom-landmark.gif)
+![The landmark pair stays fixed at nominal spacing while adjusted gaps fit the spans on either side](../examples/illustrated/assets/axiom-landmark.animated.svg)
 
 ## Shared Openings
 
 A smooth change of curvature shares one slit at the common tangent, as where a straight guide meets a circular arc. The opening serves both portions and is used only once; the connected portions must agree on its centre, type and slit axis.
 
-![A straight and curved guide share one slit where they meet with the same tangent](../examples/illustrated/assets/axiom-smooth.gif)
+![A straight and curved guide share one slit where they meet with the same tangent](../examples/illustrated/assets/axiom-smooth.animated.svg)
 
 A closed loop makes the same demand at its starting opening. The spacing must return to that opening exactly, without placing a second one there. In the circular example, two opposite landmarks fix nominal pairs of slits. Fitting each half separately gives matching adjustment blocks while preserving those pairs.
 
-![Adjusted gaps allow the loop to close at its starting opening while preserving the landmark pairs](../examples/illustrated/assets/axiom-closure.gif)
+![Adjusted gaps allow the loop to close at its starting opening while preserving the landmark pairs](../examples/illustrated/assets/axiom-closure.animated.svg)
 
 ## Two-Arm Corners
 
 Each arm's row continues towards the corner to a virtual slit with the same lean. The selected tips of the two virtual slits meet at one shared round hole, establishing its position relative to both rows. Only the round hole is punched at that meeting; the virtual slits remain construction geometry.
 
-![Two virtual slit tips meet at the shared round hole, locating it off the guide vertex](../examples/illustrated/assets/axiom-corner.gif)
+![Two virtual slit tips meet at the shared round hole, locating it off the guide vertex](../examples/illustrated/assets/axiom-corner.animated.svg)
 
 The last slit on each arm stays on its guide. The distance from its centre to the virtual slit centre is the corner step $q$, constrained by $0.9p\leq q\leq1.1p$. The virtual tips locate the hole, while the corner steps set the positions of the slits that approach it.
 
 The same construction applies to straight and circular arms. A virtual slit follows its arm's local direction, allowing the tips to locate a shared hole when one or both guides curve towards the corner.
 
-![A straight arm and a curved arm share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-line.gif)
+![A straight arm and a curved arm share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-line.animated.svg)
 
-![Two curved arms share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-arc.gif)
+![Two curved arms share a round hole where their virtual slit tips meet](../examples/illustrated/assets/corner-arc-arc.animated.svg)
 
 ## Branching Junctions
 
@@ -236,7 +240,7 @@ Three or more arms share one round hole at the guide intersection. A through-lin
 
 With each first slit centre one pitch from the hole, opposite neighbours are two pitches apart. As two arms approach a straight line, their connections through the hole appear as one overlong stitch. The thread angles also differ from those along the ordinary rows.
 
-![With full-pitch spacing from the hole, two junction stitches appear overlong as their arms approach a straight line](../examples/illustrated/t-junctions/vertex.gif)
+![With full-pitch spacing from the hole, two junction stitches appear overlong as their arms approach a straight line](../examples/illustrated/t-junctions/vertex.animated.svg)
 
 #### Vertex Point, Half Pitch
 
@@ -244,7 +248,7 @@ Consider an ordinary straight-row stitch between matching slits whose centres ar
 
 Half pitch therefore lets opposite straight arms with matching pitch and lean read as one ordinary stitch through the hole. Each arm keeps the same relationship to the hole as its angle changes, so the construction works without selecting a preferred pair of arms.
 
-![Half-pitch spacing preserves the ordinary thread direction on each straight arm; opposite arms read as one ordinary stitch](../examples/illustrated/t-junctions/half.gif)
+![Half-pitch spacing preserves the ordinary thread direction on each straight arm; opposite arms read as one ordinary stitch](../examples/illustrated/t-junctions/half.animated.svg)
 
 The geometry can be written using the outward unit tangent $\mathbf e$ along a straight arm and the unit vector $\mathbf u$ along its slit axis. For slit length $\ell$, the thread vector $\mathbf v$ from the hole to the near slit tip is
 
@@ -261,13 +265,13 @@ The junction neighbours must stay fixed to preserve those thread lengths and ang
 
 Bringing the neighbours closer to the hole also brings them closer to one another. Their openings must still have enough clearance, even when every individual arm satisfies the half-pitch rule.
 
-![The T junction's hole and half-pitch neighbours stay fixed while the remaining spans are fitted](../examples/illustrated/assets/axiom-junction.gif)
+![The T junction's hole and half-pitch neighbours stay fixed while the remaining spans are fitted](../examples/illustrated/assets/axiom-junction.animated.svg)
 
 ### X Junction with a Curved Arm
 
 An X junction applies the same shared-hole and half-pitch rule to all four arms. On the circular arm, half pitch is measured along the chord, while slit lean follows the guide's local direction. Because the guide turns between the hole and the slit, this spacing no longer guarantees the ordinary straight-row thread direction or half its visible length.
 
-![Four arms share one hole, with each first slit centre half a pitch away; the curved arm uses the same straight-line measurement](../examples/illustrated/assets/axiom-junction-curved.gif)
+![Four arms share one hole, with each first slit centre half a pitch away; the curved arm uses the same straight-line measurement](../examples/illustrated/assets/axiom-junction-curved.animated.svg)
 
 ## Clearance
 
@@ -282,7 +286,7 @@ The acute-junction example has an included angle of $6^\circ$, slit width $w=0.3
 Fixed openings divide the layout into free spans, each with its own spacing problem. Autostitch distributes the residual within each span without moving those boundaries, then checks the complete layout for clearance. A valid corner or span can still place openings too close to those elsewhere in the design. The demonstration below brings these rules together at a nominal pitch of $2.7,\mathrm{mm}$, showing how landmark placement and spacing adjustments shape the complete layout.
 
 
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.animated.svg)
 
 ## Branching Junction Spacing
 
@@ -298,7 +302,7 @@ A nominal corner step can put a neighbouring slit beyond the end of its arm. Aut
 
 In the shallow-turn example, the curved neighbour needs a corner step of approximately $3.21\,\mathrm{mm}$. The range of usable angles depends on pitch, slit geometry, hole diameter, clearance and the available arm geometry.
 
-![An adjusted corner step keeps the neighbouring slit on its curved guide at a shallow turn](../examples/illustrated/assets/corner-shallow.gif)
+![An adjusted corner step keeps the neighbouring slit on its curved guide at a shallow turn](../examples/illustrated/assets/corner-shallow.animated.svg)
 
 ## Straight-Span Fitting
 

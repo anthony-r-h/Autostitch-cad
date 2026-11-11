@@ -189,8 +189,9 @@ function speedyScenes() {
   });
 }
 
-function faglianoScene(solved=false) {
-  const spec=input(solved?'ILL-FAGLIANO-AUTOSTITCH':'ILL-FAGLIANO-TIP'),R=spec.radius,p=spec.pitch,h=spec.slitLength/2,a=spec.leanDegrees*Math.PI/180;
+function faglianoScene(solved=false,mirrored=false) {
+  const source=mirrored?'ILL-FAGLIANO-MIRRORED':solved?'ILL-FAGLIANO-AUTOSTITCH':'ILL-FAGLIANO-TIP';
+  const spec=input(source),R=spec.radius,p=spec.pitch,h=spec.slitLength/2,a=spec.leanDegrees*Math.PI/180;
   const sweep=spec.sweepDegrees*Math.PI/180,c=R*Math.cos(sweep),halfWidth=R-c,step=2*Math.asin(p/(2*R));
   // Upper intersection of the incoming minus-tip and outgoing plus-tip circles.
   const jx=h*Math.sin(a)/Math.cos(sweep);
@@ -202,10 +203,9 @@ function faglianoScene(solved=false) {
   if(chords.some(g=>g<.9*p||g>=p))throw new Error('Fagliano curves require bounded compression on both arms');
   const view={x:300,y:265,scale:13.5},bottom=-(spec.straightOpenings-1)*p;
   const point=(arm,t)=>[arm===0?c-R*Math.cos(t):-c+R*Math.cos(t),R*Math.sin(t)];
-  const slitAngle=(arm,t)=>arm===0?Math.PI/2-t+a:-Math.PI/2+t+a;
-  const s=scene(solved?'fagliano-tip-autostitch':'fagliano-tip-compression',
-    solved?'Autostitch: minimum adjusted gaps on the same strap guides':'Aligned straight runs compress equally into a vertex hole',
-    solved?'ILL-FAGLIANO-AUTOSTITCH':'ILL-FAGLIANO-TIP');
+  const slitAngle=(arm,t)=>arm===0?Math.PI/2-t+a:-Math.PI/2+t+(mirrored?-a:a);
+  const s=scene(mirrored?'fagliano-tip-mirrored':solved?'fagliano-tip-autostitch':'fagliano-tip-compression',
+    mirrored?'Vertex point with mirrored obverse and reverse rows':solved?'Autostitch: minimum adjusted gaps on the same strap guides':'Aligned straight runs compress equally into a vertex hole',source);
   // Offset the symmetric guides, then extend both arcs to their common tip.
   // Both constructions retain this same piece even though their holes differ.
   const edgeSpec=input('ILL-FAGLIANO-TIP'),edgeRadius=R+edgeSpec.leatherEdgeOffset,edgeSweep=Math.acos(c/edgeRadius);
@@ -273,7 +273,7 @@ function faglianoScene(solved=false) {
     }
     result.push(hole(joint,view));return result;
   };
-  if(!solved) {
+  if(!solved&&!mirrored) {
     frame(s,draw([[],[]],0),60,'guides');
     for(let n=1;n<=spec.straightOpenings;n++)frame(s,draw([[],[]],n),50,'aligned-straights');
     const settled=[[],[]];
@@ -294,10 +294,10 @@ function faglianoScene(solved=false) {
   const left=real.filter(e=>centre(e)[0]<view.x).sort((a,b)=>centre(b)[1]-centre(a)[1]);
   const right=real.filter(e=>centre(e)[0]>view.x).sort((a,b)=>centre(a)[1]-centre(b)[1]);
   s.threadPaths=[[...left,result.find(e=>e.kind==='hole'),...right]];
-  return slitOutlines(finishThread(solved?{...s,final:result}:finish(s,result)));
+  return slitOutlines(finishThread(solved||mirrored?{...s,final:result}:finish(s,result)));
 }
 
 export {absoluteStitchLengthDeviation} from '../illustrated/scenes.mjs';
 
-export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes(),faglianoScene(),faglianoScene(true)];}
+export function createScenes(){return [diagonalCorner(),walletScene(),walletScene(true),...loeweScenes(),...speedyScenes(),faglianoScene(),faglianoScene(true),faglianoScene(false,true)];}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))writeSceneFiles(createScenes());

@@ -9800,6 +9800,28 @@
       }
     },
     {
+      "id": "ILL-FAGLIANO-MIRRORED",
+      "measurementPolicy": "Dimension one representative chord per equal-adjustment block on each arm. Identify every adjusted gap; omit nominal gaps.",
+      "source": "examples/counter_examples/scenes.mjs",
+      "pitch": 3,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "animated": false,
+      "axioms": ["A2", "A3", "A7"],
+      "status": "Investigation variant of ILL-FAGLIANO-TIP. Preserve every opening centre and the vertex hole; mirror the left slit axes and visible thread onto the right, joining obverse and reverse rows. Analytic illustration, not native CAD output or a claim about the photographed strap.",
+      "inputs": {
+        "pitch": 3,
+        "slitLength": 1.5,
+        "leanDegrees": 40,
+        "radius": 24,
+        "sweepDegrees": 40,
+        "straightOpenings": 3,
+        "curvedSlits": 5
+      },
+      "assets": [{"path": "examples/counter_examples/assets/fagliano-tip-mirrored"}],
+      "notation": ["s", "e", "j", "direction"]
+    },
+    {
       "id": "ILL-FAGLIANO-AUTOSTITCH",
       "measurementPolicy": "Dimension one representative chord per contiguous equal-adjustment block on each arm. Identify every adjusted gap; omit nominal gaps.",
       "source": "examples/counter_examples/scenes.mjs",
@@ -9893,6 +9915,25 @@
         "holdCentiseconds": 400,
         "connection": "Each arm connects to the shared round hole."
       }
+    },
+    {
+      "id": "ILL-EMBLEM-SQUARE",
+      "measurementPolicy": "Show guides, slit outlines, virtual slits, start/end and direction marks, landmarks, junction labels, blue adjusted gaps and slit marks, and red thread-angle arcs. No dimension numbers or unresolved residuals in the completed layout.",
+      "source": "examples/illustrated/emblem-square.mjs",
+      "pitch": 2.7,
+      "slitLength": 1.5,
+      "leanDegrees": 40,
+      "axioms": ["A1", "A2", "A3", "A6", "A7", "A8", "A9"],
+      "animated": false,
+      "status": "Annotated square view of the native emblem. Original export retained in SVG metadata for the unchanged animation; notation is reconstructed from its geometry and guides.",
+      "inputs": {
+        "geometry": "examples/demos/emblem.svg",
+        "guides": "examples/emblem.lsp",
+        "nativeViewBox": [60, 68, 465, 465],
+        "canvas": [600, 600],
+        "openingsIncludingDot": 1077
+      },
+      "assets": [{"path": "examples/demos/emblem", "label": "Square emblem with construction notation"}]
     },
     {
       "id": "ILL-EMBLEM-STORYBOARD",

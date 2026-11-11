@@ -19,6 +19,7 @@ Jaeger-LeCoultre / Casa Fagliano source photograph: `jaeger_lecoultre_fagliano.p
 | `lv-speedy-chape-autostitch` | `ILL-LV-SPEEDY-CHAPE` | Same pentagon with five A6 round holes, fitted spans and closure. |
 | `fagliano-tip-compression` | `ILL-FAGLIANO-TIP` | Aligned straight pairs; left nominal curve overruns its reserved station, then compresses equally; right follows; equal curved chords into a fixed vertex hole and final thread. |
 | `fagliano-tip-autostitch` | `ILL-FAGLIANO-AUTOSTITCH` | Static comparison on identical guides: minimum adjusted gaps, one on the left and four on the right. |
+| `fagliano-tip-mirrored` | `ILL-FAGLIANO-MIRRORED` | Static investigation: the reference vertex hole and opening centres, with mirrored obverse and reverse rows. |
 
 All use a $600\times750$ canvas. In the Sellier corner and Fagliano tip GIFs, the holes fade to the theme's secondary colour over $0.3\,\mathrm{s}$ when the thread appears, followed by a four-second hold. Colours, font and label backgrounds come from [colors.json](../illustrated/colors.json), using the same theme as the pitch. Static comparisons use the same final colours and a common scale within each pair. Geometry and sequence come from `scenes.mjs`; parameters live in `tests/cases.json`.
 
@@ -55,6 +56,8 @@ Outputs: `examples/counter_examples/assets/`. Each build uses a unique `output/s
 - Fagliano fitting: keep the first curved gap nominal. Compress the next five gaps equally per arm, including the last gap to the vertex hole, to approximately $2.7491\,\mathrm{mm}$ on both sides. This is the requested equal-redistribution construction, not the production solver's minimum-adjustment-block policy. The dimensions and compression sequence are illustrative, not measurements of the photograph.
 
 Fagliano timing: establish three straight pairs; reveal each nominal curved run, hold its overrun, then interpolate the five remaining gaps together. Finish the left arm before starting the right. Chord labels update during compression; straight centres stay fixed and curve entry gaps remain nominal. The final frame adds all thread at once. PNG and SVG retain that final state.
+
+Fagliano mirrored investigation: retain the reference's vertex hole, opening centres and equal compression. Keep the left row and reverse the right row's local lean, making the slit axes and visible thread exact reflections across the strap centreline. This is an analytic alternative for investigating symmetry, not a reconstruction of the photograph or native Autostitch output. [PNG](assets/fagliano-tip-mirrored.png) and [SVG](assets/fagliano-tip-mirrored.svg).
 
 Fagliano Autostitch comparison: apply the independent circular fit selector between the protected entry and corner neighbours. The left free span needs one adjusted gap of approximately $2.7470\,\mathrm{mm}$, placed centrally with the half-index tie toward the route end. The right needs four adjusted gaps of approximately $2.7290\,\mathrm{mm}$. Both retain the reference guides, straight stations and real opening counts. Autostitch locates its hole at the selected virtual-tip intersection, slightly right of the vertex, producing asymmetric reserved stations and different fits. This checks the documented fitting policy analytically; it is not native CAD evidence.
 

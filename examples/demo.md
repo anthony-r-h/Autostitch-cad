@@ -39,13 +39,13 @@ Run `ASTDEMOEXPORT` in the corresponding demo drawing before each export. It exp
 Preview colours use `documentationTheme` in [illustrated/colors.json](illustrated/colors.json), currently Graphite. Pass `-Theme <name>` to override it. For colour changes alone, reuse the published SVG geometry:
 
 ```powershell
-./examples/render-demos.ps1 -SvgPath examples/demos/emblem.svg -OutputBase examples/demos/emblem
+./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/emblem-square.mjs -OutputDirectory ./examples/demos
 ./examples/render-demos.ps1 -SvgPath examples/demos/can-you-really.svg -OutputBase examples/demos/can-you-really
 ```
 
-The square emblem SVG comes from the native drawing. The emblem animation reads that SVG for its final stitch geometry; both use the shared theme file. Changing geometry requires a new native export and animation rebuild. Recolouring or cropping the square preview leaves the animation geometry unchanged.
+The square emblem is a 600 by 600 px annotated preview. It shows guides, slits, virtual slits, start/end and direction marks, landmarks, junction labels, blue adjustment marks and red thread-angle arcs. Dimension numbers are omitted. Its builder uses the shared theme and the native drawing geometry, retained verbatim in the SVG's `native-emblem` metadata. The animation reads that preserved export and keeps its existing presentation. Run `node tests/validate-emblem-storyboard.mjs` to check both views.
 
-The square emblem uses `-ViewBox 60,68,465,465` to enlarge the lettering for thumbnails, clipping the outer ring while retaining both words. ViewBox values are `x,y,width,height` in the original SVG pixel coordinates. Include this option when rebuilding from a native export with the bounds below; `-SvgPath` preserves the saved viewport automatically. All stitch coordinates remain in the SVG for the animation.
+The square emblem retains the crop `60,68,465,465` in the original 600 px native SVG coordinates, clipping the outer ring while retaining both words. After a geometry change, first render the new native export with the bounds below at 600 by 600 px, then run the square builder above and rebuild the animation. Use the square builder for subsequent notation or colour changes; `render-demos.ps1 -SvgPath` is for unannotated native previews.
 
 Example for the portrait lettering preview:
 

@@ -75,13 +75,22 @@ function guideGeometry() {
     const primitives=strokes.flatMap(stroke=>stroke.points.slice(0,stroke.closed?undefined:-1).map((p,j)=>
       primitive(transform(p),transform(stroke.points[(j+1)%stroke.points.length]),p[2]??0)));
     const landmarks=id==='A'?[1,9].map(index=>({primitive:index,station:primitives[index].length/2})):[];
-    groups.push({id,primitives,landmarks,openings:[],threads:[]});
+    let first=0;
+    const routes=strokes.map(stroke=>{
+      const count=stroke.closed?stroke.points.length:stroke.points.length-1;
+      const route={first,last:first+count-1,closed:stroke.closed};first+=count;return route;
+    });
+    groups.push({id,primitives,routes,landmarks,openings:[],threads:[]});
   }
   return groups;
 }
 
+export function nativeEmblemSvg() {
+  const source=read('examples/demos/emblem.svg');
+  return source.match(/<metadata id="native-emblem"><!\[CDATA\[([\s\S]*?)\]\]><\/metadata>/)?.[1]??source;
+}
 export function loadEmblem() {
-  const groups=guideGeometry(),source=read('examples/demos/emblem.svg');
+  const groups=guideGeometry(),source=nativeEmblemSvg();
   const pitch=lispForms(read('examples/emblem.lsp')).find(f=>f[0]==='defun'&&f[1]==='ast:emblem-settings')[3][2];
   const world=([x,y])=>[333+x*256/600,135.0709751266425-y*256/600];
   const openings=[],threads=[],decoration=[],extras=[];

@@ -288,6 +288,25 @@ for(const arm of [0,1]) {
 }
 assert(fagliano.frames.findIndex(f=>f.stage==='arm-0-settled')<fagliano.frames.findIndex(f=>f.stage==='arm-1-nominal'));
 
+const faglianoMirrored=scenes.find(s=>s.name==='fagliano-tip-mirrored');
+assert.equal(faglianoMirrored.frames.length,0);
+assert.equal(slits(faglianoMirrored).length,16);
+assert.equal(faglianoMirrored.final.filter(e=>e.kind==='hole').length,1);
+assert.equal(faglianoMirrored.final.filter(e=>e.kind==='virtual').length,0);
+for(const kind of ['hole','guide','alignment','leather-edge','adjusted-gap','gap-value'])assert.deepEqual(
+  faglianoMirrored.final.filter(e=>e.kind===kind),fagliano.final.filter(e=>e.kind===kind));
+slits(faglianoMirrored).forEach((e,i)=>near(distance(midpoint(e),midpoint(slits(fagliano)[i])),0));
+const reflect=p=>[2*fv.x-p[0],p[1]];
+for(const kind of ['slit','thread']) {
+  const elements=faglianoMirrored.final.filter(e=>e.kind===kind);
+  const left=elements.filter(e=>midpoint(e)[0]<fv.x),right=elements.filter(e=>midpoint(e)[0]>fv.x);
+  assert.equal(left.length,8);assert.equal(right.length,8);
+  for(const e of left)assert(right.some(r=>distance(reflect(e.a),r.b)<1e-6&&distance(reflect(e.b),r.a)<1e-6),
+    `${kind}: right side must reflect the left with reversed travel`);
+  const originalLeft=fagliano.final.filter(e=>e.kind===kind&&midpoint(e)[0]<fv.x);
+  assert.deepEqual(left,originalLeft,'Left stitching must remain unchanged');
+}
+
 const faglianoSolved=scenes[8],solvedRows=fRows(faglianoSolved.final);
 assert.equal(faglianoSolved.frames.length,0);
 const solvedHole=faglianoSolved.final.find(e=>e.kind==='hole');
@@ -334,7 +353,7 @@ function segmentDistance(a,b,c,d) {
   return Math.min(pointSegment(a,c,d),pointSegment(b,c,d),pointSegment(c,a,b),pointSegment(d,a,b));
 }
 // Full-layout clearance, including the external circular decoration.
-for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv],[fagliano,fv],[faglianoSolved,fv]]) {
+for(const [layout,v] of [[wallet,wv],[diagonalWallet,wv],[loeweReference,lv],[loeweSolved,lv],[speedyReference,sv],[speedySolved,sv],[fagliano,fv],[faglianoSolved,fv],[faglianoMirrored,fv]]) {
 const axes=slits(layout).map(e=>[world(e.a,v),world(e.b,v)]),centres=layout.final.filter(e=>e.kind==='hole').map(e=>world(e.p,v));
 for(const [i,[a,b]] of axes.entries()) {
   for(const [c,d] of axes.slice(i+1))assert(segmentDistance(a,b,c,d)-.3>=.2);

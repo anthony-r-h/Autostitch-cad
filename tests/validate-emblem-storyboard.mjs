@@ -1,7 +1,8 @@
 // Native SVG fidelity and storyboard timing; no CAD session required.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {loadEmblem,storyboard,validateStoryboard,cameraAt,frameAt,createEmblemScene} from '../examples/illustrated/emblem.mjs';
+import {loadEmblem,nativeEmblemSvg,storyboard,validateStoryboard,cameraAt,frameAt,createEmblemScene} from '../examples/illustrated/emblem.mjs';
+import {createSquareEmblem} from '../examples/illustrated/emblem-square.mjs';
 import {gifBlocks,svg,displayElements,termLabel,colorConfig} from '../examples/illustrated/scenes.mjs';
 
 const model=loadEmblem(),book=storyboard;
@@ -186,7 +187,7 @@ for(const frame of scene.frames) {
     assert(!e.bold);
   }
 }
-assert.equal(fs.readFileSync(new URL('../examples/illustrated/emblem/emblem-construction.svg',import.meta.url),'utf8'),svg(scene),'Final SVG is stale');
+assert.equal(fs.readFileSync(new URL('../examples/illustrated/emblem/emblem-construction.svg',import.meta.url),'utf8').replaceAll('\r\n','\n'),svg(scene),'Final SVG is stale');
 assert.equal(scene.frames.reduce((n,f)=>n+f.delay,0),book.duration*100);
 assert(scene.frames.every(f=>f.delay>0));
 for(const frame of scene.frames)for(const e of frame.elements) {
@@ -199,4 +200,21 @@ assert.equal(blocks.filter(b=>b.kind==='image').length,scene.frames.length);
 const delays=blocks.filter(b=>b.kind==='control').map(b=>b.bytes.readUInt16LE(4));
 assert.deepEqual(delays,scene.frames.map(f=>f.delay));
 assert(gif.includes(Buffer.from('NETSCAPE2.0')));
+const square=createSquareEmblem(model),squareElements=square.final;
+assert.equal(square.canvas.width,600);assert.equal(square.canvas.height,600);
+assert.equal(squareElements.filter(e=>e.id&&['slit','hole'].includes(e.kind)).length,model.openings.length);
+assert.equal(squareElements.filter(e=>e.kind==='thread').length,model.threads.length);
+assert.equal(squareElements.filter(e=>e.kind==='virtual').length,model.extras.filter(e=>e.kind==='virtual').length);
+for(const kind of ['guide','adjusted-gap','adjustment-mark','angle','notation-start','notation-end','notation-junction','notation-landmark']) {
+  assert(squareElements.some(e=>e.kind===kind),`Square emblem needs ${kind}`);
+}
+assert(!squareElements.some(e=>e.dimensionId||e.kind==='residual'||e.type==='text'&&/^[-+]?\d/.test(e.value)),
+  'The completed square has no dimension numbers or unresolved residuals');
+const squareSvg=fs.readFileSync(new URL('../examples/demos/emblem.svg',import.meta.url),'utf8');
+assert(squareSvg.includes('<metadata id="native-emblem"><![CDATA['+nativeEmblemSvg()+']]></metadata>'),
+  'Preserve the original native export independently of the visible annotations');
+assert.equal(squareSvg.replace(/<metadata id="native-emblem"><!\[CDATA\[[\s\S]*?\]\]><\/metadata>\r?\n/,'').replaceAll('\r\n','\n'),svg(square),'Square SVG is stale');
+const squarePng=fs.readFileSync(new URL('../examples/demos/emblem.png',import.meta.url));
+assert.equal(squarePng.readUInt32BE(16),600);assert.equal(squarePng.readUInt32BE(20),600);
 console.log(`Emblem storyboard valid: ${model.openings.length} native openings at ${model.pitch} mm, ${model.threads.length} thread segments, ${scene.frames.length} frames, ${book.duration} seconds. Half-pitch branching, crown symmetry, fixed landmarks, lettering redistribution, thread-only finish, coordinates, camera, annotations and GIF timing checked.`);
+console.log('Square emblem valid: all openings, threads and virtual slits retained; guides, blue adjustments, red angles and feature notation present; dimension numbers omitted.');

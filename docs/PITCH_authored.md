@@ -18,7 +18,7 @@ That judgement can be expressed through geometric constraints and priorities: wh
 
 ## Autostitch
 
-Autostitch applies geometric constraints and computational search to stitch layout for hand stitching with pricking irons. It is implemented in AutoLISP with an OpenDCL interface, using the extension technologies shared by CAD platforms such as BricsCAD and AutoCAD.
+Autostitch applies geometric constraints and computational search to stitch layout for hand stitching with pricking irons. It is implemented in AutoLISP with an OpenDCL interface.
 
 ![Autostitch emblem with construction notation](../examples/demos/emblem.svg)
 

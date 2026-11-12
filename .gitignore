@@ -5,7 +5,9 @@
 
 # Optional animation exports; SVGs are the published format.
 /examples/illustrated/**/*.gif
+!/examples/illustrated/emblem/emblem-construction.gif
 /examples/illustrated/**/*.mp4
+!/examples/illustrated/emblem/emblem-construction.mp4
 /examples/counter_examples/assets/*.gif
 /examples/counter_examples/assets/*.mp4
 

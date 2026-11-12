@@ -325,7 +325,7 @@ Checks cover fitting, clearance, matching guides, thread-angle measurements, sha
 - The A close-up uses the pitch's notation and dimension helpers: `s` for the two closed contour starts, `j` at the eight corner holes, `L1` and `L2` for the two crown landmarks, brackets labelled "Free span", numeric adjusted-gap dimensions, red residuals and blue adjusted gaps. Dimension and residual-value annotations are limited to the two outer-crown spans of A. Build labels those free spans and residuals; Adjustment replaces the span labels with one representative dimension per current contiguous equal-adjustment block. Every adjusted gap stays highlighted, including unmeasured spans. Adjusted dimensions fade during Stitch. Detailed dimensions leave the view as the camera pulls out. Finishing touches remove the remaining construction marks; the finished artwork has no measurements or adjustment marks.
 
 ```powershell
-./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/emblem.mjs -OutputDirectory ./examples/illustrated/emblem -FrameTimes 0,6,9,12.5,19,22.5,27
+./examples/illustrated/build.ps1 -SceneScript ./examples/illustrated/emblem.mjs -OutputDirectory ./examples/illustrated/emblem -Gif -Mp4
 node tests/validate-emblem-storyboard.mjs
 node tests/validate-cases.mjs
 ```

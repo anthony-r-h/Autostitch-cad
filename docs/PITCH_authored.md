@@ -20,7 +20,7 @@ That judgement can be expressed through geometric constraints and priorities: wh
 
 Autostitch applies geometric constraints and computational search to stitch layout for hand stitching with pricking irons. It is implemented in AutoLISP with an OpenDCL interface, using the extension technologies shared by CAD platforms such as BricsCAD and AutoCAD.
 
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.animated.svg)
+![Autostitch emblem with construction notation](../examples/demos/emblem.svg)
 
 Given seam guides and a tool profile, Autostitch places openings, resolves corners and junctions, and fits the spacing between fixed features. Its purpose is to preserve the intended seam and nominal tool pitch while making necessary adjustments explicit and controlled. The result is a geometric layout specifying opening positions and orientations, shared openings and adjusted gaps, ready to guide physical execution.
 
@@ -277,7 +277,7 @@ The acute-junction example has an included angle of $6^\circ$, slit width $w=0.3
 Fixed openings divide the layout into free spans, each with its own spacing problem. Autostitch distributes the residual within each span without moving those boundaries, then checks the complete layout for clearance. A valid corner or span can still place openings too close to those elsewhere in the design. The demonstration below brings these rules together at a nominal pitch of $2.7,\mathrm{mm}$, showing how landmark placement and spacing adjustments shape the complete layout.
 
 
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.animated.svg)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-consThen, for the emblem construction GIF that goes up, it shows up in the solution method. We also need to generate the MP4 pair with it in the same directory as the GIF. truction.gif)
 
 ## Branching Junction Spacing
 

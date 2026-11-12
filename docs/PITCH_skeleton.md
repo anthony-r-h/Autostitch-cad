@@ -409,7 +409,7 @@ $$
 - Place endpoint slits, protected landmark pairs and shared junction openings; resolve corner neighbours before fitting
 - These openings divide the guide into free spans. Their positions stay fixed; solve the remaining spacing within each span
 
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.animated.svg)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
 
 - Example: the emblem's outlined A, then the complete lettering and rings; $p=2.7\,\mathrm{mm}$
 - Crown landmarks establish symmetry. Protected pairs and shared corner openings bound the free spans

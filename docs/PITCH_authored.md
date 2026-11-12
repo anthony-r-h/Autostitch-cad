@@ -274,10 +274,9 @@ The acute-junction example has an included angle of $6^\circ$, slit width $w=0.3
 
 # Solution Method
 
-Fixed openings divide the layout into free spans, each with its own spacing problem. Autostitch distributes the residual within each span without moving those boundaries, then checks the complete layout for clearance. A valid corner or span can still place openings too close to those elsewhere in the design. The demonstration below brings these rules together at a nominal pitch of $2.7,\mathrm{mm}$, showing how landmark placement and spacing adjustments shape the complete layout.
+Fixed openings divide the layout into free spans, each with its own spacing problem. Autostitch distributes the residual within each span without moving those boundaries, then checks the complete layout for clearance. A valid corner or span can still place openings too close to those elsewhere in the design. The demonstration below brings these rules together at a nominal pitch of $2.7\,\mathrm{mm}$, showing how landmark placement and spacing adjustments shape the complete layout.
 
-
-![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-consThen, for the emblem construction GIF that goes up, it shows up in the solution method. We also need to generate the MP4 pair with it in the same directory as the GIF. truction.gif)
+![Emblem construction: establish fixed openings, redistribute residuals and stitch the complete design](../examples/illustrated/emblem/emblem-construction.gif)
 
 ## Branching Junction Spacing
 

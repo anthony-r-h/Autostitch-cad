@@ -156,36 +156,9 @@
 # Even Big Fashion Gets It Wrong
 
 - The diagram comparisons use $3\,\mathrm{mm}$ nominal pitch
-
-- Diagrams compare the observed corner methods with Autostitch
-
-## Hermès Sellier wallet
-
-<img src="../examples/counter_examples/hermies_sellier.png"  alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
-
-- Focus: the top corner and the decorative H below the right-hand run
-- The H is represented by six round holes
-
-### Reference
-
-- Reverse corner: the top and vertical rows use opposite lean
-- The stitches entering the H continue the adjoining thread angles
-
-![Sellier: Reverse corner](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
-
-### Autostitch
-
-- Consistent lean from the top row through the vertical run; a round corner hole at the virtual slit-tip intersection
-- The H keeps its shape and nominal approaches; its position and the bottom row move to suit the changed slit lean
-
-![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.png)
-
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Reference | $0$ | $0.000$ | $1.213$ |
-| Autostitch | $0$ | $0.000$ | $1.090$ |
-
-- Both layouts keep nominal gaps; the choice changes the corner position and thread geometry
+- Loewe and Louis Vuitton use representative reconstructions of visibly inconsistent execution; diagram metrics are not measurements of the products
+- Jaeger-LeCoultre and Hermès are controlled comparisons of valid junction treatments on the same guides
+- For those studies, treat Vertex point, the virtual-slit corner and mirrored stitching as available Autostitch treatments under the same spacing rules
 
 ## Loewe Mini Feather hanger
 
@@ -246,29 +219,58 @@
 
 <img src="../examples/counter_examples/jaeger_lecoultre_fagliano.png"  alt="Jaeger-LeCoultre Casa Fagliano straps with a pointed tip on the right strap">
 
-- Focus: the pointed end of the right strap
-- Both straight rows start at matching heights, with one handedness throughout
+- Pointed strap ends are common on belts and watch straps; Vertex point is a common treatment where the two sides meet
+- The photographed execution is inconsistent, while the construction itself remains valid
+- Compare three generated solutions on the same symmetric guides, pitch and adjustment limits
 
-### Reference
+### Vertex point
 
-- Vertex point: symmetric curves meet at a round hole
+- One handedness; symmetric curves meet at a round hole at the vertex
 - Residual distributed equally through five gaps on each curve; the straight rows remain aligned
 
 ![Fagliano: Vertex point with equal compression along both curves](../examples/counter_examples/assets/fagliano-tip-compression.png)
 
-### Autostitch
+### Virtual-slit corner
 
 - Same guides and aligned straight rows
 - Virtual slit tips place the shared hole right of the vertex, changing the available span on each arm
 - One adjusted gap on the left; four on the right
-- Fewer gaps need individual placement; the two sides lose their matching spacing pattern
+- Consistent lean through the turn; the two sides lose their matching spacing pattern
 
 ![Autostitch strap tip with one adjusted gap on the left and four on the right](../examples/counter_examples/assets/fagliano-tip-autostitch.png)
 
-| Construction | Number of adjusted gaps | Absolute adjustment ($\mathrm{mm}$) | Absolute stitch-length deviation ($\mathrm{mm}$) |
-| --- | ---: | ---: | ---: |
-| Reference | $10$ | $2.509$ | $2.030$ |
-| Autostitch | $5$ | $1.337$ | $1.169$ |
+### Mirrored Vertex point
+
+- Keep the hole at the vertex and mirror the stitch across the strap centreline
+- Obverse on one side and reverse on the other produce symmetric spacing, slit orientations and visible thread
+- Trade-off: deliberate change of handedness at the tip
+
+![Fagliano: mirrored stitching meets at a Vertex point](../examples/counter_examples/assets/fagliano-tip-mirrored.png)
+
+## Hermès Sellier wallet
+
+<img src="../examples/counter_examples/hermies_sellier.png"  alt="Sellier wallet with a diagonal upper corner and decorative H at the lower corner">
+
+- Focus: why a mirrored corner suits the top corner and decorative H below the right-hand run
+- The H is represented by six round holes
+
+### Reverse corner
+
+- Obverse and reverse rows meet through a shared diagonal slit
+- The change of lean balances the stitches entering the H and supports the composition
+
+![Sellier: Reverse corner](../examples/counter_examples/assets/sellier-wallet-diagonal.png)
+
+### Virtual-slit corner
+
+- Consistent lean through the turn; round corner hole at the virtual slit-tip intersection
+- The H keeps its shape and nominal approaches; its position and the bottom row move to suit the changed slit lean
+
+![Sellier construction with an Autostitch corner](../examples/counter_examples/assets/sellier-wallet-autostitch.png)
+
+- Both layouts keep nominal gaps; the choice changes corner position, handedness and thread geometry
+- Reverse corner is a two-arm treatment. At three or more arms, a shared diagonal slit privileges one pair and the remaining connections do not form ordinary full-length stitches
+- Branching junctions instead use one round hole and half-pitch neighbours, giving every arm the same rule
 
 [Sources, geometry and reproduction](../examples/counter_examples/README.md)
 

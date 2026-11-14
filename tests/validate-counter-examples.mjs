@@ -440,11 +440,11 @@ for(const s of scenes) {
     for(const e of f.elements)for(const p of e.type==='line'?[e.a,e.b]:e.type==='polygon'?e.points:[e.p])assert(p[0]>=0&&p[0]<=600&&p[1]>=0&&p[1]<=375);
   }
 }
-// Keep the published thread-length totals tied to the final drawn geometry.
+// Keep the published Loewe and Speedy thread-length totals tied to the final drawn geometry.
 const exampleText=fs.readFileSync(new URL('docs/PITCH_skeleton.md',root),'utf8');
 assert(!exampleText.includes('## Corner treatments'));
 const metricRows=exampleText.split('\n').filter(line=>/^\| (Reference|Autostitch) \|/.test(line));
-const documentOrder=[2,1,3,4,5,6,7,8];assert.equal(metricRows.length,documentOrder.length);
+const documentOrder=[3,4,5,6];assert.equal(metricRows.length,documentOrder.length);
 for(const [i,index] of documentOrder.entries()) {
   const layout=scenes[index],scale=distance(slits(layout)[0].a,slits(layout)[0].b)/1.5;
   // Obtain the nominal baseline directly from the existing straight Sellier row.
@@ -457,4 +457,4 @@ for(const [i,index] of documentOrder.entries()) {
   const published=Number(metricRows[i].split('|').at(-2).trim().replaceAll('$',''));
   assert.equal(published,Number(measured.toFixed(3)),layout.name);
 }
-console.log('Counter-examples valid: Sellier, Loewe, Speedy and Fagliano geometry; synchronized straights, equal curve compression, thread connections, handedness, closure, clearance, exports, animation timing and published stitch-length totals.');
+console.log('Counter-examples valid: Sellier, Loewe, Speedy and Fagliano geometry; synchronized straights, equal curve compression, thread connections, handedness, closure, clearance, exports, animation timing and published Loewe and Speedy stitch-length totals.');

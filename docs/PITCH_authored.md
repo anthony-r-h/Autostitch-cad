@@ -148,7 +148,7 @@ The Autostitch layout applies the corner solution and fits each intervening span
 
 ## Jaeger-LeCoultre Casa Fagliano Watch Strap
 
-Pointed strap ends are common on belts and watch straps, and a Vertex point is a common way to join the stitching where the two sides meet. The pointed end of the right [Jaeger-LeCoultre Casa Fagliano Watch Strap](../examples/counter_examples/jaeger_lecoultre_fagliano.png) uses this valid construction, but its execution is irregular. The diagrams compare three ways to resolve the same symmetric guides. In every case, the straight rows begin at matching heights and the curved spans are fitted under the same pitch and adjustment limits.
+Using the usual Vertex point construction, the [Jaeger-LeCoultre Casa Fagliano Watch Strap](../examples/counter_examples/jaeger_lecoultre_fagliano.png) stands out for its unusually uneven execution: the stitch pitch compresses visibly through the curves approaching the tip, an irregularity made more noticeable by the level of finish expected from a high-end watch strap. The diagrams compare three solutions on the same symmetric guides, with the straight rows beginning at matching heights and the curved spans fitted using the same nominal pitch and adjustment limits.
 
 The first solution keeps one handedness and places the round hole at the vertex. The residual is distributed symmetrically along both curves, so the straight rows remain aligned and both sides have the same spacing pattern.
 

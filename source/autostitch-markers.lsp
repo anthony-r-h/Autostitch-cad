@@ -82,7 +82,19 @@
       (cons 'landmark-half-size (/ (max 0.9 (min 1.6 (* pitch 0.4))) factor))
       (cons 'landmark-width (/ 0.12 factor)))))
 
-(defun ast:markers-connections (guide / state connections result ast:*cad-error*)
+(defun ast:markers-connections (guide / cached connections state member)
+  (if (and ast:*marker-cache-enabled* (setq cached (assoc guide ast:*marker-connections-cache*)))
+    (cdr cached)
+    (progn
+      (setq connections (ast:markers-connections-inner guide))
+      (if ast:*marker-cache-enabled*
+        (progn
+          (setq state (ast:cad-read-base guide))
+          (foreach member (cdr (assoc 'members state))
+            (setq ast:*marker-connections-cache* (cons (cons member connections) ast:*marker-connections-cache*)))))
+      connections)))
+
+(defun ast:markers-connections-inner (guide / state connections result ast:*cad-error*)
   (setq result (vl-catch-all-apply
     '(lambda ()
       (setq state (ast:cad-read guide))
@@ -121,7 +133,7 @@
                (<= station (vlax-curve-getDistAtParam guide boundary)))
         (vlax-curve-getPointAtDist guide station)))))
 
-(defun ast:markers-geometry (guide settings landmarks factor route style connections / total start finish phase closed reversed size text-height first last middle direction index attachment point incoming outgoing primitives connection corner-station cue-step cue-station id-point)
+(defun ast:markers-geometry (guide settings landmarks factor route style connections / total start finish phase closed reversed size text-height first last middle direction index attachment point incoming outgoing primitives connection corner-station cue-step cue-station id-point continuous-points)
   (setq total (vlax-curve-getDistAtParam guide (vlax-curve-getEndParam guide))
         closed (cdr (assoc 'closed route)) reversed (cdr (assoc 'reverse settings))
         start (if (assoc 'start settings) (/ (cdr (assoc 'start settings)) factor) 0.0)
@@ -165,6 +177,7 @@
     (setq index (1+ index))
     (if (setq point (ast:markers-attachment-point guide attachment factor))
       (ast:markers-landmark guide point index style)))
+  (setq continuous-points (ast:g-continuous-points route settings))
   (setq primitives (cdr (assoc 'primitives route)) index 0 corner-station 0.0)
   (repeat (if closed (length primitives) (max 0 (1- (length primitives))))
     (setq incoming (nth index primitives)
@@ -176,7 +189,8 @@
                                (ast:g-tangent outgoing 0.0)) 0.0)
                   (< (abs (ast:g-cross (ast:g-tangent incoming (ast:g-length incoming))
                                       (ast:g-tangent outgoing 0.0))) 1e-10)))
-      (if (and (not (ast:markers-shared-point-p point factor connections))
+      (if (and (not (vl-some '(lambda (item) (< (ast:g-dist item (list (* factor (car point)) (* factor (cadr point)))) 1e-8)) continuous-points))
+               (not (ast:markers-shared-point-p point factor connections))
                (not (equal point first 1e-8)) (not (equal point last 1e-8))
                (or closed (and (>= corner-station start) (<= corner-station finish))))
         (ast:markers-point guide point "J" 6 size text-height)))
@@ -300,13 +314,55 @@
                   (princ (strcat "\nAutostitch: Editing points hidden; " (cdr (assoc 'error state)))))))
             (ast:cad-require (entdel reference) "Could not remove an orphaned editing marker.")))))))
 
+(defun ast:markers-sync-entities (entities / entity record guide state reference)
+  ;; The bridge supplies the affected ownership graph, including erased sources
+  ;; and nonreciprocal copies. No drawing-wide selection is needed here.
+  (foreach entity entities
+    (if (and entity (entget entity)
+             (eq 'markers (cdr (assoc 'role (setq record (ast:markers-record entity))))))
+      (progn
+        (setq guide (cdr (assoc 'link record)))
+        (if (not (and guide (entget guide) (equal entity (ast:markers-reference guide))))
+          (ast:cad-require (entdel entity) "Could not remove an orphaned editing marker.")))))
+  (foreach guide entities
+    (if (and guide (entget guide)
+             (member (cdr (assoc 0 (entget guide))) '("LINE" "ARC" "CIRCLE" "LWPOLYLINE")))
+      (progn
+        (setq state (ast:cad-read guide))
+        (if (cdr (assoc 'ok state))
+          (ast:markers-update-one guide (cdr (assoc 'settings state)) (cdr (assoc 'landmarks state))
+            (cdr (assoc 'factor state)) (cdr (assoc 'route state)))
+          (if (setq reference (ast:markers-reference guide))
+            (progn
+              (ast:cad-require (entdel reference) "Could not remove invalid stitch line editing markers.")
+              (princ (strcat "\nAutostitch: Editing points hidden; " (cdr (assoc 'error state)))))))))))
+
+(defun ast:markers-native-changed (handles content / ast:*marker-cache-enabled* ast:*marker-affected*
+    ast:*cad-read-cache* ast:*marker-connections-cache* changed output)
+  (setq ast:*marker-cache-enabled* T
+        ast:*marker-affected* (mapcar 'handent (read handles))
+        changed (mapcar 'handent (read content)))
+  (setq ast:*cad-signature-cache* (vl-remove-if
+    '(lambda (item) (or (member (car item) changed) (null (entget (car item))))) ast:*cad-signature-cache*))
+  (foreach output changed
+    (if (and output (entget output) (cdr (assoc 'signature (ast:cad-record output))))
+      (ast:cad-output-signature output)))
+  (ast:markers-native-sync))
+
+(defun ast:markers-history-refresh ()
+  ;; In-memory fingerprints are not part of DWG Undo. Never write drawing state here.
+  (setq ast:*cad-signature-cache* nil)
+  (ast:ui-native-refresh))
+
 (defun ast:markers-native-sync (/ result cleanup ui-result ast:*cad-error* ast:*cad-block-open*)
   ;; Called synchronously by the managed document event bridge inside its transaction.
   ;; T means success; an error string tells the bridge to abort its transaction.
   (if ast:*marker-syncing* T
     (progn
       (setq ast:*marker-syncing* T)
-      (setq result (vl-catch-all-apply 'ast:markers-sync nil))
+      (setq result (if ast:*marker-cache-enabled*
+        (vl-catch-all-apply 'ast:markers-sync-entities (list ast:*marker-affected*))
+        (vl-catch-all-apply 'ast:markers-sync nil)))
       (if ast:*cad-block-open*
         (setq cleanup (vl-catch-all-apply 'entmake (list '((0 . "ENDBLK"))))))
       (setq ast:*marker-syncing* nil)
@@ -316,7 +372,8 @@
         ((vl-catch-all-error-p result)
           (ast:cad-error-message result "Could not update the stitch line labels. Select the stitch line again."))
         (T
-          (if (member 'ast:ui-native-refresh (atoms-family 0))
+          (if (and (member 'ast:ui-native-refresh (atoms-family 0))
+                   (or (not ast:*marker-cache-enabled*) (member astui:*guide* ast:*marker-affected*)))
             (progn
               (setq ui-result (vl-catch-all-apply 'ast:ui-native-refresh nil))
               (if (vl-catch-all-error-p ui-result)
@@ -324,5 +381,7 @@
           T)))))
 
 (vl-acad-defun 'ast:markers-native-sync)
+(vl-acad-defun 'ast:markers-native-changed)
+(vl-acad-defun 'ast:markers-history-refresh)
 
 (princ)

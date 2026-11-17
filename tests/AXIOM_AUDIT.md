@@ -34,6 +34,8 @@ The tiny-span regression is covered: arithmetic residue around $4.44\times10^{-1
 
 Matching pieces preserve the source solution under a rigid or reflected transform. The mapping suite checks guide coincidence (A1), slit axes and dimensions (A2), gap distances (A3), shared openings (A8/A9), and clearance (A10). CAD checks compare the openings actually written to both blocks and cover connected pieces, landmarks, face changes, failure rollback and saved links. Copies never run a separate fit.
 
+Automatic curve fitting coverage: `CONTINUOUS`, `CONTINUOUS-CAD` and `CONTINUOUS-UI` in [the catalog](cases.json) check Start/End, exact direct gaps, landmark symmetry, closure, protected corners, the profile-dependent shallow-turn bound and branch reservations, plus saved-output lifecycle and selected landmark deletion.
+
 ## Reproduce
 
 With a disposable `output/native/Autostitch-native.dwg` open:

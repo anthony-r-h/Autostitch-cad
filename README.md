@@ -19,6 +19,7 @@ You can connect guides into one stitch line and copy its layout to matching guid
 4. Run `AUTOSTITCH` to open the palette.
 
 The built palette and event bridge are included; no build is needed to use the plugin.
+After updating the plugin, restart BricsCAD before loading it so the rebuilt event bridge replaces the cached DLL.
 
 ## Generate your first stitch line
 
@@ -33,9 +34,12 @@ Edit the guide with normal CAD tools, then click **Generate stitches** again to 
 ## Adjust the layout
 
 - **Set start** and **Set end** limit the stitched portion of a guide. **Reverse travel** changes its direction.
+- Stitching fits across curve segments within **Start/End** automatically. Corners, junctions and landmarks retain their protected openings and gaps.
 - **Add landmark** centres a nominal gap on a picked position, such as a pattern alignment mark.
 - **Stitch lean** chooses obverse or reverse slit lean. **Face** selects the front or back material face shown.
 - **Connect guides** joins guides at junctions into one stitch line.
+- **Move guides to dedicated layer** moves the selected stitch line's guides to `AUTOSTITCH_GUIDES`, created as a nonplotting layer. This is optional; guides remain linked and update on any layer. Undo restores their original layers.
+- **Remove stitches** removes generated output while keeping guides, settings and connections. For connected guides, **Remove connected stitches** clears the whole set, including retained output awaiting regeneration. Undo restores the output; **Generate stitches** recreates it. Matched pieces keep their links, and removal affects only the selected stitch line.
 - **Match guide** transfers the source layout to a geometrically matching guide on another piece.
 
 Click **Generate stitches** after changing the layout.

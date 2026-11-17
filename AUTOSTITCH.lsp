@@ -20,17 +20,18 @@
   (if (equal (strcase document-name) (strcase expected))
     (progn
       (setq ast:*events-enabled* T)
-      (vl-bb-set 'AST-EVENTS-V1 T)
+      (setq ast:*events-version* 2)
+      (vl-bb-set 'AST-EVENTS-V2 T)
       T)))
 
 (defun ast:load-events (folder / path)
-  (if (not ast:*events-enabled*)
+  (if (not (equal 2 ast:*events-version*))
     (progn
-      (if (not (vl-bb-ref 'AST-EVENTS-V1))
+      (if (not (vl-bb-ref 'AST-EVENTS-V2))
         (if (setq path (findfile (strcat folder "/Autostitch.Events.dll")))
           (vl-cmdf "_.NETLOAD" path)))
-      (if (or path (vl-bb-ref 'AST-EVENTS-V1)) (vl-cmdf "ASTENABLEEVENTSV1"))))
-  (if ast:*events-enabled* T
+      (if (or path (vl-bb-ref 'AST-EVENTS-V2)) (vl-cmdf "ASTENABLEEVENTSV2"))))
+  (if (equal 2 ast:*events-version*) T
     (progn
       (if (not ast:*autoloading*)
         (princ "\nAUTOSTITCH: Could not load editing notifications. Keep Autostitch.Events.dll beside AUTOSTITCH.lsp; BricsCAD V22 with .NET support is required."))

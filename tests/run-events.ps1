@@ -103,7 +103,30 @@ function Assert-EventGeometry([string]$Label, [double]$StartX, [double]$EndX, [b
 }
 
 $stitchStarted = $false
+$stitchSuccess = $false
 try {
+  $stitchScratch = Join-Path $stitchRoot "output/scratch/events-$stitchId"
+  New-Item -ItemType Directory -Path $stitchScratch -Force | Out-Null
+  $stitchFixtureSource = Join-Path $stitchScratch 'EventFixture.cs'
+  $stitchFixtureAssembly = Join-Path $stitchScratch 'Autostitch.EventFixture.dll'
+  @'
+using Bricscad.ApplicationServices;
+using Teigha.DatabaseServices;
+using Teigha.Runtime;
+[assembly: CommandClass(typeof(AutostitchEventFixture))]
+public static class AutostitchEventFixture {
+    [CommandMethod("ASTEVENTCONTENT")]
+    public static void EditContent() {
+        using (ResultBuffer call = new ResultBuffer(new TypedValue(5005, "ast:event-edit-content")))
+        using (ResultBuffer result = Bricscad.Global.Editor.Invoke(call)) { }
+    }
+}
+'@ | Set-Content -LiteralPath $stitchFixtureSource -Encoding UTF8
+  $stitchCompiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+  & $stitchCompiler /nologo /target:library "/out:$stitchFixtureAssembly" `
+    '/reference:C:/Program Files/Bricsys/BricsCAD V22 en_US/BrxMgd.dll' `
+    '/reference:C:/Program Files/Bricsys/BricsCAD V22 en_US/TD_Mgd.dll' $stitchFixtureSource
+  if ($LASTEXITCODE -ne 0) { throw 'Native event fixture compilation failed.' }
   $rootLisp = ConvertTo-LispPath $stitchRoot
   $setup = @'
 (load "@ROOT@/AUTOSTITCH.lsp")
@@ -113,9 +136,10 @@ try {
 (setq ast:event-report "@REPORT@" ast:event-handles "@HANDLES@" ast:event-layer "@LAYER@")
 (ast:event-setup)
 (ast:event-ui-save)
+(vl-cmdf "_.NETLOAD" "@FIXTURE@")
 '@
   $stitchStarted = $true
-  Invoke-EventLisp ($setup.Replace('@ROOT@', $rootLisp).Replace('@REPORT@', (ConvertTo-LispPath $stitchReport)).Replace('@HANDLES@', (ConvertTo-LispPath $stitchHandles)).Replace('@LAYER@', $stitchLayer)) 'setup'
+  Invoke-EventLisp ($setup.Replace('@ROOT@', $rootLisp).Replace('@REPORT@', (ConvertTo-LispPath $stitchReport)).Replace('@HANDLES@', (ConvertTo-LispPath $stitchHandles)).Replace('@LAYER@', $stitchLayer).Replace('@FIXTURE@', (ConvertTo-LispPath $stitchFixtureAssembly))) 'setup'
   $stitchPairs = @(Get-Content -LiteralPath $stitchHandles | ForEach-Object { ,($_ -split '\|') })
   Assert-Event ($stitchPairs.Count -eq 2) 'Captured two source/helper handle pairs'
   Assert-EventGeometry 'Initial' 1000 1060
@@ -125,7 +149,7 @@ try {
   Assert-EventGeometry 'MOVE' 1005 1065
   Invoke-EventCommand '_.U'
   Assert-EventGeometry 'MOVE Undo' 1000 1060
-  Invoke-EventCommand 'ASTENABLEEVENTSV1'
+  Invoke-EventCommand 'ASTENABLEEVENTSV2'
   Assert-EventGeometry 'Event bootstrap preserves Undo state' 1000 1060
   Invoke-EventCommand '_.REDO'
   Assert-EventGeometry 'MOVE Redo' 1005 1065
@@ -163,9 +187,33 @@ try {
   Assert-EventGeometry 'Failed callback MOVE Redo' 1014 1080 $false
   # Reporting LOAD is deliberately after the uninterrupted edit/Undo/Redo sequence.
   Invoke-EventLisp '(ast:event-check-rollback)' 'check-rollback'
+  Invoke-EventLisp '(ast:event-track-setup)' 'track-setup'
+  $stitchTracked = @(Get-Content -LiteralPath $stitchHandles)[0] -split '\|'
+  Invoke-EventCommand ("_.MOVE`n" + '(ssadd ast:event-track-plain)' + "`n`n_non`n" + $basePoint + "`n_non`n" + '(trans ''(1.0 0.0 0.0) 0 1)')
+  Invoke-EventLisp '(ast:event-track-unrelated)' 'track-unrelated'
+  Invoke-EventCommand ("_.MOVE`n" + '(ssadd (car ast:event-track-guides) (ssadd (cadr ast:event-track-guides)))' + "`n`n_non`n" + $basePoint + "`n_non`n" + '(trans ''(5.0 0.0 0.0) 0 1)')
+  Invoke-EventLisp '(ast:event-track-connected)' 'track-connected'
+  Invoke-EventCommand ("_.MOVE`n" + '(ssadd (caddr ast:event-track-guides))' + "`n`n_non`n" + $basePoint + "`n_non`n" + '(trans ''(5.0 0.0 0.0) 0 1)')
+  Invoke-EventLisp '(ast:event-track-single)' 'track-single'
+  Invoke-EventCommand 'ASTEVENTCONTENT'
+  Invoke-EventLisp '(ast:event-track-content)' 'track-content'
+  Invoke-EventCommand 'ASTUIGUIDELAYER'
+  Assert-Event ((Get-EventObject $stitchTracked[0]).Layer -eq 'AUTOSTITCH_GUIDES' -and
+    (Get-EventObject $stitchTracked[1]).Layer -eq 'AUTOSTITCH_GUIDES' -and
+    (Get-EventObject $stitchTracked[2]).Layer -eq $stitchLayer) 'Guide layer action moves only the selected connected set'
+  Invoke-EventCommand '_.U'
+  Assert-Event ((Get-EventObject $stitchTracked[0]).Layer -eq $stitchLayer -and
+    (Get-EventObject $stitchTracked[1]).Layer -eq $stitchLayer) 'Guide layer Undo restores both original layers'
+  Invoke-EventCommand '_.REDO'
+  Assert-Event ((Get-EventObject $stitchTracked[0]).Layer -eq 'AUTOSTITCH_GUIDES' -and
+    (Get-EventObject $stitchTracked[1]).Layer -eq 'AUTOSTITCH_GUIDES') 'Guide layer Redo restores both dedicated layers'
+  Invoke-EventLisp '(ast:event-track-layer-check)' 'track-layer-check'
+  Invoke-EventCommand ("_.MOVE`n" + '(ssadd (car ast:event-track-guides) (ssadd (cadr ast:event-track-guides)))' + "`n`n_non`n" + $basePoint + "`n_non`n" + '(trans ''(5.0 0.0 0.0) 0 1)')
+  Invoke-EventLisp '(ast:event-track-connected)' 'track-layer-connected'
   $results = @(Get-Content -LiteralPath $stitchReport)
   if ($results -match '^FAIL ') { throw 'Native event qualification reported a failure.' }
   Write-Output "PASS Native event qualification completed. Report: $stitchReport"
+  $stitchSuccess = $true
 } catch {
   Add-Content -LiteralPath $stitchReport -Value ('FAIL Harness: ' + $_.Exception.Message)
   throw
@@ -179,5 +227,14 @@ try {
       Add-Content -LiteralPath $stitchReport -Value ('FAIL ' + $cleanupFailure)
       throw $cleanupFailure
     }
+  }
+}
+if ($stitchSuccess) {
+  Remove-Item -LiteralPath $stitchFixtureSource
+  try {
+    Remove-Item -LiteralPath $stitchFixtureAssembly
+    Remove-Item -LiteralPath $stitchScratch
+  } catch [System.IO.IOException], [System.UnauthorizedAccessException] {
+    Write-Output "Fixture cleanup deferred until BricsCAD closes: $stitchFixtureAssembly. $($_.Exception.Message)"
   }
 }

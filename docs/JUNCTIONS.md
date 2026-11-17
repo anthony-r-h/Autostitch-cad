@@ -5,7 +5,8 @@ Construction depends on the incident arms. Terms are defined in the [glossary](G
 | Geometry | Opening |
 | --- | --- |
 | Straight or co-circular continuation, equal pitch | One uninterrupted run; subdivision introduces no hole. |
-| Smooth change of curvature | One shared tangent-aligned slit. |
+| Smooth connection between separate guides | One shared tangent-aligned slit. |
+| Continuing curve join within one guide, as defined in the [model](MODEL.md#continuous-stitching) | Spacing passes across it without a required opening. |
 | Sharp two-arm corner | Round hole where the selected virtual slit tips meet. |
 | Three or more arms | Round hole at the intersection; first slit centre at half-pitch chord distance on every arm. |
 

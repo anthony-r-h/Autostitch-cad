@@ -10,6 +10,8 @@ Notation: `s` start, `e` end, arrow for direction, `L1` landmark. The `I` crossb
 
 An editable path on which real slit centres lie, made of straight or circular **segments**. A **stitch line** is the stitching defined on one guide or a connected set of guides. Each guide has a chosen extent and direction; it may be open or a closed loop. Connected guides meet at junctions and share one stitch ID.
 
+Stitch spacing continues across curve segments within the chosen extent. Free spans are derived from the fixed features; they have no separate user-selected limits. At a slit centred on a continuing vertex, the direction is the bisector of the incoming and outgoing travel tangents. A reversal has no such direction and is rejected. The [model](MODEL.md#continuous-stitching) defines which joins continue.
+
 **Station** is distance along the guide from a chosen origin; on a curve, it is arc length. The **tangent** is the guide's local direction.
 
 **Matched guides** use one source stitch line's complete hole layout. A match can include a whole connected guide set on another pattern piece; it does not add an arm to a junction. **Front face** and **Back face** identify the material face shown in the drawing; opposite-face copies reflect the complete layout. Travel direction remains a separate choice.

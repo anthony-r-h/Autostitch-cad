@@ -2,6 +2,48 @@
 
 Dependencies: [runtime](../docs/LIMITS.md#dependencies). Native tests write only to disposable drawings under `output/native`.
 
+## Automatic fitting within Start/End: 2026-11-16
+
+- All 23 native suites passed 2,146 checks. Report: `output/native/automatic-fitting-20261116-suites.txt`. Catalog validation passed with 694 stable IDs.
+- Save/reopen passed five checks for Start/End attachments, current output, exact output fingerprints, absence of retired settings and repeatable regeneration. Report: `output/native/automatic-fitting-20261116-reopen.txt`.
+- Focused checks passed 40 assertions across automatic geometry, CAD lifecycle, landmark correspondence and palette workflows. Report: `output/native/automatic-fitting-20261116-focused.txt`. Old stretch settings require no repair, old output is marked stale and regeneration removes retired settings.
+- Native edits and Undo/Redo passed 70 checks. Report: `output/native/events-60d6d5cb6e.txt`.
+- The previously extracted ST-68 coordinates generated with no mode setting, two round corner holes, unchanged corner neighbours and valid gap bounds. Report: `output/native/automatic-fitting-20261116-reproduction.txt`. Only the disposable test drawing was written.
+- The rebuilt palette was visually inspected. The separate continuous controls are absent and Start/End remain in the normal flow.
+- Eight affected catalog variants passed numerical checks: A05 tangent continuation and J07 explicit corner construction. The gallery driver loads the network fitter and keeps J07 as an explicit corner test; NET separately qualifies its connected guides. Report: `output/native/automatic-fitting-20261116-catalog.txt`. Artwork was not regenerated.
+- Initial runs exposed an infeasible test extent, unnecessary network dispatch for redundant straight subdivision, two assertions for superseded smooth-join behavior and an incorrectly written migration fixture. These were corrected. A desktop capture initially failed with an invalid handle; the desktop-access retry succeeded.
+
+## Continuous stitching corner protection: 2026-11-16
+
+- Read-only extraction of ST-68 from the reported Redraw drawing reproduced WholeGuide bypassing both 90-degree corners. With the fix, WholeGuide and two picked curve stretches both solve with two round corner holes. Report: `output/native/continuous-corners-20261116-reproduction.txt`.
+- Focused geometry passed 20 checks. New assertions cover curved sides feeding protected corners, unchanged corner holes and neighbours with free-span adjustment, protection within picked stretches, the 30-degree grouping boundary and floating-point errors at picked limits. A closed square now retains all four corners.
+- All 23 native suites passed 2,143 checks in `output/native/Autostitch-corner-20261116.dwg`. Report: `output/native/continuous-corners-20261116-suites.txt`. Catalog validation passed with 691 stable IDs.
+- Native events, save/reopen and visual checks were not repeated for this solver-only fix. The user's working drawing was not edited, regenerated or saved. Existing generated output needs regeneration after reloading the plugin.
+
+## Continuous polyline stitching: 2026-11-16
+
+- All 23 native suites passed 2,138 checks, including 27 new continuous geometry, lifecycle and palette checks. Report: `output/native/continuous-20261116-suites.txt`. Coverage includes short facets, tangent line/arc joins, join-spanning landmarks, closure, retained corners, half-pitch branch neighbours crossing facets, reversed straight continuations, matching, removal, Undo/Redo, rollback and the optional guide layer.
+- Native events passed 70 checks, including zero guide reads, marker updates and output scans for an unrelated MOVE. Report: `output/native/events-dd4efe5fbc.txt`. The final solver-only continuation change was covered by the subsequent full suite; the native event bridge was unchanged.
+- Scripted Clear/AddStretch saved both picked limits, marked output stale and regenerated 41 holes on an 80-facet curved guide. Report: `output/native/continuous-20261116-picks.txt`. The first end pick excluded the last vertex and correctly retained an infeasible short corner; the revised pick included it. The rebuilt palette and generated curve were visually inspected.
+- Save/reopen passed five checks for picked limits, current output, regeneration and whole-guide settings without output. Report: `output/native/continuous-20261116-reopen.txt`. The initial exact comparison differed after decimal serialization in continuous coordinates and lean; all settings agree within the existing $10^{-8}\,\mathrm{mm}$ geometry comparison tolerance (lean uses the same numerical tolerance in radians).
+- Catalog validation passed with 683 stable IDs. The independent analytic fit oracle passed 8,215 comparisons; it does not qualify the new mixed-segment numerical search. Palette and event assets rebuilt successfully.
+- Early numerical probes exposed AutoLISP list-handling errors and infeasible landmark/branch fixture lengths; these were corrected before the passing runs. Native test drawing: `output/native/Autostitch-continuous-20261116.dwg`. The user's working drawing was not edited or saved.
+
+## Remove generated stitches: 2026-11-16
+
+- Targeted removal and palette checks passed 15 assertions covering Undo/Redo, regeneration, stable IDs, static copies, locked output, rollback, pending connections and matched-copy ownership. Report: `output/native/remove-stitches-20261116-targeted.txt`.
+- All 20 native suites passed 2,111 checks. Report: `output/native/remove-stitches-20261116-suites.txt`. Native event checks were not rerun; the event bridge is unchanged from the preceding qualification.
+- The palette rebuilt and its new removal control was visually checked. For connected guides it says "Remove connected stitches"; after removal it is disabled and Generate remains available.
+- Removal clears the selected stitch line's complete output. Suppressing stitches on an individual connected branch is not implemented. Group highlighting and active-guide selection remain separate outstanding work.
+
+## Targeted native edit updates: 2026-11-16
+
+- All 19 native suites passed 2,096 checks, including the palette, connected guides and matched guides. Report: `output/native/edit-tracking-20261116-suites.txt`.
+- Native events passed 70 checks. With 1,000 unrelated lines, an unrelated MOVE performed zero guide reads, marker updates and stitch-content scans. Connected members were read and refreshed once each, junctions resolved once, and edited shared block content fingerprinted once. Report: `output/native/events-657b657304.txt`.
+- Moving a connected stitch line to the optional `AUTOSTITCH_GUIDES` layer preserved its output ownership; Undo/Redo restored both source layers. Tracking continued on the dedicated layer. The new palette control was visually checked.
+- The palette and event DLL rebuilt. BricsCAD retained its previously loaded DLL, so native validation used the same event source compiled under a separate test assembly name. Restart BricsCAD to load the distributed DLL normally.
+- Earlier runs exposed a missing LISP delimiter and a test fixture that did not issue native command events; both were corrected. Another run's Undo encountered wheel-zoom operations instead of ERASE. The final uninterrupted event run passed. Timings in a user's complex pattern drawing were not measured.
+
 ## Denser banner quilt: 2026-11-10
 
 - Crossings are 13.5 mm apart; the 6 mm text perimeter is unchanged. Background: 42 guides, 11 blocks, 432 openings and 36 shared junctions; no adjusted gaps.

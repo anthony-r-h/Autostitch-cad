@@ -23,6 +23,16 @@ Among feasible fits:
 
 These choices select a result within the axioms. They do not move fixed features.
 
+## Continuous stitching
+
+Fitting uses the existing Start/End extent. Tangent joins within one guide impose no opening. Straight facets with a nonzero traversal turn below the existing [shallow-turn bound](JUNCTIONS.md#shallow-turn-limit) continue through one free span. The bound uses the current pitch, slit length, lean and permitted corner step; it is not a fixed angle. At or above that bound, retain the corner construction. Non-tangent joins involving arcs and connections between separate guides keep their existing construction. A finite-arm or clearance failure at a corner remains a failure.
+
+Reserve protected corner holes and their real neighbours before assembling continuous segments into free spans. Fit the intervening gaps without moving those reservations. Find each next centre at the first forward intersection with a circle of the required gap radius. Keep the exact line/arc geometry. A landmark reserves the first nominal chord whose endpoints are equally far in station on either side of it. Branch neighbours may cross continuous vertices while retaining their half-pitch chord.
+
+Enumerate gap counts within the endpoint-distance and guide-length bounds, up to 2000 gaps, and adjusted-block sizes in ascending order. Keep the block centrally placed; prefer an exactly centred block, then the smaller pitch deviation and count. Bracket equal adjusted chord lengths within the existing allowance, refine candidate roots, and verify the resulting stations and actual distances. This numerical search can reject a span without proving that every possible layout is infeasible. Single-segment spans retain the analytic fitter.
+
+A slit exactly at a continuous vertex uses the normalized sum of the incoming and outgoing travel tangents. Reject a reversal. Closure keeps its phase opening and uses that same bisector when the phase falls on a continuing vertex. Validate all real openings before replacing output.
+
 ## Matched guides
 
 Solve the source once. Transfer its openings and construction by an isometry:
@@ -131,8 +141,8 @@ For $K=0$, all gaps remain nominal. Negative sweep reverses angular advance; adj
 - Closure reuses the start opening.
 - A straight landmark at station $s$ fixes slit centres at $s-p/2$ and $s+p/2$.
 - A circular landmark at angle $\phi$ fixes slit centres at $\phi-a/2$ and $\phi+a/2$. This is symmetry along the guide; the chord midpoint lies inside the circle.
-- A smooth change of curvature requires one shared slit. Redundant straight or co-circular subdivisions do not force an opening.
-- Sharp two-arm corners use the virtual-tip [junction construction](JUNCTIONS.md).
+- Tangent joins within one guide and redundant straight or co-circular subdivisions do not force an opening. Smooth connections between separate guides retain their shared slit.
+- Protected sharp two-arm corners use the virtual-tip [junction construction](JUNCTIONS.md).
 - Branching junctions fix one round hole at the guide intersection and the first slit at chord distance $p/2$ on every arm. Arm count and angle do not change that distance.
 
 Coincident required openings can be reused only when their position, opening type and undirected slit axis agree.

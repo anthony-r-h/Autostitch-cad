@@ -207,6 +207,10 @@
 (defun ast:n-prepare (path / route settings error range normalized primitives primitive)
   (setq route (ast:g-get 'route path nil) settings (ast:g-get 'settings path nil)
         error (ast:n-route-error route))
+  (if (and (null error) (null (ast:g-profile-error settings)))
+    (setq settings (ast:n-put 'continuous-points (ast:g-continuous-points route settings) settings)))
+  (if (and (null error) (> (length (ast:g-get 'primitives route nil)) 1) (ast:g-get 'closed route nil))
+    (setq settings (ast:n-put 'continuous-phase (ast:g-point (list '(kind . chain) (cons 'parts (ast:g-get 'primitives route nil))) (ast:g-get 'phase settings 0.0)) settings)))
   (if (null error) (setq error (ast:g-profile-error settings)))
   (if (null error)
     (progn
@@ -218,7 +222,7 @@
             (progn
               (setq primitives (ast:g-get 'primitives normalized nil))
               (foreach primitive primitives
-                (if (and (= (ast:g-get 'kind primitive nil) 'arc) (> (ast:g-get 'pitch settings 3.0) (* 2.0 (ast:g-get 'radius primitive 0))))
+                (if (and (null (ast:g-get 'continuous-points settings nil)) (= (ast:g-get 'kind primitive nil) 'arc) (> (ast:g-get 'pitch settings 3.0) (* 2.0 (ast:g-get 'radius primitive 0))))
                   (setq error "The pitch is too large for this curve. Reduce the pitch or increase the curve radius.")))))))))
   (if error (ast:g-error error) (list '(ok . T) (cons 'id (ast:g-get 'id path nil)) (cons 'settings settings)
     (cons 'primitives primitives) (cons 'landmarks (ast:g-get 'landmarks normalized nil)) (cons 'closed (ast:g-get 'closed route nil)))))
@@ -312,7 +316,8 @@
               (setq incoming (if (= (ast:g-get 'side first-arm 0) 1) first-edge (ast:n-reverse-edge first-edge))
                     outgoing (if (= (ast:g-get 'side second-arm 0) 0) second-edge (ast:n-reverse-edge second-edge))
                     settings-a (ast:g-get 'settings incoming nil) settings-b (ast:g-get 'settings outgoing nil))
-              (if (and (ast:g-mergeable (ast:g-get 'primitive incoming nil) (ast:g-get 'primitive outgoing nil))
+              (if (and (null (ast:g-get 'continuous-points settings-a nil)) (null (ast:g-get 'continuous-points settings-b nil))
+                       (ast:g-mergeable (ast:g-get 'primitive incoming nil) (ast:g-get 'primitive outgoing nil))
                        (ast:g-near (ast:g-get 'pitch settings-a 3.0) (ast:g-get 'pitch settings-b 3.0))
                        (equal (ast:g-get 'corrections settings-a T) (ast:g-get 'corrections settings-b T)))
                 (progn
@@ -327,7 +332,7 @@
   (setq edge (ast:n-edge id edges)) (subst (ast:n-put key value edge) edge edges))
 
 ;;; All physical feature reservations are committed before any span is fitted.
-(defun ast:n-reserve (edges / nodes result node arms arm side edge primitive settings degree kind first-arm second-arm first-edge second-edge incoming outgoing corner opening limit error virtual-slits corner-adjustments)
+(defun ast:n-reserve (edges / nodes result node arms arm side edge primitive settings degree kind first-arm second-arm first-edge second-edge incoming outgoing corner opening limit error virtual-slits corner-adjustments chain)
   (setq nodes (ast:n-nodes edges))
   (foreach edge edges
     (setq edges (ast:n-set-edge edges (ast:g-get 'id edge nil) 'start 0.0)
@@ -340,13 +345,23 @@
               opening (list '(type . round) (cons 'center (ast:g-get 'point node nil)) (cons 'diameter (ast:g-get 'diameter (ast:g-get 'settings edge nil) 0.5))))
         (foreach arm arms
           (setq side (ast:g-get 'side arm 0) edge (ast:n-edge (ast:g-get 'edge arm nil) edges) primitive (ast:g-get 'primitive edge nil)
-                limit (ast:g-step primitive (/ (ast:g-get 'pitch (ast:g-get 'settings edge nil) 3.0) 2.0)))
+                chain (ast:n-arm-chain edge side edges nodes)
+                limit (if (cdr (ast:g-get 'parts chain nil))
+                  (ast:g-chain-next chain 0.0 (/ (ast:g-get 'pitch (ast:g-get 'settings edge nil) 3.0) 2.0) (ast:g-length chain))
+                  (ast:g-step primitive (/ (ast:g-get 'pitch (ast:g-get 'settings edge nil) 3.0) 2.0))))
+          (if (null limit)
+            (setq error "There is not enough room for a junction neighbour on this guide. Extend the guide or reduce the pitch." limit (+ 1.0 (ast:g-length chain))))
           (setq edges (ast:n-set-edge edges (ast:g-get 'id edge nil) (if (= side 0) 'start 'finish) (if (= side 0) limit (- (ast:g-length primitive) limit))))))
       ((= degree 2)
         (setq first-arm (car arms) second-arm (cadr arms) first-edge (ast:n-edge (ast:g-get 'edge first-arm nil) edges)
               second-edge (ast:n-edge (ast:g-get 'edge second-arm nil) edges)
               incoming (if (= (ast:g-get 'side first-arm 0) 1) (ast:g-get 'primitive first-edge nil) (ast:g-reverse-primitive (ast:g-get 'primitive first-edge nil)))
               outgoing (if (= (ast:g-get 'side second-arm 0) 0) (ast:g-get 'primitive second-edge nil) (ast:g-reverse-primitive (ast:g-get 'primitive second-edge nil))))
+        (if (ast:n-continuous-node-p node first-edge second-edge)
+          (progn
+            (setq kind (if (equal (ast:g-get 'point node nil) (ast:g-get 'continuous-phase (ast:g-get 'settings first-edge nil) nil) 1e-8) 'smooth 'continuous))
+            (if (< (ast:g-norm (ast:g-add (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0))) 1e-8)
+              (setq error "The guide reverses direction here. Adjust the guide to remove the reversal.")))
         (if (not (and (> (ast:g-dot (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0)) 0.0)
                       (< (abs (ast:g-cross (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0))) 1e-10)))
           (progn
@@ -362,7 +377,7 @@
                       limit (ast:g-get 'incoming-station corner 0.0) side (ast:g-get 'side first-arm 0)
                       edges (ast:n-set-edge edges (ast:g-get 'id first-edge nil) (if (= side 0) 'start 'finish) (if (= side 0) (- (ast:g-length incoming) limit) limit))
                       limit (ast:g-get 'outgoing-station corner 0.0) side (ast:g-get 'side second-arm 0)
-                      edges (ast:n-set-edge edges (ast:g-get 'id second-edge nil) (if (= side 0) 'start 'finish) (if (= side 0) limit (- (ast:g-length outgoing) limit)))))))))
+                      edges (ast:n-set-edge edges (ast:g-get 'id second-edge nil) (if (= side 0) 'start 'finish) (if (= side 0) limit (- (ast:g-length outgoing) limit))))))))))
       (T (setq kind 'terminal)))
     (setq node (ast:n-put 'corner-adjustments corner-adjustments (ast:n-put 'virtual-slits virtual-slits
       (ast:n-put 'kind kind (ast:n-put 'opening (if opening (cons (cons 'node (ast:g-get 'id node nil)) opening)) node)))))
@@ -399,7 +414,7 @@
   (if (null error)
     (progn
       (setq edges (ast:n-collapse (ast:n-split prepared connections)) reservations (ast:n-reserve edges))
-      (if (ast:g-get 'ok reservations nil) (setq edges (ast:g-get 'edges reservations nil) nodes (ast:g-get 'nodes reservations nil)) (setq error (ast:g-get 'error reservations nil)))))
+      (if (ast:g-get 'ok reservations nil) (setq edges (ast:n-continuous-spans (ast:g-get 'edges reservations nil)) nodes (ast:g-get 'nodes reservations nil)) (setq error (ast:g-get 'error reservations nil)))))
   (if (null error)
     (progn
       (foreach node nodes
@@ -450,4 +465,72 @@
       (list '(ok . T) (cons 'status (if adjusted 'adjusted 'exact)) (cons 'openings openings) (cons 'intervals intervals)
         (cons 'virtual-slits virtual-slits) (cons 'corner-adjustments corner-adjustments)
         (cons 'warnings warnings) (cons 'primitives all-primitives) (cons 'connections connections)))))
+
+(defun ast:n-continuous-node-p (node first-edge second-edge / point aa bb settings-a settings-b)
+  (setq point (ast:g-get 'point node nil))
+  (setq aa (ast:g-get 'primitive first-edge nil) bb (ast:g-get 'primitive second-edge nil)
+        settings-a (ast:g-get 'settings first-edge nil) settings-b (ast:g-get 'settings second-edge nil))
+  (if (< (ast:g-dist point (ast:g-point aa 0.0)) 1e-8) (setq aa (ast:g-reverse-primitive aa)))
+  (if (> (ast:g-dist point (ast:g-point bb 0.0)) 1e-8) (setq bb (ast:g-reverse-primitive bb)))
+  (or
+    (and (= (ast:g-get 'path first-edge nil) (ast:g-get 'path second-edge nil))
+      (vl-some '(lambda (item) (< (ast:g-dist point item) 1e-8)) (ast:g-get 'continuous-points settings-a nil)))
+    (and (ast:g-mergeable aa bb) (ast:g-near (ast:g-get 'pitch settings-a 3.0) (ast:g-get 'pitch settings-b 3.0))
+      (equal (ast:g-get 'corrections settings-a T) (ast:g-get 'corrections settings-b T)))))
+(defun ast:n-reverse-reserved-edge (edge / result extent)
+  (setq extent (ast:g-length (ast:g-get 'primitive edge nil)) result (ast:n-reverse-edge edge))
+  (ast:n-put 'start (- extent (ast:g-get 'finish edge extent))
+    (ast:n-put 'finish (- extent (ast:g-get 'start edge 0.0))
+      (ast:n-put 'start-node (ast:g-get 'end-node edge nil) (ast:n-put 'end-node (ast:g-get 'start-node edge nil) result)))))
+(defun ast:n-continuous-spans (edges / pool result edge next parts length-value markers marker finish end-node)
+  (setq pool edges)
+  (while pool
+    (setq edge (vl-some '(lambda (item) (if (/= (ast:g-get 'kind (ast:g-get 'start-node item nil) nil) 'continuous) item)) pool))
+    (if (null edge)
+      (progn
+        (setq edge (vl-some '(lambda (item) (if (/= (ast:g-get 'kind (ast:g-get 'end-node item nil) nil) 'continuous) item)) pool))
+        (if edge
+          (progn (setq pool (vl-remove edge pool) edge (ast:n-reverse-reserved-edge edge)))
+          (setq edge (car pool)))))
+    (setq pool (vl-remove edge pool) parts (list (ast:g-get 'primitive edge nil))
+          length-value (ast:g-length (car parts)) markers (ast:g-get 'landmarks edge nil)
+          finish (ast:g-get 'finish edge 0.0) end-node (ast:g-get 'end-node edge nil))
+    (while (and (= (ast:g-get 'kind end-node nil) 'continuous)
+      (setq next (vl-some '(lambda (item) (if (or (equal (ast:g-get 'id end-node nil) (ast:g-get 'id (ast:g-get 'start-node item nil) nil))
+        (equal (ast:g-get 'id end-node nil) (ast:g-get 'id (ast:g-get 'end-node item nil) nil))) item)) pool)))
+      (setq pool (vl-remove next pool))
+      (if (equal (ast:g-get 'id end-node nil) (ast:g-get 'id (ast:g-get 'end-node next nil) nil))
+        (setq next (ast:n-reverse-reserved-edge next)))
+      (foreach marker (ast:g-get 'landmarks next nil)
+        (setq marker (ast:n-put 'station (+ length-value (ast:g-get 'station marker 0.0)) marker))
+        (if (not (vl-some '(lambda (item) (< (abs (- (ast:g-get 'station item 0.0) (ast:g-get 'station marker 0.0))) 1e-8)) markers))
+          (setq markers (append markers (list marker)))))
+      (setq finish (+ length-value (ast:g-get 'finish next 0.0))
+            parts (append parts (list (ast:g-get 'primitive next nil)))
+            length-value (+ length-value (ast:g-length (ast:g-get 'primitive next nil)))
+            end-node (ast:g-get 'end-node next nil) pool (vl-remove next pool)))
+    (if (cdr parts)
+      (setq edge (ast:n-put 'primitive (list '(kind . chain) (cons 'parts parts))
+        (ast:n-put 'landmarks markers (ast:n-put 'finish finish (ast:n-put 'end-node end-node edge))))))
+    (setq result (append result (list edge)))) result)
+(defun ast:n-arm-chain (edge side edges nodes / parts used current point node arms next-arm next-edge next-side)
+  (setq current (ast:g-get 'primitive edge nil)
+        parts (list (if (= side 0) current (ast:g-reverse-primitive current))) used (list (ast:g-get 'id edge nil)))
+  (while
+    (progn
+      (setq current (last parts) point (ast:g-point current (ast:g-length current))
+            node (vl-some '(lambda (item) (if (< (ast:g-dist point (ast:g-get 'point item nil)) 1e-8) item)) nodes)
+            arms (ast:g-get 'arms node nil) next-arm nil)
+      (if (= (length arms) 2)
+        (setq next-arm (vl-some '(lambda (arm) (if (not (member (ast:g-get 'edge arm nil) used)) arm)) arms)))
+      (if next-arm
+        (progn
+          (setq next-edge (ast:n-edge (ast:g-get 'edge next-arm nil) edges) next-side (ast:g-get 'side next-arm 0))
+          (if (and (ast:n-continuous-node-p node edge next-edge)
+                   (not (equal point (ast:g-get 'continuous-phase (ast:g-get 'settings edge nil) nil) 1e-8)))
+            (progn
+              (setq current (ast:g-get 'primitive next-edge nil)
+                    parts (append parts (list (if (= next-side 0) current (ast:g-reverse-primitive current))))
+                    used (cons (ast:g-get 'id next-edge nil) used)) T))))))
+  (list '(kind . chain) (cons 'parts parts)))
 (princ)

@@ -93,19 +93,22 @@
   (ast:g-fit (abs sweep) pitch radius protect-start protect-end corrections))
 
 (defun ast:g-length (primitive)
+  (if (= (ast:g-get 'kind primitive nil) 'chain) (apply '+ (mapcar 'ast:g-length (ast:g-get 'parts primitive nil)))
   (if (= (cdr (assoc 'kind primitive)) 'line)
     (ast:g-dist (cdr (assoc 'a primitive)) (cdr (assoc 'b primitive)))
-    (* (cdr (assoc 'radius primitive)) (abs (cdr (assoc 'sweep primitive))))))
+    (* (cdr (assoc 'radius primitive)) (abs (cdr (assoc 'sweep primitive)))))))
 (defun ast:g-point (primitive station / angle radius)
+  (if (= (ast:g-get 'kind primitive nil) 'chain) (ast:g-chain-point primitive station)
   (if (= (cdr (assoc 'kind primitive)) 'line)
     (ast:g-add (cdr (assoc 'a primitive)) (ast:g-mul (ast:g-sub (cdr (assoc 'b primitive)) (cdr (assoc 'a primitive))) (/ station (ast:g-length primitive))))
     (progn (setq radius (cdr (assoc 'radius primitive)) angle (+ (cdr (assoc 'start-angle primitive)) (* (ast:g-sign (cdr (assoc 'sweep primitive))) (/ station radius))))
-      (ast:g-add (cdr (assoc 'center primitive)) (list (* radius (cos angle)) (* radius (sin angle)))))))
+      (ast:g-add (cdr (assoc 'center primitive)) (list (* radius (cos angle)) (* radius (sin angle))))))))
 (defun ast:g-tangent (primitive station / angle)
+  (if (= (ast:g-get 'kind primitive nil) 'chain) (ast:g-chain-tangent primitive station)
   (if (= (cdr (assoc 'kind primitive)) 'line)
     (ast:g-mul (ast:g-sub (cdr (assoc 'b primitive)) (cdr (assoc 'a primitive))) (/ 1.0 (ast:g-length primitive)))
     (progn (setq angle (+ (cdr (assoc 'start-angle primitive)) (* (ast:g-sign (cdr (assoc 'sweep primitive))) (/ station (cdr (assoc 'radius primitive))))))
-      (ast:g-mul (list (- (sin angle)) (cos angle)) (ast:g-sign (cdr (assoc 'sweep primitive)))))))
+      (ast:g-mul (list (- (sin angle)) (cos angle)) (ast:g-sign (cdr (assoc 'sweep primitive))))))))
 (defun ast:g-lean (settings)
   ;; Legacy handedness describes the displayed material face.
   (* (ast:g-get 'lean settings (* pi (/ 40.0 180.0)))
@@ -195,7 +198,11 @@
     (setq tail (cdr tail))) error)
 
 ;;; A sorted landmark reserves a nominal gap. No landmark is converted to a hole.
-(defun ast:g-solve-primitive (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved advances gaps advance gap next kind span opening-count free-length station-tol point)
+(defun ast:g-solve-primitive (primitive settings landmarks start finish)
+  (if (= (ast:g-get 'kind primitive nil) 'chain)
+    (ast:g-solve-chain primitive settings landmarks start finish)
+    (ast:g-solve-single primitive settings landmarks start finish)))
+(defun ast:g-solve-single (primitive settings landmarks start finish / pitch step ordered marker station left right cursor fit openings intervals error reserved advances gaps advance gap next kind span opening-count free-length station-tol point)
   (setq pitch (ast:g-get 'pitch settings 3.0) step (ast:g-step primitive pitch) cursor start
         ordered (vl-sort landmarks '(lambda (aa bb) (< (cdr (assoc 'station aa)) (cdr (assoc 'station bb)))))
         openings (list (ast:g-slit primitive start settings)) opening-count 1
@@ -469,7 +476,36 @@
           (setq cursor (+ cursor (ast:g-length primitive)) index (1+ index))))))
   (if error (ast:g-error error) (list '(ok . T) (cons 'primitives selected) (cons 'landmarks (reverse remapped)))))
 
-(defun ast:g-solve (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted virtual-slits corner-adjustments)
+(defun ast:g-continuous-points (route settings / primitives incoming outgoing result half step lean denominator bound dot-value)
+  (setq primitives (ast:g-get 'primitives route nil)
+        half (/ (ast:g-get 'slit-length settings 1.5) 2.0)
+        step (* (ast:g-get 'pitch settings 3.0) (if (ast:g-get 'corrections settings T) 1.1 1.0))
+        lean (ast:g-lean settings) denominator (- step (* half (cos lean))))
+  ;; Use the existing shallow-turn bound, including the corner step allowance.
+  ;; Finite-arm or clearance failures at a corner never make it a continuation.
+  (if (> denominator 0.0) (setq bound (* 2.0 (atan (/ (* half (abs (sin lean))) denominator)))))
+  (if (> (length primitives) 1)
+    (progn
+      (if (ast:g-get 'closed route nil) (setq incoming (last primitives)))
+      (foreach outgoing primitives
+        (if incoming
+          (progn
+            (setq dot-value (ast:g-dot (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0)))
+            (if (and (not (ast:g-mergeable incoming outgoing))
+                     (or (and (> dot-value 0.0)
+                         (< (abs (ast:g-cross (ast:g-tangent incoming (ast:g-length incoming)) (ast:g-tangent outgoing 0.0))) 1e-10))
+                    (and bound (= (ast:g-get 'kind incoming nil) 'line) (= (ast:g-get 'kind outgoing nil) 'line)
+                         (> dot-value (+ (cos bound) 1e-10)))))
+              (setq result (cons (ast:g-point outgoing 0.0) result)))))
+        (setq incoming outgoing)))) result)
+
+(defun ast:g-solve (route settings landmarks)
+  (if (and (null (ast:g-profile-error settings))
+           (not (vl-some 'ast:g-primitive-error (ast:g-get 'primitives route nil)))
+           (ast:g-continuous-points route settings))
+    (ast:g-solve-set (list (list '(id . 0) (cons 'route route) (cons 'settings settings) (cons 'landmarks landmarks))) nil)
+    (ast:g-solve-route route settings landmarks)))
+(defun ast:g-solve-route (route settings landmarks / primitives primitive marker error normalized closed count idx incoming outgoing result joins corner openings intervals local-openings local-intervals selected join start finish warnings previous range joint-center after-center adjusted virtual-slits corner-adjustments)
   (setq primitives (ast:g-get 'primitives route nil) closed (ast:g-get 'closed route nil) error (ast:g-profile-error settings))
   (if (null primitives) (setq error "No usable stitch line was found. Select a line or curve."))
   (foreach primitive primitives (if (null error) (setq error (ast:g-primitive-error primitive))))
@@ -542,4 +578,158 @@
       (list '(ok . T) (cons 'status (if adjusted 'adjusted 'exact)) (cons 'openings openings) (cons 'intervals intervals)
         (cons 'virtual-slits virtual-slits) (cons 'corner-adjustments corner-adjustments)
         (cons 'warnings warnings) (cons 'primitives primitives) (cons 'landmarks landmarks)))))
+
+;;; Continuous spans retain exact source segments; their joins impose no phase.
+(defun ast:g-chain-location (chain station / parts)
+  (setq parts (ast:g-get 'parts chain nil))
+  (while (and (cdr parts) (> station (+ (ast:g-length (car parts)) 1e-9)))
+    (setq station (- station (ast:g-length (car parts))) parts (cdr parts)))
+  (list parts (ast:g-clamp station 0.0 (ast:g-length (car parts)))))
+(defun ast:g-chain-point (chain station / location)
+  (setq location (ast:g-chain-location chain station))
+  (ast:g-point (caar location) (cadr location)))
+(defun ast:g-chain-tangent (chain station / location parts local axis)
+  (setq location (ast:g-chain-location chain station) parts (car location) local (cadr location)
+        axis (ast:g-tangent (car parts) local))
+  (if (and (cdr parts) (< (abs (- local (ast:g-length (car parts)))) 1e-9))
+    (setq axis (ast:g-add axis (ast:g-tangent (cadr parts) 0.0))))
+  (if (and (or (< station 1e-9) (< (abs (- station (ast:g-length chain))) 1e-9))
+           (< (ast:g-dist (ast:g-point chain 0.0) (ast:g-point chain (ast:g-length chain))) 1e-8))
+    (setq axis (ast:g-add (ast:g-tangent (car (ast:g-get 'parts chain nil)) 0.0)
+      (ast:g-tangent (last (ast:g-get 'parts chain nil)) (ast:g-length (last (ast:g-get 'parts chain nil)))))))
+  (if (< (ast:g-norm axis) 1e-8) nil (ast:g-mul axis (/ 1.0 (ast:g-norm axis)))))
+(defun ast:g-chain-station (primitive point / angle)
+  (if (= (ast:g-get 'kind primitive nil) 'line)
+    (ast:g-dot (ast:g-sub point (ast:g-point primitive 0.0)) (ast:g-tangent primitive 0.0))
+    (progn
+      (setq angle (* (ast:g-sign (ast:g-get 'sweep primitive 0.0))
+        (- (atan (- (cadr point) (cadr (ast:g-get 'center primitive nil)))
+                 (- (car point) (car (ast:g-get 'center primitive nil)))) (ast:g-get 'start-angle primitive 0.0))))
+      (while (< angle -1e-9) (setq angle (+ angle (* 2.0 pi))))
+      (* (max 0.0 angle) (ast:g-get 'radius primitive 0.0)))))
+(defun ast:g-chain-next (chain station gap finish / center circle offset part hits point candidate best)
+  (setq center (ast:g-point chain station) circle (list '(kind . circle) (cons 'center center) (cons 'radius gap)) offset 0.0)
+  (foreach part (ast:g-get 'parts chain nil)
+    (if (and (null best) (> (+ offset (ast:g-length part)) (+ station 1e-8)) (<= offset (+ finish 1e-8)))
+      (progn
+        (setq hits (ast:g-intersections (ast:g-support part) circle))
+        (foreach point (ast:g-get 'points hits nil)
+          (if (ast:g-point-on part point)
+            (progn
+              (setq candidate (+ offset (ast:g-chain-station part point)))
+              (if (and (> candidate (+ station 1e-8)) (<= candidate (+ finish 1e-8))
+                       (or (null best) (< candidate best))) (setq best (min finish candidate))))))))
+    (setq offset (+ offset (ast:g-length part)))) best)
+(defun ast:g-chain-walk (chain start finish gaps / station stations gap)
+  (setq station start stations (list start))
+  (foreach gap gaps
+    (if station
+      (progn (setq station (ast:g-chain-next chain station gap finish))
+        (if station (setq stations (cons station stations))))))
+  (if station (reverse stations)))
+(defun ast:g-repeat (count value / result)
+  (repeat count (setq result (cons value result))) result)
+(defun ast:g-chain-residual (chain start finish count gap / stations)
+  (setq stations (ast:g-chain-walk chain start finish (ast:g-repeat (1- count) gap)))
+  (if stations (- (ast:g-dist (ast:g-point chain (last stations)) (ast:g-point chain finish)) gap) (- gap)))
+(defun ast:g-chain-block (chain start finish count pitch / lower upper a b fa fb mid fm step trial stations best)
+  ;; Scan brackets before bisection: distance along a general curve is not globally monotone.
+  (setq lower (* 0.9 pitch) upper (* 1.1 pitch) a lower
+        fa (ast:g-chain-residual chain start finish count a) step (/ (- upper lower) 16.0))
+  (repeat 17
+    (setq b (min upper (+ a step)) fb (ast:g-chain-residual chain start finish count b) trial nil)
+    (cond
+      ((< (abs fa) 1e-9) (setq trial a))
+      ((<= (* fa fb) 0.0)
+        (setq lower a upper b)
+        (repeat 38
+          (setq mid (/ (+ lower upper) 2.0) fm (ast:g-chain-residual chain start finish count mid))
+          (if (> (* fa fm) 0.0) (setq lower mid) (setq upper mid)))
+        (setq trial (/ (+ lower upper) 2.0))))
+    (if trial
+      (progn
+        (setq stations (ast:g-chain-walk chain start finish (ast:g-repeat count trial)))
+        (if (and stations (< (abs (- (last stations) finish)) 1e-7)
+                 (or (null best) (< (abs (- trial pitch)) (abs (- best pitch))))) (setq best trial))))
+    (setq a b fa fb upper (* 1.1 pitch))) best)
+(defun ast:g-chain-fit (chain settings start finish / pitch min-count max-count changed count block prefix suffix reverse-chain total left right q gaps stations best score best-score symmetric)
+  (setq pitch (ast:g-get 'pitch settings 3.0) total (ast:g-length chain)
+        reverse-chain (list '(kind . chain) (cons 'parts (mapcar 'ast:g-reverse-primitive (reverse (ast:g-get 'parts chain nil)))))
+        min-count (max 1 (ast:g-ceil (- (/ (ast:g-dist (ast:g-point chain start) (ast:g-point chain finish)) (* 1.1 pitch)) 1e-9)))
+        max-count (min 2000 (ast:g-floor (+ (/ (- finish start) (* 0.9 pitch)) 1e-9))) changed 0)
+  (if (< (- finish start) 1e-8) (setq best (list start)))
+  (while (and (null best) (<= changed max-count) (or (= changed 0) (ast:g-get 'corrections settings T)))
+    (setq count (max min-count changed) best-score nil)
+    (while (<= count max-count)
+      (setq block (fix (/ (+ (- count changed) 1) 2)) q nil
+            prefix (ast:g-chain-walk chain start finish (ast:g-repeat block pitch))
+            suffix (ast:g-chain-walk reverse-chain (- total finish) (- total start) (ast:g-repeat (- count changed block) pitch)))
+      (if (and prefix suffix)
+        (progn
+          (setq left (last prefix) right (- total (last suffix)))
+          (if (= changed 0)
+            (if (< (abs (- left right)) 1e-7) (setq q pitch))
+            (if (> right (+ left 1e-8)) (setq q (ast:g-chain-block chain left right changed pitch))))))
+      (if q
+        (progn
+          (setq gaps (append (ast:g-repeat block pitch) (ast:g-repeat changed q) (ast:g-repeat (- count changed block) pitch))
+                stations (ast:g-chain-walk chain start finish gaps)
+                symmetric (= (rem (- count changed) 2) 0)
+                score (list (if symmetric 0 1) (abs (- q pitch)) count))
+          (if (and stations (< (abs (- (last stations) finish)) 1e-7)
+                   (or (null best-score) (< (car score) (car best-score))
+                     (and (= (car score) (car best-score)) (< (cadr score) (- (cadr best-score) 1e-9)))))
+            (setq best stations best-score score))))
+      (setq count (1+ count)))
+    (setq changed (1+ changed)))
+  best)
+(defun ast:g-solve-chain (chain settings landmarks start finish / pitch ordered marker station half lower upper mid distance pairs spans cursor pair fit stations openings intervals a b gap error)
+  (setq pitch (ast:g-get 'pitch settings 3.0) cursor start
+        ordered (vl-sort landmarks '(lambda (aa bb) (< (ast:g-get 'station aa 0.0) (ast:g-get 'station bb 0.0)))))
+  (foreach marker ordered
+    (setq station (ast:g-get 'station marker 0.0) lower 0.0 upper (min (- station start) (- finish station)) half nil)
+    ;; Locate the first symmetric nominal chord, including chords across joins.
+    (if (> upper 0.0)
+      (progn
+        (setq mid (min upper (/ pitch 2.0)))
+        (while (and (null half) (> mid lower))
+          (setq distance (ast:g-dist (ast:g-point chain (- station mid)) (ast:g-point chain (+ station mid))))
+          (if (>= distance pitch) (setq half mid)
+            (setq lower mid mid (min upper (+ mid (/ pitch 8.0))))))
+        (if half
+          (progn
+            (setq upper half)
+            (repeat 40
+              (setq mid (/ (+ lower upper) 2.0))
+              (if (< (ast:g-dist (ast:g-point chain (- station mid)) (ast:g-point chain (+ station mid))) pitch)
+                (setq lower mid) (setq upper mid)))
+            (setq half (/ (+ lower upper) 2.0))))))
+    (if (or (null half) (< (- station half) (- cursor 1e-8)))
+      (setq error "A landmark is too close to another fixed point. Move it farther away or reduce the pitch.")
+      (progn (setq pairs (append pairs (list (list (- station half) (+ station half)))))
+        (setq cursor (+ station half)))))
+  (setq cursor start)
+  (foreach pair pairs
+    (setq spans (append spans (list (list cursor (car pair) nil) (list (car pair) (cadr pair) T))) cursor (cadr pair)))
+  (setq spans (append spans (list (list cursor finish nil))))
+  (foreach pair spans
+    (if (null error)
+      (progn
+        (setq fit (if (caddr pair) (list (car pair) (cadr pair)) (ast:g-chain-fit chain settings (car pair) (cadr pair))))
+        (if (null fit) (setq error "Could not fit stitches between these fixed points. Change the pitch or adjust Start, End or a landmark.")
+          (progn
+            (if stations (setq fit (cdr fit)))
+            (setq stations (append stations fit)))))))
+  (foreach station stations
+    (if (null (ast:g-tangent chain station)) (setq error "The guide reverses direction here. Adjust the guide to remove the reversal."))
+    (if (null error) (setq openings (append openings (list (ast:g-slit chain station settings))))))
+  (while (cdr stations)
+    (setq a (car stations) b (cadr stations) gap (ast:g-dist (ast:g-point chain a) (ast:g-point chain b)))
+    (if (or (< gap (- (* 0.9 pitch) 1e-7)) (> gap (+ (* 1.1 pitch) 1e-7)))
+      (setq error "Continuous stitching exceeded the spacing allowance. Change the pitch or the stitch limits."))
+    (setq intervals (append intervals (list (list (cons 'kind (if (< (abs (- gap pitch)) 1e-7) 'ordinary 'corrected))
+      (cons 'distance gap) (cons 'start-station a) (cons 'end-station b)
+      (cons 'reserved (if (vl-some '(lambda (item) (and (< (abs (- a (car item))) 1e-7) (< (abs (- b (cadr item))) 1e-7))) pairs) T nil)))))
+      stations (cdr stations)))
+  (if error (ast:g-error error) (list '(ok . T) (cons 'openings openings) (cons 'intervals intervals))))
 (princ)

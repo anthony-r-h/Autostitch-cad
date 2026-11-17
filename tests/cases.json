@@ -1215,7 +1215,7 @@
     },
     {
       "id": "J02",
-      "title": "90Ãƒâ€šÃ‚Â° corner",
+      "title": "90\u00c3\u0192\u00e2\u20ac\u0161\u00c3\u201a\u00c2\u00b0 corner",
       "description": "Does the prescribed slit-tip construction preserve the reference corner symmetry?",
       "group": "Corner angles",
       "svg": true,
@@ -1394,7 +1394,7 @@
     },
     {
       "id": "J03",
-      "title": "135Ãƒâ€šÃ‚Â° corner",
+      "title": "135\u00c3\u0192\u00e2\u20ac\u0161\u00c3\u201a\u00c2\u00b0 corner",
       "description": "Does the same direct construction fit the supplied wider corner?",
       "group": "Corner angles",
       "svg": true,
@@ -1573,7 +1573,7 @@
     },
     {
       "id": "J04",
-      "title": "45Ãƒâ€šÃ‚Â° corner",
+      "title": "45\u00c3\u0192\u00e2\u20ac\u0161\u00c3\u201a\u00c2\u00b0 corner",
       "description": "Does the same direct construction fit the supplied tighter corner?",
       "group": "Corner angles",
       "svg": true,
@@ -2926,7 +2926,7 @@
     {
       "id": "A05",
       "title": "Straight into a curve",
-      "description": "With one slit fixed at the smooth join and free outer margins, does nominal spacing continue from the line into the arc?",
+      "description": "With free outer margins, does nominal spacing continue from the line into the arc without a forced opening at the join?",
       "group": "Curves",
       "svg": true,
       "notes": "Endpoint centres and landmark stations are fixed. Start/end positions reserve nominal outer margins.",
@@ -4041,7 +4041,7 @@
       "description": "Can two separate guides meeting at a shallow turn use the bounded corner-step allowance?",
       "group": "Junctions",
       "svg": true,
-      "notes": "Exact reported guide coordinates. At 3 mm pitch the outgoing corner step is 3.097120227 mm; 2.7 mm cannot reach the guide within its allowance. The same route is tested as connected guides in NET.",
+      "notes": "Exact reported guide coordinates. At 3 mm pitch the outgoing corner step is 3.097120227 mm; 2.7 mm cannot reach the guide within its allowance. The same route is tested as connected guides in NET. The gallery qualifies the explicit corner construction; NET tests the separate connected guides. Automatic shallow-facet fitting within one polyline is a different case.",
       "variants": [
         {
           "pitch": 2.7,
@@ -4211,7 +4211,7 @@
     },
     {
       "id": "J08",
-      "title": "Shallow lineÃƒÂ¯Ã‚Â¿Ã‚Â½arc corner",
+      "title": "Shallow line\u00c3\u0192\u00c2\u00af\u00c3\u201a\u00c2\u00bf\u00c3\u201a\u00c2\u00bdarc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4406,7 +4406,7 @@
     },
     {
       "id": "J09",
-      "title": "Shallow arcÃƒÂ¯Ã‚Â¿Ã‚Â½line corner",
+      "title": "Shallow arc\u00c3\u0192\u00c2\u00af\u00c3\u201a\u00c2\u00bf\u00c3\u201a\u00c2\u00bdline corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "J10",
-      "title": "Shallow arcÃƒÂ¯Ã‚Â¿Ã‚Â½arc corner",
+      "title": "Shallow arc\u00c3\u0192\u00c2\u00af\u00c3\u201a\u00c2\u00bf\u00c3\u201a\u00c2\u00bdarc corner",
       "description": "Does a shallow curved corner retain the selected tip intersection and use a bounded direct-chord step?",
       "group": "Junctions",
       "svg": true,
@@ -5000,7 +5000,8 @@
     "tests/autostitch-display-tests.lsp",
     "tests/autostitch-matching-cad-tests.lsp",
     "examples/fills.lsp",
-    "tests/autostitch-fill-tests.lsp"
+    "tests/autostitch-fill-tests.lsp",
+    "tests/autostitch-continuous-tests.lsp"
   ],
   "suites": [
     {
@@ -5273,12 +5274,12 @@
         },
         {
           "id": "GEO-049",
-          "expected": "smooth curvature join shares exactly one slit",
+          "expected": "smooth curvature join does not force a slit",
           "sourceSymbol": "ast:g-tests"
         },
         {
           "id": "GEO-050",
-          "expected": "landmark straddling curvature join rejected",
+          "expected": "landmark straddling curvature join retains its nominal gap",
           "sourceSymbol": "ast:g-tests"
         },
         {
@@ -6863,7 +6864,7 @@
         },
         {
           "id": "ATTACH-002",
-          "expected": "Deleting one landmark cannot rebase another after vertex insertion",
+          "expected": "Deleting one landmark preserves the unresolved baseline of another after vertex insertion",
           "sourceSymbol": "ast:cad-correspondence-tests"
         },
         {
@@ -7826,6 +7827,16 @@
       "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
       "checks": [
         {
+          "id": "UI-REMOVE-001",
+          "expected": "The palette names the connected scope when stitches can be removed",
+          "sourceSymbol": "ast:ui-test-remove-stitches"
+        },
+        {
+          "id": "UI-REMOVE-002",
+          "expected": "Remove stitches disables itself, preserves the pitch draft and leaves the connected guides ready to generate",
+          "sourceSymbol": "ast:ui-test-remove-stitches"
+        },
+        {
           "id": "UI-001",
           "expected": "An empty palette disables actions that require a selected stitch line",
           "sourceSymbol": "ast:ui-tests"
@@ -8054,7 +8065,7 @@
       "runner": "events",
       "svg": false,
       "setup": "Disposable saved drawing under output/native. Never run against a pattern drawing.",
-      "recipe": "Create two source/helper pairs; use native MOVE, STRETCH and ERASE with Undo/Redo; inject callback failure and compare saved records and geometry.",
+      "recipe": "Create two source/helper pairs; use native MOVE, STRETCH and ERASE with Undo/Redo; inject callback failure and compare saved records and geometry. Instrument reads and marker updates with 1,000 unrelated lines, connected and independent stitched guides; edit block content and move guides to the optional layer with Undo/Redo.",
       "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
       "checks": [
         {
@@ -8081,6 +8092,31 @@
           "id": "EVENT-005",
           "expected": "Captured exact metadata/definitions and armed second-helper failure",
           "sourceSymbol": "ast:event-arm-failure"
+        },
+        {
+          "id": "EVENT-006",
+          "sourceSymbol": "ast:event-track-unrelated",
+          "expected": "Unrelated MOVE performs zero guide reads, marker updates and stitch-content scans"
+        },
+        {
+          "id": "EVENT-007",
+          "sourceSymbol": "ast:event-track-connected",
+          "expected": "Connected MOVE refreshes each member once, resolves junctions once and reuses unchanged cut content"
+        },
+        {
+          "id": "EVENT-008",
+          "sourceSymbol": "ast:event-track-single",
+          "expected": "Editing another stitch line leaves the selected connected set untouched"
+        },
+        {
+          "id": "EVENT-009",
+          "sourceSymbol": "ast:event-track-content",
+          "expected": "Editing generated block content fingerprints its shared output exactly once"
+        },
+        {
+          "id": "EVENT-010",
+          "sourceSymbol": "ast:event-track-layer-check",
+          "expected": "Optional guide layer preserves connected membership and generated output ownership"
         }
       ],
       "driver": "tests/run-events.ps1",
@@ -8318,6 +8354,97 @@
             "helpersCurrent": false,
             "notes": "Prior complete helpers remain; the failed callback does not undo the native edit."
           }
+        },
+        {
+          "id": "EVENT-LAYER-01",
+          "title": "Guide layer action moves only the selected connected set",
+          "action": "Guide layer action moves only the selected connected set",
+          "expected": "Guide layer action moves only the selected connected set"
+        },
+        {
+          "id": "EVENT-LAYER-02",
+          "title": "Guide layer Undo restores both original layers",
+          "action": "Guide layer Undo restores both original layers",
+          "expected": "Guide layer Undo restores both original layers"
+        },
+        {
+          "id": "EVENT-LAYER-03",
+          "title": "Guide layer Redo restores both dedicated layers",
+          "action": "Guide layer Redo restores both dedicated layers",
+          "expected": "Guide layer Redo restores both dedicated layers"
+        }
+      ]
+    },
+    {
+      "id": "REMOVE",
+      "title": "Remove generated stitches",
+      "source": "tests/autostitch-connected-tests.lsp",
+      "entrypoint": "ast:cad-remove-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Disposable drawing with CAD, marker and matching modules loaded.",
+      "recipe": "Remove single, connected, pending and matched outputs; undo and redo; regenerate; inject failures and lock output layers.",
+      "expected": "Guides, topology, settings, identities and unrelated copies survive removal; failed removal rolls back completely.",
+      "checks": [
+        {
+          "id": "REMOVE-001",
+          "expected": "Remove stitches through output preserves the guide, markers, settings, ID and static copies",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-002",
+          "expected": "One Undo restores removed output and its exact source metadata",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-003",
+          "expected": "Redo removes stitches while preserving their source identity",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-004",
+          "expected": "Generate after removal reuses the stitch ID and leaves static copies unchanged",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-005",
+          "expected": "Failed removal restores output, block names and source metadata atomically",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-006",
+          "expected": "Locked output prevents removal without changing the guide or stitches",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-007",
+          "expected": "Removal clears all retained outputs from pending connections and preserves the connected guides",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-008",
+          "expected": "A cleared pending set regenerates one shared output with its original ID",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-009",
+          "expected": "Removing a generated connected set through its secondary guide keeps both members linked",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-010",
+          "expected": "Removal without generated output reports that no stitches remain",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-011",
+          "expected": "Removing a matched copy's stitches preserves its matching link and the source output",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-012",
+          "expected": "Matched-family generation recreates removed output with the same copy ID",
+          "sourceSymbol": "ast:cad-remove-tests"
         }
       ]
     },
@@ -8519,6 +8646,220 @@
           "sourceSymbol": "ast:fill-tests"
         }
       ]
+    },
+    {
+      "id": "CONTINUOUS",
+      "title": "Continuous polyline geometry",
+      "source": "tests/autostitch-continuous-tests.lsp",
+      "entrypoint": "ast:c-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Use production geometry; lifecycle checks use a disposable native drawing.",
+      "recipe": "Exercise automatic fitting within Start/End, protected features, matching, saved output and selected landmark deletion.",
+      "expected": "All assertions pass without a separate continuous mode or stretch selection.",
+      "checks": [
+        {
+          "id": "CONTINUOUS-001",
+          "expected": "Continuous vertices introduce neither round holes nor fixed slits",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-002",
+          "expected": "Reversed continuous fitting preserves endpoints and actual chord bounds",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-003",
+          "expected": "Redundant subdivision leaves continuous openings unchanged",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-004",
+          "expected": "Retired continuous selections do not change automatic fitting",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-005",
+          "expected": "A landmark reserves a nominal chord across continuous vertices",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-006",
+          "expected": "Tangent line and arc continue without a mandatory join slit",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-007",
+          "expected": "Default fitting retains all four protected square corners",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-008",
+          "expected": "Continuous connected guides preserve shared branch holes and half-pitch neighbours",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-009",
+          "expected": "Default fitting retains the corner following a faceted curve",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-010",
+          "expected": "Branch reservations can cross short continuous facets while retaining the half-pitch chord",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-011",
+          "expected": "A reversed straight continuation into another guide remains one uninterrupted span",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-012",
+          "expected": "An eighty-facet curved side fits as one continuous span at three millimetre pitch",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-013",
+          "expected": "Default fitting keeps both standard corners where faceted curves feed a U-shaped guide",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-014",
+          "expected": "Continuous fitting fixes the existing corner holes and neighbours and redistributes only free-span gaps",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-015",
+          "expected": "Retired stretch settings cannot bypass protected corners",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-016",
+          "expected": "Existing Start and End alone bound automatic fitting",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-017",
+          "expected": "Default fitting crosses short facets without a separate mode",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-018",
+          "expected": "Automatic fitting uses the existing profile-dependent shallow-turn bound",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-019",
+          "expected": "Continuous fitting still rejects insufficient opening clearance",
+          "sourceSymbol": "ast:c-tests"
+        },
+        {
+          "id": "CONTINUOUS-020",
+          "expected": "Disabling corrections rejects a continuous span that needs adjusted spacing",
+          "sourceSymbol": "ast:c-tests"
+        }
+      ]
+    },
+    {
+      "id": "CONTINUOUS-CAD",
+      "title": "Continuous polyline lifecycle",
+      "source": "tests/autostitch-continuous-tests.lsp",
+      "entrypoint": "ast:c-cad-tests",
+      "runner": "suite",
+      "svg": false,
+      "setup": "Use production geometry; lifecycle checks use a disposable native drawing.",
+      "recipe": "Exercise automatic fitting within Start/End, protected features, matching, saved output and selected landmark deletion.",
+      "expected": "All assertions pass without a separate continuous mode or stretch selection.",
+      "checks": [
+        {
+          "id": "CONTINUOUS-CAD-001",
+          "expected": "Continuous polylines generate current DWG output with cross-segment thread and spacing labels",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-002",
+          "expected": "Removing output preserves the existing Start and End settings",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-003",
+          "expected": "Undo restores continuous output and exact guide metadata",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-004",
+          "expected": "Regeneration after Redo reproduces the same continuous geometry and stitch ID",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-005",
+          "expected": "Failed automatic fitting preserves valid output",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-006",
+          "expected": "Reshaping a curve needs no separate stretch repair",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-007",
+          "expected": "Matched guides transfer automatic fitting and the existing stitch limits",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-008",
+          "expected": "Removing matched continuous output preserves links and allows family regeneration",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-009",
+          "expected": "Failed continuous output replacement rolls back geometry and saved settings",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-010",
+          "expected": "Continuous guides work on the optional dedicated guide layer",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-011",
+          "expected": "Retired stretch metadata is ignored without repair prompts or output deletion",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-012",
+          "expected": "Output from the previous fitting rules remains visible and is marked stale",
+          "sourceSymbol": "ast:c-cad-tests"
+        },
+        {
+          "id": "CONTINUOUS-CAD-013",
+          "expected": "Regeneration removes retired stretch settings and records the current fitting rules",
+          "sourceSymbol": "ast:c-cad-tests"
+        }
+      ]
+    },
+    {
+      "id": "CONTINUOUS-UI",
+      "title": "Continuous stitching palette",
+      "source": "tests/autostitch-continuous-tests.lsp",
+      "entrypoint": "ast:c-ui-tests",
+      "runner": "ui",
+      "svg": false,
+      "setup": "Use production geometry; lifecycle checks use a disposable native drawing.",
+      "recipe": "Exercise automatic fitting within Start/End, protected features, matching, saved output and selected landmark deletion.",
+      "expected": "All assertions pass without a separate continuous mode or stretch selection.",
+      "checks": [
+        {
+          "id": "CONTINUOUS-UI-001",
+          "expected": "Select guide then Start End and Generate fits a curve without another mode",
+          "sourceSymbol": "ast:c-ui-tests"
+        },
+        {
+          "id": "CONTINUOUS-UI-002",
+          "expected": "Delete removes only the selected invalid landmark and preserves an unchanged segment landmark",
+          "sourceSymbol": "ast:c-ui-tests"
+        }
+      ]
     }
   ],
   "visualFixtures": [
@@ -8535,7 +8876,12 @@
         {
           "name": "EMBLEM",
           "description": "Tight square preview with complete lettering and cropped outer ring",
-          "viewBox": [60, 68, 465, 465]
+          "viewBox": [
+            60,
+            68,
+            465,
+            465
+          ]
         }
       ],
       "coverage": [
@@ -9534,7 +9880,10 @@
       "inputs": {
         "diagonalCase": "ILL-SELLIER-CORNER",
         "armIntervals": 8,
-        "bridgeThreadLengths": [1, 3],
+        "bridgeThreadLengths": [
+          1,
+          3
+        ],
         "bridgeIncomingAdvance": 0.5,
         "bridgeHoldCentiseconds": 50,
         "bridgeMotionCentiseconds": 214
@@ -9701,7 +10050,24 @@
         "leanDegrees": 40,
         "width": 8.1,
         "sideSteps": 3,
-        "leatherEdge": [[-1.5, -11.5], [-1.5, 2.4], [9.6, 2.4], [9.6, -11.5]]
+        "leatherEdge": [
+          [
+            -1.5,
+            -11.5
+          ],
+          [
+            -1.5,
+            2.4
+          ],
+          [
+            9.6,
+            2.4
+          ],
+          [
+            9.6,
+            -11.5
+          ]
+        ]
       },
       "assets": [
         {
@@ -9759,7 +10125,36 @@
             -16.2
           ]
         ],
-        "leatherEdge": [[-6.8, 3.4], [-6.8, 0], [-12.5, -16.7], [0, -27.5], [12.5, -16.7], [6.8, 0], [6.8, 3.4]]
+        "leatherEdge": [
+          [
+            -6.8,
+            3.4
+          ],
+          [
+            -6.8,
+            0
+          ],
+          [
+            -12.5,
+            -16.7
+          ],
+          [
+            0,
+            -27.5
+          ],
+          [
+            12.5,
+            -16.7
+          ],
+          [
+            6.8,
+            0
+          ],
+          [
+            6.8,
+            3.4
+          ]
+        ]
       },
       "assets": [
         {
@@ -9825,7 +10220,11 @@
       "slitLength": 1.5,
       "leanDegrees": 40,
       "animated": false,
-      "axioms": ["A2", "A3", "A7"],
+      "axioms": [
+        "A2",
+        "A3",
+        "A7"
+      ],
       "status": "Investigation variant of ILL-FAGLIANO-TIP. Preserve every opening centre and the vertex hole; mirror the left slit axes and visible thread onto the right, joining obverse and reverse rows. Analytic illustration, not native CAD output or a claim about the photographed strap.",
       "inputs": {
         "pitch": 3,
@@ -9836,8 +10235,17 @@
         "straightOpenings": 3,
         "curvedSlits": 5
       },
-      "assets": [{"path": "examples/counter_examples/assets/fagliano-tip-mirrored"}],
-      "notation": ["s", "e", "j", "direction"]
+      "assets": [
+        {
+          "path": "examples/counter_examples/assets/fagliano-tip-mirrored"
+        }
+      ],
+      "notation": [
+        "s",
+        "e",
+        "j",
+        "direction"
+      ]
     },
     {
       "id": "ILL-FAGLIANO-AUTOSTITCH",
@@ -9941,18 +10349,39 @@
       "pitch": 2.7,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "axioms": ["A1", "A2", "A3", "A6", "A7", "A8", "A9"],
+      "axioms": [
+        "A1",
+        "A2",
+        "A3",
+        "A6",
+        "A7",
+        "A8",
+        "A9"
+      ],
       "animated": false,
       "status": "Annotated square view of the native emblem. Original export retained in SVG metadata for the unchanged animation; notation is reconstructed from its geometry and guides.",
       "inputs": {
         "geometry": "examples/demos/emblem.svg",
         "guides": "examples/emblem.lsp",
-        "nativeViewBox": [60, 68, 465, 465],
-        "canvas": [600, 600],
+        "nativeViewBox": [
+          60,
+          68,
+          465,
+          465
+        ],
+        "canvas": [
+          600,
+          600
+        ],
         "supersampling": 3,
         "openingsIncludingDot": 1077
       },
-      "assets": [{"path": "examples/demos/emblem", "label": "Square emblem with construction notation"}]
+      "assets": [
+        {
+          "path": "examples/demos/emblem",
+          "label": "Square emblem with construction notation"
+        }
+      ]
     },
     {
       "id": "ILL-EMBLEM-STORYBOARD",
@@ -9961,7 +10390,15 @@
       "pitch": 2.7,
       "slitLength": 1.5,
       "leanDegrees": 40,
-      "axioms": ["A1", "A2", "A3", "A6", "A7", "A8", "A9"],
+      "axioms": [
+        "A1",
+        "A2",
+        "A3",
+        "A6",
+        "A7",
+        "A8",
+        "A9"
+      ],
       "animated": true,
       "status": "Constructed presentation of the native 2.7 mm emblem, with half-pitch neighbours at all three branching holes. Lettering uses analytic planning motion between fixed run endpoints, landmark pairs and round holes; animation is not a solver execution trace. Used in PITCH's Model and solution section.",
       "inputs": {
@@ -9973,10 +10410,27 @@
         "durationSeconds": 40,
         "pullbackSeconds": 12,
         "finalHoldSeconds": 13.25,
-        "landmarkStep": {"at": 0.2, "duration": 0.6, "annotation": "Set symmetry", "expected": "Reveal the two crown landmarks before resolving fixed openings at 1.5 seconds."},
-        "dotPunch": {"at": 26.3, "duration": 0.45, "expected": "Dot follows the opening fade by 0.05 seconds, then settles to its original radius. No full-emblem flash."},
-        "residualReveal": {"delayAfterLayout": 0.35, "fadeSeconds": 0.25, "expected": "Brief pause, then a subtle fade of red residual annotations before redistribution."},
-        "openingFade": {"at": 26, "duration": 0.25, "expected": "Hide slit outlines, round holes and spacing marks before the dot punch. Final hold contains only thread and the dot."},
+        "landmarkStep": {
+          "at": 0.2,
+          "duration": 0.6,
+          "annotation": "Set symmetry",
+          "expected": "Reveal the two crown landmarks before resolving fixed openings at 1.5 seconds."
+        },
+        "dotPunch": {
+          "at": 26.3,
+          "duration": 0.45,
+          "expected": "Dot follows the opening fade by 0.05 seconds, then settles to its original radius. No full-emblem flash."
+        },
+        "residualReveal": {
+          "delayAfterLayout": 0.35,
+          "fadeSeconds": 0.25,
+          "expected": "Brief pause, then a subtle fade of red residual annotations before redistribution."
+        },
+        "openingFade": {
+          "at": 26,
+          "duration": 0.25,
+          "expected": "Hide slit outlines, round holes and spacing marks before the dot punch. Final hold contains only thread and the dot."
+        },
         "guideVisibility": "Only A from 0 to 14 seconds; no guides or text during pullback or final hold.",
         "openingsIncludingDot": 1077,
         "branchingHoles": 3,

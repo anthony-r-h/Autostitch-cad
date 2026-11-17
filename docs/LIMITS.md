@@ -12,7 +12,9 @@ Width and margin are required inputs to a finite-width result. They are currentl
 
 ## Unresolved geometric rules
 
-- A landmark gap spanning a change of curvature needs a mixed-curve construction. The current landmark rule applies within one straight or circular segment.
+- A landmark gap may cross continuing segment joins within one guide. Protected corners and junctions bound that gap.
+- Continuous fitting searches centrally placed equal-adjustment blocks numerically. Failure does not prove that every allowed layout is infeasible. Coarse faceting remains visible in slit orientations. Protected corners retain the finite-arm limits of their existing construction. Straight turns below the profile-dependent shallow-turn bound continue as facets; a polyline does not encode whether the author intended such a turn as a corner.
+- Native spline guides are unsupported.
 - There is no symmetry constraint linking adjustments in separate free spans.
 - Corner adjustment chooses the step nearest nominal that fits the finite arm. It does not search other step combinations to rescue a later clearance or span-fit failure.
 

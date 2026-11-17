@@ -151,6 +151,14 @@
   (ast:ui-put "End" "Enabled" (if (and astui:*guide* (not closed)) T nil))
   (foreach control '("Add" "Generate" "Pitch" "Reverse" "Connect")
     (ast:ui-put control "Enabled" (if astui:*guide* T nil)))
+  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(3 4 5 6))
+    (ast:ui-put "GuideLayer" "Enabled" (if astui:*guide* T nil)))
+  (if (equal 6 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+    (progn
+      (ast:ui-put "RemoveStitches" "Enabled" (if (and astui:*guide*
+        (ast:cad-removable-outputs astui:*state*)) T nil))
+      (ast:ui-put "RemoveStitches" "Caption" (if (> (length (cdr (assoc 'members astui:*state*))) 1)
+        "Remove connected stitches" "Remove stitches"))))
   (ast:ui-put "Disconnect" "Enabled" (and astui:*guide*
     (or (cdr (assoc 'missing-members astui:*state*)) (> (length (cdr (assoc 'members astui:*state*))) 1))))
   (ast:ui-put "Disconnect" "Caption" (if (cdr (assoc 'missing-members astui:*state*))
@@ -173,7 +181,7 @@
   (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Face" (if (equal face -1) 1 0))
   (ast:ui-put "Face" "Enabled" (if astui:*guide* T nil))
   ;; Native callbacks can refresh the previous palette before ui-open upgrades it.
-  (if (equal 2 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(2 3 4 5 6))
     (progn
       (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Stitch")
       (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Stitch" '("Obverse" "Reverse"))
@@ -323,18 +331,12 @@
 (defun c:ASTUIDELETE ()
   (ast:ui-run '(lambda (/ index kept attachment)
     (if (and (ast:ui-ready) (>= astui:*index* 0))
-      (if (not (ast:cad-attachments-valid-p astui:*state* astui:*landmarks*))
-        (progn
-          (initget "ClearAll Cancel")
-          (if (equal (getkword "\nThe line changed. Remove all landmarks and add them again [ClearAll/Cancel] <Cancel>: ") "ClearAll")
-            (ast:ui-save astui:*settings* nil)
-            (ast:ui-status "Landmarks kept. Remove them before adding replacements.")))
-        (progn
-          (setq index 0 kept nil)
-          (foreach attachment astui:*landmarks*
-            (if (/= index astui:*index*) (setq kept (cons attachment kept)))
-            (setq index (1+ index)))
-          (ast:ui-save astui:*settings* (reverse kept))))))))
+      (progn
+        (setq index 0)
+        (foreach attachment astui:*landmarks*
+          (if (/= index astui:*index*) (setq kept (cons attachment kept)))
+          (setq index (1+ index)))
+        (ast:ui-save astui:*settings* (reverse kept)))))))
 
 (defun c:ASTUIREVERSE ()
   (ast:ui-run '(lambda ()
@@ -535,6 +537,15 @@
                   (if (> count 0) (ast:ui-status "Connection cancelled. Guides unchanged."))))))
           (ast:ui-status "Connection cancelled. Guides unchanged.")))))))
 
+(defun c:ASTUIGUIDELAYER ()
+  (ast:ui-run '(lambda (/ result)
+    (if (ast:ui-ready)
+      (progn
+        (setq result (ast:cad-guide-layer astui:*guide*))
+        (if (ast:ui-result result)
+          (ast:ui-status (strcat (itoa (cdr (assoc 'count result)))
+            " guide(s) moved to AUTOSTITCH_GUIDES. Undo restores their original layers."))))))))
+
 (defun c:ASTUIDISCONNECT ()
   (ast:ui-run '(lambda (/ result repairing)
     (if (ast:ui-ready)
@@ -546,6 +557,18 @@
             (ast:ui-adopt (ast:cad-read astui:*guide*))
             (ast:ui-status (if repairing "Missing guides removed. Generate stitches to update the output."
               "Guide disconnected. Generate each stitch line to update its stitches.")))))))))
+
+(defun c:ASTUIREMOVESTITCHES ()
+  (ast:ui-run '(lambda (/ result draft)
+    (if (ast:ui-ready)
+      (progn
+        (setq draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text")
+              result (ast:cad-remove-stitches astui:*guide*))
+        (if (ast:ui-result result)
+          (progn
+            (ast:ui-adopt (ast:cad-read astui:*guide*))
+            (ast:ui-put "Pitch" "Text" draft)
+            (ast:ui-status "Stitches removed. Guides and connections kept. Generate stitches to recreate them."))))))))
 
 (defun ast:ui-generate (/ pitch settings result state)
   (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
@@ -587,7 +610,7 @@
   (if path
     (progn
       (setq loaded (vl-catch-all-apply 'dcl-Project-Load
-        (list path (not (equal 2 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
+        (list path (not (equal 6 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
       (if (or (vl-catch-all-error-p loaded) (not loaded))
         (progn
           (setq loaded nil)
@@ -595,7 +618,7 @@
     (princ "\nAutostitch: AUTOSTITCH.odcl is missing beside AUTOSTITCH.lsp."))
   (if loaded
     (progn
-      (vl-bb-set 'ASTUI-PALETTE-VERSION 2)
+      (vl-bb-set 'ASTUI-PALETTE-VERSION 6)
       (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
       (if (not (equal astui:*document* document))
         (setq astui:*guide* nil ast:*unit-factor* nil))
@@ -616,5 +639,6 @@
         (c:ASTUIINIT))
       (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))))
   (if loaded T nil))
+
 
 (princ)

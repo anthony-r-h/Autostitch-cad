@@ -126,6 +126,7 @@
         lean (ast:g-get 'lean settings (* pi (/ 40.0 180.0))) hand (ast:g-get 'handedness settings 1)
         diameter (ast:g-get 'diameter settings 0.5) width (ast:g-get 'thickness settings nil) margin (ast:g-get 'margin settings nil))
   (cond ((not (and (ast:g-finite pitch) (> pitch 0) (ast:g-finite slit) (> slit 0) (ast:g-finite lean) (member hand '(-1 1)) (ast:g-finite diameter) (> diameter 0))) "The pitch or hole dimensions are invalid. Check the pitch and tool settings.")
+        ((not (and (ast:g-finite (ast:g-get 'offset settings 0.0)) (>= (ast:g-get 'offset settings 0.0) 0.0))) "Offset must be zero or more stitch pitches.")
         ((not (member (ast:g-get 'stitch-hand settings 1) '(-1 1))) "Choose Obverse or Reverse for the stitch lean.")
         ((and width (not (and (ast:g-finite width) (>= width 0)))) "The slit width is invalid. Enter a width of zero or more in the tool settings.")
         ((and margin (not (and (ast:g-finite margin) (>= margin 0)))) "The material margin is invalid. Enter a distance of zero or more in the tool settings.")))
@@ -436,7 +437,7 @@
     (list '(kind . arc) (cons 'center (ast:g-get 'center primitive nil)) (cons 'radius (ast:g-get 'radius primitive 0))
           (cons 'start-angle (+ (ast:g-get 'start-angle primitive 0) (* (ast:g-sign (ast:g-get 'sweep primitive 0)) (/ start (ast:g-get 'radius primitive 0)))))
           (cons 'sweep (* (ast:g-sign (ast:g-get 'sweep primitive 0)) (/ (- finish start) (ast:g-get 'radius primitive 0)))))))
-(defun ast:g-range (primitives landmarks settings closed / start finish phase total error remapped marker station index offsets absolute primitive cursor low high selected cycles found)
+(defun ast:g-range (primitives landmarks settings closed / start finish phase total offset error remapped marker station index offsets absolute primitive cursor low high selected cycles found)
   (setq total 0.0)
   (foreach primitive primitives
     (setq offsets (append offsets (list total)) total (+ total (ast:g-length primitive))))
@@ -447,6 +448,12 @@
         (setq start phase finish (+ phase total))))
     (if (not (and (ast:g-finite start) (ast:g-finite finish) (>= start 0.0) (<= finish total) (> finish start)))
       (setq error "The start and end must lie on the guide, with some line between them. Pick them again.")))
+  (if (and (null error) (not closed))
+    (progn
+      (setq offset (* (ast:g-get 'offset settings 0.0) (ast:g-get 'pitch settings 3.0))
+            start (+ start offset) finish (- finish offset))
+      (if (<= (- finish start) 1e-9)
+        (setq error "The offset leaves no stitching length. Reduce the offset or extend the start/end range."))))
   (foreach marker landmarks
     (setq index (ast:g-get 'primitive marker 0) station (ast:g-get 'station marker nil))
     (if (not (and (numberp index) (= index (fix index)) (>= index 0) (< index (length primitives)) (ast:g-finite station)))

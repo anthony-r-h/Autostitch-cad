@@ -54,7 +54,7 @@
   (setq astui:*state* nil astui:*guide* nil astui:*settings* nil astui:*landmarks* nil astui:*route* nil
         astui:*factor* nil astui:*placement-conflict* nil astui:*index* -1))
 
-(defun ast:ui-ready (/ result draft dirty selected index astui:*defer-markers*)
+(defun ast:ui-ready (/ result draft dirty offset-draft offset-dirty selected index astui:*defer-markers*)
   ;; Input writers update helpers in their own transaction; picks refresh explicitly.
   (setq astui:*defer-markers* T)
   (cond
@@ -67,11 +67,15 @@
         (progn
           (setq draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text")
                 dirty (not (equal draft astui:*pitch-text*))
+                offset-draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Offset" "Text")
+                offset-dirty (not (equal offset-draft astui:*offset-text*))
                 selected (if (>= astui:*index* 0) (nth astui:*index* astui:*landmarks*)))
           ;; Copies use source inputs; only editable guides retain an unsaved draft.
           (ast:ui-adopt result)
           (if (and dirty (not (eq 'copy (ast:cad-get 'match-role result))))
             (ast:ui-put "Pitch" "Text" draft))
+          (if (and offset-dirty (not (eq 'copy (ast:cad-get 'match-role result))))
+            (ast:ui-put "Offset" "Text" offset-draft))
           (if selected
             (progn
               (setq index (vl-position selected astui:*landmarks*)
@@ -85,7 +89,8 @@
 
 (defun ast:ui-native-refresh (/ active astui:*busy*)
   ;; Native edit notifications must never open or transfer the shared palette.
-  (if (and (equal (vl-bb-ref 'ASTUI-PALETTE-OWNER) (ast:ui-document-key))
+  (if (and (equal 7 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+           (equal (vl-bb-ref 'ASTUI-PALETTE-OWNER) (ast:ui-document-key))
            (equal astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))
            (member 'dcl-Form-IsActive (atoms-family 0)))
     (progn
@@ -114,6 +119,9 @@
                   ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text") 2)
                                (cdr (assoc 'pitch astui:*settings*)) 1e-12))
                     (ast:ui-status "Generate stitches to apply the new pitch."))
+                  ((not (equal (distof (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Offset" "Text") 2)
+                               (ast:g-get 'offset astui:*settings* 0.0) 1e-12))
+                    (ast:ui-status "Generate stitches to apply the new offset."))
                   (T (ast:ui-status "Stitches are up to date."))))))))))
   T)
 
@@ -148,12 +156,13 @@
   (ast:ui-put "Identity" "Caption" (if astui:*guide*
     (strcat "Stitch ID: " (ast:cad-stitch-id astui:*guide*)) ""))
   (ast:ui-put "Start" "Enabled" (if astui:*guide* T nil))
+  (ast:ui-put "Offset" "Enabled" (if (and astui:*guide* (not closed)) T nil))
   (ast:ui-put "End" "Enabled" (if (and astui:*guide* (not closed)) T nil))
   (foreach control '("Add" "Generate" "Pitch" "Reverse" "Connect")
     (ast:ui-put control "Enabled" (if astui:*guide* T nil)))
-  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(3 4 5 6))
+  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(3 4 5 6 7))
     (ast:ui-put "GuideLayer" "Enabled" (if astui:*guide* T nil)))
-  (if (equal 6 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+  (if (equal 7 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
     (progn
       (ast:ui-put "RemoveStitches" "Enabled" (if (and astui:*guide*
         (ast:cad-removable-outputs astui:*state*)) T nil))
@@ -181,7 +190,7 @@
   (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Face" (if (equal face -1) 1 0))
   (ast:ui-put "Face" "Enabled" (if astui:*guide* T nil))
   ;; Native callbacks can refresh the previous palette before ui-open upgrades it.
-  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(2 3 4 5 6))
+  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(2 3 4 5 6 7))
     (progn
       (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Stitch")
       (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Stitch" '("Obverse" "Reverse"))
@@ -201,13 +210,18 @@
              (if (= 1 (length (ast:cad-get 'targets matching))) " matching stitch line" " matching stitch lines")))
           (T "")))
   (if copy
-    (foreach control '("Pitch" "Start" "End" "Reverse" "Add" "Delete" "Landmarks")
+    (foreach control '("Pitch" "Offset" "Start" "End" "Reverse" "Add" "Delete" "Landmarks")
       (ast:ui-put control "Enabled" nil)))
   (if (ast:cad-get 'active matching)
     (foreach control '("Connect" "Disconnect") (ast:ui-put control "Enabled" nil)))
   (setq astui:*busy* nil))
 
-(defun ast:ui-adopt (result / markers-ready)
+(defun ast:ui-adopt (result / markers-ready offset-draft)
+  (if (and astui:*guide* (equal astui:*guide* (cdr (assoc 'guide result)))
+           (not (eq 'copy (ast:cad-get 'match-role result))))
+    (progn
+      (setq offset-draft (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Offset" "Text"))
+      (if (equal offset-draft astui:*offset-text*) (setq offset-draft nil))))
   (setq astui:*state* result astui:*guide* (cdr (assoc 'guide result))
         astui:*settings* (cdr (assoc 'settings result))
         astui:*route* (cdr (assoc 'route result))
@@ -218,6 +232,8 @@
   (if (= (getvar "INSUNITS") 0) (setq ast:*unit-factor* astui:*factor*))
   (setq astui:*pitch-text* (rtos (cdr (assoc 'pitch astui:*settings*)) 2 3))
   (ast:ui-put "Pitch" "Text" astui:*pitch-text*)
+  (setq astui:*offset-text* (rtos (ast:g-get 'offset astui:*settings* 0.0) 2 3))
+  (ast:ui-put "Offset" "Text" (if offset-draft offset-draft astui:*offset-text*))
   (setq markers-ready (ast:ui-markers))
   (ast:ui-fill)
   markers-ready)
@@ -225,8 +241,14 @@
 (defun ast:ui-pitch (/ value text)
   (setq text (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Pitch" "Text")
         value (if (equal text astui:*pitch-text*) (cdr (assoc 'pitch astui:*settings*)) (distof text 2)))
-  (if (and value (> value 0.0)) value
+  (if (and value (> value 0.0)) (if (ast:ui-offset) value)
     (progn (ast:ui-status "Pitch must be a positive number in mm.") nil)))
+
+(defun ast:ui-offset (/ text value)
+  (setq text (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Offset" "Text")
+        value (if (equal text astui:*offset-text*) (ast:g-get 'offset astui:*settings* 0.0) (distof text 2)))
+  (if (and (ast:g-finite value) (>= value 0.0)) value
+    (progn (ast:ui-status "Offset must be zero or more stitch pitches.") nil)))
 
 (defun ast:ui-save (settings landmarks / result text)
   (setq result (ast:cad-save-inputs astui:*guide* settings landmarks))
@@ -573,7 +595,7 @@
 (defun ast:ui-generate (/ pitch settings result state)
   (if (and (ast:ui-ready) (setq pitch (ast:ui-pitch)))
     (progn
-      (setq settings (ast:cad-put 'pitch pitch astui:*settings*)
+      (setq settings (ast:cad-put 'offset (ast:ui-offset) (ast:cad-put 'pitch pitch astui:*settings*))
             result (if astui:*placement-conflict*
               (ast:cad-restore astui:*guide* settings astui:*landmarks*)
               (ast:cad-generate astui:*guide* settings astui:*landmarks*)))
@@ -592,7 +614,8 @@
 (defun c:ASTUIINIT ()
   (setq astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))
   (ast:ui-clear) (ast:ui-fill)
-  (setq astui:*pitch-text* "3")
+  (setq astui:*pitch-text* "3" astui:*offset-text* "0")
+  (ast:ui-put "Offset" "Text" astui:*offset-text*)
   (ast:ui-put "Pitch" "Text" astui:*pitch-text*)
   (vl-bb-set 'ASTUI-PALETTE-OWNER (ast:ui-document-key))
   (ast:ui-status "Select a guide or its generated stitches.")
@@ -610,7 +633,7 @@
   (if path
     (progn
       (setq loaded (vl-catch-all-apply 'dcl-Project-Load
-        (list path (not (equal 6 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
+        (list path (not (equal 7 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
       (if (or (vl-catch-all-error-p loaded) (not loaded))
         (progn
           (setq loaded nil)
@@ -618,7 +641,7 @@
     (princ "\nAutostitch: AUTOSTITCH.odcl is missing beside AUTOSTITCH.lsp."))
   (if loaded
     (progn
-      (vl-bb-set 'ASTUI-PALETTE-VERSION 6)
+      (vl-bb-set 'ASTUI-PALETTE-VERSION 7)
       (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
       (if (not (equal astui:*document* document))
         (setq astui:*guide* nil ast:*unit-factor* nil))

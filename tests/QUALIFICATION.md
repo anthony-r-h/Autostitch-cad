@@ -207,6 +207,30 @@ With a saved disposable `output/native/Autostitch-native.dwg` open in the existi
 Get-Content ./output/native/geometry-oracle.txt
 ```
 
-Omit `-IncludeUi` to run only the 18 non-palette suites. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) separately.
+Use `-Suite` to select catalog IDs; palette suites load their UI automatically:
+
+```powershell
+./tests/run-suites.ps1 -List
+./tests/run-suites.ps1 -Suite GEO,NET,CONTINUOUS
+./tests/run-suites.ps1 -Suite MAP,MATCH,MATCHNET
+./tests/run-suites.ps1 -Suite UI
+```
+
+Choose by changed behavior:
+
+| Change | Starting selection | Expand when |
+| --- | --- | --- |
+| Fitting, range or pitch | GEO; NET/CONTINUOUS if their shared path changes | CAD inputs/output behavior also changes |
+| Matching transforms | MAP | MATCH/MATCHNET for persistence or family generation |
+| Palette input | UI | Relevant geometry suite if input semantics change |
+| Drawing ownership or rollback | Relevant CAD/lifecycle suite | Full suite for shared persistence/transaction changes |
+| Display/markers | DISPLAY or MARK | UI if picking or selection changes |
+| Fill recipes | FILL-NATIVE | Shared solver changes |
+| Native edit bridge | Separate event runner | Shared persistence changes |
+| Documentation only | References and consistency | No CAD run |
+
+Omit `-Suite` for all non-palette suites; add `-IncludeUi` for a full run. Release validation also uses the separate event and reopen workflows. Run the [gallery checks](AXIOM_AUDIT.md#reproduce) only for affected exported geometry or display. Arithmetic checks are relevant to fitter changes, not every GUI edit.
+
+The runner prints the selected suites and report path. Detailed assertions stay in a uniquely named report. A suite must report a positive executed count, no failures and a successful result. Counts describe execution volume, not confidence or independent coverage.
 
 Use one native runner at a time. The harness refuses drawings outside `output/native`; inspect its completed report as well as the process exit status. Test identities and descriptions belong in [cases.json](cases.json). Geometric limits belong in [limits](../docs/LIMITS.md).

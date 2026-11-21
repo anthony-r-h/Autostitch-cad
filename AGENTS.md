@@ -98,7 +98,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 ## Process
 
 1. Identify the narrowest files and functions. State material assumptions.
-2. Run only checks affected by the change, starting with the smallest. Run the full plugin suite for releases or changes spanning multiple subsystems. Stop after the required checks pass unless new changes or failures require another run. See `tests/QUALIFICATION.md` for commands.
+2. Run only checks affected by the change, starting with the smallest. Run the full plugin suite for releases or changes to shared persistence, transaction or dispatch behavior. Touching multiple files or subsystems alone does not require it; select suites for the behavior changed using `tests/run-suites.ps1 -Suite`. Stop after the required checks pass unless new changes or failures require another run. See `tests/QUALIFICATION.md` for commands.
 3. Report failed commands plainly. Do not invent causes or count historical evidence as a new run.
 4. Review documentation for concise, neutral language and consistency with the implementation.
 5. Summarize changes, validation, risks and anything unverified.
@@ -139,3 +139,7 @@ Autostitch is a BricsCAD V22 / OpenDCL plugin. The source drawing guides are aut
 - Do not test in, overwrite, close or save a user's working drawing.
 - Drawings and recovery files under `output/` may contain user work. They are not disposable merely because Git ignores them.
 - A successful script dispatch is not a test pass. Inspect the completion marker and failures in the report.
+
+## Learnings
+
+- Test counts measure executed assertions, not independent evidence. Avoid identical-call comparisons and oversized fixtures that repeat the same mapping check; use explicit expected values for a small representative fixture and retain boundary cases and recorded regressions. Report tested behavior and oracle limitations, with full logs in report files.

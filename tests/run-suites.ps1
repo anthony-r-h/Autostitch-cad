@@ -1,25 +1,41 @@
 param(
   [string]$DrawingName = 'Autostitch-native.dwg',
   [ValidateRange(1, 3600)][int]$TimeoutSeconds = 180,
-  [switch]$IncludeUi
+  [switch]$IncludeUi,
+  [string[]]$Suite,
+  [switch]$List
 )
 $ErrorActionPreference = 'Stop'
 $stitchRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $stitchOutput = Join-Path $stitchRoot 'output/native'
+$stitchCatalog = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'cases.json') -Raw | ConvertFrom-Json
+if ($Suite) {
+  foreach ($stitchId in $Suite) {
+    $stitchMatch = @($stitchCatalog.suites | Where-Object { $_.id -eq $stitchId -and $_.runner -in @('suite', 'ui') })
+    if ($stitchMatch.Count -ne 1) { throw "Unknown or separately driven suite '$stitchId'. Use -List for available suites." }
+  }
+  $stitchSelected = @($stitchCatalog.suites | Where-Object { $_.id -in $Suite })
+} else {
+  $stitchSelected = @($stitchCatalog.suites | Where-Object {
+    $_.runner -eq 'suite' -or ($IncludeUi -and $_.runner -eq 'ui')
+  })
+}
+if ($List) {
+  $stitchCatalog.suites | Where-Object { $_.runner -in @('suite', 'ui') } | Select-Object id, title, runner
+  return
+}
+$stitchSuites = @($stitchSelected | ForEach-Object { $_.entrypoint.ToUpperInvariant() })
+$IncludeUi = @($stitchSelected | Where-Object { $_.runner -eq 'ui' }).Count -gt 0
 New-Item -ItemType Directory -Path $stitchOutput -Force | Out-Null
 $stitchLispRoot = $stitchRoot.Replace('\', '/').Replace('"', '\"')
-$stitchScript = Join-Path $stitchOutput 'all-suites.lsp'
-$stitchReport = Join-Path $stitchOutput 'all-suites.txt'
-$stitchCatalog = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'cases.json') -Raw | ConvertFrom-Json
-$stitchSuites = @($stitchCatalog.suites | Where-Object {
-  $_.runner -eq 'suite' -or ($IncludeUi -and $_.runner -eq 'ui')
-} | ForEach-Object { $_.entrypoint.ToUpperInvariant() })
+$stitchRun = 'suites-' + [Guid]::NewGuid().ToString('N').Substring(0, 10)
+$stitchScript = Join-Path $stitchOutput ($stitchRun + '.lsp')
+$stitchReport = Join-Path $stitchOutput ($stitchRun + '.txt')
 $stitchLoads = @($stitchCatalog.nativeLoads)
 if ($IncludeUi) { $stitchLoads = @('AUTOSTITCH.lsp') + $stitchLoads }
 $stitchLoadForms = ($stitchLoads | ForEach-Object { '"' + $_ + '"' }) -join ' '
-if (Test-Path -LiteralPath $stitchReport) { Remove-Item -LiteralPath $stitchReport }
 $stitchDriver = @'
-(setq ast:suite-file (open "@ROOT@/output/native/all-suites.txt" "w"))
+(setq ast:suite-file (open "@ROOT@/output/native/@RUN@.txt" "w"))
 (setq ast:suite-load-failed nil ast:suite-failed nil ast:suite-completed 0)
 (foreach ast:suite-path '(@LOADS@)
   (setq ast:suite-result (vl-catch-all-apply 'load (list (strcat "@ROOT@/" ast:suite-path))))
@@ -36,7 +52,10 @@ $stitchDriver = @'
       (setq ast:suite-detail (vl-catch-all-error-message ast:suite-result))
       (progn
         (setq ast:suite-detail (vl-prin1-to-string ast:suite-result))
-        (if (and (listp ast:suite-result) (null (cdr (assoc 'failures ast:suite-result))))
+        (if (and (listp ast:suite-result) (assoc 'failures ast:suite-result)
+                 (null (cdr (assoc 'failures ast:suite-result)))
+                 (vl-some '(lambda (key) (and (numberp (cdr (assoc key ast:suite-result)))
+                   (> (cdr (assoc key ast:suite-result)) 0))) '(checks count passed)))
           (setq ast:suite-pass
             (if (assoc 'ok ast:suite-result) (eq T (cdr (assoc 'ok ast:suite-result)))
               (and (numberp (cdr (assoc 'failed ast:suite-result)))
@@ -50,7 +69,7 @@ $stitchDriver = @'
 (close ast:suite-file)
 (princ)
 '@
-$stitchDriver.Replace('@ROOT@', $stitchLispRoot).Replace('@SUITES@', ($stitchSuites -join ' ')).Replace('@LOADS@', $stitchLoadForms) |
+$stitchDriver.Replace('@RUN@', $stitchRun).Replace('@ROOT@', $stitchLispRoot).Replace('@SUITES@', ($stitchSuites -join ' ')).Replace('@LOADS@', $stitchLoadForms) |
   Set-Content -LiteralPath $stitchScript -Encoding UTF8
 & (Join-Path $PSScriptRoot 'run-native.ps1') -ScriptPath $stitchScript -DrawingName $DrawingName
 $stitchDeadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
@@ -64,9 +83,10 @@ do {
   if ($stitchResults -match '^DONE (PASS|FAIL) \d+$') { break }
   Start-Sleep -Milliseconds 200
 } while ([DateTime]::UtcNow -lt $stitchDeadline)
-$stitchResults
+Write-Output "Report: $stitchReport"
 if ($stitchResults.Count -eq 0 -or $stitchResults[-1] -ne "DONE PASS $($stitchSuites.Count)" -or
     ($stitchResults -match ' FAIL ')) {
+  $stitchResults
   if ($stitchReadError) { Write-Output "Last report read error: $stitchReadError" }
   throw 'Native suite failed, could not load its files, or did not finish with a complete DONE report.'
 }
@@ -75,3 +95,5 @@ foreach ($stitchSuite in $stitchSuites) {
     throw "Native suite result is missing or duplicated: $stitchSuite"
   }
 }
+
+Write-Output ("Passed suites: " + (($stitchSelected | ForEach-Object { $_.id }) -join ", "))

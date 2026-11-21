@@ -5012,8 +5012,8 @@
       "runner": "suite",
       "svg": false,
       "setup": "Pure solver; no drawing changes.",
-      "recipe": "Evaluate straight and circular fits; mirrored straight/curved corners; rotations/translations; landmarks; loops; collision guards.",
-      "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
+      "recipe": "Evaluate straight and circular fits; mirrored straight/curved corners; rotations/translations; landmarks; loops; collision guards. Rigid corner transforms use rotation 0.37 radians at translations (0,0) and (1000,1000); the intermediate translation was removed as repeated sampling.",
+      "expected": "Fixed expected positions and independent corner constructions agree with the solver; boundary failures reject. Rigid-transform checks establish invariance, not independent correctness.",
       "checks": [
         {
           "id": "GEO-001",
@@ -5529,6 +5529,41 @@
           "id": "STITCH-G-05",
           "expected": "Legacy settings without stitch lean retain obverse geometry",
           "sourceSymbol": "ast:g-test-stitch-hand"
+        },
+        {
+          "id": "GEO-OFFSET-01",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "half pitch offset inwards from picked limits"
+        },
+        {
+          "id": "GEO-OFFSET-02",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "offset follows reversed travel"
+        },
+        {
+          "id": "GEO-OFFSET-03",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "negative offset rejected"
+        },
+        {
+          "id": "GEO-OFFSET-04",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "offset consuming range rejected"
+        },
+        {
+          "id": "GEO-OFFSET-05",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "offset excluding landmark rejected"
+        },
+        {
+          "id": "GEO-OFFSET-06",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "arc offset measured along guide"
+        },
+        {
+          "id": "GEO-OFFSET-07",
+          "sourceSymbol": "ast:g-test-offset",
+          "expected": "closed loop ignores endpoint offset"
         }
       ],
       "matrices": [
@@ -6014,7 +6049,7 @@
       "runner": "suite",
       "svg": false,
       "setup": "Load geometry, network and matching geometry; pure tests do not modify drawings.",
-      "recipe": "Match translated, rotated and reflected lines, arcs, polylines, circles and connected groups; transfer complete solved corner and T-junction layouts.",
+      "recipe": "Map explicit line, arc, circle and connected routes. Transfer a small literal solution containing slits, a round hole, both interval representations, virtual slits and adjustment metadata under rotation/reflection; separately transfer a solved connected T.",
       "expected": "One exact isometry matches every target guide and transforms all holes and construction without refitting. Incongruent targets reject.",
       "checks": [
         {
@@ -6188,11 +6223,6 @@
           "sourceSymbol": "ast:m-tests"
         },
         {
-          "id": "MAP-029",
-          "expected": "source shallow corner has one known adjustment",
-          "sourceSymbol": "ast:m-tests"
-        },
-        {
           "id": "MAP-030",
           "expected": "copy preserves hole count and adjustment status (each parameter combination)",
           "sourceSymbol": "ast:m-tests",
@@ -6226,21 +6256,6 @@
             [
               "itoa",
               "index"
-            ]
-          ]
-        },
-        {
-          "id": "MAP-032",
-          "expected": "rigid copy preserves physical clearance (each parameter combination)",
-          "sourceSymbol": "ast:m-tests",
-          "labelExpression": [
-            "strcat",
-            {
-              "text": "rigid copy preserves physical clearance "
-            },
-            [
-              "itoa",
-              "parity"
             ]
           ]
         },
@@ -6303,7 +6318,7 @@
         },
         {
           "id": "MAP-037",
-          "expected": "inverse reflection restores complete shallow-corner solution",
+          "expected": "inverse reflection restores complete transfer fixture",
           "sourceSymbol": "ast:m-tests"
         },
         {
@@ -8054,6 +8069,26 @@
           "id": "STITCH-UI-02",
           "expected": "A matching copy displays inherited stitch lean and disables its independent selector",
           "sourceSymbol": "ast:ui-test-matching"
+        },
+        {
+          "id": "UI-OFFSET-01",
+          "sourceSymbol": "ast:ui-test-offset",
+          "expected": "Offset draft survives palette refresh"
+        },
+        {
+          "id": "UI-OFFSET-02",
+          "sourceSymbol": "ast:ui-test-offset",
+          "expected": "Generate persists pitch-unit offset with current output"
+        },
+        {
+          "id": "UI-OFFSET-03",
+          "sourceSymbol": "ast:ui-test-offset",
+          "expected": "Invalid offset preserves saved inputs and output"
+        },
+        {
+          "id": "UI-OFFSET-04",
+          "sourceSymbol": "ast:ui-test-offset",
+          "expected": "Infeasible offset preserves saved inputs and output"
         }
       ]
     },

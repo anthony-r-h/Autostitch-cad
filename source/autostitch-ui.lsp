@@ -89,7 +89,7 @@
 
 (defun ast:ui-native-refresh (/ active astui:*busy*)
   ;; Native edit notifications must never open or transfer the shared palette.
-  (if (and (equal 7 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+  (if (and (equal 9 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
            (equal (vl-bb-ref 'ASTUI-PALETTE-OWNER) (ast:ui-document-key))
            (equal astui:*document* (vla-get-ActiveDocument (vlax-get-acad-object)))
            (member 'dcl-Form-IsActive (atoms-family 0)))
@@ -135,6 +135,53 @@
         (ast:ui-result (ast:markers-ensure astui:*guide* astui:*settings*
           astui:*landmarks* astui:*factor* astui:*route*))))))
 
+(defun ast:ui-stitch-count (state / count output entity data)
+  (setq count 0)
+  (foreach output (ast:cad-removable-outputs state)
+    (setq entity (tblobjname "BLOCK" (cdr (assoc 2 (entget output)))))
+    (while (and (setq entity (entnext entity))
+                (not (equal "ENDBLK" (cdr (assoc 0 (setq data (entget entity)))))))
+      ;; Count physical openings, excluding thread, fills and annotations.
+      (if (and (equal "AUTOSTITCH" (cdr (assoc 8 data)))
+               (or (equal "CIRCLE" (cdr (assoc 0 data)))
+                   (and (equal "LINE" (cdr (assoc 0 data)))
+                        (equal 30 (cdr (assoc 370 data))))))
+        (setq count (1+ count)))))
+  count)
+
+(defun ast:ui-total-residual (solution / total interval)
+  (setq total 0.0)
+  (foreach interval (append (ast:cad-get 'intervals solution) (ast:cad-get 'corner-adjustments solution))
+    ;; Junction distances have their own construction, not a fitted nominal gap.
+    (if (assoc 'nominal interval)
+      (setq total (+ total (- (ast:cad-get 'distance interval) (ast:cad-get 'nominal interval))))))
+  total)
+
+(defun ast:ui-residual-inner (state / states solution)
+  (if (eq 'copy (ast:cad-get 'match-role state))
+    (setq state (ast:cad-read (ast:cad-get 'match-source state))))
+  (ast:cad-require (and (ast:cad-get 'ok state) (not (ast:cad-get 'stale state)))
+    "Generate stitches to update the residual.")
+  (if (> (length (ast:cad-get 'members state)) 1)
+    (progn
+      (setq states (ast:cad-set-states (ast:cad-get 'members state) (ast:cad-get 'guide state)
+        (ast:cad-get 'settings state) (ast:cad-get 'landmarks state)))
+      (setq solution (ast:cad-get 'solution (ast:cad-resolve-set states (ast:cad-get 'connections state)))))
+    (setq solution (ast:g-solve (ast:cad-get 'route state) (ast:cad-get 'settings state)
+      (ast:cad-get 'landmarks state))))
+  (ast:cad-require (ast:cad-get 'ok solution) (ast:cad-get 'error solution))
+  (list '(ok . T) (cons 'residual (ast:ui-total-residual solution))))
+
+(defun ast:ui-residual-caption (state / result residual)
+  (setq result (ast:cad-catch 'ast:ui-residual-inner (list state)))
+  (if (ast:cad-get 'ok result)
+    (progn
+      (setq residual (ast:cad-get 'residual result))
+      (if (< (abs residual) 0.005) (setq residual 0.0))
+      (strcat "Total residual: " (if (> residual 0.0) "+" "")
+        (ast:cad-spacing-label residual) " mm"))
+    (strcat "Total residual: unavailable\n" (ast:cad-get 'error result))))
+
 (defun ast:ui-fill (/ labels index attachment total start finish closed control matching copy source face)
   (setq astui:*busy* T labels nil index 0)
   (foreach attachment astui:*landmarks*
@@ -154,15 +201,16 @@
   (ast:ui-put "Delete" "Enabled" (if labels T nil))
   (setq closed (cdr (assoc 'closed astui:*route*)))
   (ast:ui-put "Identity" "Caption" (if astui:*guide*
-    (strcat "Stitch ID: " (ast:cad-stitch-id astui:*guide*)) ""))
+    (strcat "Stitch ID: " (ast:cad-stitch-id astui:*guide*)
+      "\nStitches: " (itoa (ast:ui-stitch-count astui:*state*))) ""))
   (ast:ui-put "Start" "Enabled" (if astui:*guide* T nil))
   (ast:ui-put "Offset" "Enabled" (if (and astui:*guide* (not closed)) T nil))
   (ast:ui-put "End" "Enabled" (if (and astui:*guide* (not closed)) T nil))
   (foreach control '("Add" "Generate" "Pitch" "Reverse" "Connect")
     (ast:ui-put control "Enabled" (if astui:*guide* T nil)))
-  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(3 4 5 6 7))
+  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(3 4 5 6 7 8 9))
     (ast:ui-put "GuideLayer" "Enabled" (if astui:*guide* T nil)))
-  (if (equal 7 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
+  (if (equal 9 (vl-bb-ref 'ASTUI-PALETTE-VERSION))
     (progn
       (ast:ui-put "RemoveStitches" "Enabled" (if (and astui:*guide*
         (ast:cad-removable-outputs astui:*state*)) T nil))
@@ -180,7 +228,8 @@
       (ast:ui-put "Seam" "Caption"
         (if (cdr (assoc 'range-conflict astui:*state*)) "Saved stitch limits need updating"
           (strcat "Guide length: " (rtos (if closed total (- finish start)) 2 2) " mm"
-            (if (and (not closed) (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")))))
+            (if (and (not closed) (or (> start 1e-8) (< finish (- total 1e-8)))) " (part of line)" "")
+            "\n" (ast:ui-residual-caption astui:*state*)))))
     (ast:ui-put "Seam" "Caption" "No guide selected"))
   (setq matching (if astui:*guide* (ast:match-info astui:*guide*))
         copy (eq 'copy (ast:cad-get 'role matching)) source (ast:cad-get 'source matching)
@@ -190,7 +239,7 @@
   (dcl-ComboBox-SetCurSel "AUTOSTITCH" "Palette" "Face" (if (equal face -1) 1 0))
   (ast:ui-put "Face" "Enabled" (if astui:*guide* T nil))
   ;; Native callbacks can refresh the previous palette before ui-open upgrades it.
-  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(2 3 4 5 6 7))
+  (if (member (vl-bb-ref 'ASTUI-PALETTE-VERSION) '(2 3 4 5 6 7 8 9))
     (progn
       (dcl-ComboBox-Clear "AUTOSTITCH" "Palette" "Stitch")
       (dcl-ComboBox-AddList "AUTOSTITCH" "Palette" "Stitch" '("Obverse" "Reverse"))
@@ -633,7 +682,7 @@
   (if path
     (progn
       (setq loaded (vl-catch-all-apply 'dcl-Project-Load
-        (list path (not (equal 7 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
+        (list path (not (equal 9 (vl-bb-ref 'ASTUI-PALETTE-VERSION))) "AUTOSTITCH")))
       (if (or (vl-catch-all-error-p loaded) (not loaded))
         (progn
           (setq loaded nil)
@@ -641,7 +690,7 @@
     (princ "\nAutostitch: AUTOSTITCH.odcl is missing beside AUTOSTITCH.lsp."))
   (if loaded
     (progn
-      (vl-bb-set 'ASTUI-PALETTE-VERSION 7)
+      (vl-bb-set 'ASTUI-PALETTE-VERSION 9)
       (setq document (vla-get-ActiveDocument (vlax-get-acad-object)))
       (if (not (equal astui:*document* document))
         (setq astui:*guide* nil ast:*unit-factor* nil))

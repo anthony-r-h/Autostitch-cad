@@ -913,19 +913,37 @@
   (setq ast:*cad-signature-cache* (vl-remove-if '(lambda (item) (member (car item) outputs)) ast:*cad-signature-cache*))
   (list '(ok . T) (cons 'count (length outputs))))
 
-(defun ast:cad-remove-stitches-inner (entity / state outputs guide output)
+(defun ast:cad-remove-stitches-family-write (plans / plan count)
+  (setq count 0)
+  (foreach plan plans
+    (ast:cad-remove-stitches-write (car plan) (cadr plan))
+    (setq count (+ count (length (cadr plan))))
+    (ast:cad-inject "remove-stitches-member"))
+  (list '(ok . T) (cons 'count count)))
+
+(defun ast:cad-remove-stitches-inner (entity / state info owners owner outputs plans count guide output)
   (setq state (ast:cad-read-inner entity))
-  (ast:cad-require (not (ast:cad-get 'missing-members state))
-    "Remove missing lines to repair this stitch line, then remove its stitches.")
-  (setq outputs (ast:cad-removable-outputs state))
-  (ast:cad-require outputs "This stitch line has no generated stitches to remove.")
-  (foreach guide (ast:cad-get 'members state)
-    (ast:cad-require (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget guide))))
-      "Unlock the guide layers before removing stitches."))
-  (foreach output outputs
-    (ast:cad-require (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget output))))
-      "Unlock the output layer before removing stitches."))
-  (ast:cad-transaction 'ast:cad-remove-stitches-write (list state outputs)))
+  (if (member 'ast:match-info-inner (atoms-family 0))
+    (progn
+      (setq info (ast:match-info-inner (ast:cad-get 'guide state)))
+      (ast:cad-require (not (ast:cad-get 'error info)) (ast:cad-get 'error info))))
+  (setq owners (if (ast:cad-get 'active info) (ast:cad-get 'members info)
+                 (list (ast:cad-get 'guide state))) count 0)
+  ;; Validate the whole family before changing any output or guide metadata.
+  (foreach owner owners
+    (setq state (ast:cad-read-inner owner))
+    (ast:cad-require (not (ast:cad-get 'missing-members state))
+      "Remove missing lines to repair this stitch line, then remove its stitches.")
+    (setq outputs (ast:cad-removable-outputs state) count (+ count (length outputs)))
+    (foreach guide (ast:cad-get 'members state)
+      (ast:cad-require (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget guide))))
+        "Unlock the guide layers before removing stitches."))
+    (foreach output outputs
+      (ast:cad-require (ast:cad-layer-unlocked-p (cdr (assoc 8 (entget output))))
+        "Unlock the output layer before removing stitches."))
+    (setq plans (cons (list state outputs) plans)))
+  (ast:cad-require (> count 0) "This stitch line has no generated stitches to remove.")
+  (ast:cad-transaction 'ast:cad-remove-stitches-family-write (list (reverse plans))))
 
 (defun ast:cad-remove-stitches (entity)
   (ast:cad-catch 'ast:cad-remove-stitches-inner (list entity)))

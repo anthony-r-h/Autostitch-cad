@@ -230,6 +230,25 @@
   (c:ASTUIGENERATE)
   (ast:cad-test-assert (equal record (ast:cad-record guide)) "Infeasible offset preserves saved inputs and output"))
 
+(defun ast:ui-test-residual (/ compressed expanded)
+  (setq compressed '((kind . corrected) (distance . 2.75) (nominal . 3.0))
+        expanded '((kind . corrected) (distance . 3.25) (nominal . 3.0)))
+  (ast:cad-test-assert (equal -0.75 (ast:ui-total-residual
+    (list (cons 'intervals (list compressed compressed compressed)))) 1e-9)
+    "Three 2.75 mm gaps at 3 mm pitch have total residual -0.75 mm")
+  (ast:cad-test-assert (equal 0.75 (ast:ui-total-residual
+    (list (cons 'intervals (list expanded expanded expanded)))) 1e-9)
+    "Three 3.25 mm gaps at 3 mm pitch have total residual +0.75 mm")
+  (ast:cad-test-assert (equal 0.0 (ast:ui-total-residual
+    (list (cons 'intervals (list compressed expanded)))) 1e-9)
+    "Positive and negative residuals cancel in the signed total")
+  (ast:cad-test-assert (equal 0.25 (ast:ui-total-residual
+    '((intervals ((kind . corrected) (distance . 2.75) (nominal . 3.0))
+                 ((kind . corrected) (distance . 4.4) (nominal . 4.0))
+                 ((kind . junction) (distance . 1.5)))
+      (corner-adjustments ((distance . 3.1) (nominal . 3.0))))) 1e-9)
+    "Residual uses each gap's pitch and fitted corner steps, excluding junction distances"))
+
 (defun ast:ui-tests (/ ast:*cad-test-passed* ast:*cad-test-failures* original-units original-tile settings guide output result state source-data output-data record generated-data generated-record landmarks partial-settings first second first-data second-data caption)
   (setq ast:*cad-test-passed* 0 ast:*cad-test-failures* nil
         original-units (getvar "INSUNITS") original-tile (getvar "TILEMODE")
@@ -237,6 +256,7 @@
   (setvar "INSUNITS" 4) (setvar "TILEMODE" 1)
   (c:AUTOSTITCH)
   (c:ASTUIINIT)
+  (ast:ui-test-residual)
   (ast:cad-test-assert (and (not (ast:ui-test-enabled-p "Generate"))
                           (not (ast:ui-test-enabled-p "Add"))
                           (not (ast:ui-test-enabled-p "Delete"))
@@ -245,7 +265,7 @@
   (setq guide (entmakex '((0 . "LINE") (8 . "0") (10 0.0 1700.0 0.0) (11 30.0 1700.0 0.0))))
   (ast:ui-adopt (ast:cad-read guide))
   (ast:cad-test-assert (and (ast:cad-id-number (ast:cad-stitch-id guide))
-    (equal (strcat "Stitch ID: " (ast:cad-stitch-id guide))
+    (equal (strcat "Stitch ID: " (ast:cad-stitch-id guide) "\nStitches: 0")
       (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Identity" "Caption"))
     (ast:marker-test-id guide (ast:marker-test-entities (ast:markers-reference guide))))
     "First selection shows the same new ST-number in the palette and boxed label")
@@ -256,9 +276,9 @@
   (ast:cad-test-assert (and (wcmatch caption "Guide length:*30*mm*")
                           (null (vl-string-search "|" caption))
                           (ast:ui-test-enabled-p "Start") (ast:ui-test-enabled-p "End")
-                          (equal (strcat "Stitch ID: " (ast:cad-stitch-id guide))
+                          (equal (strcat "Stitch ID: " (ast:cad-stitch-id guide) "\nStitches: 11")
                             (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Identity" "Caption")))
-    "An open guide shows its ID and length with both endpoint controls enabled")
+    "An open guide shows its ID and 11 stitches on separate lines, and length with both endpoint controls enabled")
   (ast:cad-test-assert (and
     (equal "Add landmark" (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Add" "Caption"))
     (equal "Remove landmark" (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Delete" "Caption")))
@@ -409,7 +429,7 @@
     (not (ast:cad-get 'stale (ast:cad-read first)))
     (not (ast:cad-get 'stale (ast:cad-read second)))
     (equal (ast:cad-stitch-id first) (ast:cad-stitch-id second))
-    (equal (strcat "Stitch ID: " (ast:cad-stitch-id first))
+    (equal (strcat "Stitch ID: " (ast:cad-stitch-id first) "\nStitches: 13")
       (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Identity" "Caption")))
     "Generate from a connected member restores the shared output and displays its shared ID")
   (setq caption (ast:cad-stitch-id first))
@@ -421,7 +441,7 @@
   (ast:ui-adopt (ast:cad-read second))
   (ast:cad-test-assert (and (ast:cad-id-number (ast:cad-stitch-id first))
     (/= caption (ast:cad-stitch-id first)) (= caption (cdr (assoc 2 (entget output))))
-    (equal (strcat "Stitch ID: " (ast:cad-stitch-id first))
+    (equal (strcat "Stitch ID: " (ast:cad-stitch-id first) "\nStitches: 13")
       (dcl-Control-GetProperty "AUTOSTITCH" "Palette" "Identity" "Caption"))
     (ast:marker-test-id first (ast:marker-test-entities (ast:markers-reference first))))
     "Selecting a legacy connected secondary member refreshes the primary boxed ID without regenerating output")

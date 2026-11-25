@@ -7842,6 +7842,26 @@
       "expected": "Every indexed assertion passes; generated state and metadata remain consistent.",
       "checks": [
         {
+          "id": "UI-RESIDUAL-001",
+          "expected": "Three 2.75 mm gaps at 3 mm pitch have total residual -0.75 mm",
+          "sourceSymbol": "ast:ui-test-residual"
+        },
+        {
+          "id": "UI-RESIDUAL-002",
+          "expected": "Three 3.25 mm gaps at 3 mm pitch have total residual +0.75 mm",
+          "sourceSymbol": "ast:ui-test-residual"
+        },
+        {
+          "id": "UI-RESIDUAL-003",
+          "expected": "Positive and negative residuals cancel in the signed total",
+          "sourceSymbol": "ast:ui-test-residual"
+        },
+        {
+          "id": "UI-RESIDUAL-004",
+          "expected": "Residual uses each gap's pitch and fitted corner steps, excluding junction distances",
+          "sourceSymbol": "ast:ui-test-residual"
+        },
+        {
           "id": "UI-REMOVE-001",
           "expected": "The palette names the connected scope when stitches can be removed",
           "sourceSymbol": "ast:ui-test-remove-stitches"
@@ -7858,7 +7878,7 @@
         },
         {
           "id": "UI-002",
-          "expected": "An open guide shows its ID and length with both endpoint controls enabled",
+          "expected": "An open guide shows its ID and 11 stitches on separate lines, and length with both endpoint controls enabled",
           "sourceSymbol": "ast:ui-tests"
         },
         {
@@ -8473,12 +8493,32 @@
         },
         {
           "id": "REMOVE-011",
-          "expected": "Removing a matched copy's stitches preserves its matching link and the source output",
+          "expected": "Removing a matched copy's stitches clears the family and preserves its matching link",
           "sourceSymbol": "ast:cad-remove-tests"
         },
         {
           "id": "REMOVE-012",
           "expected": "Matched-family generation recreates removed output with the same copy ID",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-013",
+          "expected": "One Undo restores the entire matched family's stitches",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-014",
+          "expected": "Redo removes the entire matched family's stitches",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-015",
+          "expected": "Failure after removing a family member restores all outputs and guide records",
+          "sourceSymbol": "ast:cad-remove-tests"
+        },
+        {
+          "id": "REMOVE-016",
+          "expected": "Removing source stitches clears every matched copy and preserves lineage",
           "sourceSymbol": "ast:cad-remove-tests"
         }
       ]

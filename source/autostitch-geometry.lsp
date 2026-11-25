@@ -238,7 +238,7 @@
             (while (and gaps (null error))
               (setq gap (car gaps) advance (car advances) station (+ cursor (if (= (cdr (assoc 'kind primitive)) 'arc) (* advance (cdr (assoc 'radius primitive))) advance))
                     kind (if (ast:g-near gap pitch) 'ordinary 'corrected)
-                    intervals (cons (list (cons 'kind kind) (cons 'distance gap) (cons 'start-station cursor) (cons 'end-station station) (cons 'reserved (caddr span))) intervals)
+                    intervals (cons (list (cons 'kind kind) (cons 'distance gap) (cons 'nominal pitch) (cons 'start-station cursor) (cons 'end-station station) (cons 'reserved (caddr span))) intervals)
                     openings (cons (ast:g-slit primitive station settings) openings) cursor station gaps (cdr gaps) advances (cdr advances) opening-count (1+ opening-count))
               ;; One temporary closing duplicate is removed by the route planner.
               (if (> opening-count 2001) (setq error "This stitch line needs more than 2000 holes. Split the guide into shorter stitch lines."))))))))
@@ -735,7 +735,7 @@
     (if (or (< gap (- (* 0.9 pitch) 1e-7)) (> gap (+ (* 1.1 pitch) 1e-7)))
       (setq error "Continuous stitching exceeded the spacing allowance. Change the pitch or the stitch limits."))
     (setq intervals (append intervals (list (list (cons 'kind (if (< (abs (- gap pitch)) 1e-7) 'ordinary 'corrected))
-      (cons 'distance gap) (cons 'start-station a) (cons 'end-station b)
+      (cons 'distance gap) (cons 'nominal pitch) (cons 'start-station a) (cons 'end-station b)
       (cons 'reserved (if (vl-some '(lambda (item) (and (< (abs (- a (car item))) 1e-7) (< (abs (- b (cadr item))) 1e-7))) pairs) T nil)))))
       stations (cdr stations)))
   (if error (ast:g-error error) (list '(ok . T) (cons 'openings openings) (cons 'intervals intervals))))
